@@ -154,5 +154,7 @@ class AdminController extends Controller {
 		return Auth::guard ();
 	}
 	public function dashboard() {
+		
+		return view('admin.auth.dashboard');
 	}
 }

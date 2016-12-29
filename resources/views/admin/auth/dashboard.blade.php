@@ -134,492 +134,117 @@
                     </div><!-- col-6 -->
                 </div>
              </div><!-- row -->
-             <div class="row">
+             <div id="reservations-vue-container" class="row">
              	<div class="col-md-12">
-             		<div class="tsheet-tabs padd-15">
-                	  	<div class="b-b nav-active-bg">
-          <ul class="nav nav-tabs">
-            <li class="nav-item">
-              <a class="nav-link active" href data-toggle="tab" data-target="#tab1">
-              <p>02</p><p>Wednesday</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href data-toggle="tab" data-target="#tab2">
-              	<p>03</p><p>Thursday</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href data-toggle="tab" data-target="#tab3">
-              	<p>04</p><p>Friday</p>
-              </a>
-            </li>
-             <li class="nav-item">
-              <a class="nav-link" href data-toggle="tab" data-target="#tab4">
-              	<p>05</p><p>Saturday</p>
-              </a>
-            </li>
-          </ul>
-        </div>
-        				<div class="tab-content p-a m-b-md">
-          <div class="tab-pane animated fadeIn active text-muted" id="tab1">
-            <div class="tab-pane-content">
-            <div class="table-responsive">
-             <table class="table table-hover b-t">
-              <tbody>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-              </tbody>
-            </table>
-            </div>
-            </div>
-          </div>
-          <div class="tab-pane animated fadeIn text-muted" id="tab2">
-            <div class="tab-pane-content">
-            <div class="table-responsive">
-             <table class="table table-hover b-t">
-              <tbody>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-              </tbody>
-            </table>
-            </div>
-            </div>
-          </div>
-          <div class="tab-pane animated fadeIn text-muted" id="tab3">
-            <div class="tab-pane-content">
-            <div class="table-responsive">
-             <table class="table table-hover b-t">
-              <tbody>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-              </tbody>
-            </table>
-            </div>
-            </div>
-          </div>
-          <div class="tab-pane animated fadeIn text-muted" id="tab4">
-            <div class="tab-pane-content">
-            <div class="table-responsive">
-             <table class="table table-hover b-t">
-              <tbody>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-                <tr>
-                  <td>19:00</td>
-                  <td colspan="6">
-                  	<ul class="members-add">
-                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
-                        <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
-                    </ul>
-                  </td>
-                  <td>
-                  	<div class="ts-action-btn">
-                  		<a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                   		<a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
-                   </div>
-                  </td>
-                 
-                </tr>
-              </tbody>
-            </table>
-            </div>
-            </div>
-          </div>
-        </div>
-                </div><!-- tsheet tabs -->
+                    <reservation-tabs :reservations-parent="reservationsParent">
+                         <reservation-tab-tables :reservations-by-date="reservationsParent.reservationsByDate"></reservation-tab-tables>
+                    </reservation-tabs>
+                   
              	</div>
              </div>
          </div><!-- dashboard tee sheet -->
      </div><!-- padding -->
     </div>
   </div>
+<div >
+    
+    
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.7/vue.js"></script>
+@include("admin.__vue_components.reservation-tabs")
+@include("admin.__vue_components.reservation-tab-tables")
+<script>
+    var _reservationsParent = 
+            {
+                course_id:'',
+                reservationsByDate: [
+
+                                    {
+                                            date:'29',
+                                            day:'THURSDAY',
+                                            reservationsByTimeSlot:[
+                                                            {
+
+                                                                timeSlot:'06:00 AM',
+                                                                players:[
+                                                                          {
+                                                                                playerName:'Kashif Chishti',
+                                                                                 playerId:'1'
+                                                                          },
+                                                                          {
+                                                                                playerName:'Bilal Bin Nisar',
+                                                                                 playerId:'2'
+                                                                          }
+                                                                ]
+
+                                                             },
+                                                             {
+
+                                                                timeSlot:'07:00 AM',
+                                                                players:[
+                                                                          {
+                                                                                playerName:'Bilal Khalid',
+                                                                                 playerId:'3'
+                                                                          },
+                                                                          {
+                                                                                playerName:'Fahad Mansoor',
+                                                                                 playerId:'4'
+                                                                          }
+                                                                ]
+
+                                                             }
+                                            ]
+                                            
+                                    },
+                                    {
+                                            date:'30',
+                                            day:'FRIDAY',
+                                            reservationsByTimeSlot:[
+                                                            {
+
+                                                                timeSlot:'01:00 PM',
+                                                                players:[
+                                                                          {
+                                                                                playerName:'Kashif Chishti',
+                                                                                 playerId:'1'
+                                                                          },
+                                                                          {
+                                                                                playerName:'Bilal Bin Nisar',
+                                                                                 playerId:'2'
+                                                                          }
+                                                                ]
+
+                                                             },
+                                                             {
+
+                                                                timeSlot:'02:00 PM',
+                                                                players:[
+                                                                          {
+                                                                                playerName:'Bilal Khalid',
+                                                                                 playerId:'3'
+                                                                          },
+                                                                          {
+                                                                                playerName:'Fahad Mansoor',
+                                                                                 playerId:'4'
+                                                                          }
+                                                                ]
+
+                                                             }
+                                            ]
+                                            
+                                    }
+
+
+                       ]
+
+            }
+    var vue = new Vue({
+        el:"#reservations-vue-container",
+        data:{
+            reservationsParent:_reservationsParent
+        }
+    });
+    
+</script>
+
 @endSection  

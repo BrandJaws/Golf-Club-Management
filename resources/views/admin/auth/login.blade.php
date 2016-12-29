@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-barstyle"
 	content="black-translucent">
-<link rel="apple-touch-icon" href={{asset('/assets/images/logo.png')}}">
+<link rel="apple-touch-icon" href="{{asset('/assets/images/logo.png')}}">
 <meta name="apple-mobile-web-app-title" content="Flatkit">
 <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
 <meta name="mobile-web-app-capable" content="yes">

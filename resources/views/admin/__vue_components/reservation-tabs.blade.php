@@ -3,14 +3,14 @@
 
 Vue.component('reservation-tabs', {
     template: `
-              		<div class="tsheet-tabs padd-15">
-                	  	<reservation-tab-heads :reservations-by-date="reservationsByDate"></reservation-tab-heads>
+              		<div :class="styleForShowMoreTab == 'true' ? ['tsheet-tabs-reser'] : ['tsheet-tabs', 'padd-15']">
                                 <slot></slot>
                          </div>
           
             `,
     props: [
-            "reservationsParent"
+            "reservationsParent",
+            "styleForShowMoreTab"
             
             
     ],

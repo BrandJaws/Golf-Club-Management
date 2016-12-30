@@ -136,8 +136,9 @@
              </div><!-- row -->
              <div id="reservations-vue-container" class="row">
              	<div class="col-md-12">
-                    <reservation-tabs :reservations-parent="reservationsParent">
-                         <reservation-tab-tables :reservations-by-date="reservationsParent.reservationsByDate"></reservation-tab-tables>
+                    <reservation-tabs :reservations-parent="reservationsParent" style-for-show-more-tab="false">
+                        <reservation-tab-heads :reservations-by-date="reservationsParent.reservationsByDate" show-more-tab="false"></reservation-tab-heads>
+                        <reservation-tab-tables :reservations-by-date="reservationsParent.reservationsByDate"></reservation-tab-tables>
                     </reservation-tabs>
                    
              	</div>
@@ -182,6 +183,30 @@
 
                                                                 timeSlot:'07:00 AM',
                                                                 players:[
+                                                                          {
+                                                                                playerName:'Bilal Khalid',
+                                                                                 playerId:'3'
+                                                                          },
+                                                                          {
+                                                                                playerName:'Fahad Mansoor',
+                                                                                 playerId:'4'
+                                                                          },
+                                                                          {
+                                                                                playerName:'Bilal Khalid',
+                                                                                 playerId:'3'
+                                                                          },
+                                                                          {
+                                                                                playerName:'Fahad Mansoor',
+                                                                                 playerId:'4'
+                                                                          },
+                                                                          {
+                                                                                playerName:'Bilal Khalid',
+                                                                                 playerId:'3'
+                                                                          },
+                                                                          {
+                                                                                playerName:'Fahad Mansoor',
+                                                                                 playerId:'4'
+                                                                          },
                                                                           {
                                                                                 playerName:'Bilal Khalid',
                                                                                  playerId:'3'

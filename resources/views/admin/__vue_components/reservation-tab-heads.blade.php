@@ -10,13 +10,21 @@ Vue.component('reservation-tab-heads', {
                       <p>@{{reservation.date}}</p><p>@{{reservation.day}}</p>
                       </a>
                     </li>
+                    <li class="nav-item calender-more-li text-center" v-if="showMoreTab == 'true'">
+                        <a href="#." class="nav-link">
+                                <p><i class="fa fa-chevron-down" aria-hidden="true"></i><br>More</p>
+                        </a>
+                    </li>
+            	
+            
                   </ul>
                 </div>
                         
           
             `,
     props: [
-            "reservationsByDate"
+            "reservationsByDate",
+            "showMoreTab"
             
             
             

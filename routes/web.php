@@ -19,6 +19,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
 	 Route::get('/login',['as'=>'login','uses'=>'Admin\AdminController@showLoginForm']);
 	 Route::post('/login',['as'=>'login','uses'=>'Admin\AdminController@login']);
 	 Route::get('/dashboard',['as'=>'dashboard','uses'=>'Admin\AdminController@dashboard']);
+	 
+	 Route::group(['prefix'=>'member','as'=>'member.'],function(){
+	 	Route::get('/',['as'=>'index','uses'=>'Admin\MemberController@index']);		
+	 });
 });
 Auth::routes();
 

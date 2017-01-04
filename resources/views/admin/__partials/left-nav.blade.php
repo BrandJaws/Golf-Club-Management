@@ -10,7 +10,7 @@
       </div>
       <div flex class="hide-scroll">
         <nav class="scroll nav-light">
-          <ul class="nav" ui-nav>
+          <ul class="nav">
             <li class="nav-header hidden-folded"> <small class="text-muted">Main</small> </li>
             <li> <a href="{{route('admin.dashboard')}}" > <span class="nav-icon"> <i class="material-icons">&#xe3fc; <span ui-include="'{{asset('assets/images/i_0.svg')}}'"></span> </i> </span> <span class="nav-text">Dashboard</span> </a> </li>
             <li> <a href="{{route('admin.member.index')}}" > <span class="nav-icon"> <i class="material-icons">&#xe8d2; <span ui-include="'{{asset('assets/images/i_3.svg')}}'"></span> </i> </span> <span class="nav-text">Members</span> </a> </li>

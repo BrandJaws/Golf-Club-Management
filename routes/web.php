@@ -23,6 +23,11 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
 	 Route::group(['prefix'=>'member','as'=>'member.'],function(){
 	 	Route::get('/',['as'=>'index','uses'=>'Admin\MemberController@index']);		
 	 });
+         Route::group(['prefix'=>'reservations','as'=>'reservations.'],function(){
+             Route::get('/',['as'=>'reservations','uses'=>'Reservations\ReservationsController@index']);
+             
+         });
+         
 });
 Auth::routes();
 

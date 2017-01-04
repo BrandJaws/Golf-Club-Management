@@ -125,5 +125,22 @@
         }
     }
 })
+// autocomplete
+var options = {
+	url: "resources/countries.json",
 
+	getValue: "name",
+
+	list: {
+		match: {
+			enabled: true
+		},
+		maxNumberOfElements: 8
+	},
+
+	theme: "plate-dark"
+
+};
+
+$("#plate").easyAutocomplete(options);
 })(jQuery);

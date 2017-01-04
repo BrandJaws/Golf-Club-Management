@@ -15,8 +15,8 @@ Vue.component('reservation-tab-tables', {
                                     <td >@{{reservation.timeSlot}}</td>
                                     <td width="80%">
                                       <ul class="members-add">
-                                          <reservation-player-tag v-for="reservationPlayer in reservation.players" :reservationPlayer="reservationPlayer" @deletePlayer="deletePlayer"></reservation-player-tag>
-                                          <li class="add-btn"><a href="#."><i class="fa fa-plus"></i></a></li>
+                                          <reservation-player-tag v-for="reservationPlayer in reservation.players" :reservationPlayer="reservationPlayer" @deletePlayer="deletePlayer(reservationPlayer,$event)"></reservation-player-tag>
+                                          <li class="add-btn" @click="editReservationClicked(reservation)"><a href="#."><i class="fa fa-plus"></i></a></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -50,12 +50,17 @@ Vue.component('reservation-tab-tables', {
       }
     },
     methods: {
-        deletePlayer: function(abc){
+        deletePlayer: function(abc,event){
         
        
             console.log(abc);
+            console.log(event);
             //this.$emit('deletePlayer');
             
+        },
+        editReservationClicked: function(reservation){
+            
+             this.$emit('edit-reservation',reservation);
         }
     }
   

@@ -1,6 +1,5 @@
 @extends('admin.__layouts.admin-layout')
 @section('main')
-
 <div id="content" class="app-content box-shadow-z0" role="main">
     <div class="app-header white box-shadow">
       <div class="navbar"> 
@@ -53,7 +52,7 @@
       <div class="p-a white lt box-shadow">
         <div class="row">
           <div class="col-sm-6">
-            <h4 class="m-b-0 _300">Welcome to Grit<a href="{{route('admin.dashboard')}}" >ABCDE</a></h4>
+            <h4 class="m-b-0 _300">Welcome to Grit</h4>
             <small class="text-muted">The Ultimate Booking Platform </small></div>
           <div class="col-sm-6 text-sm-right">
             <div class="m-y-sm"> <span class="m-r-sm">Start manage:</span>
@@ -138,9 +137,9 @@
              <div id="reservations-vue-container" class="row">
              	<div class="col-md-12">
                     <reservation-popup v-if="showPopup" :reservation="reservationToEdit" @close-popup="closePopupTriggered"></reservation-popup>
-                    <reservation-tabs :reservations-parent="reservationsParent" style-for-show-more-tab="false">
-                        <reservation-tab-heads :reservations-by-date="reservationsParent.reservationsByDate" show-more-tab="false"></reservation-tab-heads>
-                        <reservation-tab-tables :reservations-by-date="reservationsParent.reservationsByDate" @edit-reservation="editReservationEventTriggered"></reservation-tab-tables>
+                    <reservation-tabs :reservations-parent="reservationsParent" style-for-show-more-tab="true">
+                        <reservation-tab-heads :reservations-by-date="reservationsParent.reservationsByDate" show-more-tab="true"></reservation-tab-heads>
+                        <reservation-tab-divs :reservations-by-date="reservationsParent.reservationsByDate" @edit-reservation="editReservationEventTriggered"></reservation-tab-tables>
                     </reservation-tabs>
                    
              	</div>
@@ -155,7 +154,7 @@
 </div>
 
 @include("admin.__vue_components.reservation-tabs")
-@include("admin.__vue_components.reservation-tab-tables")
+@include("admin.__vue_components.reservation-tab-divs")
 @include("admin.__vue_components.reservation-popup")
 
 <script>
@@ -221,6 +220,30 @@
                                                                           }
                                                                 ]
 
+                                                             },
+                                                             {
+
+                                                                timeSlot:'08:00 AM',
+                                                                players:[
+                                                                         
+                                                                ]
+
+                                                             },
+                                                             {
+
+                                                                timeSlot:'09:00 AM',
+                                                                players:[
+                                                                         
+                                                                ]
+
+                                                             },
+                                                             {
+
+                                                                timeSlot:'10:00 AM',
+                                                                players:[
+                                                                         
+                                                                ]
+
                                                              }
                                             ]
                                             
@@ -258,6 +281,22 @@
                                                                           }
                                                                 ]
 
+                                                             },
+                                                             {
+
+                                                                timeSlot:'03:00 PM',
+                                                                players:[
+                                                                         
+                                                                ]
+
+                                                             },
+                                                             {
+
+                                                                timeSlot:'04:00 PM',
+                                                                players:[
+                                                                         
+                                                                ]
+
                                                              }
                                             ]
                                             
@@ -287,7 +326,7 @@
             }
         }
     });
-    console.log(vue.reservationsParent);
+    
 </script>
 
 @endSection  

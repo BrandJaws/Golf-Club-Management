@@ -24,8 +24,10 @@
 <!-- build:css assets/styles/app.min.css -->
 <link rel="stylesheet" href="assets/styles/app.css" type="text/css" />
 <link rel="stylesheet" href="assets/styles/custom-style.css" type="text/css" />
+<link rel="stylesheet" href="scripts/owl/css/owl.carousel.css" type="text/css" />
 <!-- endbuild -->
 <link rel="stylesheet" href="assets/styles/font.css" type="text/css" />
+<link rel="stylesheet" href="libs/jquery/easyautocomplete/easy-autocomplete.min.css" type="text/css" />
 </head>
 <body>
 <div class="app" id="app"> 
@@ -84,7 +86,7 @@
             <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
           </li>
           <li class="nav-item dropdown"> <a class="nav-link clear" href data-toggle="dropdown"> <span class="avatar w-32"> <img src="../assets/images/a0.jpg" alt="..."> <i class="on b-white bottom"></i> </span> </a>
-            <div ui-include="'../views/blocks/dropdown.user.html'"></div>
+            
           </li>
           <li class="nav-item hidden-md-up"> <a class="nav-link" data-toggle="collapse" data-target="#collapse"> <i class="material-icons">&#xe5d4;</i> </a> </li>
         </ul>
@@ -150,12 +152,12 @@
                 tooltip: true,
                 tooltipOpts: { content: '%s: %p.0%' }
               }
-            " style="height:118px"></div>
+            " ></div>
           </div>
         </div>
       </div>
       <div class="col-sm-6 col-md-4">
-        <div class="box p-a" style="height:150px">
+        <div class="box p-a" >
 	          <div class="pull-left m-r">
 	            <span class="w-48 rounded  accent">
 	              <i class="material-icons">&#xe151;</i>
@@ -168,7 +170,7 @@
 	        </div>
       </div>
       <div class="col-sm-6 col-md-4">
-        <div class="box p-a" style="height:150px">
+        <div class="box p-a" >
 	          <div class="pull-left m-r">
 	            <span class="w-48 rounded primary">
 	              <i class="material-icons">&#xe54f;</i>
@@ -182,7 +184,56 @@
       </div>
       </div>
       </div><!-- padding -->
-      
+      <!-- / .modal -->
+<div id="m-a-a" class="modal fade animate" data-backdrop="true">
+  <div class="modal-dialog  modal-lg" id="animate">
+    <div class="modal-content">
+      <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      	<h5 class="modal-title">Reservation</h5>
+      </div>
+      <div class="modal-body text-center p-lg">
+        <div class="row">
+        	<div class="col-md-12">
+            	<div class="tags-container">
+                	<ul class="members-add">
+                    	<li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
+                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
+                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
+                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
+                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
+                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
+                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
+                        <li>John Doe &nbsp;<a href="#."><i class="fa fa-times"></i></a></li>
+                    </ul>
+                </div><!-- tags container ends here -->
+                <div class="autocomplete-search">
+                	<div class="row">
+                    	<div class="col-md-6">
+                        	<div class="input-auto-complete text-left">
+                            <label>Add Members</label>
+                            <input id="plate" type="text" name="search-player" class="form-control" ></div>
+                        </div>
+                        <div class="col-md-6">
+                        	<div class="guest-search text-left">
+                            <label>Add Number Of Guests</label>
+                            <input type="nubmer" name="search-guest" class="form-control" ><br>
+                            <i>How many guests do you have!</i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer text-center">
+        <button type="button" class="btn btn-outline b-primary text-primary" data-dismiss="modal">Cancel Booking</button> 
+        &nbsp;&nbsp;
+        <button type="button" class="btn btn-fw primary" data-dismiss="modal">Save</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div>
+</div>
+<!-- / .modal -->
      <div class="padding"> 
          <div class="dashboard-tsheet">
              <div class="row">
@@ -237,7 +288,63 @@
           <div class="tab-pane animated fadeIn active text-muted" id="tab1">
             <div class="tab-pane-content">
             	<div class="booked-list">
-                	<ul>
+                	<div class="col-md-3">
+                			<div class="booking-box text-center">
+                            	<h3>7.40 AM</h3>
+                                <p>John Doe, Pablo Escobar, Molcolm, Todd Fiesel</p>
+                                <p><a href="#."data-toggle="modal" data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" class="booked">Booked</a></p>
+                            </div>
+                    </div>
+                    <div class="col-md-3">
+                            <div class="booking-box text-center">
+                            	<h3>7.40 AM</h3>
+                                <p>John Doe, Pablo Escobar, Molcolm, Todd Fiesel</p>
+                                <p><a href="#." class="">Book Now</a></p>
+                            </div>
+                            </div>
+                            <div class="col-md-3">
+                            <div class="booking-box text-center">
+                            	<h3>7.40 AM</h3>
+                                <p>John Doe, Pablo Escobar, Molcolm, Todd Fiesel</p>
+                                <p><a href="#." class="">Book Now</a></p>
+                            </div>
+                            </div>
+                            <div class="col-md-3">
+                            <div class="booking-box text-center">
+                            	<h3>7.40 AM</h3>
+                                <p>John Doe, Pablo Escobar, Molcolm, Todd Fiesel</p>
+                                <p><a href="#." class="">Book Now</a></p>
+                            </div>
+                            </div>
+                            <div class="col-md-3">
+                            <div class="booking-box text-center">
+                            	<h3>7.40 AM</h3>
+                                <p>John Doe, Pablo Escobar, Molcolm, Todd Fiesel</p>
+                                <p><a href="#." class="">Book Now</a></p>
+                            </div>
+                            </div>
+                            <div class="col-md-3">
+                            <div class="booking-box text-center">
+                            	<h3>7.40 AM</h3>
+                                <p>John Doe, Pablo Escobar, Molcolm, Todd Fiesel</p>
+                                <p><a href="#." class="">Book Now</a></p>
+                            </div>
+                            </div>
+                            <div class="col-md-3">
+                            <div class="booking-box text-center">
+                            	<h3>7.40 AM</h3>
+                                <p>John Doe, Pablo Escobar, Molcolm, Todd Fiesel</p>
+                                <p><a href="#." class="">Book Now</a></p>
+                            </div>
+                            </div>
+                            <div class="col-md-3">
+                            <div class="booking-box text-center">
+                            	<h3>7.40 AM</h3>
+                                <p>John Doe, Pablo Escobar, Molcolm, Todd Fiesel</p>
+                                <p><a href="#." class="">Book Now</a></p>
+                            </div>
+                            </div>
+                    <!--<ul>
                     	<li>
                         	<div class="booking-box text-center">
                             	<h3>7.40 AM</h3>
@@ -308,7 +415,7 @@
                                 <p><a href="#." class="booked">Booked</a></p>
                             </div>
                         </li>
-                    </ul>
+                    </ul>-->
                 </div>
             </div>
           </div><!-- tab 1 -->
@@ -349,15 +456,20 @@
 <script src="libs/jquery/PACE/pace.min.js"></script> 
 <script src="scripts/config.lazyload.js"></script> 
 <script src="scripts/palette.js"></script> 
+<script src="libs/jquery/flot/jquery.flot.js"></script> 
 <script src="scripts/ui-load.js"></script> 
+
 <script src="scripts/ui-jp.js"></script> 
 <script src="scripts/ui-include.js"></script> 
 <script src="scripts/ui-device.js"></script> 
 <script src="scripts/ui-form.js"></script> 
 <script src="scripts/ui-nav.js"></script> 
-<script src="scripts/ui-screenfull.js"></script> 
+<script src="libs/jquery/screenfull/dist/screenfull.min.js"></script> 
 <script src="scripts/ui-scroll-to.js"></script> 
 <script src="scripts/ui-toggle-class.js"></script> 
+<!-- owl carousel -->
+<script src="scripts/owl/js/owl.carousel.js"></script>
+<script src="libs/jquery/easyautocomplete/jquery.easy-autocomplete.js"></script>
 <script src="scripts/app.js"></script> 
 
 <!-- ajax --> 

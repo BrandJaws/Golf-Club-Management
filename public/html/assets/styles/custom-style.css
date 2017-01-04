@@ -68,14 +68,16 @@
 .tsheet-tabs-reser .nav-tabs li a.active p, .tsheet-tabs-reser .nav-tabs li a.active p:first-child{ color:#0cc2aa;}
 .calender-more-li a p{ font-size:20px !important;}
 .tsheet-tabs-reser .nav-tabs li:last-child{ width:10% !important;}
-.booked-list{ padding:10px;}
+.booked-list{ padding: 40px 0 20px 0;overflow: hidden;}
 .booked-list ul{ list-style:none; padding:0; overflow:hidden;}
 .booked-list ul li{ float:left; width:18%; margin:20px 1% ; }
-.booking-box{ background:#f8f8f8;border-radius:4px; overflow:hidden;border: 1px solid #eee; }
+.booking-box{ background:#f8f8f8;border-radius:4px; overflow:hidden;border: 1px solid #eee; margin-bottom:25px; }
 .booking-box h3{ background:#f0f0f0; min-height:55px; margin:0; line-height:55px; color:#2e3e4e; font-size:28px;}
 .booking-box p{ padding:12px; color:#949494; margin:0;}
 .booking-box a{ background:#0cc2aa; padding:10px 0; font-size:18px; text-transform:uppercase; color:#fff; border-radius:4px; display:block}
 .booking-box .booked{ background:#949494 !important; padding:10px 0; font-size:18px; text-transform:uppercase; color:#fff; display:block}
+.tags-container{border:1px solid #ccc; padding:20px 10px; border-radius:4px; margin-bottom:30px;}
+.tags-container .members-add{ overflow:hidden; margin-bottom:0;}
 /** SHOP **/
 .shop-main{}
 .parent-category-box{ background:#fff; padding:20px 20px 5px 20px;}
@@ -94,5 +96,10 @@
 .menu-list ul li a{ display:inline-block; color:#7f919e; font-size:16px;}
 .menu-list ul li a:hover, .menu-list ul li.active-menu a{color:#0cc2aa; }
 .menu-list ul li span{ display:inline; padding:12px;}
+/** Beacon sccreen **/
+.beacon-configure{ background:#fff; padding:30px;}
+/** easy autocomplete **/
+.easy-autocomplete{ width:100% !important;}
+.easy-autocomplete input{ padding: .5rem .75rem !important;border-color: rgba(120, 130, 140, 0.2) !important;border-radius: 0 !important;}
 
 

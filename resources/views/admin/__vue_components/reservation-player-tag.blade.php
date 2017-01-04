@@ -30,7 +30,7 @@ Vue.component('reservation-player-tag', {
             }else{
                 this.applyDeleteTagBg = true;
             }
-            this.$emit('deletePlayer',reservationPlayerData);
+            this.$emit('deletePlayer',"abc");
             
         }
     }

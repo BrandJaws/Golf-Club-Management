@@ -3,7 +3,7 @@
 
 Vue.component('reservation-tabs', {
     template: `
-              		<div :class="styleForShowMoreTab == 'true' ? ['tsheet-tabs-reser'] : ['tsheet-tabs', 'padd-15']">
+              		<div :class="styleForShowMoreTab.toLowerCase() == 'true' ? ['tsheet-tabs-reser'] : ['tsheet-tabs', 'padd-15']">
                                 <slot></slot>
                          </div>
           

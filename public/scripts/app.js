@@ -103,7 +103,10 @@
     
     init();
     setTheme();
-	
+	//datepicker
+ $(function () {
+                $('#date-reserv').datepicker();
+            });
 	//owl carousel
 	$('#shop-carousel').owlCarousel({
     loop:true,
@@ -125,5 +128,60 @@
         }
     }
 })
+// autocomplete
+var options = {
+	url: "resources/countries.json",
+
+	getValue: "name",
+
+	list: {
+		match: {
+			enabled: true
+		},
+		maxNumberOfElements: 8
+	},
+
+	theme: "plate-dark"
+
+};
+
+$("#plate").easyAutocomplete(options);
+
+$(document).ready(function(){
+	//custom message near
+    $('#near').on('change', function() {
+      if ( this.value == '4')
+      {
+        $("#custom-message-near").show();
+      }
+      else
+      {
+        $("#custom-message-near").hide();
+      }
+    });
+	//custom message immediate
+	$('#immediate').on('change', function() {
+      if ( this.value == '4')
+      {
+        $("#custom-message-immediate").show();
+      }
+      else
+      {
+        $("#custom-message-immediate").hide();
+      }
+    });
+	//custom message Far
+	$('#far').on('change', function() {
+      if ( this.value == '4')
+      {
+        $("#custom-message-far").show();
+      }
+      else
+      {
+        $("#custom-message-far").hide();
+      }
+    });
+	
+});
 
 })(jQuery);

@@ -14,7 +14,7 @@
 @include ('admin.__partials.css-assets')
 <script src="{{asset('/libs/jquery/jquery/dist/jquery.js')}}"></script> 
 <script src="{{asset('html/libs/jquery/easyautocomplete/jquery.easy-autocomplete.js')}}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.7/vue.js"></script>
+<script src="{{asset('/libs/vuejs/vue.js')}}"></script>
 </head>
 <body>
 <div class="app" id="app"> 

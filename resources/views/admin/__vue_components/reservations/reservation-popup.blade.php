@@ -1,4 +1,4 @@
-@include("admin.__vue_components.reservation-player-tag")
+@include("admin.__vue_components.reservations.reservation-player-tag")
 <script>
 
 Vue.component('reservation-popup', {

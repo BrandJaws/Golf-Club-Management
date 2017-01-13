@@ -1,4 +1,4 @@
-@include("admin.__vue_components.reservation-player-tag")
+@include("admin.__vue_components.reservations.reservation-player-tag")
 <script>
 
 Vue.component('reservation-tab-tables', {
@@ -52,10 +52,8 @@ Vue.component('reservation-tab-tables', {
     methods: {
         deletePlayer: function(abc,event){
         
-       
-            console.log(abc);
             console.log(event);
-            //this.$emit('deletePlayer');
+           // this.$emit('delete-player');
             
         },
         editReservationClicked: function(reservation){

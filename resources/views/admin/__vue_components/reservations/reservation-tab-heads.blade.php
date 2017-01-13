@@ -6,12 +6,12 @@ Vue.component('reservation-tab-heads', {
                 <div class="b-b nav-active-bg">
                   <ul class="nav nav-tabs">
                     <li class="nav-item" v-for="(reservation,reservationIndex) in reservationsByDateData">
-                      <a :class="['nav-link', reservationIndex == 0 ? 'active' : '']" href data-toggle="tab" :data-target="'#tab'+(reservationIndex+1)">
+                      <a  :class="['nav-link', reservationIndex == 0 ? 'active' : '']" href data-toggle="tab" :data-target="'#tab'+(reservationIndex+1)">
                       <p>@{{reservation.date}}</p><p>@{{reservation.day}}</p>
                       </a>
                     </li>
                     <li class="nav-item calender-more-li text-center" v-if="showMoreTab == 'true'">
-                        <a href="#." class="nav-link">
+                        <a id="date-reserv" href="#." class="nav-link">
                                 <p><i class="fa fa-chevron-down" aria-hidden="true"></i><br>More</p>
                         </a>
                     </li>

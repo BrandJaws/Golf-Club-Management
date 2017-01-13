@@ -27,6 +27,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'reservations','uses'=>'Reservations\ReservationsController@index']);
              
      });
+     Route::group(['prefix'=>'segments','as'=>'segments.'],function(){
+        Route::get('/',['as'=>'segments','uses'=>'Segments\SegmentsController@index']);
+             
+     });
          
 });
 Auth::routes();

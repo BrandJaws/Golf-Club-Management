@@ -154,9 +154,9 @@
     
 </div>
 
-@include("admin.__vue_components.reservation-tabs")
-@include("admin.__vue_components.reservation-tab-tables")
-@include("admin.__vue_components.reservation-popup")
+@include("admin.__vue_components.reservations.reservation-tabs")
+@include("admin.__vue_components.reservations.reservation-tab-tables")
+@include("admin.__vue_components.reservations.reservation-popup")
 
 <script>
     var _reservationsParent = 

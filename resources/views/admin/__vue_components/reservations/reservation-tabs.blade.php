@@ -1,4 +1,4 @@
-@include("admin.__vue_components.reservation-tab-heads")
+@include("admin.__vue_components.reservations.reservation-tab-heads")
 <script>
 
 Vue.component('reservation-tabs', {

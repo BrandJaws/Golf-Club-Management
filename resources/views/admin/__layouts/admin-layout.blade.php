@@ -13,7 +13,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 @include ('admin.__partials.css-assets')
 <script src="{{asset('/libs/jquery/jquery/dist/jquery.js')}}"></script> 
-<script src="{{asset('html/libs/jquery/easyautocomplete/jquery.easy-autocomplete.js')}}"></script>
 <script src="{{asset('/libs/vuejs/vue.js')}}"></script>
 </head>
 <body>

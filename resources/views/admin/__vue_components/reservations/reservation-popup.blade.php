@@ -1,4 +1,5 @@
 @include("admin.__vue_components.reservations.reservation-player-tag")
+@include("admin.__vue_components.autocomplete.autocomplete")
 <script>
 
 Vue.component('reservation-popup', {
@@ -23,8 +24,17 @@ Vue.component('reservation-popup', {
                                         <div class="row">
                                         <div class="col-md-6">
                                                 <div class="input-auto-complete text-left">
-                                            <label>Add Members</label>
-                                            <div class="easy-autocomplete eac-plate-dark" style="width: 100px;"><input id="plate" name="search-player" class="form-control" autocomplete="off" type="text"><div class="easy-autocomplete-container" id="eac-container-plate"><ul></ul></div></div></div>
+                                                    <label>Add Members</label>
+                                                    <auto-complete-box url="{{asset('people.json')}}" 
+                                                                       property-for-id="email" 
+                                                                       property-for-name="name" 
+                                                                       filtered-from-source="false" 
+                                                                       include-id-in-list="true"
+                                                                       v-model="selectedId"
+                                                                       initial-text-value="">
+
+                                                    </auto-complete-box>
+                                                </div>
                                         </div>
                                         <div class="col-md-6">
                                                 <div class="guest-search text-left">

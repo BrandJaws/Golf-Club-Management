@@ -3,7 +3,7 @@
 
 Vue.component('reservation-tabs', {
     template: `
-              		<div :class="styleForShowMoreTab.toLowerCase() == 'true' ? ['tsheet-tabs-reser'] : ['tsheet-tabs', 'padd-15']">
+              		<div :class="styleForShowMoreTabData ? ['tsheet-tabs-reser'] : ['tsheet-tabs', 'padd-15']">
                                 <slot></slot>
                          </div>
           
@@ -17,7 +17,8 @@ Vue.component('reservation-tabs', {
     data: function () {
        
       return {
-          reservationsByDate:this.reservationsParent.reservationsByDate
+          reservationsByDate:this.reservationsParent.reservationsByDate,
+          styleForShowMoreTabData:this.styleForShowMoreTab != null && this.styleForShowMoreTab.toLowerCase()== 'true' ? true : false,
       }
     }
   

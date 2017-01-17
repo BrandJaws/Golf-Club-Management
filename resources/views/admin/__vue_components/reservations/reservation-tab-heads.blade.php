@@ -10,7 +10,7 @@ Vue.component('reservation-tab-heads', {
                       <p>@{{reservation.date}}</p><p>@{{reservation.day}}</p>
                       </a>
                     </li>
-                    <li class="nav-item calender-more-li text-center" v-if="showMoreTab == 'true'">
+                    <li class="nav-item calender-more-li text-center" v-if="showMoreTabData">
                         <a id="date-reserv" href="#." class="nav-link">
                                 <p><i class="fa fa-chevron-down" aria-hidden="true"></i><br>More</p>
                         </a>
@@ -32,7 +32,8 @@ Vue.component('reservation-tab-heads', {
     data: function () {
         
       return {
-          reservationsByDateData:this.reservationsByDate
+          reservationsByDateData:this.reservationsByDate,
+          showMoreTabData:this.showMoreTab != null && this.showMoreTab.toLowerCase() == 'true' ? true :false,
       }
     }
   

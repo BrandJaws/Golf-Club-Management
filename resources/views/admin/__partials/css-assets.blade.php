@@ -12,3 +12,4 @@
 <!-- endbuild -->
 <link rel="stylesheet" href="{{asset('assets/styles/font.css')}}" type="text/css" />
 <link rel="stylesheet" href="libs/jquery/bootstrap-datepicker/bootstrap-datepicker.css" type="text/css" />
+<link rel="stylesheet" href="{{asset('assets/styles/easy-autocomplete.css')}}" type="text/css" />

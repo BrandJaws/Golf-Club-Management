@@ -13,7 +13,7 @@
           <ul class="nav">
             <li class="nav-header hidden-folded"> <small class="text-muted">Main</small> </li>
             <li> <a href="{{route('admin.dashboard')}}" > <span class="nav-icon"> <i class="material-icons">&#xe3fc; <span ui-include="'{{asset('assets/images/i_0.svg')}}'"></span> </i> </span> <span class="nav-text">Dashboard</span> </a> </li>
-            <li> <a href="{{route('admin.member.index')}}" > <span class="nav-icon"> <i class="material-icons">&#xe8d2; <span ui-include="'{{asset('assets/images/i_3.svg')}}'"></span> </i> </span> <span class="nav-text">Members</span> </a> </li>
+            <li> <a href="{{route('admin.members.members')}}" > <span class="nav-icon"> <i class="material-icons">&#xe8d2; <span ui-include="'{{asset('assets/images/i_3.svg')}}'"></span> </i> </span> <span class="nav-text">Members</span> </a> </li>
             <li> <a href="{{route('admin.reservations.reservations')}}" > <span class="nav-icon"> <i class="material-icons">&#xe8d2; <span ui-include="'{{asset('assets/images/i_3.svg')}}'"></span> </i> </span> <span class="nav-text">Reservations</span> </a> </li>
             <li> <a href="widget.html" > <span class="nav-icon"> <i class="material-icons">&#xe8d2; <span ui-include="'{{asset('assets/images/i_3.svg')}}'"></span> </i> </span> <span class="nav-text">Profile / Settings</span> </a> </li>
             <li> <a href="widget.html" > <span class="nav-icon"> <i class="material-icons">&#xe8d2; <span ui-include="'{{asset('assets/images/i_3.svg')}}'"></span> </i> </span> <span class="nav-text">Shop</span> </a> </li>

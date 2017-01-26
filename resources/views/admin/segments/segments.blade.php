@@ -103,9 +103,6 @@
                 }
                 
                 
-                
-                
-                
                 return;
                 
                 //End Check: Delete block after real data is available

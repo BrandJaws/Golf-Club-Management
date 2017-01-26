@@ -26,9 +26,12 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
      Route::group(['prefix'=>'reservations','as'=>'reservations.'],function(){
         Route::get('/',['as'=>'reservations','uses'=>'Reservations\ReservationsController@index']);
              
-     });
-     Route::group(['prefix'=>'segments','as'=>'segments.'],function(){
+     });     Route::group(['prefix'=>'segments','as'=>'segments.'],function(){
         Route::get('/',['as'=>'segments','uses'=>'Segments\SegmentsController@index']);
+             
+     });
+     Route::group(['prefix'=>'members','as'=>'members.'],function(){
+        Route::get('/',['as'=>'members','uses'=>'Members\MembersController@index']);
              
      });
          

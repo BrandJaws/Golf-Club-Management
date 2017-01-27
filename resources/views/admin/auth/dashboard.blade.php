@@ -41,19 +41,19 @@
         <!-- / navbar collapse --> 
       </div>
     </div>
-    <div class="app-footer">
-      <div class="p-a text-xs">
-        <div class="pull-right text-muted"> &copy; Copyright <strong>Flatkit</strong> <span class="hidden-xs-down">- Built with Love v1.1.3</span> <a ui-scroll-to="content"><i class="fa fa-long-arrow-up p-x-sm"></i></a> </div>
-        <div class="nav"> <a class="nav-link" href="../">About</a> <span class="text-muted">-</span> <a class="nav-link label accent" href="">Get it</a> </div>
-      </div>
-    </div>
+    {{--<div class="app-footer">--}}
+      {{--<div class="p-a text-xs">--}}
+        {{--<div class="pull-right text-muted"> &copy; Copyright <strong>Flatkit</strong> <span class="hidden-xs-down">- Built with Love v1.1.3</span> <a ui-scroll-to="content"><i class="fa fa-long-arrow-up p-x-sm"></i></a> </div>--}}
+        {{--<div class="nav"> <a class="nav-link" href="../">About</a> <span class="text-muted">-</span> <a class="nav-link label accent" href="">Get it</a> </div>--}}
+      {{--</div>--}}
+    {{--</div>--}}
     <div ui-view class="app-body" id="view"> 
       
       <!-- ############ PAGE START-->
       <div class="p-a white lt box-shadow">
         <div class="row">
           <div class="col-sm-6">
-            <h4 class="m-b-0 _300">Welcome to Grit<a href="{{route('admin.dashboard')}}" >ABCDE</a></h4>
+            <h4 class="m-b-0 _300">Welcome to <a href="{{route('admin.dashboard')}}" >Grit</a></h4>
             <small class="text-muted">The Ultimate Booking Platform </small></div>
           <div class="col-sm-6 text-sm-right">
             <div class="m-y-sm"> <span class="m-r-sm">Start manage:</span>

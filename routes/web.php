@@ -34,6 +34,14 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'members','uses'=>'Members\MembersController@index']);
              
      });
+    Route::group(['prefix'=>'rewards','as'=>'rewards.'],function(){
+        Route::get('/',['as'=>'rewards','uses'=>'Rewards\RewardsController@index']);
+
+    });
+    Route::group(['prefix'=>'notifications','as'=>'notifications.'],function(){
+        Route::get('/',['as'=>'notifications','uses'=>'Notifications\NotificationsController@index']);
+
+    });
          
 });
 Auth::routes();

@@ -50,25 +50,10 @@
     <div ui-view class="app-body" id="view"> 
       
       <!-- ############ PAGE START-->
-      <div class="p-a white lt box-shadow">
-        <div class="row">
-          <div class="col-sm-6">
-            <h4 class="m-b-0 _300">Welcome to <a href="{{route('admin.dashboard')}}" >Grit</a></h4>
-            <small class="text-muted">The Ultimate Booking Platform </small></div>
-          <div class="col-sm-6 text-sm-right">
-            <div class="m-y-sm"> <span class="m-r-sm">Start manage:</span>
-              <div class="btn-group dropdown">
-                <button class="btn white btn-sm ">Projects</button>
-                <button class="btn white btn-sm dropdown-toggle" data-toggle="dropdown"></button>
-                <div class="dropdown-menu dropdown-menu-scale pull-right"> <a class="dropdown-item" href>Members</a> <a class="dropdown-item" href>Tasks</a> <a class="dropdown-item" href>Inbox</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item">Profile</a> </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="padding">
+
+
       </div>
-      
      <div class="padding">
       <div class="row">
       <div class="col-sm-6 col-md-4">

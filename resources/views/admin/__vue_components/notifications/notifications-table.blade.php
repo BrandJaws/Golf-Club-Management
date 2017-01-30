@@ -14,8 +14,8 @@
                         </td>
                         <td>
                             <div class="section-2 sec-style">
-                                <span class="notificationSent" v-if="notification.status == 'sent'">@{{ notification.status }}</span>
-                                <span class="notificationSchedule" v-if="notification.status == 'schedule'">@{{ notification.status }}</span>
+                                <span :class="notification.status == 'sent' ? 'notificationSent' : 'notificationSchedule'">@{{ notification.status }}</span>
+                                {{--<span :class="" v-if="notification.status == 'schedule'">@{{ notification.status }}</span>--}}
                             </div>
                         </td>
                         <td>

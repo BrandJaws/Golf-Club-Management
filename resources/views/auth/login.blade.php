@@ -65,4 +65,9 @@
         </div>
     </div>
 </div>
+<script>
+    if($(".md-input").value !== "") {
+        $(".md-input").addClass(".md-input-focused");
+    }
+</script>
 @endsection

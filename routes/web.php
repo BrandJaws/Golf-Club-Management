@@ -46,6 +46,14 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'notifications/create','uses'=>'Notifications\NotificationsController@create']);
 
     });
+    Route::group(['prefix'=>'profile','as'=>'profile.'],function(){
+        Route::get('/',['as'=>'profile','uses'=>'Profile\ProfileController@index']);
+
+    });
+    Route::group(['prefix'=>'profile/edit','as'=>'profile/edit.'],function(){
+        Route::get('/',['as'=>'profile/edit','uses'=>'Profile\ProfileController@edit']);
+
+    });
          
 });
 Auth::routes();

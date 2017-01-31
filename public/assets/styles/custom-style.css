@@ -174,3 +174,7 @@ label {
     display: inline-block;
 }
 /** notifications create screen **/
+/** profile/setting screen **/
+.profileImg { width: 250px; }
+.profile-create { border: none; }
+/** profile/setting screen **/

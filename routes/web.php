@@ -42,6 +42,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'notifications','uses'=>'Notifications\NotificationsController@index']);
 
     });
+    Route::group(['prefix'=>'notifications/create','as'=>'notifications/create.'],function(){
+        Route::get('/',['as'=>'notifications/create','uses'=>'Notifications\NotificationsController@create']);
+
+    });
          
 });
 Auth::routes();

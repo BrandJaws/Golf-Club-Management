@@ -47,7 +47,7 @@
                                         <h3><span>Notifications List</span></h3>
                                     </div>
                                     <div class="col-md-4 text-right">
-                                        <button class="btn-def btn"><i class="fa fa-plus-circle"></i>&nbsp;Create Notification</button>
+                                        <a class="btn-def btn" href="{{Request::url()}}/create"><i class="fa fa-plus-circle"></i>&nbsp;Create Notification</a>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>

@@ -181,3 +181,12 @@ label {
 /** segments create screen **/
 .inlineFormPadding { padding: 15px 0px 0px 0px; }
 /** segments create screen **/
+/** social profile connect **/
+.socialMediaConnect { margin: 20px 0 20px 0; display: inline-block; }
+.socialMediaConnect li { list-style: none; float: left; text-align: center; }
+.socialMediaConnect li.facebook a { background: #3B5998; text-decoration: none; color: #fff; text-transform: uppercase; }
+.socialMediaConnect li.twitter a { background: #0084b4; text-decoration: none; color: #fff; text-transform: uppercase; }
+.socialMediaConnect li.instagram a { background: #fb3958; text-decoration: none; color: #fff; text-transform: uppercase; }
+.socialMediaConnect li.instagram a, .socialMediaConnect li.twitter a, .socialMediaConnect li.facebook a { display: inline-block; margin: 10px; width: 200px; height: 48px; line-height: 48px; }
+.socialMediaConnect li:hover { opacity: 0.8; }
+/** social profile connect **/

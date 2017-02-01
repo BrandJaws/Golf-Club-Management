@@ -63,6 +63,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'rewards/create','uses'=>'Rewards\RewardsController@create']);
 
     });
+    Route::group(['prefix'=>'social','as'=>'social.'],function(){
+        Route::get('/',['as'=>'social','uses'=>'Social\SocialController@index']);
+
+    });
          
 });
 Auth::routes();

@@ -12,4 +12,7 @@ class RewardsController extends Controller
     public function index() {
         return view('admin.rewards.rewards-list');
     }
+    public function create() {
+        return view('admin.rewards.create');
+    }
 }

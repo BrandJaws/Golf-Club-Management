@@ -111,7 +111,7 @@ a.btn-def { color: #fff !important; }
 .easy-autocomplete-container ul { margin: 0 !important; padding: 2px 5px 2px 5px !important; list-style: none; }
 /** easy-autocomplete.css override **/
 /** notifications create screen **/
-.notificationsCreateSec { background: #fff; padding: 10px; }
+.notificationsCreateSec { background: #fff; padding: 20px; }
 .hide-replaced.ws-inputreplace {
     display: none !important;
 }
@@ -140,11 +140,11 @@ div.ws-success input {
     border-color: #8c8;
 }
 form {
-    margin: 10px auto;
+    /*margin: 10px auto;*/
     width: 700px;
     min-width: 49.6154em;
-    border: 1px solid #000;
-    padding: 10px;
+    /*border: 1px solid #000;*/
+    /*padding: 10px;*/
 }
 .form-row {
     padding: 5px 10px;
@@ -178,3 +178,6 @@ label {
 .profileImg { width: 250px; }
 .profile-create { border: none; }
 /** profile/setting screen **/
+/** segments create screen **/
+.inlineFormPadding { padding: 15px 0px 0px 0px; }
+/** segments create screen **/

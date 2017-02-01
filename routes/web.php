@@ -26,10 +26,15 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
      Route::group(['prefix'=>'reservations','as'=>'reservations.'],function(){
         Route::get('/',['as'=>'reservations','uses'=>'Reservations\ReservationsController@index']);
              
-     });     Route::group(['prefix'=>'segments','as'=>'segments.'],function(){
+     });
+     Route::group(['prefix'=>'segments','as'=>'segments.'],function(){
         Route::get('/',['as'=>'segments','uses'=>'Segments\SegmentsController@index']);
              
      });
+    Route::group(['prefix'=>'segments/create','as'=>'segments/create.'],function(){
+        Route::get('/',['as'=>'segments/create','uses'=>'Segments\SegmentsController@create']);
+
+    });
      Route::group(['prefix'=>'members','as'=>'members.'],function(){
         Route::get('/',['as'=>'members','uses'=>'Members\MembersController@index']);
              
@@ -52,6 +57,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
     });
     Route::group(['prefix'=>'profile/edit','as'=>'profile/edit.'],function(){
         Route::get('/',['as'=>'profile/edit','uses'=>'Profile\ProfileController@edit']);
+
+    });
+    Route::group(['prefix'=>'rewards/create','as'=>'rewards/create.'],function(){
+        Route::get('/',['as'=>'rewards/create','uses'=>'Rewards\RewardsController@create']);
 
     });
          

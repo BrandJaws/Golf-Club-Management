@@ -21,7 +21,8 @@
 <script src="{{asset('/scripts/ui-screenfull.js')}}"></script> 
 <script src="{{asset('/scripts/ui-scroll-to.js')}}"></script> 
 <script src="{{asset('/scripts/ui-toggle-class.js')}}"></script> 
-<script src="{{asset('/scripts/app.js')}}"></script> 
+<script src="{{asset('/scripts/app.js')}}"></script>
+<script src="{{asset('/scripts/jquery-ui.min.js')}}"></script>
 
 <!-- ajax --> 
 <script src="{{asset('/libs/jquery/jquery-pjax/jquery.pjax.js')}}"></script> 

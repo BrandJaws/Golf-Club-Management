@@ -59,7 +59,7 @@
                                                     <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
                                                 </span>
                                                 <span class="">
-                                                    <button type="button" name="add-segment" class="btn-def"><i class="fa fa-plus-circle"></i>&nbsp;Add New Segment</button>
+                                                    <a href="{{Request::url()}}/create" type="button" name="add-segment" class="btn-def"><i class="fa fa-plus-circle"></i>&nbsp;Add New Segment</a>
                                                 </span>
                                             </div>
                                         </form>

@@ -56,7 +56,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-4 text-right">
-                                        <button class="btn-def btn"><i class="fa fa-plus-circle"></i>&nbsp;Create Offer</button>
+                                        <a href="{{ Request::url() }}/create" class="btn-def btn"><i class="fa fa-plus-circle"></i>&nbsp;Create Offer</a>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>

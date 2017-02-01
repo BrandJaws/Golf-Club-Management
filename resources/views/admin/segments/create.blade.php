@@ -107,13 +107,20 @@
                 range: true,
                 min: 18,
                 max: 85,
-                values: [ 22, 50 ],
+                values: [22,50],
                 slide: function( event, ui ) {
                     $( "#amount" ).val(ui.values[ 0 ] + " - " + ui.values[ 1 ] );
                 }
             });
-            $( "#amount" ).val($( "#slider-range" ).slider( "values", 0 ) +
-                " - " + $( "#slider-range" ).slider( "values", 1 ) );
+            $( "#amount" ).val($( "#sliderRange" ).slider( "values", 0 ) +
+                " - " + $( "#sliderRange" ).slider( "values", 1 ) );
         } );
+
+//        $( "#sliderRange" ).slider( "option", "values", [22,50] );
+
+        $("form").submit(function(e){
+            e.preventDefault();
+           console.log($("#sliderRange").slider( "option", "values" ));
+        });
     </script>
     @endSection

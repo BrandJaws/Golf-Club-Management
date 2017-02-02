@@ -12,4 +12,7 @@ class SocialController extends Controller
     public function index() {
         return view('admin.social.connect');
     }
+    public function create() {
+        return view('admin.social.create');
+    }
 }

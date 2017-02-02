@@ -67,6 +67,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'social','uses'=>'Social\SocialController@index']);
 
     });
+    Route::group(['prefix'=>'social/create','as'=>'social/create.'],function(){
+        Route::get('/',['as'=>'social/create','uses'=>'Social\SocialController@create']);
+
+    });
          
 });
 Auth::routes();

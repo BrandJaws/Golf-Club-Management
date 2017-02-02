@@ -190,3 +190,13 @@ label {
 .socialMediaConnect li.instagram a, .socialMediaConnect li.twitter a, .socialMediaConnect li.facebook a { display: inline-block; margin: 10px; width: 200px; height: 48px; line-height: 48px; }
 .socialMediaConnect li:hover { opacity: 0.8; }
 /** social profile connect **/
+/** social message post **/
+.createSocialPost { line-height: 48px; }
+.socialMediaConnected { margin: 0 0 0 0; display: inline-block; }
+.socialMediaConnected li { list-style: none; float: left; text-align: center; }
+.socialMediaConnected li.facebook a { background: #3B5998; text-decoration: none; color: #fff; text-transform: uppercase; }
+.socialMediaConnected li.twitter a { background: #0084b4; text-decoration: none; color: #fff; text-transform: uppercase; }
+.socialMediaConnected li.instagram a { background: #fb3958; text-decoration: none; color: #fff; text-transform: uppercase; }
+.socialMediaConnected li.instagram a, .socialMediaConnected li.twitter a, .socialMediaConnected li.facebook a { display: inline-block; margin: 0px 10px 0px 10px; width: 200px; height: 48px; line-height: 48px; }
+.socialMediaConnected li:hover { opacity: 0.8; }
+/** social message post **/

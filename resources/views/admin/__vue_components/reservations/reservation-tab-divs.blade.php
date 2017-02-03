@@ -8,7 +8,7 @@ Vue.component('reservation-tab-divs', {
                       <div v-for="(reservationByDate,reservationIndex) in reservationsByDateData" :id="'tab'+(reservationIndex+1)" :class="['tab-pane', 'animated', 'fadeIn', 'text-muted', reservationIndex == 0 ? 'active' : '']" >
                         <div class="tab-pane-content">
                             <div class="booked-list">
-                                    <div class="col-md-3" v-for="(reservation,reservationIndex) in reservationByDate.reservationsByTimeSlot">
+                                    <div class="col-md-3 timeSlots3" v-for="(reservation,reservationIndex) in reservationByDate.reservationsByTimeSlot">
                                             <div class="booking-box text-center" >
                                             <h3>@{{reservation.timeSlot}}</h3>
                                                 <p class="min-height-names">
@@ -18,7 +18,7 @@ Vue.component('reservation-tab-divs', {
                                                     <span v-else v-for="(reservationPlayer,reservationPlayerIndex) in reservation.players" v-if="reservationPlayerIndex < 4">
                                                        @{{reservationPlayer.playerName}}
                                                        <span v-if="reservationPlayerIndex < 4 && reservationPlayerIndex < reservation.players.length -1">
-                                                             @{{ reservationPlayerIndex < 3 ? ", &nbsp;" : "..." }}
+                                                             @{{ reservationPlayerIndex < 3 ? "" : "" }}
                                                        </span> 
                                                     </span>
                                                     

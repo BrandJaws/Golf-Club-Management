@@ -66,7 +66,6 @@
                     <div class="tsheet-header padd-15">
                         <div class="col-md-8">
                             <h2>Tee Sheet</h2>
-                            <p>This is dummy text Ipsum</p>
                         </div><!-- col-6 -->
                         <div class="col-md-4">
                             <div class="input-group">

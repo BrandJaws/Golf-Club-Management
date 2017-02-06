@@ -80,8 +80,9 @@ a.btn-def { color: #fff !important; }
 .booking-box p{ padding:12px; color:#949494; margin:0;}
 .booking-box a{ background:#C4061F; padding:10px 0; font-size:18px; text-transform:uppercase; color:#fff; border-radius:4px; display:block}
 .booking-box .booked{ background:#949494 !important; padding:10px 0; font-size:18px; text-transform:uppercase; color:#fff; display:block}
-.tags-container{border:1px solid #ccc; padding:20px 10px; border-radius:4px; margin-bottom:30px;}
+.tags-container{border:1px solid #ccc; padding:20px 10px; border-radius:4px;}
 .tags-container .members-add{ overflow:hidden; margin-bottom:0;}
+.modal-body.borderBottom { border-bottom: 1px solid #e5e5e5; }
 /** SHOP **/
 .shop-main{}
 .parent-category-box{ background:#fff; padding:20px 20px 5px 20px;}
@@ -105,7 +106,7 @@ a.btn-def { color: #fff !important; }
 /** easy autocomplete **/
 .easy-autocomplete{ width:100% !important;}
 .easy-autocomplete input{ border-color: rgba(120, 130, 140, 0.2) !important;border-radius: 0 !important;}
-.min-height-names{ min-height:100px; }
+.min-height-names{ min-height:108px; }
 .min-height-names span { display: block; text-align: center; }
 .timeSlots3 { height: 261px; }
 /** Notifications screen **/

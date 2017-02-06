@@ -4,22 +4,33 @@
 
 Vue.component('reservation-popup', {
     template: `
-        <div>      		
-               <div id="m-a-a" class="modal fade animate in" data-backdrop="true" style="display: block;">
+        <div @click="closeModal($event)">
+               <div id="m-a-a" class="modal fade animate in closePopup" data-backdrop="false" style="display: block;">
                   <div class="modal-dialog  modal-lg fade-down" id="animate" ui-class="fade-down">
                     <div class="modal-content">
                       <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closePopup"><span aria-hidden="true">×</span></button>
-                        <h5 class="modal-title">Reservation</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="closePopup">×</span></button>
+                            <h5 class="modal-title">Reservation</h5>
+                            <small>Uit arcu tempor, dignissim erat in</small>
                       </div>
-                      <div class="modal-body text-center p-lg">
+                      <div class="modal-body text-center p-lg borderBottom">
                         <div class="row">
-                                <div class="col-md-12">
+                            <div class="col-md-12">
                                 <div class="tags-container">
                                     <ul class="members-add">
                                         <reservation-player-tag v-for="reservationPlayer in reservation.players" :reservationPlayer="reservationPlayer" @deletePlayer="deletePlayer"></reservation-player-tag>
                                     </ul>
                                 </div><!-- tags container ends here -->
+                            </div>
+                            <div class="col-md-12 text-right">
+                                <br />
+                                <button type="button" class="btn btn-outline b-primary text-primary"><i class="fa fa-ban"></i> &nbsp; Cancel Booking</button>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="modal-body text-center p-lg">
+                        <div class="row">
+                            <div class="col-md-12">
                                 <div class="autocomplete-search">
                                         <div class="row">
                                         <div class="col-md-6">
@@ -32,7 +43,6 @@ Vue.component('reservation-popup', {
                                                                        include-id-in-list="true"
                                                                        v-model="selectedId"
                                                                        initial-text-value="">
-
                                                     </auto-complete-box>
                                                 </div>
                                         </div>
@@ -48,15 +58,15 @@ Vue.component('reservation-popup', {
                         </div>
                       </div>
                       <div class="modal-footer text-center">
-                        <button type="button" class="btn btn-outline b-primary text-primary" data-dismiss="modal">Cancel Booking</button> 
+                        <button type="button" class="closePopup btn btn-outline b-primary text-primary" data-dismiss="modal" ><i class="fa fa-times-circle"></i> &nbsp;Close</button>
                         &nbsp;&nbsp;
-                        <button type="button" class="btn btn-fw primary" data-dismiss="modal">Save</button>
+                        <button type="button" class="btn btn-fw primary" data-dismiss="modal"><i class="fa fa-floppy-o"></i> &nbsp;Save</button>
                       </div>
                     </div><!-- /.modal-content -->
                   </div>
                   
                 </div>
-                <div class="modal-backdrop fade in"></div>   
+                <div class="modal-backdrop fade in closePopup"></div>
         </div>
                      
           
@@ -79,6 +89,13 @@ Vue.component('reservation-popup', {
         },
         deletePlayer:function(reservationPlayer){
             this.$emit('delete-player',reservationPlayer);
+        },
+        closeModal:function(event){
+            console.log(event.target);
+            console.log(event.target.className.search("closePopup"));
+            if(event.target.className.search("closePopup") !== -1) {
+                this.closePopup();
+            }
         }
     }
   

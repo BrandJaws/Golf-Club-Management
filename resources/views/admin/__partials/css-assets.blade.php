@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{asset('/assets/bootstrap/dist/css/bootstrap.min.css')}}" type="text/css" />
 <!-- endbuild -->
 <link rel="stylesheet" href="{{asset('assets/styles/font.css')}}" type="text/css" />
-<link rel="stylesheet" href="libs/jquery/bootstrap-datepicker/bootstrap-datepicker.css" type="text/css" />
+<link rel="stylesheet" href="{{asset('/libs/jquery/bootstrap-datepicker/bootstrap-datepicker.css')}}" type="text/css" />
 <link rel="stylesheet" href="{{asset('assets/styles/easy-autocomplete.css')}}" type="text/css" />
 <!-- build:css assets/styles/app.min.css -->
 <link rel="stylesheet" href="{{asset('/assets/styles/app.css')}}" type="text/css" />

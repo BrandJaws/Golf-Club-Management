@@ -96,7 +96,6 @@
 @include("admin.__vue_components.reservations.reservation-tabs")
 @include("admin.__vue_components.reservations.reservation-tab-divs")
 @include("admin.__vue_components.reservations.reservation-popup")
-
 <script>
     var _reservationsParent =
             {

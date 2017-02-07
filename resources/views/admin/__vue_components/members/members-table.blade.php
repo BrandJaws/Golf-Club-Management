@@ -37,7 +37,8 @@
 					<td>@{{ member.warnings }}</td>
 					<td>
 						<a href="#." class="blue-cb" @click="editMember(member.email)">edit</a>
-						<a href="#."><i class="fa fa-trash"></i></a>
+						&nbsp;&nbsp;
+						<a href="#." class="del-icon"><i class="fa fa-trash"></i></a>
 					</td>
 				</tr>
 			</tbody>

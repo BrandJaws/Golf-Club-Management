@@ -17,6 +17,7 @@ class WarningMember extends Migration
 			$table->bigIncrements ( 'id' );
 			$table->bigInteger( 'warning_id',false,true);
 			$table->bigInteger( 'member_id',false,true);
+			$table->dateTime('created_at')->nullable()->default(NULL);
 		} );
     }
 

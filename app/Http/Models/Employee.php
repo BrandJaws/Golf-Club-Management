@@ -24,6 +24,12 @@ class Employee extends Authenticatable {
 	public static function getUserByEmail($email) {
 		return self::where ( 'email', '=', $email )->first ();
 	}
+	/**
+	 *
+	 * @deprecated Use fillableFromArray instead
+	 * @param array $data        	
+	 * @return \App\Http\Models\Employee
+	 */
 	public function populate($data = []) {
 		if (array_key_exists ( 'lastName', $data )) {
 			$this->lastName = $data ['lastName'];
@@ -44,11 +50,10 @@ class Employee extends Authenticatable {
 			$this->profilePic = $data ['profilePic'];
 		}
 		if (array_key_exists ( 'password', $data )) {
-			$this->password =  Hash::make(  $data ['password']);
+			$this->password = Hash::make ( $data ['password'] );
 		}
 		return $this;
 	}
-	
 	public function updateProfileImage($profileImage) {
 		$this->forceFill ( [ 
 				'profilePic' => $profileImage 

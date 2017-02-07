@@ -22,6 +22,7 @@ class CreateEmployeeTable extends Migration
             //$table->string('salt', 100);
             $table->string('phone', 50)->nullable()->default(Null);
             $table->string('profilePic', 250)->nullable()->default(Null);
+            $table->text('permissions')->nullable()->default(Null);
             $table->timestamps();
             $table->softDeletes();
         });

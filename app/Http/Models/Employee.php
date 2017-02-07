@@ -16,7 +16,7 @@ class Employee extends Authenticatable {
 			'profilePic',
 			'password',
 			'club_id',
-			'salt' 
+			'permissions' 
 	];
 	public function club() {
 		return $this->belongsTo ( 'App\Http\Models\Club' );
@@ -24,6 +24,12 @@ class Employee extends Authenticatable {
 	public static function getUserByEmail($email) {
 		return self::where ( 'email', '=', $email )->first ();
 	}
+	/**
+	 *
+	 * @deprecated Use fillableFromArray instead
+	 * @param array $data        	
+	 * @return \App\Http\Models\Employee
+	 */
 	public function populate($data = []) {
 		if (array_key_exists ( 'lastName', $data )) {
 			$this->lastName = $data ['lastName'];
@@ -44,32 +50,13 @@ class Employee extends Authenticatable {
 			$this->profilePic = $data ['profilePic'];
 		}
 		if (array_key_exists ( 'password', $data )) {
-			if (is_null ( $this->salt )) {
-				$this->salt = self::generateSalt ();
-			}
-			$this->password = crypt ( $data ['password'], $this->salt );
+			$this->password = Hash::make ( $data ['password'] );
 		}
 		return $this;
 	}
-	public static function generateSalt() {
-		$cost = 10;
-		$salt = strtr ( base64_encode ( mcrypt_create_iv ( 16, MCRYPT_DEV_URANDOM ) ), '+', '.' );
-		$salt = sprintf ( "$2a$%02d$", $cost ) . $salt;
-		return $salt;
-	}
-	
 	public function updateProfileImage($profileImage) {
 		$this->forceFill ( [ 
 				'profilePic' => $profileImage 
 		] )->save ();
 	}
-	/*
-	 * public function getProfilePicAttribute($value) {
-	 * if($this->attributes['profilePic']){
-	 * return asset($this->attributes['profilePic']);
-	 * }else{
-	 * return null;
-	 * }
-	 * }
-	 */
 }

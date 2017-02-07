@@ -17,8 +17,7 @@ class CreateClubTable extends Migration
             $table->string('name', 50);
             $table->string('address', 150);
             $table->string('logo', 50)->nullable()->default(Null);
-            $table->time('opening');
-            $table->time('closing');
+            $table->boolean('lightSaving')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

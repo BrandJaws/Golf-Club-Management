@@ -58,7 +58,7 @@
 								<i class="primary"></i> Keep me signed in
 							</label>
 						</div>
-						<button type="submit" class="btn primary btn-block p-x-md">Sign in</button>
+						<button type="submit" class="btn-def btn btn-block p-x-md">Sign in</button>
 					</form>
 				</div>
 			</div>

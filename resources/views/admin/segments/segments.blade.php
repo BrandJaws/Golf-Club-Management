@@ -14,7 +14,13 @@
                     <div ui-include="'../views/blocks/dropdown.notification.html'"></div>
                 </li>
                 <li class="nav-item dropdown"> <a class="nav-link clear" href="" data-toggle="dropdown"> <span class="avatar w-32"> <img src="../assets/images/a0.jpg" alt="..."> <i class="on b-white bottom"></i> </span> </a>
-                    <div ui-include="'../views/blocks/dropdown.user.html'"></div>
+                    <div class="dropdown-menu pull-right dropdown-menu-scale ng-scope">
+                        <a class="dropdown-item" ui-sref="app.inbox.list" href="{{route('admin.profile.profile')}}">
+                            <span>Profile</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" ui-sref="access.signin" href="#/access/signin">Sign out</a>
+                    </div>
                 </li>
                 <li class="nav-item hidden-md-up"> <a class="nav-link" data-toggle="collapse" data-target="#collapse"> <i class="material-icons"></i> </a> </li>
             </ul>
@@ -29,12 +35,12 @@
             <!-- / navbar collapse --> 
         </div>
     </div>
-    <div class="app-footer">
-        <div class="p-a text-xs">
-            <div class="pull-right text-muted"> © Copyright <strong>Grit Golf</strong> <span class="hidden-xs-down">- Built with Love v1.1.3</span> <a ui-scroll-to="content"><i class="fa fa-long-arrow-up p-x-sm"></i></a> </div>
-            <div class="nav"> <a class="nav-link" href="../">About</a> <span class="text-muted">-</span> <a class="nav-link label accent" href="http://themeforest.net/user/flatfull/portfolio?ref=flatfull">Get it</a> </div>
-        </div>
-    </div>
+    {{--<div class="app-footer">--}}
+        {{--<div class="p-a text-xs">--}}
+            {{--<div class="pull-right text-muted"> © Copyright <strong>Grit Golf</strong> <span class="hidden-xs-down">- Built with Love v1.1.3</span> <a ui-scroll-to="content"><i class="fa fa-long-arrow-up p-x-sm"></i></a> </div>--}}
+            {{--<div class="nav"> <a class="nav-link" href="../">About</a> <span class="text-muted">-</span> <a class="nav-link label accent" href="http://themeforest.net/user/flatfull/portfolio?ref=flatfull">Get it</a> </div>--}}
+        {{--</div>--}}
+    {{--</div>--}}
     <div ui-view="" class="app-body" id="view"> 
 
         <!-- Profile Page Start -->
@@ -59,7 +65,7 @@
                                                     <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
                                                 </span>
                                                 <span class="">
-                                                    <button type="button" name="add-segment" class="btn-def"><i class="fa fa-plus-circle"></i>&nbsp;Add New Segment</button>
+                                                    <a href="{{Request::url()}}/create" name="add-segment" class="btn-def btn"><i class="fa fa-plus-circle"></i>&nbsp;Add New Segment</a>
                                                 </span>
                                             </div>
                                         </form>
@@ -101,9 +107,6 @@
                     }
                    
                 }
-                
-                
-                
                 
                 
                 return;

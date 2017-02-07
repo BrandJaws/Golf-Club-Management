@@ -1,6 +1,5 @@
 @include("admin.__vue_components.reservations.reservation-player-tag")
 <script>
-
 Vue.component('reservation-tab-tables', {
     template: `
               		
@@ -15,7 +14,7 @@ Vue.component('reservation-tab-tables', {
                                     <td >@{{reservation.timeSlot}}</td>
                                     <td width="80%">
                                       <ul class="members-add">
-                                          <reservation-player-tag v-for="reservationPlayer in reservation.players" :reservationPlayer="reservationPlayer" @deletePlayer="deletePlayer(reservationPlayer,$event)"></reservation-player-tag>
+                                          <reservation-player-tag v-for="reservationPlayer in reservation.players.slice(0,4)" :reservationPlayer="reservationPlayer" @deletePlayer="deletePlayer(reservationPlayer,$event)"></reservation-player-tag>
                                           <li class="add-btn" @click="editReservationClicked(reservation)"><a href="#."><i class="fa fa-plus"></i></a></li>
                                       </ul>
                                     </td>
@@ -60,7 +59,13 @@ Vue.component('reservation-tab-tables', {
             
              this.$emit('edit-reservation',reservation);
         }
-    }
+    },
+//    computed: {
+//        reservationsByDateDataSlice: function(){
+//            console.log("abd");
+//            console.log(this.reservationsByDateData.slice(0,4));
+//        }
+//    }
   
 });
 </script>

@@ -267,7 +267,9 @@
   display: block;
   font-size: 14px;
   font-weight: normal;
-  padding: 4px 12px;
+  /*padding: 4px 12px;*/
+  margin: 0 !important;
+
 }
 .easy-autocomplete-container ul li:last-child {
   border-radius: 0 0 2px 2px;

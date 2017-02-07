@@ -12,4 +12,8 @@ class SegmentsController extends Controller {
         public function index(){
             return view('admin.segments.segments');
         }
+
+        public function create(){
+            return view('admin.segments.create');
+        }
 }

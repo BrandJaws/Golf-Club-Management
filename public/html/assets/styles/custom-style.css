@@ -102,3 +102,6 @@
 .easy-autocomplete{ width:100% !important;}
 .easy-autocomplete input{ padding: .5rem .75rem !important;border-color: rgba(120, 130, 140, 0.2) !important;border-radius: 0 !important;}
 .min-height-names{ min-height:100px;}
+/** notifications **/
+.notificationSent { text-transform: uppercase; color: #66BB6A ; }
+.notificationSchedule { text-transform: uppercase; color: #35c4f9; }

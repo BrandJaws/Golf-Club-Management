@@ -21,9 +21,46 @@
 <script src="{{asset('/scripts/ui-screenfull.js')}}"></script> 
 <script src="{{asset('/scripts/ui-scroll-to.js')}}"></script> 
 <script src="{{asset('/scripts/ui-toggle-class.js')}}"></script> 
-<script src="{{asset('/scripts/app.js')}}"></script> 
+<script src="{{asset('/scripts/app.js')}}"></script>
+<script src="{{asset('/scripts/jquery-ui.min.js')}}"></script>
 
 <!-- ajax --> 
 <script src="{{asset('/libs/jquery/jquery-pjax/jquery.pjax.js')}}"></script> 
 <script src="{{asset('/scripts/ajax.js')}}"></script> 
 <!-- endbuild -->
+<!-- inline-date-picker -->
+<script src="{{asset('/assets/js-webshim/minified/polyfiller.js')}}"></script>
+<script>
+    //webshim.setOptions('basePath', '{{asset('/assets/js-webshim/minified/shims')}}');
+
+    //request the features you need:
+    //webshim.polyfill('forms forms-ext');
+
+    webshim.setOptions('forms-ext', {
+        replaceUI: 'auto',
+        types: 'date',
+        date: {
+            startView: 2,
+            inlinePicker: true,
+            classes: 'hide-inputbtns'
+        }
+    });
+    webshim.setOptions('forms', {
+        lazyCustomMessages: true
+    });
+    //start polyfilling
+    //webshim.polyfill('forms forms-ext');
+    webshim.polyfill('forms forms-ext');
+
+    //only last example using format display
+    $(function () {
+        $('.format-date').each(function () {
+            var $display = $('.date-display', this);
+            $(this).on('change', function (e) {
+                //webshim.format will automatically format date to according to webshim.activeLang or the browsers locale
+                var localizedDate = webshim.format.date($.prop(e.target, 'value'));
+                $display.html(localizedDate);
+            });
+        });
+    });
+</script>

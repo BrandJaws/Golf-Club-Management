@@ -4,7 +4,7 @@
       <div class="navbar no-radius"> 
         <!-- brand --> 
         <a class="navbar-brand">
-        <div ui-include="{{url('/assets/images/logo_wh.png')}}"></div>
+        {{--<div ui-include="{{url('/assets/images/logo_wh.png')}}"></div>--}}
         <img src="{{url('/assets/images/logo_wh.png')}}" alt="." class=""> <span class="hidden-folded inline hide">Grit</span> </a>
         <!-- / brand --> 
       </div>

@@ -12,4 +12,8 @@ class MembersController extends Controller {
         public function index(){
             return view('admin.members.members-list');
         }
+
+        public function add() {
+            return view('admin.members.create');
+        }
 }

@@ -92,7 +92,7 @@
 
     function init(){
       $('[ui-jp]').uiJp();
-      $('body').uiInclude();
+      // $('body').uiInclude();
     }
 
     $(document).on('pjaxStart', function() {

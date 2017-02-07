@@ -30,7 +30,10 @@
 .save-btn{background: #C4061F; padding:5px; font-size:16px; color:#fff; border-radius:3px;}
 .cancel-btn{background: #999; padding:5px; font-size:16px; color:#fff; border-radius:3px;}
 .save-btn:hover, .cancel-btn:hover{ color:#fff; opacity:0.9;}
-.ts-action-btn{ padding-top:8px;} 
+.ts-action-btn{ padding-top:8px;}
+.form-group-inline .form-control-label { padding-top: 0px !important; padding-bottom: 0px !important; }
+/*#selectionDepHidden { display: none; }*/
+[v-cloak] { display: none; }
 /** Profile css **/
 .details-section{ background:#fff;padding:25px;}
 .detail-content{ padding:30px 0 10px 0;}

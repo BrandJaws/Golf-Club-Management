@@ -39,6 +39,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'members','uses'=>'Members\MembersController@index']);
              
      });
+    Route::group(['prefix'=>'members/add','as'=>'members/add.'],function(){
+        Route::get('/',['as'=>'members/add','uses'=>'Members\MembersController@add']);
+
+    });
     Route::group(['prefix'=>'rewards','as'=>'rewards.'],function(){
         Route::get('/',['as'=>'rewards','uses'=>'Rewards\RewardsController@index']);
 

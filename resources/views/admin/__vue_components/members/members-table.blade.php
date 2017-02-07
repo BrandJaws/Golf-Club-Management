@@ -36,8 +36,8 @@
 					<td>@{{ member.gender }}</td>
 					<td>@{{ member.warnings }}</td>
 					<td>
-						<a href="#." @click="editMember(member.email)">edit</a>
-						<a href="#.">del</a>
+						<a href="#." class="blue-cb" @click="editMember(member.email)">edit</a>
+						<a href="#."><i class="fa fa-trash"></i></a>
 					</td>
 				</tr>
 			</tbody>

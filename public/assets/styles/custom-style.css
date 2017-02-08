@@ -3,6 +3,10 @@
 .padd-15{ padding:15px;}
 .margin-20-tb{ margin:20px 0;}
 .mrg-t{ padding-top:8% !important;}
+.paddingInline { padding: 1.5rem 1.5rem; }
+.dashboardQuickView .box.p-a {
+    margin-bottom: 15px !important;
+}
 /** Login page **/
 .primary { background-color: #C4061F !important; }
 .md-input.focus, .md-input:focus { border-color: #C4061F !important; }

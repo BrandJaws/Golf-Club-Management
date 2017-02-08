@@ -75,6 +75,14 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'social/create','uses'=>'Social\SocialController@create']);
 
     });
+    Route::group(['prefix'=>'staff','as'=>'staff.'],function(){
+        Route::get('/',['as'=>'staff','uses'=>'Staff\StaffController@index']);
+
+    });
+    Route::group(['prefix'=>'staff/create','as'=>'staff/create.'],function(){
+        Route::get('/',['as'=>'staff/create','uses'=>'Staff\StaffController@create']);
+
+    });
          
 });
 Auth::routes();

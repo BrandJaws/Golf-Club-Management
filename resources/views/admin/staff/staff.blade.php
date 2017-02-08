@@ -29,7 +29,7 @@
                 <!-- navbar collapse -->
                 <div class="collapse navbar-toggleable-sm" id="collapse">
                     <div class="main-page-heading">
-                        <h3> <span>Staff</span></h3>
+                        <h3> <span>Staff Members</span></h3>
                     </div>
                 </div>
                 <!-- / navbar collapse -->

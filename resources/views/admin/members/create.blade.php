@@ -40,114 +40,123 @@
             <!-- ############ PAGE START-->
             <div class="profile-main padding" id="selectionDepHidden">
                 <div class="row details-section">
+                    <form action="#." name="" action="">
                     <div class="col-md-8">
-                        <form action="#." name="" action="">
-                            <div class="form-group">
-                                <label class="form-control-label">Name</label>
-                                <input type="text" class="form-control" />
-                            </div>
-                            <div class="form-group">
-                                <label class="form-control-label">Email</label>
-                                <input type="email" class="form-control" />
-                            </div>
-                            <div class="row row-sm">
-                                <div class="col-md-3">
-                                    <div class="form-group form-group-inline">
-                                        <label class="form-control-label">Gender</label>
-                                    </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Name</label>
+                            <input type="text" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Email</label>
+                            <input type="email" class="form-control" />
+                        </div>
+                        <div class="row row-sm">
+                            <div class="col-md-3">
+                                <div class="form-group form-group-inline">
+                                    <label class="form-control-label">Gender</label>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="row row-sm">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <div class="radio">
-                                                    <label class="ui-check">
-                                                        <input type="radio" name="a" value="option1" class="has-value" checked>
-                                                        <i class="dark-white"></i>
-                                                        Male
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row row-sm">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
                                             <div class="radio">
                                                 <label class="ui-check">
-                                                    <input type="radio" name="a" value="option1" class="has-value">
+                                                    <input type="radio" name="a" value="option1" class="has-value" checked>
                                                     <i class="dark-white"></i>
-                                                    Female
+                                                    Male
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="radio">
+                                            <label class="ui-check">
+                                                <input type="radio" name="a" value="option1" class="has-value">
+                                                <i class="dark-white"></i>
+                                                Female
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-sm">
+                            <div class="col-md-3">
+                                <div class="form-group form-group-inline">
+                                    <label class="form-control-label">Member Type</label>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row row-sm">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label class="ui-check">
+                                                    <input v-model="memberType" type="radio" name="relation" value="parent" class="has-value" @change="affiliate()" />
+                                                    <i class="dark-white"></i>
+                                                    Parent
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label class="ui-check">
+                                                    <input v-model="memberType" type="radio" name="relation" value="affiliate" class="has-value" @change="affiliate()" />
+                                                    <i class="dark-white"></i>
+                                                    Affiliate Member
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row row-sm">
-                                <div class="col-md-3">
-                                    <div class="form-group form-group-inline">
-                                        <label class="form-control-label">Member Type</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="row row-sm">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <div class="radio">
-                                                    <label class="ui-check">
-                                                        <input v-model="memberType" type="radio" name="relation" value="parent" class="has-value" @change="affiliate()" />
-                                                        <i class="dark-white"></i>
-                                                        Parent
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <div class="radio">
-                                                    <label class="ui-check">
-                                                        <input v-model="memberType" type="radio" name="relation" value="affiliate" class="has-value" @change="affiliate()" />
-                                                        <i class="dark-white"></i>
-                                                        Affiliate Member
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row row-sm animated fadeInUp" v-cloak v-if="showParentSelector">
-                                <div class="col-md-3">
+                        </div>
+                        <div class="row row-sm animated fadeInUp" v-cloak v-if="showParentSelector">
+                            <div class="col-md-3">
 
-                                </div>
-                                <div class="col-md-9">
-                                    <div class="row row-sm">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label class="form-control-label">Select Parent Member</label>
-                                            </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="row row-sm">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Select Parent Member</label>
                                         </div>
-                                        <div class="col-md-8">
-                                            <div class="form-group">
-                                                <auto-complete-box url="{{asset('people.json')}}"
-                                                                   property-for-id="email"
-                                                                   property-for-name="name"
-                                                                   filtered-from-source="false"
-                                                                   include-id-in-list="true"
-                                                                   v-model="selectedId"
-                                                                   initial-text-value="">
-                                                </auto-complete-box>
-                                            </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <auto-complete-box url="{{asset('people.json')}}"
+                                                               property-for-id="email"
+                                                               property-for-name="name"
+                                                               filtered-from-source="false"
+                                                               include-id-in-list="true"
+                                                               v-model="selectedId"
+                                                               initial-text-value="">
+                                            </auto-complete-box>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <br />
-                            <div class="form-group">
-                                <a href="#." class="btn btn-def"><i class="fa fa-floppy-o"></i> &nbsp;Add Member</a>
-                                &nbsp;&nbsp;
-                                <a href="#." class="btn btn-outline b-primary text-primary"><i class="fa fa-ban"></i> &nbsp;Cancel</a>
-                            </div>
-                        </form>
+                        </div>
+                        <br />
+                        <div class="form-group">
+                            <a href="#." class="btn btn-def"><i class="fa fa-floppy-o"></i> &nbsp;Add Member</a>
+                            &nbsp;&nbsp;
+                            <a href="{{route('admin.members.members')}}" class="btn btn-outline b-primary text-primary"><i class="fa fa-ban"></i> &nbsp;Cancel</a>
+                        </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <img src="../../assets/images/user.png" class="img-responsive img-circle defaultImg" />
+                            <div class="form-group">
+                                <label class="form-control-label">Add Image</label>
+                                <input type="file" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    </form>
                 </div>
             </div>
         </div>

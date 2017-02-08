@@ -209,3 +209,6 @@ label {
 .socialMediaConnected li.instagram a, .socialMediaConnected li.twitter a, .socialMediaConnected li.facebook a { display: inline-block; margin: 0px 10px 0px 10px; width: 200px; height: 48px; line-height: 48px; }
 .socialMediaConnected li:hover { opacity: 0.8; }
 /** social message post **/
+/** add staff members screen **/
+.defaultImg { width: 178px; border: 1px solid #e5e5e5; }
+/** add staff members screen **/

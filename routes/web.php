@@ -83,6 +83,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'staff/create','uses'=>'Staff\StaffController@create']);
 
     });
+    Route::group(['prefix'=>'shop','as'=>'shop.'],function(){
+        Route::get('/',['as'=>'shop','uses'=>'Shop\ShopController@index']);
+
+    });
          
 });
 Auth::routes();

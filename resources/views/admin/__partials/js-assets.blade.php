@@ -10,6 +10,9 @@
 <script>
     $( "#date-reserv" ).datepicker();
 </script>
+<!-- owl -->
+<script src="{{asset('/scripts/owl/js/owl.carousel.js')}}"></script>
+<!-- owl -->
 <script src="{{asset('/libs/jquery/underscore/underscore-min.js')}}"></script> 
 <script src="{{asset('/libs/jquery/jQuery-Storage-API/jquery.storageapi.min.js')}}"></script> 
 <script src="{{asset('/libs/jquery/PACE/pace.min.js')}}"></script> 

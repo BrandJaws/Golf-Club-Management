@@ -13,6 +13,9 @@
 <!-- build:css assets/styles/app.min.css -->
 <link rel="stylesheet" href="{{asset('/assets/styles/app.css')}}" type="text/css" />
 <link rel="stylesheet" href="{{asset('/assets/styles/custom-style.css')}}" type="text/css" />
+<!-- owl -->
+<link rel="stylesheet" href="{{asset('/scripts/owl/css/owl.carousel.css')}}" type="text/css" />
+<!-- owl -->
 
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 {{--<link rel="stylesheet" href="/resources/demos/style.css">--}}

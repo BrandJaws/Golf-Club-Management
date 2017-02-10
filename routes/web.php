@@ -87,6 +87,14 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'shop','uses'=>'Shop\ShopController@index']);
 
     });
+    Route::group(['prefix'=>'coaches','as'=>'coaches.'],function(){
+        Route::get('/',['as'=>'coaches','uses'=>'Coaches\CoachesController@index']);
+
+    });
+    Route::group(['prefix'=>'coaches/create','as'=>'coaches/create.'],function(){
+        Route::get('/',['as'=>'coaches/create','uses'=>'Coaches\CoachesController@create']);
+
+    });
          
 });
 Auth::routes();

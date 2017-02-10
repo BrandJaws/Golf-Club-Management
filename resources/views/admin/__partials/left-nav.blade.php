@@ -23,7 +23,7 @@
             <li> <a href="{{route('admin.social.social')}}" > <span class="nav-icon"> <i class="fa fa-thumbs-up"></i> </span> <span class="nav-text">Social</span> </a> </li>
             <li> <a href="{{route('admin.staff.staff')}}" > <span class="nav-icon"> <i class="fa fa-users"></i> </span> <span class="nav-text">Staff</span> </a> </li>
             <li> <a href="#." > <span class="nav-icon"> <i class="fa fa-graduation-cap"></i> </span> <span class="nav-text">Trainings</span> </a> </li>
-            <li> <a href="#." > <span class="nav-icon"> <i class="fa fa-podcast"></i> </span> <span class="nav-text">Coaches</span> </a> </li>
+            <li> <a href="{{route('admin.coaches.coaches')}}" > <span class="nav-icon"> <i class="fa fa-podcast"></i> </span> <span class="nav-text">Coaches</span> </a> </li>
             <li> <a href="#." > <span class="nav-icon"> <i class="fa fa-gamepad"></i> </span> <span class="nav-text">Leagues</span> </a> </li>
           </ul>
         </nav>

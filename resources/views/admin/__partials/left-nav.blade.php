@@ -16,7 +16,7 @@
             <li> <a href="{{route('admin.members.members')}}" > <span class="nav-icon"> <i class="fa fa-user-circle-o"></i> </span> <span class="nav-text">Members</span> </a> </li>
             <li> <a href="{{route('admin.reservations.reservations')}}" > <span class="nav-icon"> <i class="fa fa-calendar"></i> </span> <span class="nav-text">Reservations</span> </a> </li>
             <li> <a href="{{route('admin.profile.profile')}}" > <span class="nav-icon"> <i class="fa fa-user"></i> </span> <span class="nav-text">Profile / Settings</span> </a> </li>
-            <li> <a href="#." > <span class="nav-icon"> <i class="fa fa-shopping-basket"></i> </span> <span class="nav-text">Shop</span> </a> </li>
+            <li> <a href="{{route('admin.shop.shop')}}" > <span class="nav-icon"> <i class="fa fa-shopping-basket"></i> </span> <span class="nav-text">Shop</span> </a> </li>
             <li> <a href="{{route('admin.segments.segments')}}" > <span class="nav-icon"> <i class="fa fa-pie-chart"></i> </span> <span class="nav-text">Segments</span> </a> </li>
             <li> <a href="{{route('admin.rewards.rewards')}}" > <span class="nav-icon"> <i class="fa fa-star"></i> </span> <span class="nav-text">Offer / Rewards</span> </a> </li>
             <li> <a href="{{route('admin.notifications.notifications')}}" > <span class="nav-icon"> <i class="fa fa-bullhorn"></i> </span> <span class="nav-text">Notifications</span> </a> </li>

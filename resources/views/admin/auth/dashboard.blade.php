@@ -44,11 +44,11 @@
       <div class="col-sm-6 col-md-4">
           <div class="box p-a" style="height: 80px;">
               <div class="pull-left m-r">
-                  <span ui-jp="sparkline" ui-refresh="app.setting.color" ui-options="[40,60], {type:'pie', height:36, sliceColors:['#f1f2f3','#0cc2aa']}" class="sparkline inline"><canvas width="36" height="36" style="display: inline-block; width: 36px; height: 36px; vertical-align: top;"></canvas></span>
+                  <span ui-jp="sparkline" ui-refresh="app.setting.color" ui-options="[20,50,30], {type:'pie', height:36, sliceColors:['#f1f2f3','#0cc2aa','#fcc100']}" class="sparkline inline"><canvas width="36" height="36" style="display: inline-block; width: 36px; height: 36px; vertical-align: top;"></canvas></span>
               </div>
               <div class="clear">
-                  <h4 class="m-a-0 text-md"><a href="">60% <span class="text-sm">Increase</span></a></h4>
-                  <small class="text-muted">38 Shipped.</small>
+                  <h4 class="m-a-0 text-md"><a href="">50 <span class="text-sm">Members</span></a></h4>
+                  <small class="text-muted">30 Guests. 20 Unused</small>
               </div>
           </div>
           {{--<div class="box">--}}

@@ -45,75 +45,76 @@
 
             <!-- ############ PAGE START-->
 
-            <div class="padding">
+            <div class="padding" id="shopPage">
                 <div class="shop-main">
                     <div class="row">
                         <div class="shop-inner">
                             <div class="box">
                                 <div class="col-md-11">
-                                    <div id="shop-carousel" class="owl-carousel owl-theme">
-                                        <div class="item active-item">
-                                            <div class="parent-category-box">
-                                                <div class="media"> <a class="media-left" href="#"> <img class="media-object" src="../assets/images/food-ico.png" alt="icon"> </a>
-                                                    <div class="media-body text-left">
-                                                        <a href="#.">
-                                                            <h4 class="media-heading">Food</h4>
-                                                            <p class="media-sub">Categories</p>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="parent-category-box">
-                                                <div class="media"> <a class="media-left" href="#"> <img class="media-object" src="../assets/images/beverages.png" alt="icon"> </a>
-                                                    <div class="media-body text-left">
-                                                        <a href="#.">
-                                                            <h4 class="media-heading">Beverages</h4>
-                                                            <p class="media-sub">No Shows</p>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="parent-category-box">
-                                                <div class="media"> <a class="media-left" href="#"> <img class="media-object" src="../assets/images/clothing.png" alt="icon"> </a>
-                                                    <div class="media-body text-left">
-                                                        <a href="#.">
-                                                            <h4 class="media-heading">Clothing</h4>
-                                                            <p class="media-sub">No Shows</p>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="parent-category-box">
-                                                <div class="media"> <a class="media-left" href="#"> <img class="media-object" src="../assets/images/golf.png" alt="icon"> </a>
-                                                    <div class="media-body text-left">
-                                                        <a href="#.">
-                                                            <h4 class="media-heading">Brands</h4>
-                                                            <p class="media-sub">Golf Brands</p>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="parent-category-box">
-                                                <div class="media"> <a class="media-left" href="#"> <img class="media-object" src="../assets/images/beverages.png" alt="icon"> </a>
-                                                    <div class="media-body text-left">
-                                                        <a href="#.">
-                                                            <h4 class="media-heading">Beverages</h4>
-                                                            <p class="media-sub">No Shows</p>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {{--<div id="shop-carousel" class="owl-carousel owl-theme">--}}
+                                        {{--<div class="item active-item">--}}
+                                            {{--<div class="parent-category-box">--}}
+                                                {{--<div class="media"> <a class="media-left" href="#"> <img class="media-object" src="../assets/images/food-ico.png" alt="icon"> </a>--}}
+                                                    {{--<div class="media-body text-left">--}}
+                                                        {{--<a href="#.">--}}
+                                                            {{--<h4 class="media-heading">Food</h4>--}}
+                                                            {{--<p class="media-sub">Categories</p>--}}
+                                                        {{--</a>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="item">--}}
+                                            {{--<div class="parent-category-box">--}}
+                                                {{--<div class="media"> <a class="media-left" href="#"> <img class="media-object" src="../assets/images/beverages.png" alt="icon"> </a>--}}
+                                                    {{--<div class="media-body text-left">--}}
+                                                        {{--<a href="#.">--}}
+                                                            {{--<h4 class="media-heading">Beverages</h4>--}}
+                                                            {{--<p class="media-sub">No Shows</p>--}}
+                                                        {{--</a>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="item">--}}
+                                            {{--<div class="parent-category-box">--}}
+                                                {{--<div class="media"> <a class="media-left" href="#"> <img class="media-object" src="../assets/images/clothing.png" alt="icon"> </a>--}}
+                                                    {{--<div class="media-body text-left">--}}
+                                                        {{--<a href="#.">--}}
+                                                            {{--<h4 class="media-heading">Clothing</h4>--}}
+                                                            {{--<p class="media-sub">No Shows</p>--}}
+                                                        {{--</a>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="item">--}}
+                                            {{--<div class="parent-category-box">--}}
+                                                {{--<div class="media"> <a class="media-left" href="#"> <img class="media-object" src="../assets/images/golf.png" alt="icon"> </a>--}}
+                                                    {{--<div class="media-body text-left">--}}
+                                                        {{--<a href="#.">--}}
+                                                            {{--<h4 class="media-heading">Brands</h4>--}}
+                                                            {{--<p class="media-sub">Golf Brands</p>--}}
+                                                        {{--</a>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                        {{--<div class="item">--}}
+                                            {{--<div class="parent-category-box">--}}
+                                                {{--<div class="media"> <a class="media-left" href="#"> <img class="media-object" src="../assets/images/beverages.png" alt="icon"> </a>--}}
+                                                    {{--<div class="media-body text-left">--}}
+                                                        {{--<a href="#.">--}}
+                                                            {{--<h4 class="media-heading">Beverages</h4>--}}
+                                                            {{--<p class="media-sub">No Shows</p>--}}
+                                                        {{--</a>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
                                     <!-- owl carousel -->
+                                    <shop-scroller></shop-scroller>
                                 </div>
                                 <div class="col-md-1">
                                     <div class="add-category-btn text-center">
@@ -128,96 +129,97 @@
                     <div class="row">
                         <div class="main-padd">
                             <div class="col-md-3">
-                                <div class="menu-sidebar">
-                                    <div class="sidebar-heading">
-                                        <h3>Food Menu</h3>
-                                    </div>
-                                    <div class="menu-list">
-                                        <ul>
-                                            <li class="active-menu">
-                                                <a href="#." class="pull-left">
-                                                    <span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Appetizers</span>
-                                                </a>
-                                                <a href="#." class="pull-right">
-                                                    <span><i class="fa fa-pencil"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#." class="pull-left">
-                                                    <span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Desserts</span>
-                                                </a>
-                                                <a href="#." class="pull-right">
-                                                    <span><i class="fa fa-pencil"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#." class="pull-left">
-                                                    <span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Nuggets</span>
-                                                </a>
-                                                <a href="#." class="pull-right">
-                                                    <span><i class="fa fa-pencil"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#." class="pull-left">
-                                                    <span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Pizza</span>
-                                                </a>
-                                                <a href="#." class="pull-right">
-                                                    <span><i class="fa fa-pencil"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#." class="pull-left">
-                                                    <span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Starters</span>
-                                                </a>
-                                                <a href="#." class="pull-right">
-                                                    <span><i class="fa fa-pencil"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#." class="pull-left">
-                                                    <span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Appetizers</span>
-                                                </a>
-                                                <a href="#." class="pull-right">
-                                                    <span><i class="fa fa-pencil"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#." class="pull-left">
-                                                    <span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Desserts</span>
-                                                </a>
-                                                <a href="#." class="pull-right">
-                                                    <span><i class="fa fa-pencil"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#." class="pull-left">
-                                                    <span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Nuggets</span>
-                                                </a>
-                                                <a href="#." class="pull-right">
-                                                    <span><i class="fa fa-pencil"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#." class="pull-left">
-                                                    <span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Pizza</span>
-                                                </a>
-                                                <a href="#." class="pull-right">
-                                                    <span><i class="fa fa-pencil"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#." class="pull-left">
-                                                    <span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Starters</span>
-                                                </a>
-                                                <a href="#." class="pull-right">
-                                                    <span><i class="fa fa-pencil"></i></span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                        <div class="clearfix"></div>
-                                    </div>
-                                </div>
+                                {{--<div class="menu-sidebar">--}}
+                                    {{--<div class="sidebar-heading">--}}
+                                        {{--<h3>Food Menu</h3>--}}
+                                    {{--</div>--}}
+                                    {{--<div class="menu-list">--}}
+                                        {{--<ul>--}}
+                                            {{--<li class="active-menu">--}}
+                                                {{--<a href="#." class="pull-left">--}}
+                                                    {{--<span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Appetizers</span>--}}
+                                                {{--</a>--}}
+                                                {{--<a href="#." class="pull-right">--}}
+                                                    {{--<span><i class="fa fa-pencil"></i></span>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                            {{--<li>--}}
+                                                {{--<a href="#." class="pull-left">--}}
+                                                    {{--<span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Desserts</span>--}}
+                                                {{--</a>--}}
+                                                {{--<a href="#." class="pull-right">--}}
+                                                    {{--<span><i class="fa fa-pencil"></i></span>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                            {{--<li>--}}
+                                                {{--<a href="#." class="pull-left">--}}
+                                                    {{--<span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Nuggets</span>--}}
+                                                {{--</a>--}}
+                                                {{--<a href="#." class="pull-right">--}}
+                                                    {{--<span><i class="fa fa-pencil"></i></span>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                            {{--<li>--}}
+                                                {{--<a href="#." class="pull-left">--}}
+                                                    {{--<span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Pizza</span>--}}
+                                                {{--</a>--}}
+                                                {{--<a href="#." class="pull-right">--}}
+                                                    {{--<span><i class="fa fa-pencil"></i></span>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                            {{--<li>--}}
+                                                {{--<a href="#." class="pull-left">--}}
+                                                    {{--<span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Starters</span>--}}
+                                                {{--</a>--}}
+                                                {{--<a href="#." class="pull-right">--}}
+                                                    {{--<span><i class="fa fa-pencil"></i></span>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                            {{--<li>--}}
+                                                {{--<a href="#." class="pull-left">--}}
+                                                    {{--<span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Appetizers</span>--}}
+                                                {{--</a>--}}
+                                                {{--<a href="#." class="pull-right">--}}
+                                                    {{--<span><i class="fa fa-pencil"></i></span>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                            {{--<li>--}}
+                                                {{--<a href="#." class="pull-left">--}}
+                                                    {{--<span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Desserts</span>--}}
+                                                {{--</a>--}}
+                                                {{--<a href="#." class="pull-right">--}}
+                                                    {{--<span><i class="fa fa-pencil"></i></span>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                            {{--<li>--}}
+                                                {{--<a href="#." class="pull-left">--}}
+                                                    {{--<span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Nuggets</span>--}}
+                                                {{--</a>--}}
+                                                {{--<a href="#." class="pull-right">--}}
+                                                    {{--<span><i class="fa fa-pencil"></i></span>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                            {{--<li>--}}
+                                                {{--<a href="#." class="pull-left">--}}
+                                                    {{--<span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Pizza</span>--}}
+                                                {{--</a>--}}
+                                                {{--<a href="#." class="pull-right">--}}
+                                                    {{--<span><i class="fa fa-pencil"></i></span>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                            {{--<li>--}}
+                                                {{--<a href="#." class="pull-left">--}}
+                                                    {{--<span><i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;Starters</span>--}}
+                                                {{--</a>--}}
+                                                {{--<a href="#." class="pull-right">--}}
+                                                    {{--<span><i class="fa fa-pencil"></i></span>--}}
+                                                {{--</a>--}}
+                                            {{--</li>--}}
+                                        {{--</ul>--}}
+                                        {{--<div class="clearfix"></div>--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
+                                <shop-menu></shop-menu>
                             </div>
                             <div class="col-md-9">
                                 <div class="segments-inner">
@@ -424,5 +426,20 @@
         </div>
     </div>
 
+
+    @include("admin.__vue_components.shop.shop-scroller");
+    @include("admin.__vue_components.shop.shop-menu");
+    <script>
+        var _shopMenuList = [
+            {menuItem: 'Appetizers'},{menuItem: 'Desserts'},{menuItem: 'Nuggets'},{menuItem: 'Pizza'},
+            {menuItem: 'Starters'},{menuItem: 'Desserts'},{menuItem: 'Appetizers'},{menuItem: 'Nuggets'},
+            {menuItem: 'Pizza'},{menuItem: 'Starters'}
+        ];
+
+        var vue = new Vue({
+           el: "#shopPage"
+        });
+
+    </script>
 
     @endSection

@@ -18,6 +18,7 @@
             <li> <a href="{{route('admin.profile.profile')}}" > <span class="nav-icon"> <i class="fa fa-user"></i> </span> <span class="nav-text">Profile / Settings</span> </a> </li>
             <li> <a href="{{route('admin.shop.shop')}}" > <span class="nav-icon"> <i class="fa fa-shopping-basket"></i> </span> <span class="nav-text">Shop</span> </a> </li>
             <li> <a href="{{route('admin.segments.segments')}}" > <span class="nav-icon"> <i class="fa fa-pie-chart"></i> </span> <span class="nav-text">Segments</span> </a> </li>
+            <li> <a href="{{route('admin.beacon.beacon')}}" > <span class="nav-icon"> <i class="fa fa-pie-chart"></i> </span> <span class="nav-text">Beacon</span> </a> </li>
             <li> <a href="{{route('admin.rewards.rewards')}}" > <span class="nav-icon"> <i class="fa fa-star"></i> </span> <span class="nav-text">Offer / Rewards</span> </a> </li>
             <li> <a href="{{route('admin.notifications.notifications')}}" > <span class="nav-icon"> <i class="fa fa-bullhorn"></i> </span> <span class="nav-text">Notifications</span> </a> </li>
             <li> <a href="{{route('admin.social.social')}}" > <span class="nav-icon"> <i class="fa fa-thumbs-up"></i> </span> <span class="nav-text">Social</span> </a> </li>

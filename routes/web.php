@@ -95,6 +95,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'coaches/create','uses'=>'Coaches\CoachesController@create']);
 
     });
+    Route::group(['prefix'=>'beacon','as'=>'beacon.'],function(){
+        Route::get('/',['as'=>'beacon','uses'=>'Beacon\BeaconController@index']);
+
+    });
          
 });
 Auth::routes();

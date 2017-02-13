@@ -30,8 +30,22 @@ class Member extends Authenticatable {
 	public static function getById($id) {
 		return self::find ( $id );
 	}
+	/**
+	 * Relation with club
+	 * @usage Mobile, Web
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
 	public function club() {
 		return $this->belongsTo ( 'App\Http\Models\Club' );
+	}
+	/**
+	 * Relation
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function tennis_reservation_players() {
+		return $this->hasMany ( 'App\Http\Models\TennisReservationPlayer' );
 	}
 	public function populate($data = []) {
 		if (array_key_exists ( 'firstName', $data )) {
@@ -66,6 +80,13 @@ class Member extends Authenticatable {
 		}
 		return $this;
 	}
+	/**
+	 * Search club Members with in a club
+	 * @usage Mobile, Web
+	 *
+	 * @param unknown $clubId        	
+	 * @param unknown $search        	
+	 */
 	public function listClubMembers($clubId, $search = null) {
 		return self::where ( 'club_id', '=', $clubId )->where ( function ($query) use ($search) {
 			if ($search !== false) {
@@ -76,6 +97,15 @@ class Member extends Authenticatable {
 				\DB::raw ( "CONCAT(firstName,' ', lastName) AS name" ) 
 		] );
 	}
+	/**
+	 * List Get club members
+	 * @usage Mobile
+	 *
+	 * @param unknown $clubId        	
+	 * @param unknown $currentPage        	
+	 * @param unknown $perPage        	
+	 * @return unknown
+	 */
 	public function getClubMembers($clubId, $currentPage, $perPage) {
 		$userId = \Illuminate\Support\Facades\Auth::user ()->id;
 		$members = self::where ( 'club_id', '=', $clubId )->where ( 'id', '<>', $userId )->paginate ( $perPage, [ 
@@ -98,6 +128,31 @@ class Member extends Authenticatable {
 		
 		return $members;
 	}
+	/**
+	 * Get paginated list of members for logedin club
+	 * @usage Web
+	 *
+	 * @param unknown $clubId        	
+	 * @param unknown $currentPage        	
+	 * @param unknown $perPage        	
+	 */
+	public function listClubMembersPaginated($clubId, $currentPage, $perPage, $searchTerm = false) {
+		return $this->where ( 'club_id', '=', $clubId )->where ( function ($query) use ($searchTerm) {
+			if ($searchTerm) {
+				$query->orWhere ( 'member.firstName', 'like', "%$searchTerm%" );
+				$query->orWhere ( 'member.lastName', 'like', "%$searchTerm%" );
+				$query->orWhere ( 'member.email', 'like', "%$searchTerm%" );
+			}
+		} )->select ( 'member.id as id', 'member.firstName', 'member.lastName', 'member.email', 'member.phone', 'member.gender' )->orderby ( 'member.created_at', 'ASC' )->paginate ( $perPage, array (
+				'*' 
+		), 'current_page', $currentPage );
+	}
+	/**
+	 * Get total members with in a club
+	 * @usage Mobile, Web
+	 *
+	 * @param unknown $clubId        	
+	 */
 	public static function countClubMembers($clubId) {
 		return self::where ( 'club_id', '=', $clubId )->count ();
 	}
@@ -106,9 +161,7 @@ class Member extends Authenticatable {
 				'profilePic' => $profileImage 
 		] )->save ();
 	}
-	public function tennis_reservation_players() {
-		return $this->hasMany ( 'App\Http\Models\TennisReservationPlayer' );
-	}
+	
 	/*
 	 * public function favorite_members() {
 	 * return $this->belongsToMany ( "App\Http\Models\Member", "favorite_member_member", "member_id", "favorite_member_id" )->withTimestamps ();

@@ -18,6 +18,7 @@ Route::get('/', function () {
 Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
 	 Route::get('/login',['as'=>'login','uses'=>'Admin\AdminController@showLoginForm']);
 	 Route::post('/login',['as'=>'login','uses'=>'Admin\AdminController@login']);
+	 Route::group(['middleware' => 'auth'], function(){
 	 Route::get('/dashboard',['as'=>'dashboard','uses'=>'Admin\AdminController@dashboard']);
 	 
 	 Route::group(['prefix'=>'member','as'=>'member.'],function(){
@@ -95,7 +96,7 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'coaches/create','uses'=>'Coaches\CoachesController@create']);
 
     });
-         
+    	});
 });
 Auth::routes();
 

@@ -31,7 +31,7 @@
 		template: `
 			<tbody>
 				<tr v-for="member in membersListData">
-					<td>@{{ member.name }}</td>
+					<td>@{{ member.firstName }} @{{member.lastName}}</td>
 					<td>@{{ member.email }}</td>
 					<td>@{{ member.gender }}</td>
 					<td>@{{ member.warnings }}</td>
@@ -48,7 +48,7 @@
 		],
 		data: function(){
 			return {
-				membersListData:this.membersList
+				membersListData:this.membersList.data
 			}
 		},
 		methods: {

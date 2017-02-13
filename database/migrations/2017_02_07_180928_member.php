@@ -27,7 +27,7 @@ class Member extends Migration
             $table->string ( 'device_registeration_id', 255 )->nullable ()->default ( NULL );
             $table->enum ( 'device_type', ['Android','Iphone'])->nullable ()->default ( NULL );
             $table->bigInteger('main_member_id', false,true)->default(0);
-            $table->string('auth_token', 100);
+            $table->string('auth_token', 100)->nullable ()->default ( NULL );
             $table->timestamps();
             $table->softDeletes();
     	});

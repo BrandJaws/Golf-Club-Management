@@ -81,26 +81,10 @@
 @include("admin.__vue_components.members.members-table")
 <script>
 	var baseUrl = "{{url('')}}";
-	_membersList = [{name:"Johnny Bravo",email:"johnnybravo@mail.com",gender:"Male",warnings:"00"},
-		{name:"Emma Watson",email:"emmawatson@mail.com",gender:"Female",warnings:"00"},
-		{name:"Emma Stone",email:"emmastone@mail.com",gender:"Female",warnings:"01"},
-		{name:"Leonardo DiCaprio",email:"leothelion@mail.com",gender:"Male",warnings:"02"},
-		{name:"Daniel Redcliffe",email:"danielredcliffe@mail.com",gender:"Male",warnings:"00"},
-		{name:"Johnny Bravo",email:"johnnybravo@mail.com",gender:"Male",warnings:"00"},
-		{name:"Emma Watson",email:"emmawatson@mail.com",gender:"Female",warnings:"00"},
-		{name:"Emma Stone",email:"emmastone@mail.com",gender:"Female",warnings:"01"},
-		{name:"Leonardo DiCaprio",email:"leothelion@mail.com",gender:"Male",warnings:"02"},
-		{name:"Daniel Redcliffe",email:"danielredcliffe@mail.com",gender:"Male",warnings:"00"},
-		{name:"Johnny Bravo",email:"johnnybravo@mail.com",gender:"Male",warnings:"00"},
-		{name:"Emma Watson",email:"emmawatson@mail.com",gender:"Female",warnings:"00"},
-		{name:"Emma Stone",email:"emmastone@mail.com",gender:"Female",warnings:"01"},
-		{name:"Leonardo DiCaprio",email:"leothelion@mail.com",gender:"Male",warnings:"02"},
-		{name:"Daniel Redcliffe",email:"danielredcliffe@mail.com",gender:"Male",warnings:"00"}];
-
 	var vue = new Vue({
 		el: "#members-list-table",
 		data: {
-			membersList:[],
+			membersList:{!! $members !!},
 			latestPageLoaded:0,
 			ajaxRequestInProcess:false
 		},
@@ -117,11 +101,9 @@
 		},
 	});
 
-	$(document).ready(function() {
+	/* $(document).ready(function() {
        vue.loadNextPage();
-       console.log("bottom!");
-       
-    });
+    }); */
     $(window).scroll(function() {
        if($(window).scrollTop() + $(window).height() == $(document).height()) {
            vue.loadNextPage();

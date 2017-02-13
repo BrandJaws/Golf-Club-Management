@@ -12,15 +12,15 @@ class CreateClubAndStaff extends Seeder {
 		$faker = Faker\Factory::create ();
 		$id = \DB::table ( 'club' )->insert ( [ 
 				'name' => $faker->name (),
-				'address' => $faker->address ()
-		]);
+				'address' => $faker->address () 
+		] );
 		
-		Employee::create( [ 
-				'club_id'=>$id,
-				'firstName' =>  $faker->firstNameMale(),
-				'lastName' =>  $faker->lastName(),
+		Employee::create ( [ 
+				'club_id' => $id,
+				'firstName' => $faker->firstNameMale (),
+				'lastName' => $faker->lastName (),
 				'email' => 'admin@grit.com',
-				'password' => \Hash::make( '123456' ),
+				'password' => \Hash::make ( '123456' ),
 				'created_at' => $faker->dateTime ( 'now' ) 
 		] );
 	}

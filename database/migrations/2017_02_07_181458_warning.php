@@ -21,6 +21,6 @@ class Warning extends Migration {
 	 * @return void
 	 */
 	public function down() {
-		Schema::drop('warning');
+		Schema::drop ( 'warning' );
 	}
 }

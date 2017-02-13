@@ -18,18 +18,29 @@
 <meta name="apple-mobile-web-app-title" content="Flatkit">
 <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="shortcut icon" sizes="196x196" href="{{asset('/assets/images/logo.png')}}">
+<link rel="shortcut icon" sizes="196x196"
+	href="{{asset('/assets/images/logo.png')}}">
 
 <!-- style -->
-<link rel="stylesheet" href="{{asset('/assets/animate.css/animate.min.css')}}" type="text/css" />
-<link rel="stylesheet" href="{{asset('/assets/glyphicons/glyphicons.css')}}" type="text/css" />
-<link rel="stylesheet" href="{{asset('/assets/font-awesome/css/font-awesome.min.css')}}" type="text/css" />
-<link rel="stylesheet" href="{{asset('/assets/material-design-icons/material-design-icons.css')}}" type="text/css" />
+<link rel="stylesheet"
+	href="{{asset('/assets/animate.css/animate.min.css')}}" type="text/css" />
+<link rel="stylesheet"
+	href="{{asset('/assets/glyphicons/glyphicons.css')}}" type="text/css" />
+<link rel="stylesheet"
+	href="{{asset('/assets/font-awesome/css/font-awesome.min.css')}}"
+	type="text/css" />
+<link rel="stylesheet"
+	href="{{asset('/assets/material-design-icons/material-design-icons.css')}}"
+	type="text/css" />
 
-<link rel="stylesheet" href="{{asset('/assets/bootstrap/dist/css/bootstrap.min.css')}}" type="text/css" />
+<link rel="stylesheet"
+	href="{{asset('/assets/bootstrap/dist/css/bootstrap.min.css')}}"
+	type="text/css" />
 <link rel="stylesheet" href="{{asset('/assets/styles/app.min.css')}}">
-<link rel="stylesheet" href="{{asset('/assets/styles/font.css')}}" type="text/css" />
-<link rel="stylesheet" href="{{asset('/assets/styles/custom-style.css')}}" type="text/css" />
+<link rel="stylesheet" href="{{asset('/assets/styles/font.css')}}"
+	type="text/css" />
+<link rel="stylesheet"
+	href="{{asset('/assets/styles/custom-style.css')}}" type="text/css" />
 </head>
 <body>
 	<div class="app" id="app">
@@ -40,22 +51,25 @@
 					<div class="m-b text-center logo-login">
 						<img src="{{asset('/images/logo.png')}}" alt="logo-login">
 					</div>
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/login') }}">
-                        {{ csrf_field() }}
-						<div class="md-form-group float-label {{ $errors->has('email') ? ' has-error' : '' }}">
-							<input type="email" name="email" class="md-input" ng-model="user.email" value="{{ old('email') }}" required autofocus> 
-							<label>Email</label> 
-							@if ($errors->has('email')) 
-							<span class="help-block"> <strong>{{ $errors->first('email') }}</strong> </span> 
-							@endif
+					<form class="form-horizontal" role="form" method="POST"
+						action="{{ url('/admin/login') }}">
+						{{ csrf_field() }}
+						<div
+							class="md-form-group float-label {{ $errors->has('email') ? ' has-error' : '' }}">
+							<input type="email" name="email" class="md-input"
+								ng-model="user.email" value="{{ old('email') }}" required
+								autofocus> <label>Email</label> @if ($errors->has('email')) <span
+								class="help-block"> <strong>{{ $errors->first('email') }}</strong>
+							</span> @endif
 						</div>
-						<div class="md-form-group float-label {{ $errors->has('password') ? ' has-error' : '' }}">
-							<input type="password" name="password" class="md-input" ng-model="user.password" required>
-							<label>Password</label>
+						<div
+							class="md-form-group float-label {{ $errors->has('password') ? ' has-error' : '' }}">
+							<input type="password" name="password" class="md-input"
+								ng-model="user.password" required> <label>Password</label>
 						</div>
 						<div class="m-b-md">
-							<label class="md-check"> <input type="checkbox">
-								<i class="primary"></i> Keep me signed in
+							<label class="md-check"> <input type="checkbox"> <i
+								class="primary"></i> Keep me signed in
 							</label>
 						</div>
 						<button type="submit" class="btn-def btn btn-block p-x-md">Sign in</button>

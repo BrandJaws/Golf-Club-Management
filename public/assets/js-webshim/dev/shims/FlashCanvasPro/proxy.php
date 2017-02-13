@@ -31,64 +31,71 @@
  * @link       http://flashcanvas.net/
  * @link       http://code.google.com/p/flashcanvas/
  */
-
 function FCgetHostName() {
-    if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-        return $_SERVER['HTTP_X_FORWARDED_HOST'];
-    } else if (isset($_SERVER['HTTP_HOST'])) {
-        return $_SERVER['HTTP_HOST'];
-    } else {
-        return $_SERVER['SERVER_NAME'];
-    }
+	if (isset ( $_SERVER ['HTTP_X_FORWARDED_HOST'] )) {
+		return $_SERVER ['HTTP_X_FORWARDED_HOST'];
+	} else if (isset ( $_SERVER ['HTTP_HOST'] )) {
+		return $_SERVER ['HTTP_HOST'];
+	} else {
+		return $_SERVER ['SERVER_NAME'];
+	}
 }
 
 // Whether we check referrer or not
-define('CHECK_REFERRER', true);
+define ( 'CHECK_REFERRER', true );
 
 // If necessary, specify the host where the SWF file is located
-define('SWF_HOST_NAME', '');
+define ( 'SWF_HOST_NAME', '' );
 
 // Check that the request comes from the same host
 if (CHECK_REFERRER) {
-    if (empty($_SERVER['HTTP_REFERER'])) {
-        exit;
-    }
-    if (SWF_HOST_NAME) {
-        $host = SWF_HOST_NAME;
-    } else {
-        $host = FCgetHostName();
-    }
-    $pattern = '#^https?://' . str_replace('.', '\.', $host) . '(:\d*)?/#';
-    if (!preg_match($pattern, $_SERVER['HTTP_REFERER'])) {
-        exit;
-    }
+	if (empty ( $_SERVER ['HTTP_REFERER'] )) {
+		exit ();
+	}
+	if (SWF_HOST_NAME) {
+		$host = SWF_HOST_NAME;
+	} else {
+		$host = FCgetHostName ();
+	}
+	$pattern = '#^https?://' . str_replace ( '.', '\.', $host ) . '(:\d*)?/#';
+	if (! preg_match ( $pattern, $_SERVER ['HTTP_REFERER'] )) {
+		exit ();
+	}
 }
 
 // Check that the request has a valid URL parameter
-if (empty($_GET['url'])) {
-    exit;
+if (empty ( $_GET ['url'] )) {
+	exit ();
 }
-if (!preg_match('#^https?://#', $_GET['url'])) {
-    exit;
+if (! preg_match ( '#^https?://#', $_GET ['url'] )) {
+	exit ();
 }
 
 // Percent-encode special characters in the URL
-$search  = array(  '%',   '#',   ' ');
-$replace = array('%25', '%23', '%20');
-$url     = str_replace($search, $replace, $_GET['url']);
+$search = array (
+		'%',
+		'#',
+		' ' 
+);
+$replace = array (
+		'%25',
+		'%23',
+		'%20' 
+);
+$url = str_replace ( $search, $replace, $_GET ['url'] );
 
 // Disable compression
-header('Content-Encoding: none');
+header ( 'Content-Encoding: none' );
 
 // Load and output the file
-if (extension_loaded('curl')) {
-    // Use cURL extension
-    $ch = curl_init($url);
-//  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-//  curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-    curl_exec($ch);
-    curl_close($ch);
+if (extension_loaded ( 'curl' )) {
+	// Use cURL extension
+	$ch = curl_init ( $url );
+	// curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	// curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+	curl_exec ( $ch );
+	curl_close ( $ch );
 } else {
-    // Use the http:// wrapper
-    readfile($url);
+	// Use the http:// wrapper
+	readfile ( $url );
 }

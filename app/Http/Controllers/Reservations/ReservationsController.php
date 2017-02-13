@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 
 class ReservationsController extends Controller {
-	
-        public function index(){
-            return view('admin.reservations.reservations');
-        }
+	public function index() {
+		return view ( 'admin.reservations.reservations' );
+	}
 }

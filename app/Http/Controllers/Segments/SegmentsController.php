@@ -8,12 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 
 class SegmentsController extends Controller {
-	
-        public function index(){
-            return view('admin.segments.segments');
-        }
-
-        public function create(){
-            return view('admin.segments.create');
-        }
+	public function index() {
+		return view ( 'admin.segments.segments' );
+	}
+	public function create() {
+		return view ( 'admin.segments.create' );
+	}
 }

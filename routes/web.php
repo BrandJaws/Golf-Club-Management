@@ -99,6 +99,10 @@ Route::group(['prefix'=>'admin','as'=>'admin.'],function(){
         Route::get('/',['as'=>'beacon','uses'=>'Beacon\BeaconController@index']);
 
     });
+    Route::group(['prefix'=>'beacon/create','as'=>'beacon/create.'],function(){
+        Route::get('/',['as'=>'beacon/create','uses'=>'Beacon\BeaconController@create']);
+
+    });
          
 });
 Auth::routes();

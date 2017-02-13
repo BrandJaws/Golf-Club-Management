@@ -10,4 +10,8 @@ class BeaconController extends Controller
     public function index() {
         return view('admin.beacon.beacon');
     }
+
+    public function create() {
+        return view('admin.beacon.create');
+    }
 }

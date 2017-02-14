@@ -68,36 +68,111 @@
 								type="tel" class="form-control" />
 						</div>
 						<div class="row row-sm">
-							<div class="col-md-3">
-								<div class="form-group form-group-inline">
-									<label class="form-control-label">Role</label>
-								</div>
+							<div class="col-md-12">
+								<h3>Responsible to manage</h3>
+								<hr />
 							</div>
-							<div class="col-md-8">
+						</div>
+						<div class="row row-sm">
+							<div class="col-md-12">
 								<div class="row row-sm">
 									<div class="col-md-3">
-										<div class="form-group">
-											<div class="radio">
-												<label class="ui-check"> <input type="radio" name="a"
-													value="keeper" class="has-value" checked> <i
-													class="dark-white"></i> Keeper
-												</label>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="radio">
-											<label class="ui-check"> <input type="radio" name="a"
-												value="wizard" class="has-value"> <i class="dark-white"></i>
-												Wizard
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Members
 											</label>
 										</div>
 									</div>
 									<div class="col-md-3">
-										<div class="radio">
-											<label class="ui-check"> <input type="radio" name="a"
-												value="deathEater" class="has-value"> <i class="dark-white"></i>
-												Death Eater
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Reservations
+											</label>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Shop
+											</label>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Segments
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="row row-sm">
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Beacon
+											</label>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Offers/Rewards
+											</label>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Notifications
+											</label>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Social
+											</label>
+										</div>
+									</div>
+								</div>
+								<div class="row row-sm">
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Staff
+											</label>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Trainings
+											</label>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Coaches
+											</label>
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="">
+												Leagues
 											</label>
 										</div>
 									</div>

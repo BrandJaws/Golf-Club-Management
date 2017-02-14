@@ -87,6 +87,15 @@ Route::group ( [
 					'uses' => 'Members\MembersController@add' 
 			] );
 		} );
+        Route::group ( [
+            'prefix' => 'members/edit',
+            'as' => 'members/edit.'
+        ], function () {
+            Route::get ( '/', [
+                'as' => 'members/edit',
+                'uses' => 'Members\MembersController@edit'
+            ] );
+        } );
 		Route::group ( [ 
 				'prefix' => 'rewards',
 				'as' => 'rewards.' 

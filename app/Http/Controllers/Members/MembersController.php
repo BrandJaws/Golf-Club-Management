@@ -16,8 +16,13 @@ class MembersController extends Controller {
 		if ($members->count () > 0) {
 			$members = json_encode ( $members );
 		}
+                if($request->ajax()){
+                    
+                    return $members;
+                }else{
+                    return view ( 'admin.members.members-list', compact ( 'members' ) );
+                }
 		
-		return view ( 'admin.members.members-list', compact ( 'members' ) );
 	}
 	public function add() {
 		return view ( 'admin.members.create' );

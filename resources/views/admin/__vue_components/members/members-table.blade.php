@@ -47,7 +47,9 @@
 			"membersList"
 		],
 		data: function(){
+                        
 			return {
+                            
 				membersListData:this.membersList.data
 			}
 		},

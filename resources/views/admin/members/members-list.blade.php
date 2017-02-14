@@ -127,6 +127,7 @@
                         searchQuery:"",
                         lastSearchTerm:"",
                         nextAvailablePage:2,
+                        searchRequestHeld:false,
                         
                         
                         
@@ -137,7 +138,10 @@
                                
 				
                                 if(isSearchQuery){
-                                    
+                                    if(this.ajaxRequestInProcess){
+                                        this.searchRequestHeld=true;
+                                        return;
+                                    }
                                     if(this.searchQuery !== this.lastSearchTerm){
                                         this.nextAvailablePage = 1;
                                     }
@@ -151,7 +155,7 @@
                                     _url = baseUrl+'?current_page='+(this.nextAvailablePage);
                                 }
                                 
-                                
+                                console.log(_url);
                                 if(this.nextAvailablePage === null){
                                     return;
                                 }
@@ -163,8 +167,14 @@
                                         url: _url,
                                         method: "GET",
                                         success:function(msg){
-                                                   
                                                     this.ajaxRequestInProcess = false;
+                                                    if(this.searchRequestHeld){
+                                                       
+                                                        this.searchRequestHeld=false;
+                                                        this.loadNextPage(true);
+                                                        
+                                                    }
+                                                    
                                                     pageDataReceived = JSON.parse(msg);
                                                     membersList = pageDataReceived.data;
                                                     

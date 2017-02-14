@@ -27,4 +27,8 @@ class MembersController extends Controller {
 	public function add() {
 		return view ( 'admin.members.create' );
 	}
+
+	public function edit() {
+	    return view ( 'admin.members.edit' );
+    }
 }

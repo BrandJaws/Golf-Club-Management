@@ -36,7 +36,7 @@
 					<td>@{{ member.gender }}</td>
 					<td>@{{ member.warnings }}</td>
 					<td>
-						<a href="#." class="blue-cb" @click="editMember(member.email)">edit</a>
+						<a href="{{Request::url()}}/edit" class="blue-cb" @click="editMember(member.email)">edit</a>
 						&nbsp;&nbsp;
 						<a href="#." class="del-icon"><i class="fa fa-trash"></i></a>
 					</td>

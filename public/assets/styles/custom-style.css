@@ -679,6 +679,15 @@ label {
 .inlineFormPadding {
 	padding: 15px 0px 0px 0px;
 }
+.padding-small {
+	padding: 15px 0px 0px 0px;
+}
+.bg-white {
+	background: #fff;
+}
+.padding-none {
+	padding: 0px !important;
+}
 /** segments create screen **/
 /** social profile connect **/
 .socialMediaConnect {

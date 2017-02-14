@@ -86,7 +86,7 @@
 										<form action="#." method="post">
 											<div class="search-field">
 												<span class="search-box"> <input type="text" name="search"
-													class="search-bar">
+													class="search-bar" v-model="searchQuery" @input="loadNextPage(true)">
 													<button type="submit" class="search-btn">
 														<i class="fa fa-search"></i>
 													</button>
@@ -117,23 +117,110 @@
 
 @include("admin.__vue_components.members.members-table")
 <script>
+    
 	var baseUrl = "{{url('admin/members')}}";
 	var vue = new Vue({
 		el: "#members-list-table",
 		data: {
 			membersList:{!! $members !!},
-			latestPageLoaded:0,
-			ajaxRequestInProcess:false
+			ajaxRequestInProcess:false,
+                        searchQuery:"",
+                        lastSearchTerm:"",
+                        nextAvailablePage:2,
+                        searchRequestHeld:false,
+                        
+                        
+                        
 		},
 		methods: {
-			loadNextPage:function(){
-				if(this.latestPageLoaded == 0){
-                    for(x=0; x<_membersList.length; x++){
-                         this.membersList.push(_membersList[x]);
-                    }
-                   
-                }
-                return;
+                    
+			loadNextPage:function(isSearchQuery){
+                               
+				
+                                if(isSearchQuery){
+                                    if(this.ajaxRequestInProcess){
+                                        this.searchRequestHeld=true;
+                                        return;
+                                    }
+                                    if(this.searchQuery !== this.lastSearchTerm){
+                                        this.nextAvailablePage = 1;
+                                    }
+                                    this.lastSearchTerm = this.searchQuery;
+                                    _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+                                   
+                                    
+                                }else if(this.searchQuery != ""){
+                                    _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+                                }else{
+                                    _url = baseUrl+'?current_page='+(this.nextAvailablePage);
+                                }
+                                
+                                console.log(_url);
+                                if(this.nextAvailablePage === null){
+                                    return;
+                                }
+                                
+                                if(!this.ajaxRequestInProcess){
+                                    this.ajaxRequestInProcess = true;
+                                    var request = $.ajax({
+                                        
+                                        url: _url,
+                                        method: "GET",
+                                        success:function(msg){
+                                                    this.ajaxRequestInProcess = false;
+                                                    if(this.searchRequestHeld){
+                                                       
+                                                        this.searchRequestHeld=false;
+                                                        this.loadNextPage(true);
+                                                        
+                                                    }
+                                                    
+                                                    pageDataReceived = JSON.parse(msg);
+                                                    membersList = pageDataReceived.data;
+                                                    
+                                                    //Success code to follow
+                                                        if(pageDataReceived.next_page_url !== null){
+                                                                this.nextAvailablePage = pageDataReceived.current_page+1;
+                                                        }else{
+                                                            this.nextAvailablePage = null;
+                                                        }
+                                                    
+                                                        if(isSearchQuery){
+                                                            
+                                                            for(x=this.membersList.data.length;x>=0;x--){
+                                                                this.membersList.data.splice(x,1);
+                                                            }
+
+                                                            for(x=0; x<membersList.length; x++){
+
+                                                                this.membersList.data.push(membersList[x]);
+
+                                                            }
+                                                            
+                                                        
+                                                        }else{
+                                                            
+                                                           
+                                                            for(x=0; x<membersList.length; x++){
+
+                                                                this.membersList.data.push(membersList[x]);
+
+                                                            }
+                                                        }
+                                                    
+                                                    
+                                                    
+                                                }.bind(this),
+
+                                        error: function(jqXHR, textStatus ) {
+                                                    this.ajaxRequestInProcess = false;
+
+                                                    //Error code to follow
+
+
+                                               }.bind(this)
+                                    }); 
+                                }
 			}
 		},
 	});
@@ -143,8 +230,9 @@
     }); */
     $(window).scroll(function() {
        if($(window).scrollTop() + $(window).height() == $(document).height()) {
-           vue.loadNextPage();
-           console.log("bottom!");
+       
+            vue.loadNextPage(false);
+           
        }
     });
 </script>

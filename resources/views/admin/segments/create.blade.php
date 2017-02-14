@@ -120,10 +120,22 @@
 				<div class="">
 					<div class="col-sm-6 col-md-4">
 						<div class="box">
+							<div class="box-header">
+								<h3>Pie</h3>
+								<small>Full fill</small>
+							</div>
 							<div class="box-body">
-								<div ui-jp="plot" ui-refresh="app.setting.color"
-									ui-options="[{data: 20, label:&#x27;Server&#x27;}, {data: 50, label: &#x27;Client&#x27;}, {data: 30, label:&#x27;Server&#x27;}],{series: { pie: { show: true, innerRadius: 0.6, stroke: { width: 0 }, label: { show: true, threshold: 0.05 } } },legend: {backgroundColor: 'transparent'},colors: ['#0cc2aa','#fcc100'],grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },tooltip: true,tooltipOpts: { content: '%s: %p.0%' }}"
-									style="height: 118px"></div>
+								<div ui-jp="plot" ui-refresh="app.setting.color" ui-options="
+              [{data: 75, label: &#x27;iPhone&#x27;}, {data: 20, label: &#x27;iPad&#x27;}],
+              {
+                series: { pie: { show: true, innerRadius: 0, stroke: { width: 0 }, label: { show: true, threshold: 0.05 } } },
+                legend: {backgroundColor: 'transparent'},
+                colors: ['#0cc2aa','#fcc100'],
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: 'rgba(120,120,120,0.5)' },
+                tooltip: true,
+                tooltipOpts: { content: '%s: %p.0%' }
+              }
+            " style="height:200px"></div>
 							</div>
 						</div>
 					</div>
@@ -156,4 +168,5 @@
            console.log($("#sliderRange").slider( "option", "values" ));
         });
     </script>
+<script src="{{asset("/libs/jquery/flot/jquery.flot.js")}}"></script>
 @endSection

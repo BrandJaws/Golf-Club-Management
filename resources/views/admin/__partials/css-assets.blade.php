@@ -38,3 +38,5 @@
 {{--
 <link rel="stylesheet" href="/resources/demos/style.css">
 --}}
+<link rel="stylesheet"
+	  href="{{asset('/chat/style.css')}}">

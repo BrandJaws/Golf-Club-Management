@@ -96,7 +96,7 @@
 									</div>
 								</div>
 								<div class="col-md-4 text-right">
-									<a href="{{Request::url()}}/add" class="btn-def btn"><i
+									<a href="{{route('admin.member.create')}}" class="btn-def btn"><i
 										class="fa fa-plus-circle"></i>&nbsp;Add Members</a>
 									<button class="btn-def btn">
 										<i class="fa fa-upload"></i>&nbsp;Import CSV

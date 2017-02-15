@@ -20,7 +20,7 @@
 								<i class="fa fa-cube"></i>
 						</span> <span class="nav-text">Dashboard</span>
 					</a></li>
-					<li><a href="{{route('admin.members.members')}}"> <span
+					<li><a href="{{route('admin.member.index')}}"> <span
 							class="nav-icon"> <i class="fa fa-user-circle-o"></i>
 						</span> <span class="nav-text">Members</span>
 					</a></li>

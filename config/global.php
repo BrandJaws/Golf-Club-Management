@@ -2,8 +2,8 @@
 return [ 
 		
 		'gender' => [ 
-				'male' => 'Male',
-				'female' => 'Female' 
+				'male' => 'MALE',
+				'female' => 'FEMALE' 
 		],
         'staff'=>[
             'permissions'=>[

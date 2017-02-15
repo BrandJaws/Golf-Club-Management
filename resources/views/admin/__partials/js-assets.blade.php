@@ -4,8 +4,8 @@
 <!-- Bootstrap -->
 <script src="{{asset('/libs/jquery/tether/dist/js/tether.min.js')}}"></script>
 <script src="{{asset('/libs/jquery/bootstrap/dist/js/bootstrap.js')}}"></script>
-<script
-	src="{{asset('/libs/jquery/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+<script src="{{asset('/libs/jquery/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
+<script src="{{asset('/chat/script.js')}}"></script>
 <!-- core -->
 
 <script>

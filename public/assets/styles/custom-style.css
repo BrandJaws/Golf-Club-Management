@@ -688,6 +688,13 @@ label {
 .padding-none {
 	padding: 0px !important;
 }
+.chat-shadow {
+	border: 1px solid #e6e6e6;
+	-webkit-box-shadow: 0px 0px 20px 2px #cecdcd;
+	-moz-box-shadow: 0px 0px 20px 2px #cecdcd;
+	-o-box-shadow: 0px 0px 20px 2px #cecdcd;
+	box-shadow: 0px 0px 20px 2px #cecdcd;
+}
 /** segments create screen **/
 /** social profile connect **/
 .socialMediaConnect {

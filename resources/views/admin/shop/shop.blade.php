@@ -299,7 +299,7 @@
 								--}} {{--
 							</div>
 							--}}
-							<shop-menu></shop-menu>
+							<shop-menu :menu-list-m="menuListM"></shop-menu>
 						</div>
 						<div class="col-md-9">
 							<div class="segments-inner">
@@ -536,8 +536,34 @@
             {menuItem: 'Pizza'},{menuItem: 'Starters'}
         ];
 
+        //var _shopFood = {menu:{title:'',menuList:[{id:'1',name:'Appetizers'},{id:'2',name:'Pizza'},{id:'3',name:'Nuggets'}]},items:{title:'',menuList:[]}};
+
+        var _shopFood = {
+            			menu:{
+            			    title:'Food',
+                            menuList:[
+                                {id:1,name:'Appetizers'},
+                                {id:2,name:'Pizza'},
+                                {id:3,name:'Nuggets'},
+                                {id:4,name:'Starters'}
+                            ]
+						},
+                        items:{
+            			    title:'',
+                            menuList:[{name:"Segment 1",description:"Sunday Members Only",coverage:"90%",dateTime:"Dec 9 2016 - 2:13:00 AM",status:"Active"},
+                                {name:"Segment 1",description:"Sunday Members Only",coverage:"90%",dateTime:"Dec 9 2016 - 2:13:00 AM",status:"Active"},
+                                {name:"Segment 1",description:"Sunday Members Only",coverage:"90%",dateTime:"Dec 9 2016 - 2:13:00 AM",status:"Active"},
+                                {name:"Segment 1",description:"Sunday Members Only",coverage:"90%",dateTime:"Dec 9 2016 - 2:13:00 AM",status:"Active"},
+                                {name:"Segment 1",description:"Sunday Members Only",coverage:"90%",dateTime:"Dec 9 2016 - 2:13:00 AM",status:"Active"}]
+                        }
+					};
+
         var vue = new Vue({
-           el: "#shopPage"
+           el: "#shopPage",
+           data: {
+               menuListM:_shopFood
+           }
+
         });
 
     </script>

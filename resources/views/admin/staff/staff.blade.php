@@ -105,6 +105,12 @@
 								<div class="clearfix"></div>
 							</div>
 						</div>
+						@if(Session::has('error'))
+                            <div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
+                        @endif
+                        @if(Session::has('success'))
+                        	<div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
+                        @endif
 						<!-- inner header -->
 						<staff :staff-list="staffList"> </staff>
 					</div>
@@ -116,34 +122,92 @@
 
 @include("admin.__vue_components.staff.staff-table")
 <script>
-        var baseUrl = "{{url('')}}";
-        _staffList = [{name:'John Wick',email:'john.wick@mail.com',contact:'0423456783',role:'Keeper'},
-            {name:'Johnny Depp',email:'johnny.depp@mail.com',contact:'042343284',role:'Actor'},
-            {name:'Emma Watson',email:'emma.watson@mail.com',contact:'98323456783',role:'Actress'},
-            {name:'Emma Brows',email:'emma.brown@mail.com',contact:'0423656783',role:'Actress'},
-            {name:'Harry Potter',email:'harry.potter@mail.com',contact:'34563456783',role:'Wizard'},
-            {name:'Atif Aslam',email:'atif.aslam@mail.com',contact:'65472836399',role:'Singer'},
-            {name:'Emma Watson',email:'emma.watson@mail.com',contact:'98323456783',role:'Actress'},
-            {name:'Emma Brows',email:'emma.brown@mail.com',contact:'0423656783',role:'Actress'},
-            {name:'Harry Potter',email:'harry.potter@mail.com',contact:'34563456783',role:'Wizard'},];
+        
 
         var vue = new Vue({
             el: "#staff-list-table",
             data: {
-                staffList:[],
-                latestPageLoaded:0,
-                ajaxRequestInProcess:false
+                staffList:({!! $employees !!}).data,
+                searchQuery:"",
+                lastSearchTerm:"",
+                nextAvailablePage:2,
+                searchRequestHeld:false,
             },
             methods: {
-                loadNextPage:function(){
-                    if(this.latestPageLoaded == 0){
-                        for(x=0; x<_staffList.length; x++){
-                            this.staffList.push(_staffList[x]);
+                loadNextPage:function(isSearchQuery){
+                    
+    				
+                    if(isSearchQuery){
+                        if(this.ajaxRequestInProcess){
+                            this.searchRequestHeld=true;
+                            return;
                         }
-
+                        if(this.searchQuery !== this.lastSearchTerm){
+                            this.nextAvailablePage = 1;
+                        }
+                        this.lastSearchTerm = this.searchQuery;
+                        _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+                       
+                        
+                    }else if(this.searchQuery != ""){
+                        _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+                    }else{
+                        _url = baseUrl+'?current_page='+(this.nextAvailablePage);
                     }
-                    return;
-                }
+                    
+                  
+                    if(this.nextAvailablePage === null){
+                        return;
+                    }
+                    
+                    if(!this.ajaxRequestInProcess){
+                        this.ajaxRequestInProcess = true;
+                        var request = $.ajax({
+                            
+                            url: _url,
+                            method: "GET",
+                            success:function(msg){
+                                
+                                        this.ajaxRequestInProcess = false;
+                                        if(this.searchRequestHeld){
+                                           
+                                            this.searchRequestHeld=false;
+                                            this.loadNextPage(true);
+                                            
+                                        }
+                                        
+                                        pageDataReceived = JSON.parse(msg);
+                                        membersList = pageDataReceived.data ;
+                                        
+                                        //Success code to follow
+                                            if(pageDataReceived.next_page_url !== null){
+                                                    this.nextAvailablePage = pageDataReceived.current_page+1;
+                                            }else{
+                                                this.nextAvailablePage = null;
+                                            }
+                                        
+                                            if(isSearchQuery){
+                                                
+                                                 this.membersList=membersList;
+                                            }else{
+                                                
+                                               appendArray(this.membersList,membersList);
+                                            }
+                                        
+                                        
+                                        
+                                    }.bind(this),
+
+                            error: function(jqXHR, textStatus ) {
+                                        this.ajaxRequestInProcess = false;
+
+                                        //Error code to follow
+
+
+                                   }.bind(this)
+                        }); 
+                    }
+}
             },
         });
 

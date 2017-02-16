@@ -53,14 +53,14 @@
 		<!-- ############ PAGE START-->
 		<div class="profile-main padding" id="selectionDepHidden">
 			<div class="row details-section">
-				<form action="{{route('admin.staff.store')}}" name="" method="post">
+				<form action="{{route('admin.staff.update')}}" method="post">
 				@if(Session::has('error'))
                     <div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
                     @endif
                     @if(Session::has('success'))
                     <div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
                     @endif
-					<input type="hidden" name="_method" value="POST" />
+					<input type="hidden" name="_method" value="put" />
 				   {{ csrf_field() }}
 					<div class="col-md-8">
 						<div class="form-group {{($errors->has('firstName'))?'has-error':''}}">
@@ -192,7 +192,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="league" name="permissions[]">
+												<input type="checkbox" value="league" name="permissions[]" {{(array_key_exists('league',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Leagues
 											</label>
 										</div>

@@ -50,10 +50,10 @@ Route::group([
             'as' => 'segments.'
         ], function () {
             Route::get('/', [
-                'as' => 'segments',
+                'as' => 'index',
                 'uses' => 'ClubAdmin\Segments\SegmentsController@index'
             ]);
-            Route::get('/', [
+            Route::get('/create', [
                 'as' => 'create',
                 'uses' => 'ClubAdmin\Segments\SegmentsController@create'
             ]);

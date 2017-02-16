@@ -36,7 +36,7 @@
 								<i class="fa fa-shopping-basket"></i>
 						</span> <span class="nav-text">Shop</span>
 					</a></li>
-					<li><a href="{{route('admin.segments.segments')}}"> <span
+					<li><a href="{{route('admin.segments.index')}}"> <span
 							class="nav-icon"> <i class="fa fa-pie-chart"></i>
 						</span> <span class="nav-text">Segments</span>
 					</a></li>

@@ -21,7 +21,9 @@ class StaffController extends Controller
         $currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
         $perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
         $employees = (new Employee())->listClubEmployeesPaginated(Auth::user()->club_id, $currentPage, $perPage, $search);
-        dd($employees);
+        if ($employees->count() > 0) {
+            $employees = json_encode($employees);
+        }
         if ($request->ajax()) {
             return $employees;
         }

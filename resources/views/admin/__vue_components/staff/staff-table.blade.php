@@ -22,13 +22,13 @@
                 <tbody>
                     <tr v-for="staff in staffMembers">
                         <td>
-                            @{{staff.name}}
+                            @{{staff.firstName}} @{{staff.lastName}}
                         </td>
                          <td>
                             @{{staff.email}}
                         </td>
                         <td>
-                            @{{staff.contact}}
+                            @{{staff.phone}}
                         </td>
                         
                         <td>

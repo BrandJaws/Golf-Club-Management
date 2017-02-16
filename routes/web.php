@@ -20,18 +20,18 @@ Route::group([
 ], function () {
     Route::get('/login', [
         'as' => 'login',
-        'uses' => 'Admin\AdminController@showLoginForm'
+        'uses' => 'ClubAdmin\Admin\AdminController@showLoginForm'
     ]);
     Route::post('/login', [
         'as' => 'login',
-        'uses' => 'Admin\AdminController@login'
+        'uses' => 'ClubAdmin\Admin\AdminController@login'
     ]);
     Route::group([
         'middleware' => 'auth'
     ], function () {
         Route::get('/dashboard', [
             'as' => 'dashboard',
-            'uses' => 'Admin\AdminController@dashboard'
+            'uses' => 'ClubAdmin\Admin\AdminController@dashboard'
         ]);
         Route::group([
             'prefix' => 'reservations',
@@ -39,86 +39,87 @@ Route::group([
         ], function () {
             Route::get('/', [
                 'as' => 'reservations',
-                'uses' => 'Reservations\ReservationsController@index'
+                'uses' => 'ClubAdmin\Reservations\ReservationsController@index'
             ]);
         });
+        /**
+         * Routes related to segments
+         */
         Route::group([
             'prefix' => 'segments',
             'as' => 'segments.'
         ], function () {
             Route::get('/', [
                 'as' => 'segments',
-                'uses' => 'Segments\SegmentsController@index'
+                'uses' => 'ClubAdmin\Segments\SegmentsController@index'
             ]);
-        });
-        Route::group([
-            'prefix' => 'segments/create',
-            'as' => 'segments/create.'
-        ], function () {
             Route::get('/', [
-                'as' => 'segments/create',
-                'uses' => 'Segments\SegmentsController@create'
+                'as' => 'create',
+                'uses' => 'ClubAdmin\Segments\SegmentsController@create'
             ]);
         });
+        /**
+         * Routes related to members
+         */
         Route::group([
             'prefix' => 'member',
             'as' => 'member.'
         ], function () {
             Route::get('/', [
                 'as' => 'index',
-                'uses' => 'Members\MembersController@index'
+                'uses' => 'ClubAdmin\Members\MembersController@index'
             ]);
             Route::get('/create', [
                 'as' => 'create',
-                'uses' => 'Members\MembersController@create'
+                'uses' => 'ClubAdmin\Members\MembersController@create'
             ]);
             Route::post('/', [
                 'as' => 'store',
-                'uses' => 'Members\MembersController@store'
+                'uses' => 'ClubAdmin\Members\MembersController@store'
             ]);
             Route::get('/edit/{member_id}', [
                 'as' => 'edit',
-                'uses' => 'Members\MembersController@edit'
+                'uses' => 'ClubAdmin\Members\MembersController@edit'
             ]);
             Route::put('/{member_id}', [
                 'as' => 'update',
-                'uses' => 'Members\MembersController@update'
+                'uses' => 'ClubAdmin\Members\MembersController@update'
             ]);
             Route::delete('/{member_id}', [
                 'as' => 'distroy',
-                'uses' => 'Members\MembersController@distroy'
+                'uses' => 'ClubAdmin\Members\MembersController@distroy'
             ]);
             Route::get('/search-list', [
                 'as' => 'search-list',
-                'uses' => 'Members\MembersController@searchListMembers'
+                'uses' => 'ClubAdmin\Members\MembersController@searchListMembers'
             ]);
         });
-       
+        /**
+         * reoutes related to rewards
+         */
         Route::group([
             'prefix' => 'rewards',
             'as' => 'rewards.'
         ], function () {
             Route::get('/', [
                 'as' => 'rewards',
-                'uses' => 'Rewards\RewardsController@index'
+                'uses' => 'ClubAdmin\Rewards\RewardsController@index'
             ]);
         });
+        /**
+         * Routes releated to notificaitons
+         */
         Route::group([
             'prefix' => 'notifications',
             'as' => 'notifications.'
         ], function () {
             Route::get('/', [
                 'as' => 'notifications',
-                'uses' => 'Notifications\NotificationsController@index'
+                'uses' => 'ClubAdmin\Notifications\NotificationsController@index'
             ]);
-        });
-        Route::group([
-            'prefix' => 'notifications/create',
-            'as' => 'notifications/create.'
-        ], function () {
-            Route::get('/', [
-                'as' => 'notifications/create',
-                'uses' => 'Notifications\NotificationsController@create'
+            Route::get('/create', [
+                'as' => 'create',
+                'uses' => 'ClubAdmin\Notifications\NotificationsController@create'
             ]);
         });
         Route::group([
@@ -127,25 +128,23 @@ Route::group([
         ], function () {
             Route::get('/', [
                 'as' => 'profile',
-                'uses' => 'Profile\ProfileController@index'
+                'uses' => 'ClubAdmin\Profile\ProfileController@index'
+            ]);
+            Route::get('/edit', [
+                'as' => 'edit',
+                'uses' => 'ClubAdmin\Profile\ProfileController@edit'
             ]);
         });
+        /**
+         * Routes related to rewards
+         */
         Route::group([
-            'prefix' => 'profile/edit',
-            'as' => 'profile/edit.'
+            'prefix' => 'rewards',
+            'as' => 'rewards.'
         ], function () {
-            Route::get('/', [
-                'as' => 'profile/edit',
-                'uses' => 'Profile\ProfileController@edit'
-            ]);
-        });
-        Route::group([
-            'prefix' => 'rewards/create',
-            'as' => 'rewards/create.'
-        ], function () {
-            Route::get('/', [
-                'as' => 'rewards/create',
-                'uses' => 'Rewards\RewardsController@create'
+            Route::get('/create', [
+                'as' => 'create',
+                'uses' => 'ClubAdmin\Rewards\RewardsController@create'
             ]);
         });
         Route::group([
@@ -154,18 +153,16 @@ Route::group([
         ], function () {
             Route::get('/', [
                 'as' => 'social',
-                'uses' => 'Social\SocialController@index'
+                'uses' => 'ClubAdmin\Social\SocialController@index'
+            ]);
+            Route::get('/create', [
+                'as' => 'create',
+                'uses' => 'ClubAdmin\Social\SocialController@create'
             ]);
         });
-        Route::group([
-            'prefix' => 'social/create',
-            'as' => 'social/create.'
-        ], function () {
-            Route::get('/', [
-                'as' => 'social/create',
-                'uses' => 'Social\SocialController@create'
-            ]);
-        });
+        /**
+         * Routes related to staff
+         */
         Route::group([
             'prefix' => 'staff',
             'as' => 'staff.'
@@ -173,73 +170,72 @@ Route::group([
             
             Route::get('/', [
                 'as' => 'index',
-                'uses' => 'Staff\StaffController@index'
+                'uses' => 'ClubAdmin\Staff\StaffController@index'
             ]);
             Route::get('/create', [
                 'as' => 'create',
-                'uses' => 'Staff\StaffController@create'
+                'uses' => 'ClubAdmin\Staff\StaffController@create'
             ]);
             Route::post('/', [
                 'as' => 'store',
-                'uses' => 'Staff\StaffController@store'
+                'uses' => 'ClubAdmin\Staff\StaffController@store'
             ]);
             Route::get('/edit/{staff_id}', [
                 'as' => 'edit',
-                'uses' => 'Staff\StaffController@edit'
+                'uses' => 'ClubAdmin\Staff\StaffController@edit'
             ]);
             Route::put('/{staff_id}', [
                 'as' => 'update',
-                'uses' => 'Staff\StaffController@update'
+                'uses' => 'ClubAdmin\Staff\StaffController@update'
             ]);
             Route::delete('/{staff_id}', [
                 'as' => 'delete',
-                'uses' => 'Staff\StaffController@destroy'
+                'uses' => 'ClubAdmin\Staff\StaffController@destroy'
             ]);
         });
-        
+        /**
+         * Routes related to shop
+         */
         Route::group([
             'prefix' => 'shop',
             'as' => 'shop.'
         ], function () {
             Route::get('/', [
                 'as' => 'shop',
-                'uses' => 'Shop\ShopController@index'
+                'uses' => 'ClubAdmin\Shop\ShopController@index'
             ]);
         });
+        
+        /**
+         * Routes related to coaches
+         */
         Route::group([
             'prefix' => 'coaches',
             'as' => 'coaches.'
         ], function () {
             Route::get('/', [
                 'as' => 'coaches',
-                'uses' => 'Coaches\CoachesController@index'
+                'uses' => 'ClubAdmin\Coaches\CoachesController@index'
+            ]);
+            Route::get('/create', [
+                'as' => 'create',
+                'uses' => 'ClubAdmin\Coaches\CoachesController@create'
             ]);
         });
-        Route::group([
-            'prefix' => 'coaches/create',
-            'as' => 'coaches/create.'
-        ], function () {
-            Route::get('/', [
-                'as' => 'coaches/create',
-                'uses' => 'Coaches\CoachesController@create'
-            ]);
-        });
+        /**
+         * routes related to beacons
+         */
         Route::group([
             'prefix' => 'beacon',
             'as' => 'beacon.'
         ], function () {
             Route::get('/', [
                 'as' => 'beacon',
-                'uses' => 'Beacon\BeaconController@index'
+                'uses' => 'ClubAdmin\Beacon\BeaconController@index'
             ]);
-        });
-        Route::group([
-            'prefix' => 'beacon/create',
-            'as' => 'beacon/create.'
-        ], function () {
-            Route::get('/', [
-                'as' => 'beacon/create',
-                'uses' => 'Beacon\BeaconController@create'
+            Route::get('/create', [
+                'as' => 'create',
+                'uses' => 'ClubAdmin\Beacon\BeaconController@create'
             ]);
         });
     });

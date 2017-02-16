@@ -56,7 +56,7 @@
 							class="nav-icon"> <i class="fa fa-thumbs-up"></i>
 						</span> <span class="nav-text">Social</span>
 					</a></li>
-					<li><a href="{{route('admin.staff.staff')}}"> <span
+					<li><a href="{{route('admin.staff.index')}}"> <span
 							class="nav-icon"> <i class="fa fa-users"></i>
 						</span> <span class="nav-text">Staff</span>
 					</a></li>

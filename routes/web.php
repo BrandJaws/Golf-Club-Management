@@ -34,15 +34,6 @@ Route::group([
             'uses' => 'Admin\AdminController@dashboard'
         ]);
         Route::group([
-            'prefix' => 'member',
-            'as' => 'member.'
-        ], function () {
-            Route::get('/', [
-                'as' => 'index',
-                'uses' => 'Admin\MemberController@index'
-            ]);
-        });
-        Route::group([
             'prefix' => 'reservations',
             'as' => 'reservations.'
         ], function () {
@@ -175,20 +166,33 @@ Route::group([
             'prefix' => 'staff',
             'as' => 'staff.'
         ], function () {
+            
             Route::get('/', [
-                'as' => 'staff',
+                'as' => 'index',
                 'uses' => 'Staff\StaffController@index'
             ]);
-        });
-        Route::group([
-            'prefix' => 'staff/create',
-            'as' => 'staff/create.'
-        ], function () {
-            Route::get('/', [
-                'as' => 'staff/create',
+            Route::get('/create', [
+                'as' => 'create',
                 'uses' => 'Staff\StaffController@create'
             ]);
+            Route::post('/', [
+                'as' => 'store',
+                'uses' => 'Staff\StaffController@store'
+            ]);
+            Route::get('/edit/{staff_id}', [
+                'as' => 'edit',
+                'uses' => 'Staff\StaffController@edit'
+            ]);
+            Route::put('/{staff_id}', [
+                'as' => 'update',
+                'uses' => 'Staff\StaffController@update'
+            ]);
+            Route::delete('/{staff_id}', [
+                'as' => 'delete',
+                'uses' => 'Staff\StaffController@destroy'
+            ]);
         });
+        
         Route::group([
             'prefix' => 'shop',
             'as' => 'shop.'

@@ -13,9 +13,7 @@
 	          			<th>
 	          				Contact Number
 	          			</th>
-	          			<th>
-	          				Role
-	          			</th>
+	          			
 	          			<th>
 	          				Actions
 	          			</th>
@@ -32,9 +30,7 @@
                         <td>
                             @{{staff.contact}}
                         </td>
-                        <td>
-                            @{{staff.role}}
-                        </td>
+                        
                         <td>
                             <a href="#." class="blue-cb">edit</a>&nbsp;&nbsp;&nbsp;
                             <a href="#." class="del-icon"><i class="fa fa-trash"></i></a>

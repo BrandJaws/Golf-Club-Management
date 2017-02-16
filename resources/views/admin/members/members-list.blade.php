@@ -86,7 +86,8 @@
 										<form action="#." method="post">
 											<div class="search-field">
 												<span class="search-box"> <input type="text" name="search"
-													class="search-bar" v-model="searchQuery" @input="loadNextPage(true)">
+													class="search-bar" v-model="searchQuery"
+													@input="loadNextPage(true)">
 													<button type="submit" class="search-btn">
 														<i class="fa fa-search"></i>
 													</button>

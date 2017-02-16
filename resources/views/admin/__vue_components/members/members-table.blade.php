@@ -49,8 +49,8 @@
 		
                 computed: {
                             membersListData: function () {
-                              return this.membersList;
-                            }
+                                                return this.membersList;
+                                              }
                 },
 		methods: {
 			editMember: function(id){

@@ -119,7 +119,7 @@
 <script>
        
         
-	var baseUrl = "{{url('admin/members')}}";
+	var baseUrl = "{{url('admin/member')}}";
 	var vue = new Vue({
 		el: "#members-list-table",
 		data: {

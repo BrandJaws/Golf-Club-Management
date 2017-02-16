@@ -3,18 +3,14 @@
         <div class="app-header white box-shadow">
             <div class="navbar">
                 <!-- Open side - Naviation on mobile -->
-                <a data-toggle="modal" data-target="#aside"
-                   class="navbar-item pull-left hidden-lg-up"> <i
-                            class="material-icons">&#xe5d2;</i>
-                </a>
+                <a data-toggle="modal" data-target="#aside" class="navbar-item pull-left hidden-lg-up"> <i class="material-icons">&#xe5d2;</i>
+                </a> 
                 <!-- / -->
                 <!-- Page title - Bind to $state's title -->
-                <div class="navbar-item pull-left h5"
-                     ng-bind="$state.current.data.title" id="pageTitle"></div>
+                <div class="navbar-item pull-left h5" ng-bind="$state.current.data.title" id="pageTitle"></div>
                 <!-- navbar right -->
                 <ul class="nav navbar-nav pull-right">
-                    <li class="nav-item dropdown pos-stc-xs"><a class="nav-link" href
-                                                                data-toggle="dropdown"> <i class="material-icons">&#xe7f5;</i> <span
+                    <li class="nav-item dropdown pos-stc-xs"><a class="nav-link" href="" data-toggle="dropdown"> <i class="material-icons">&#xe7f5;</i> <span
                                     class="label label-sm up warn">3</span>
                         </a></li>
                     <li class="nav-item dropdown"><a class="nav-link clear" href
@@ -53,15 +49,19 @@
             <!-- ############ PAGE START-->
             <div class="profile-main padding" id="selectionDepHidden">
                 <div class="row details-section">
-                    <form action="#." name="" action="">
+                    <form name="" action="{{route('admin.member.update',['member_id'=>$member->id])}}" method="post">
+                    	<input type="hidden" name="_method" value="PUT" />
+                    	{{ csrf_field() }}
                         <div class="col-md-8">
                             <div class="form-group">
-                                <label class="form-control-label">Name</label> <input type="text"
-                                                                                      class="form-control" value="John Whick" />
+                                <label class="form-control-label">First Name</label> <input type="text" name="firstName"  class="form-control" value="{{$member->firstName}} " />
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label">Email</label> <input
-                                        type="email" class="form-control" value="john.whick@gmail.com" />
+                                <label class="form-control-label">Last Name</label> <input type="text" name="lastName" class="form-control" value="{{$member->lastName}} " />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Email</label> 
+                                <input type="email" class="form-control" name="email" value="{{$member->email}}" />
                             </div>
                             <div class="row row-sm">
                                 <div class="col-md-3">
@@ -74,17 +74,16 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="radio">
-                                                    <label class="ui-check"> <input type="radio" name="a"
-                                                                                    value="option1" class="has-value" checked> <i
-                                                                class="dark-white"></i> Male
+                                                    <label class="ui-check"> 
+                                                    	<input type="radio" name="gender" value="{{Config::get('global.gender.male')}}" class="has-value" {{($member->gender == Config::get('global.gender.male'))?'checked':''}}> <i class="dark-white"></i> Male
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="radio">
-                                                <label class="ui-check"> <input type="radio" name="a"
-                                                                                value="option1" class="has-value"> <i class="dark-white"></i>
+                                                <label class="ui-check">
+													<input type="radio" name="gender"  value="{{Config::get('global.gender.female')}}" class="has-value" {{($member->gender == Config::get('global.gender.female'))?'checked':''}}> <i class="dark-white"></i>
                                                     Female
                                                 </label>
                                             </div>
@@ -103,10 +102,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="radio">
-                                                    <label class="ui-check"> <input v-model="memberType"
-                                                                                    type="radio" name="relation" value="parent"
-                                                                                    class="has-value" @change="affiliate()" /> <i
-                                                                class="dark-white"></i> Parent
+                                                    <label class="ui-check"> <input v-model="memberType"  type="radio" name="relation" value="parent"  class="has-value" @change="affiliate()"  /> <i class="dark-white"></i> Parent
                                                     </label>
                                                 </div>
                                             </div>
@@ -137,8 +133,7 @@
                                         </div>
                                         <div class="col-md-8">
                                             <div class="form-group">
-                                                <auto-complete-box url="{{asset('people.json')}}"
-                                                                   property-for-id="email" property-for-name="name"
+                                                <auto-complete-box url="{{asset('people.json')}}" property-for-id="email" property-for-name="name"
                                                                    filtered-from-source="false" include-id-in-list="true"
                                                                    v-model="selectedId" initial-text-value=""> </auto-complete-box>
                                             </div>
@@ -148,9 +143,8 @@
                             </div>
                             <br />
                             <div class="form-group">
-                                <a href="#." class="btn btn-def"><i class="fa fa-floppy-o"></i>
-                                    &nbsp;Add Member</a> &nbsp;&nbsp; <a
-                                        href="{{route('admin.members.members')}}"
+                                <button type="submit"  class="btn btn-def"><i class="fa fa-floppy-o"></i>&nbsp;Update Member</button> &nbsp;&nbsp; <a
+                                        href="{{route('admin.member.index')}}"
                                         class="btn btn-outline b-primary text-primary"><i
                                             class="fa fa-ban"></i> &nbsp;Cancel</a>
                             </div>
@@ -203,7 +197,7 @@
             el: "#selectionDepHidden",
             data: {
                 showParentSelector:false,
-                memberType:'parent',
+                memberType:'{{($member->main_member_id == 0)?'parent':'affiliate'}}',
                 selectedId: '',
                 warnings:[],
                 latestPageLoaded:0,
@@ -211,7 +205,6 @@
             },
             methods: {
                 affiliate:function() {
-                    console.log(this.memberType);
                     if (this.memberType == 'affiliate') {
                         this.showParentSelector = true;
                     }

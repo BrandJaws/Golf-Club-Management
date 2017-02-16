@@ -53,45 +53,46 @@
 		<!-- ############ PAGE START-->
 		<div class="profile-main padding" id="selectionDepHidden">
 			<div class="row details-section">
-				<form action="#." name="" action="">
+				<form action="{{route('admin.member.store')}}"  action="POST">
 					<div class="col-md-8">
 						<div class="form-group">
-							<label class="form-control-label">Name</label> <input type="text"
-								class="form-control" />
-						</div>
-						<div class="form-group">
-							<label class="form-control-label">Email</label> <input
-								type="email" class="form-control" />
-						</div>
-						<div class="row row-sm">
-							<div class="col-md-3">
-								<div class="form-group form-group-inline">
-									<label class="form-control-label">Gender</label>
-								</div>
-							</div>
-							<div class="col-md-8">
-								<div class="row row-sm">
-									<div class="col-md-3">
-										<div class="form-group">
-											<div class="radio">
-												<label class="ui-check"> <input type="radio" name="a"
-													value="option1" class="has-value" checked> <i
-													class="dark-white"></i> Male
-												</label>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-3">
-										<div class="radio">
-											<label class="ui-check"> <input type="radio" name="a"
-												value="option1" class="has-value"> <i class="dark-white"></i>
-												Female
-											</label>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+                                <label class="form-control-label">First Name</label> <input type="text" name="firstName"  class="form-control" value="{{Input::old('firstName')}}" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Last Name</label> <input type="text" name="lastName" class="form-control" value="{{Input::old('lastName')}}" />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Email</label> 
+                                <input type="email" class="form-control" name="email" value="{{input::old('email')}}" />
+                            </div>
+                            <div class="row row-sm">
+                                <div class="col-md-3">
+                                    <div class="form-group form-group-inline">
+                                        <label class="form-control-label">Gender</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row row-sm">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="radio">
+                                                    <label class="ui-check"> 
+                                                    	<input type="radio" name="gender" value="{{Config::get('global.gender.male')}}" class="has-value" {{(Input::old('gender') == Config::get('global.gender.male'))?'checked':''}}> <i class="dark-white"></i> Male
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="radio">
+                                                <label class="ui-check">
+													<input type="radio" name="gender"  value="{{Config::get('global.gender.female')}}" class="has-value" {{(Input::old('gender') == Config::get('global.gender.female'))?'checked':''}}> <i class="dark-white"></i>
+                                                    Female
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 						<div class="row row-sm">
 							<div class="col-md-3">
 								<div class="form-group form-group-inline">
@@ -103,10 +104,8 @@
 									<div class="col-md-3">
 										<div class="form-group">
 											<div class="radio">
-												<label class="ui-check"> <input v-model="memberType"
-													type="radio" name="relation" value="parent"
-													class="has-value" @change="affiliate()" /> <i
-													class="dark-white"></i> Parent
+												<label class="ui-check"> 
+												<input v-model="memberType" type="radio" name="relation" value="parent" class="has-value" @change="affiliate()" /> <i class="dark-white"></i> Parent
 												</label>
 											</div>
 										</div>
@@ -148,9 +147,9 @@
 						</div>
 						<br />
 						<div class="form-group">
-							<a href="#." class="btn btn-def"><i class="fa fa-floppy-o"></i>
-								&nbsp;Add Member</a> &nbsp;&nbsp; <a
-								href="{{route('admin.members.members')}}"
+							<button type="submit" class="btn btn-def"><i class="fa fa-floppy-o"></i>
+								&nbsp;Add Member</button> &nbsp;&nbsp; <a
+								href="{{route('admin.member.index')}}"
 								class="btn btn-outline b-primary text-primary"><i
 								class="fa fa-ban"></i> &nbsp;Cancel</a>
 						</div>

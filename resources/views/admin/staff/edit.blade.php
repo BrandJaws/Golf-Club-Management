@@ -53,7 +53,7 @@
 		<!-- ############ PAGE START-->
 		<div class="profile-main padding" id="selectionDepHidden">
 			<div class="row details-section">
-				<form action="{{route('admin.staff.update')}}" method="post">
+				<form action="{{route('admin.staff.update',['employee_id',$employee['id']])}}" method="post">
 				@if(Session::has('error'))
                     <div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
                     @endif
@@ -65,22 +65,22 @@
 					<div class="col-md-8">
 						<div class="form-group {{($errors->has('firstName'))?'has-error':''}}">
 							<label class="form-control-label">First Name</label> 
-							<input type="text" class="form-control" name="firstName"  value="{{ Request::old('firstName')}}"/>
+							<input type="text" class="form-control" name="firstName"  value="{{$employee['firstName']}}"/>
 							 @if($errors->has('firstName')) <span class="help-block">{{$errors->first('firstName') }}</span> @endif
 						</div>
 						<div class="form-group {{($errors->has('firstName'))?'has-error':''}}">
 							<label class="form-control-label">Last Name</label> 
-							<input type="text" class="form-control" name="lastName" value="{{Request::old('lastName')}}" />
+							<input type="text" class="form-control" name="lastName" value="{{$employee['lastName']}}" />
 							 @if($errors->has('lastName')) <span class="help-block">{{$errors->first('lastName') }}</span> @endif
 						</div>
 						<div class="form-group {{($errors->has('firstName'))?'has-error':''}}">
 							<label class="form-control-label">Email</label> 
-							<input type="email" class="form-control" name="email" value="{{Request::old('email')}}"/>
+							<input type="email" class="form-control" name="email" value="{{$employee['email']}}"/>
 							 @if($errors->has('email')) <span class="help-block">{{$errors->first('email') }}</span> @endif
 						</div>
 						<div class="form-group {{($errors->has('phone'))?'has-error':''}}">
 							<label class="form-control-label">Contact Number</label> 
-							<input type="tel" class="form-control" name="phone" value="{{Request::old('phone')}}"/>
+							<input type="tel" class="form-control" name="phone" value="{{$employee['phone']}}"/>
 							 @if($errors->has('phone')) <span class="help-block">{{$errors->first('phone') }}</span> @endif
 						</div>
 						<div class="form-group {{($errors->has('password'))?'has-error':''}}">
@@ -100,7 +100,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="member" name="permissions[]" {{(array_key_exists('member',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="member" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('member',array_flip($employee['permissions'])))?'checked':''}}>
 												Members
 											</label>
 										</div>
@@ -108,7 +108,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="reservation" name="permissions[]" {{(array_key_exists('reservation',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="reservation" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('reservation',array_flip($employee['permissions'])))?'checked':''}}>
 												Reservations
 											</label>
 										</div>
@@ -116,7 +116,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="shop" name="permissions[]" {{(array_key_exists('shop',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="shop" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('shop',array_flip($employee['permissions'])))?'checked':''}}>
 												Shop
 											</label>
 										</div>
@@ -124,7 +124,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="segment" name="permissions[]" {{(array_key_exists('segment',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="segment" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('segment',array_flip($employee['permissions'])))?'checked':''}}>
 												Segments
 											</label>
 										</div>
@@ -134,7 +134,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="beacon" name="permissions[]" {{(array_key_exists('beacon',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="beacon" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('beacon',array_flip($employee['permissions'])))?'checked':''}}>
 												Beacon
 											</label>
 										</div>
@@ -142,7 +142,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="offer" name="permissions[]" {{(array_key_exists('offer',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="offer" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('offer',array_flip($employee['permissions'])))?'checked':''}}>
 												Offers/Rewards
 											</label>
 										</div>
@@ -150,7 +150,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="notification" name="permissions[]" {{(array_key_exists('notification',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="notification" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('notification',array_flip($employee['permissions'])))?'checked':''}}>
 												Notifications
 											</label>
 										</div>
@@ -158,7 +158,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="social" name="permissions[]" {{(array_key_exists('social',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="social" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('social',array_flip($employee['permissions'])))?'checked':''}}>
 												Social
 											</label>
 										</div>
@@ -168,7 +168,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="staff" name="permissions[]" {{(array_key_exists('staff',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="staff" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('staff',array_flip($employee['permissions'])))?'checked':''}}>
 												Staff
 											</label>
 										</div>
@@ -176,7 +176,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="training" name="permissions[]" {{(array_key_exists('training',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="training" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('training',array_flip($employee['permissions'])))?'checked':''}}>
 												Trainings
 											</label>
 										</div>
@@ -184,7 +184,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="coache" name="permissions[]" {{(array_key_exists('coache',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="coache" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('coache',array_flip($employee['permissions'])))?'checked':''}}>
 												Coaches
 											</label>
 										</div>
@@ -192,7 +192,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="league" name="permissions[]" {{(array_key_exists('league',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="league" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('league',array_flip($employee['permissions'])))?'checked':''}}>
 												Leagues
 											</label>
 										</div>

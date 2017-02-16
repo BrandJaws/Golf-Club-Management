@@ -100,7 +100,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="member" name="permissions[]" {{(array_key_exists('member',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="member" name="permissions[]" {{(Request::old('permissions') && array_key_exists('member',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Members
 											</label>
 										</div>
@@ -108,7 +108,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="reservation" name="permissions[]" {{(array_key_exists('reservation',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="reservation" name="permissions[]" {{(Request::old('permissions') && array_key_exists('reservation',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Reservations
 											</label>
 										</div>
@@ -116,7 +116,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="shop" name="permissions[]" {{(array_key_exists('shop',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="shop" name="permissions[]" {{(Request::old('permissions') && array_key_exists('shop',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Shop
 											</label>
 										</div>
@@ -124,7 +124,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="segment" name="permissions[]" {{(array_key_exists('segment',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="segment" name="permissions[]" {{(Request::old('permissions') && array_key_exists('segment',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Segments
 											</label>
 										</div>
@@ -134,7 +134,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="beacon" name="permissions[]" {{(array_key_exists('beacon',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="beacon" name="permissions[]" {{(Request::old('permissions') && array_key_exists('beacon',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Beacon
 											</label>
 										</div>
@@ -142,7 +142,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="offer" name="permissions[]" {{(array_key_exists('offer',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="offer" name="permissions[]" {{(Request::old('permissions') && array_key_exists('offer',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Offers/Rewards
 											</label>
 										</div>
@@ -150,7 +150,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="notification" name="permissions[]" {{(array_key_exists('notification',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="notification" name="permissions[]" {{(Request::old('permissions') && array_key_exists('notification',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Notifications
 											</label>
 										</div>
@@ -158,7 +158,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="social" name="permissions[]" {{(array_key_exists('social',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="social" name="permissions[]" {{(Request::old('permissions') && array_key_exists('social',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Social
 											</label>
 										</div>
@@ -168,7 +168,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="staff" name="permissions[]" {{(array_key_exists('staff',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="staff" name="permissions[]" {{(Request::old('permissions') && array_key_exists('staff',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Staff
 											</label>
 										</div>
@@ -176,7 +176,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="training" name="permissions[]" {{(array_key_exists('training',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="training" name="permissions[]" {{(Request::old('permissions') && array_key_exists('training',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Trainings
 											</label>
 										</div>
@@ -184,7 +184,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="coache" name="permissions[]" {{(array_key_exists('coache',array_flip(Request::old('permissions'))))?'checked':''}}>
+												<input type="checkbox" value="coache" name="permissions[]" {{(Request::old('permissions') && array_key_exists('coache',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Coaches
 											</label>
 										</div>
@@ -192,7 +192,7 @@
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" value="league" name="permissions[]">
+												<input type="checkbox" value="league" name="permissions[]" {{(Request::old('permissions') && array_key_exists('league',array_flip(Request::old('permissions'))))?'checked':''}}>
 												Leagues
 											</label>
 										</div>

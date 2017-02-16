@@ -75,7 +75,7 @@ class StaffController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         if (Auth()->user()->canNot('staff', 'App\Model')) {
             return Redirect::to('/dashboard')->with([
@@ -83,15 +83,23 @@ class StaffController extends Controller
             ]);;
         }
         try {
-            $page = Employee::findOrFail($id);
+            $employee = Employee::findOrFail($id);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
-            self::logError($exp, __CLASS__, __METHOD__);
-            $this->error = "page_not_found";
+            return Redirect::back()->with([
+                'error' => \trans('messages.not_found')
+            ]);
         } catch (\Exception $exp) {
-            self::logError($exp, __CLASS__, __METHOD__);
-            $this->error = "exception";
+            return Redirect::back()->with([
+                'error' => $exp->getMessage()
+            ]);
         }
-        return view('admin.staff.edit');
+        if(empty($request->old())){
+            $employee = $employee->toArray();
+            $employee['permissions'] = array_keys(json_decode($employee['permissions'], true),true);
+        }else{
+            $employee = $request->old();
+        }
+        return view('admin.staff.edit',compact('employee'));
     }
 
     public function update(Request $request, $id)

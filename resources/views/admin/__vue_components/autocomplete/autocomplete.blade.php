@@ -5,7 +5,7 @@
                 template: `
                             <div style="width: 186px;" class="easy-autocomplete eac-plate-dark eac-description">
                                 <input v-model="textFieldValue" class="form-control autocomplete-input" type="text" @keydown.down="downArrowPressed" @keydown.up="upArrowPressed" @keydown.enter="enterKeyPressed" @blur="focusedOut" @input="inputEvent">
-                                <div id="eac-container-eac-5104" class="easy-autocomplete-container" v-if="panelVisible">
+                                <div id="eac-container-eac-5104" class="easy-autocomplete-container" v-if="panelVisible" style="position:absolute;">
                                     <ul style="display: block;">
                                         <li v-for="(data,dataIndex) in dataListData" :class="[data.selected ? 'selected' : '']" @mouseover="mouseOver(dataIndex,data)">
                                             <div class="eac-item" v-html="data.nameMarkup">
@@ -14,7 +14,9 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </div>                    
+                                <input type="hidden" :name="fieldName" :value="selectedId" v-if="selectedIndex > -1"/>
+                            </div> 
+                            
                             `,
                 props: [
                         
@@ -24,7 +26,9 @@
                         "propertyForName",
                         "includeIdInList",
                         "value",
-                        "initialTextValue"
+                        "initialTextValue",
+                        "searchQueryKey",
+                        "fieldName"
                         
 
 
@@ -38,6 +42,7 @@
                                 dataListData:[],
                                 filteredFromSourceData:this.filteredFromSource != null && this.filteredFromSource.toLowerCase() == "true" ? true : false,
                                 includeIdInListData:this.includeIdInList != null && this.includeIdInList.toLowerCase() == "true" ? true : false,
+                                selectedId:-1,
                             }
                 },
                 methods: {
@@ -85,13 +90,13 @@
                     inputEvent:function(){
                         this.clearSelectionIfInputTextDoesntMatchSelected();
                         this.panelVisible = false;
+                        _data={};
+                        _data[this.searchQueryKey]=this.textFieldValue;
+                        
                         var request = $.ajax({
                                 
                                     url: this.url,
-                                    data:{
-                                        search:this.textFieldValue,
-                                        
-                                    },
+                                    data:_data,
                                     mimeType: "application/json",
                                     dataType:"json",
                                     method: "GET",
@@ -172,6 +177,7 @@
                     },
                     raiseInputEventWithNewSelectedId:function(newSelectedId){
                         this.$emit('input',newSelectedId);
+                        this.selectedId = newSelectedId;
                     }
                     
                 },

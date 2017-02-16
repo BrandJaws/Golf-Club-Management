@@ -119,9 +119,10 @@ class Member extends Authenticatable
         return self::where('club_id', '=', $clubId)->where(function ($query) use ($search) {
             if ($search !== false) {
                 $query->where('member.firstName', 'Like', '%' . $search . '%')
-                    ->orWhere('member.lastName', 'Like', '%' . $search . '%');
+                    ->orWhere('member.lastName', 'Like', '%' . $search . '%') ;
             }
         })
+        ->take(15)
             ->get([
             'member.id',
             \DB::raw("CONCAT(firstName,' ', lastName) AS name")

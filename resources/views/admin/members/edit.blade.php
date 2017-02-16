@@ -133,9 +133,9 @@
                                         </div>
                                         <div class="col-md-8">
                                             <div class="form-group">
-                                                <auto-complete-box url="{{asset('people.json')}}" property-for-id="email" property-for-name="name"
-                                                                   filtered-from-source="false" include-id-in-list="true"
-                                                                   v-model="selectedId" initial-text-value=""> </auto-complete-box>
+                                                <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="id" property-for-name="name"
+                                                                   filtered-from-source="true" include-id-in-list="true"
+                                                                   v-model="selectedId" initial-text-value="" search-query-key="search" field-name="memberId"> </auto-complete-box>
                                             </div>
                                         </div>
                                     </div>

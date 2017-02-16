@@ -32,7 +32,7 @@
                         </td>
                         
                         <td>
-                            <a href="#." class="blue-cb">edit</a>&nbsp;&nbsp;&nbsp;
+                            <a href="#." class="blue-cb" :href="generateEditMemberRoute('{{Request::url()}}',staff.id)">edit</a>&nbsp;&nbsp;&nbsp;
                             <a href="#." class="del-icon"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
@@ -47,6 +47,11 @@
             return {
                 staffMembers:this.staffList
             }
+        },
+        methods: {
+                generateEditMemberRoute: function(baseRouteToCurrentPage,id){
+                    return baseRouteToCurrentPage+'/edit/'+id;
+                }
         }
     })
 </script>

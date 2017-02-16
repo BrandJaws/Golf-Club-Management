@@ -15,3 +15,7 @@ use Illuminate\Http\Request;
 Route::get ( '/user', function (Request $request) {
 	return $request->user ();
 } )->middleware ( 'auth:api' );
+
+Route::post('/login', '\App\Http\Controllers\Mobile\MembersController@login');
+Route::post('/password/forgot', '\App\Http\Controllers\Mobile\MembersController@forgotPassword');
+   

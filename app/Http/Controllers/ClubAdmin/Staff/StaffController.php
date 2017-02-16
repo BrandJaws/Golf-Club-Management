@@ -41,7 +41,6 @@ class StaffController extends Controller
 
     public function store(Request $request)
     {
-       
         $validator = Validator::make($request->all(), [
             'firstName' => 'required|min:1,max:40',
             'lastName' => 'required|min:1,max:40',
@@ -54,25 +53,43 @@ class StaffController extends Controller
             $this->error = $validator->errors();
             return \Redirect::back()->withInput()->withErrors($this->error);
         }
-        try{
-        $employee = new Employee();
-        $data = $request->only(['firstName','lastName','email','phone','password','permissions']);
-        $data['club_id'] = \Auth::user()->club_id; 
-        $employee->fill($data)->save();
-        return \Redirect::route ( 'admin.staff.index' )->with ( [
-            'success' => \trans ( 'messages.member_update_success' )
-        ] );
-        }catch(\Exception $exp){
-            return \Redirect::back ()->withInput()->with ( [
+        try {
+            $employee = new Employee();
+            $data = $request->only([
+                'firstName',
+                'lastName',
+                'email',
+                'phone',
+                'password',
+                'permissions'
+            ]);
+            $data['club_id'] = \Auth::user()->club_id;
+            $employee->fill($data)->save();
+            return \Redirect::route('admin.staff.index')->with([
+                'success' => \trans('messages.member_update_success')
+            ]);
+        } catch (\Exception $exp) {
+            return \Redirect::back()->withInput()->with([
                 'error' => $exp->getMessage()
-            ] );
+            ]);
         }
     }
 
     public function edit($id)
     {
         if (Auth()->user()->canNot('staff', 'App\Model')) {
-            return Redirect::to('/dashboard');
+            return Redirect::to('/dashboard')->with([
+                'error' => \trans('messages.unauthorized_access')
+            ]);;
+        }
+        try {
+            $page = Employee::findOrFail($id);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
+            self::logError($exp, __CLASS__, __METHOD__);
+            $this->error = "page_not_found";
+        } catch (\Exception $exp) {
+            self::logError($exp, __CLASS__, __METHOD__);
+            $this->error = "exception";
         }
         return view('admin.staff.edit');
     }

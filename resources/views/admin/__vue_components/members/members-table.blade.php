@@ -36,7 +36,7 @@
 					<td>@{{ member.gender }}</td>
 					<td>@{{ member.warnings }}</td>
 					<td>
-						<a href="{{Request::url()}}/edit" class="blue-cb" @click="editMember(member.email)">edit</a>
+						<a :href="generateEditMemberRoute('{{Request::url()}}',member.id)" class="blue-cb" >edit</a>
 						&nbsp;&nbsp;
 						<a href="#." class="del-icon"><i class="fa fa-trash"></i></a>
 					</td>
@@ -53,8 +53,8 @@
                                               }
                 },
 		methods: {
-			editMember: function(id){
-
+			generateEditMemberRoute: function(baseRouteToCurrentPage,id){
+                            return baseRouteToCurrentPage+'/edit/'+id;
 			}
 		}
 	});

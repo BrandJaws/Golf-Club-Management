@@ -88,6 +88,10 @@ Route::group([
                 'as' => 'distroy',
                 'uses' => 'Members\MembersController@distroy'
             ]);
+            Route::get('/search-list', [
+                'as' => 'search-list',
+                'uses' => 'Members\MembersController@searchListMembers'
+            ]);
         });
        
         Route::group([

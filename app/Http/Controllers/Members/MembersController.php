@@ -49,4 +49,25 @@ class MembersController extends Controller
 
     public function destroy($memberId)
     {}
+    
+    public function searchListMembers(Request $requst) {
+		$search = $requst->has ( 'search' ) ? $requst->get ( 'search' ) : '';
+		try {
+			$clubMember = (new Member ())->listClubMembers ( Auth::user ()->club_id, $search );
+			if ($clubMember && count ( $clubMember )) {
+				//$this->response = $clubMember;
+                                return $clubMember;
+			} else {
+				//$this->error = 'no_members_could_be_found';
+                                return [];
+			}
+		} catch ( \Exception $e ) {
+			//$this->error = "exception";
+			\Log::error ( __METHOD__, [ 
+					'error' => $e->getMessage (),
+					'line' => $e->getLine () 
+			] );
+		}
+		//return $this->response ();
+	}
 }

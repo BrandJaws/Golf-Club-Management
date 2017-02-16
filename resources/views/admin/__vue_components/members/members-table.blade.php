@@ -46,13 +46,12 @@
 		props: [
 			"membersList"
 		],
-		data: function(){
-                        
-			return {
-                            
-				membersListData:this.membersList.data
-			}
-		},
+		
+                computed: {
+                            membersListData: function () {
+                              return this.membersList;
+                            }
+                },
 		methods: {
 			editMember: function(id){
 

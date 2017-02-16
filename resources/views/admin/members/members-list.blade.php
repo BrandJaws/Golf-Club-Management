@@ -117,12 +117,13 @@
 
 @include("admin.__vue_components.members.members-table")
 <script>
-    
+       
+        
 	var baseUrl = "{{url('admin/members')}}";
 	var vue = new Vue({
 		el: "#members-list-table",
 		data: {
-			membersList:{!! $members !!},
+			membersList:({!! $members !!}).data,
 			ajaxRequestInProcess:false,
                         searchQuery:"",
                         lastSearchTerm:"",
@@ -155,7 +156,7 @@
                                     _url = baseUrl+'?current_page='+(this.nextAvailablePage);
                                 }
                                 
-                                console.log(_url);
+                              
                                 if(this.nextAvailablePage === null){
                                     return;
                                 }
@@ -167,6 +168,7 @@
                                         url: _url,
                                         method: "GET",
                                         success:function(msg){
+                                            
                                                     this.ajaxRequestInProcess = false;
                                                     if(this.searchRequestHeld){
                                                        
@@ -176,7 +178,7 @@
                                                     }
                                                     
                                                     pageDataReceived = JSON.parse(msg);
-                                                    membersList = pageDataReceived.data;
+                                                    membersList = pageDataReceived.data ;
                                                     
                                                     //Success code to follow
                                                         if(pageDataReceived.next_page_url !== null){
@@ -187,25 +189,10 @@
                                                     
                                                         if(isSearchQuery){
                                                             
-                                                            for(x=this.membersList.data.length;x>=0;x--){
-                                                                this.membersList.data.splice(x,1);
-                                                            }
-
-                                                            for(x=0; x<membersList.length; x++){
-
-                                                                this.membersList.data.push(membersList[x]);
-
-                                                            }
-                                                            
-                                                        
+                                                             this.membersList=membersList;
                                                         }else{
                                                             
-                                                           
-                                                            for(x=0; x<membersList.length; x++){
-
-                                                                this.membersList.data.push(membersList[x]);
-
-                                                            }
+                                                           appendArray(this.membersList,membersList);
                                                         }
                                                     
                                                     
@@ -235,6 +222,15 @@
            
        }
     });
+    
+ 
+    function appendArray(targetArray,newArray){
+        for(x=0; x<newArray.length; x++){
+
+            targetArray.push(newArray[x]);
+
+        }
+    }
 </script>
 
 @endSection

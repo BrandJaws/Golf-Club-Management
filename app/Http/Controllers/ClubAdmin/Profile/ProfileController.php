@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Profile;
+namespace App\Http\Controllers\ClubAdmin\Profile;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

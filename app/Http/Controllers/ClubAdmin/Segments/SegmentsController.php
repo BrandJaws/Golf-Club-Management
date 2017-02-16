@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Social;
+namespace App\Http\Controllers\ClubAdmin\Segments;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 
-class SocialController extends Controller {
+class SegmentsController extends Controller {
 	public function index() {
-		return view ( 'admin.social.connect' );
+		return view ( 'admin.segments.segments' );
 	}
 	public function create() {
-		return view ( 'admin.social.create' );
+		return view ( 'admin.segments.create' );
 	}
 }

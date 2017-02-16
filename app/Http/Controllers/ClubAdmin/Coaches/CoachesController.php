@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Coaches;
+namespace App\Http\Controllers\ClubAdmin\Coaches;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

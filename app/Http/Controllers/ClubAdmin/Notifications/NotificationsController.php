@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Notifications;
+namespace App\Http\Controllers\ClubAdmin\Notifications;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

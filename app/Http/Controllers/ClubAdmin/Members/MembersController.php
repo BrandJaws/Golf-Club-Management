@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Members;
+namespace App\Http\Controllers\ClubAdmin\Members;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

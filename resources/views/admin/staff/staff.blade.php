@@ -123,7 +123,7 @@
 @include("admin.__vue_components.staff.staff-table")
 <script>
         
-
+        var baseUrl = "{{url('')}}";
         var vue = new Vue({
             el: "#staff-list-table",
             data: {

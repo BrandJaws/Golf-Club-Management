@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Reservations;
+namespace App\Http\Controllers\ClubAdmin\Reservations;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

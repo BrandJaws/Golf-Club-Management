@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\ClubAdmin\Auth;
 
 use App\User;
 use Validator;

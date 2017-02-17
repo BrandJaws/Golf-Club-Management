@@ -19,7 +19,9 @@ class Member extends Migration
             $table->string('firstName', 50);
             $table->string('lastName', 50);
             $table->string('email', 50);
-            $table->string('phone', 50);
+            $table->string('phone', 50)
+                ->nullable()
+                ->default(NULL);
             $table->string('profilePic', 250)
                 ->nullable()
                 ->default(NULL);

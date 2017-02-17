@@ -28,6 +28,11 @@ class Member extends Authenticatable
         'status'
     ];
 
+    protected $gaurded = [
+        'profilePic',
+        'password'
+    ];
+
     public static function getUserByEmail($email)
     {
         return self::where('email', '=', $email)->first();
@@ -119,10 +124,10 @@ class Member extends Authenticatable
         return self::where('club_id', '=', $clubId)->where(function ($query) use ($search) {
             if ($search !== false) {
                 $query->where('member.firstName', 'Like', '%' . $search . '%')
-                    ->orWhere('member.lastName', 'Like', '%' . $search . '%') ;
+                    ->orWhere('member.lastName', 'Like', '%' . $search . '%');
             }
         })
-        ->take(15)
+            ->take(15)
             ->get([
             'member.id',
             \DB::raw("CONCAT(firstName,' ', lastName) AS name")
@@ -181,7 +186,7 @@ class Member extends Authenticatable
             }
         })
             ->select('member.id as id', 'member.firstName', 'member.lastName', 'member.email', 'member.phone', 'member.gender')
-            ->orderby('member.created_at', 'ASC')
+            ->orderby('member.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'
         ), 'current_page', $currentPage);

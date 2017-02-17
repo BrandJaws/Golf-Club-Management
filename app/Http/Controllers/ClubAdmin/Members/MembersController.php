@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Models\Member;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 
 class MembersController extends Controller
 {
@@ -43,23 +44,131 @@ class MembersController extends Controller
         return view('admin.members.create');
     }
 
-    public function edit($memberId)
+    public function edit(Request $request, $memberId)
     {
         if (Auth()->user()->canNot('member', 'App\Model')) {
             return Redirect::route('admin.dashboard')->with([
                 'error' => \trans('message.unauthorized_access')
             ]);
         }
-        $member = Member::findOrFail($memberId);
+        try {
+            $member = Member::findOrFail($memberId);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
+            return Redirect::back()->with([
+                'error' => \trans('message.not_found')
+            ]);
+        } catch (\Exception $exp) {
+            return Redirect::back()->with([
+                'error' => $exp->getMessage()
+            ]);
+        }
+        if (empty($request->old())) {
+            $member = $member->toArray();
+        } else {
+            $member_parent_id = $member->main_member_id;
+            $member = $request->old();
+            $member['id'] = $memberId;
+            $member['main_member_id'] = $member_parent_id;
+        }
+        
         return view('admin.members.edit', compact('member'));
     }
 
-    public function store()
-    {}
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'firstName' => 'required|min:1,max:40',
+            'lastName' => 'required|min:1,max:40',
+            'email' => 'required|email',
+            'phone' => 'numeric',
+            'password' => 'required|min:4,max:15',
+            'profilePic' => 'sometimes|image|mimes:jpeg,bmp,png,jpg|max:1024'
+        ]);
+        
+        if ($validator->fails()) {
+            $this->error = $validator->errors();
+            return \Redirect::back()->withInput()->withErrors($this->error);
+        }
+        try {
+            $member = new Member();
+            $data = $request->only([
+                'firstName',
+                'lastName',
+                'email',
+                'phone',
+                'gender'
+            ]);
+            $data['club_id'] = \Auth::user()->club_id;
+            if ($request->has('password')) {
+                $member->password = bcrypt($request->get('password'));
+            }
+            if ($request->hasFile('profilePic')) {
+                $image = $request->file('profilePic');
+                $fileName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move('member/', $fileName);
+                if (! is_null($member->profilePic) && $member->profilePic != '' && file_exists($member->profilePic)) {
+                    @unlink($member->profilePic);
+                }
+                $member->profilePic = 'member/' . $fileName;
+            }
+            
+            $member->fill($data)->save();
+            
+            return \Redirect::route('admin.member.index')->with([
+                'success' => \trans('message.member_created_success')
+            ]);
+        } catch (\Exception $exp) {
+            return \Redirect::back()->withInput()->with([
+                'error' => $exp->getMessage()
+            ]);
+        }
+    }
 
     public function update(Request $request, $memberId)
     {
-        dd($request->all(), $memberId);
+        $validator = Validator::make($request->all(), [
+            'firstName' => 'required|min:1,max:40',
+            'lastName' => 'required|min:1,max:40',
+            'email' => 'required|email',
+            'phone' => 'numeric',
+            'password' => 'min:4,max:15',
+            'profilePic' => 'sometimes|image|mimes:jpeg,bmp,png,jpg|max:1024'
+        ]);
+        
+        if ($validator->fails()) {
+            $this->error = $validator->errors();
+            return \Redirect::back()->withInput()->withErrors($this->error);
+        }
+        try {
+            $data = $request->except([
+                'profilePic'
+            ]);
+            $member = Member::findOrFail($memberId);
+            if ($request->has('password')) {
+                $member->password = bcrypt($request->get('password'));
+            }
+            if ($request->hasFile('profilePic')) {
+                $image = $request->file('profilePic');
+                $fileName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move('member/', $fileName);
+                if (! is_null($member->profilePic) && $member->profilePic != '' && file_exists($member->profilePic)) {
+                    @unlink($member->profilePic);
+                }
+                $member->profilePic = 'member/' . $fileName;
+            }
+            $member->fill($data)->update();
+            return \Redirect::route('admin.member.index')->with([
+                'success' => \trans('message.member_update_success')
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
+            return Redirect::back()->with([
+                'error' => \trans('message.not_found')
+            ]);
+        } catch (\Exception $exp) {
+            return \Redirect::back()->withInput()->with([
+                'error' => $exp->getMessage()
+            ]);
+        }
     }
 
     public function destroy($memberId)
@@ -79,19 +188,15 @@ class MembersController extends Controller
         try {
             $clubMember = (new Member())->listClubMembers(Auth::user()->club_id, $search);
             if ($clubMember && count($clubMember)) {
-                // $this->response = $clubMember;
                 return $clubMember;
             } else {
-                // $this->error = 'no_members_could_be_found';
                 return [];
             }
         } catch (\Exception $e) {
-            // $this->error = "exception";
             \Log::error(__METHOD__, [
                 'error' => $e->getMessage(),
                 'line' => $e->getLine()
             ]);
         }
-        // return $this->response ();
     }
 }

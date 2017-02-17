@@ -137,7 +137,6 @@ class StaffController extends Controller
             return \Redirect::back()->withInput()->withErrors($this->error);
         }
         try {
-            $employee = new Employee();
             $data = $request->except([
                 'profilePic'
             ]);

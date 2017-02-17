@@ -79,7 +79,7 @@ class Employee extends Authenticatable
             }
         })
             ->select('employee.id as id', 'employee.firstName', 'employee.lastName', 'employee.email', 'employee.phone', 'employee.status')
-            ->orderby('employee.created_at', 'ASC')
+            ->orderby('employee.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'
         ), 'current_page', $currentPage);

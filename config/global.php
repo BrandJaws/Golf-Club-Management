@@ -19,5 +19,9 @@ return [
                 'coach'=>false,
                 'league'=>false
             ]
-        ]
+        ],
+		'deviceType' => [ 
+				'android' => 'Android',
+				'iphone' => 'Iphone' 
+		]
 ];

@@ -10,9 +10,10 @@ use App\Http\Models\Club;
 use App\Http\Models\Court;
 use Validator;
 use App\Http\Models\PushNotification;
+use Illuminate\Support\Facades\Hash;
 class MembersController extends Controller {
-	use \ImageHandler;
-	use \Notification;
+	//use \ImageHandler;
+	//use \Notification;
 	public function login(Request $request) {
 		if (! $request->has ( 'email' )) {
 			$this->error = 'login_email_not_present';
@@ -39,8 +40,8 @@ class MembersController extends Controller {
 			$this->error = 'invalid_email_address';
 			return $this->response ();
 		}
-		$password = crypt ( $request->get ( 'password' ), $fetchUser->salt );
-		if ($password != $fetchUser->password) {
+		
+		if (!Hash::check($request->get ( 'password' ), $fetchUser->password) ) {
 			$this->error = 'invalid_password';
 			return $this->response ();
 		}

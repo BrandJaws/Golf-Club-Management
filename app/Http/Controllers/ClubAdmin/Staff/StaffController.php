@@ -74,11 +74,11 @@ class StaffController extends Controller
             if ($request->hasFile('profilePic')) {
                 $image = $request->file('profilePic');
                 $fileName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move('staff/', $fileName);
+                $image->move('uploads/staff/', $fileName);
                 if (! is_null($employee->profilePic) && $employee->profilePic != '' && file_exists($employee->profilePic)) {
                     @unlink($employee->profilePic);
                 }
-                $employee->profilePic = 'staff/' . $fileName;
+                $employee->profilePic = 'uploads/staff/' . $fileName;
             }
             
             $employee->fill($data)->save();
@@ -147,11 +147,11 @@ class StaffController extends Controller
             if ($request->hasFile('profilePic')) {
                 $image = $request->file('profilePic');
                 $fileName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move('staff/', $fileName);
+                $image->move('uploads/staff/', $fileName);
                 if (! is_null($employee->profilePic) && $employee->profilePic != '' && file_exists($employee->profilePic)) {
                     @unlink($employee->profilePic);
                 }
-                $employee->profilePic = 'staff/' . $fileName;
+                $employee->profilePic = 'uploads/staff/' . $fileName;
             }
             $employee->fill($data)->update();
             return \Redirect::route('admin.staff.index')->with([

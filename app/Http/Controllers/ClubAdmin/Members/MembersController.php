@@ -105,11 +105,11 @@ class MembersController extends Controller
             if ($request->hasFile('profilePic')) {
                 $image = $request->file('profilePic');
                 $fileName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move('member/', $fileName);
+                $image->move('uploads/member/', $fileName);
                 if (! is_null($member->profilePic) && $member->profilePic != '' && file_exists($member->profilePic)) {
                     @unlink($member->profilePic);
                 }
-                $member->profilePic = 'member/' . $fileName;
+                $member->profilePic = 'uploads/member/' . $fileName;
             }
             
             $member->fill($data)->save();
@@ -150,11 +150,11 @@ class MembersController extends Controller
             if ($request->hasFile('profilePic')) {
                 $image = $request->file('profilePic');
                 $fileName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move('member/', $fileName);
+                $image->move('uploads/member/', $fileName);
                 if (! is_null($member->profilePic) && $member->profilePic != '' && file_exists($member->profilePic)) {
                     @unlink($member->profilePic);
                 }
-                $member->profilePic = 'member/' . $fileName;
+                $member->profilePic = 'uploads/member/' . $fileName;
             }
             $member->fill($data)->update();
             return \Redirect::route('admin.member.index')->with([

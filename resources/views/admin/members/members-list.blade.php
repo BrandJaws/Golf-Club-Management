@@ -178,7 +178,7 @@
                                                         
                                                     }
                                                     
-                                                    pageDataReceived = JSON.parse(msg);
+                                                    pageDataReceived = msg;
                                                     membersList = pageDataReceived.data ;
                                                     
                                                     //Success code to follow
@@ -225,13 +225,7 @@
     });
     
  
-    function appendArray(targetArray,newArray){
-        for(x=0; x<newArray.length; x++){
-
-            targetArray.push(newArray[x]);
-
-        }
-    }
+   
 </script>
 
 @endSection

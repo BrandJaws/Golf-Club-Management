@@ -16,6 +16,7 @@
 @include ('admin.__partials.css-assets')
 <script src="{{asset('/libs/jquery/jquery/dist/jquery.js')}}"></script>
 <script src="{{asset('/libs/vuejs/vue.js')}}"></script>
+<script src="{{asset('/libs/helpers.js')}}"></script>
 </head>
 <body>
 	<div class="app" id="app">

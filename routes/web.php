@@ -86,8 +86,8 @@ Route::group([
                 'uses' => 'ClubAdmin\Members\MembersController@update'
             ]);
             Route::delete('/{member_id}', [
-                'as' => 'distroy',
-                'uses' => 'ClubAdmin\Members\MembersController@distroy'
+                'as' => 'destroy',
+                'uses' => 'ClubAdmin\Members\MembersController@destroy'
             ]);
             Route::get('/search-list', [
                 'as' => 'search-list',

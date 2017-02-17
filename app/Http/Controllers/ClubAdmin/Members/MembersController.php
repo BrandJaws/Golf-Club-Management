@@ -15,13 +15,14 @@ class MembersController extends Controller
         $currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
         $perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
         $members = (new Member())->listClubMembersPaginated(Auth::user()->club_id, $currentPage, $perPage, $search);
-        if ($members->count() > 0) {
-            $members = json_encode($members);
-        }
+        
         if ($request->ajax()) {
             
             return $members;
         } else {
+            if ($members->count() > 0) {
+             $members = json_encode($members);
+            }
             return view('admin.members.members-list', compact('members'));
         }
     }
@@ -48,7 +49,15 @@ class MembersController extends Controller
     }
 
     public function destroy($memberId)
-    {}
+    {
+        try{
+            Member::find($memberId)->delete();
+            return "success";
+        }catch(\Exception $e){
+            return $e->getMessage();
+            return "failure";
+        }
+    }
     
     public function searchListMembers(Request $requst) {
 		$search = $requst->has ( 'search' ) ? $requst->get ( 'search' ) : '';

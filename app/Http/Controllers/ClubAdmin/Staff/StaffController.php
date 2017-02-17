@@ -21,13 +21,13 @@ class StaffController extends Controller
         $currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
         $perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
         $employees = (new Employee())->listClubEmployeesPaginated(Auth::user()->club_id, $currentPage, $perPage, $search);
-        if ($employees->count() > 0) {
-            $employees = json_encode($employees);
-        }
+        
         if ($request->ajax()) {
             return $employees;
         }
-        
+        if ($employees->count() > 0) {
+            $employees = json_encode($employees);
+        }
         return view('admin.staff.staff', compact('employees'));
     }
 
@@ -106,6 +106,14 @@ class StaffController extends Controller
     public function update(Request $request, $id)
     {}
 
-    public function destroy($id)
-    {}
+    public function destroy($staffId)
+    {
+        try{
+            Employee::find($staffId)->delete();
+            return "success";
+        }catch(\Exception $e){
+            return $e->getMessage();
+            return "failure";
+        }
+    }
 }

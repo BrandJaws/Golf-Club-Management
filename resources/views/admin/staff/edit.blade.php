@@ -53,14 +53,15 @@
 		<!-- ############ PAGE START-->
 		<div class="profile-main padding" id="selectionDepHidden">
 			<div class="row details-section">
-				<form action="{{route('admin.staff.update',['employee_id',$employee['id']])}}" method="post">
+				<form action="{{route('admin.staff.update',$employee['id'])}}" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="_method" value="PUT" />
 				@if(Session::has('error'))
                     <div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
                     @endif
                     @if(Session::has('success'))
                     <div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
                     @endif
-					<input type="hidden" name="_method" value="put" />
+					
 				   {{ csrf_field() }}
 					<div class="col-md-8">
 						<div class="form-group {{($errors->has('firstName'))?'has-error':''}}">
@@ -211,11 +212,11 @@
 					</div>
 					<div class="col-md-4">
 						<div class="text-center">
-							<img src="../../assets/images/user.png"
-								class="img-responsive img-circle defaultImg" />
-							<div class="form-group">
-								<label class="form-control-label">Add Image</label> <input
-									type="file" class="form-control" />
+							<img src="{{(isset($employee['profilePic']) && $employee['profilePic'])? asset($employee['profilePic']): asset('assets/images/user.png')}}" class="img-responsive img-circle defaultImg" />
+							<div class="form-group {{($errors->has('profilePic'))?'has-error':''}}">
+								<label class="form-control-label">Add Image</label> 
+								<input type="file" name="profilePic" class="form-control" />
+								@if($errors->has('profilePic')) <span class="help-block">{{$errors->first('profilePic') }}</span> @endif
 							</div>
 						</div>
 					</div>

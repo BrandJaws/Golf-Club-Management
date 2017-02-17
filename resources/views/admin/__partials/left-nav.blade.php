@@ -20,57 +20,81 @@
 								<i class="fa fa-cube"></i>
 						</span> <span class="nav-text">Dashboard</span>
 					</a></li>
+					@can('members', 'App\Model')
 					<li><a href="{{route('admin.member.index')}}"> <span
 							class="nav-icon"> <i class="fa fa-user-circle-o"></i>
 						</span> <span class="nav-text">Members</span>
 					</a></li>
+					@endif
+					@can('reservation', 'App\Model')
 					<li><a href="{{route('admin.reservations.reservations')}}"> <span
 							class="nav-icon"> <i class="fa fa-calendar"></i>
 						</span> <span class="nav-text">Reservations</span>
 					</a></li>
+					@endif
 					<li><a href="{{route('admin.profile.profile')}}"> <span
 							class="nav-icon"> <i class="fa fa-user"></i>
 						</span> <span class="nav-text">Profile / Settings</span>
 					</a></li>
+					@can('shop', 'App\Model')
 					<li><a href="{{route('admin.shop.shop')}}"> <span class="nav-icon">
 								<i class="fa fa-shopping-basket"></i>
 						</span> <span class="nav-text">Shop</span>
 					</a></li>
+					@endif
+					@can('segment', 'App\Model')
 					<li><a href="{{route('admin.segments.index')}}"> <span
 							class="nav-icon"> <i class="fa fa-pie-chart"></i>
 						</span> <span class="nav-text">Segments</span>
 					</a></li>
+					@endif
+					@can('beacon', 'App\Model')
 					<li><a href="{{route('admin.beacon.beacon')}}"> <span
 							class="nav-icon"> <i class="fa fa-pie-chart"></i>
 						</span> <span class="nav-text">Beacon</span>
 					</a></li>
+					@endif
+					@can('offer', 'App\Model')
 					<li><a href="{{route('admin.rewards.rewards')}}"> <span
 							class="nav-icon"> <i class="fa fa-star"></i>
 						</span> <span class="nav-text">Offer / Rewards</span>
 					</a></li>
+					@endif
+					@can('notification', 'App\Model')
 					<li><a href="{{route('admin.notifications.notifications')}}"> <span
 							class="nav-icon"> <i class="fa fa-bullhorn"></i>
 						</span> <span class="nav-text">Notifications</span>
 					</a></li>
+					@endif
+					@can('social', 'App\Model')
 					<li><a href="{{route('admin.social.social')}}"> <span
 							class="nav-icon"> <i class="fa fa-thumbs-up"></i>
 						</span> <span class="nav-text">Social</span>
 					</a></li>
+					@endif
+					@can('staff', 'App\Model')
 					<li><a href="{{route('admin.staff.index')}}"> <span
 							class="nav-icon"> <i class="fa fa-users"></i>
 						</span> <span class="nav-text">Staff</span>
 					</a></li>
+					@endif
+					@can('training', 'App\Model')
 					<li><a href="#."> <span class="nav-icon"> <i
 								class="fa fa-graduation-cap"></i>
 						</span> <span class="nav-text">Trainings</span>
 					</a></li>
+					@endif
+					@can('coach', 'App\Model')
 					<li><a href="{{route('admin.coaches.coaches')}}"> <span
 							class="nav-icon"> <i class="fa fa-podcast"></i>
 						</span> <span class="nav-text">Coaches</span>
 					</a></li>
+					@endif
+					@can('league', 'App\Model')
 					<li><a href="#."> <span class="nav-icon"> <i class="fa fa-gamepad"></i>
 						</span> <span class="nav-text">Leagues</span>
 					</a></li>
+					@endif
 				</ul>
 			</nav>
 		</div>

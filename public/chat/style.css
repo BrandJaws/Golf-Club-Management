@@ -11,7 +11,7 @@
 }
 
 .chat_head,.msg_head{
-	background:#f39c12;
+	background:#c4061f;
 	color:white;
 	padding:15px;
 	font-weight:bold;
@@ -28,7 +28,7 @@
 }
 
 .msg_head{
-	background:#3498db;
+	background:#2e3e4e;
 }
 
 .msg_body{
@@ -51,6 +51,7 @@
 .close{
 	float:right;
 	cursor:pointer;
+	color: #fff;
 }
 .minimize{
 	float:right;

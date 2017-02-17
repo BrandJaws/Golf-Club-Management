@@ -31,7 +31,7 @@
 						</a>
 						<div class="dropdown-divider"></div>
 						<a class="dropdown-item" ui-sref="access.signin"
-							href="#/access/signin">Sign out</a>
+							href="{{route('admin.logout')}}">Sign out</a>
 					</div></li>
 				<li class="nav-item hidden-md-up"><a class="nav-link"
 					data-toggle="collapse" data-target="#collapse"> <i

@@ -20,7 +20,7 @@
 								<i class="fa fa-cube"></i>
 						</span> <span class="nav-text">Dashboard</span>
 					</a></li>
-					@can('members', 'App\Model')
+					@can('member', 'App\Model')
 					<li><a href="{{route('admin.member.index')}}"> <span
 							class="nav-icon"> <i class="fa fa-user-circle-o"></i>
 						</span> <span class="nav-text">Members</span>

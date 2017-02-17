@@ -29,6 +29,12 @@ Route::group([
     Route::group([
         'middleware' => 'auth'
     ], function () {
+        
+
+        Route::get('/logout', [
+            'as' => 'logout',
+            'uses' => 'ClubAdmin\Admin\AdminController@logout'
+        ]);
         Route::get('/dashboard', [
             'as' => 'dashboard',
             'uses' => 'ClubAdmin\Admin\AdminController@dashboard'

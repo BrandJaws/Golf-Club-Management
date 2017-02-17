@@ -19,6 +19,8 @@ class CreateEmployeeTable extends Migration
             $table->string('lastName', 50);
             $table->string('email', 50)->unique();
             $table->string('password', 100);
+            $table->string('remember_token', 250)->nullable()
+                ->default(Null);
             $table->string('phone', 50)
                 ->nullable()
                 ->default(Null);

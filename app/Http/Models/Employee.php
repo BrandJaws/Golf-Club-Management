@@ -20,6 +20,9 @@ class Employee extends Authenticatable
         'status',
         'permissions'
     ];
+    protected $hidden = [
+        'remember_token'
+    ];
     protected $gaurded = ['password'];
   
     public function club()
@@ -44,11 +47,11 @@ class Employee extends Authenticatable
         return ucfirst($value);
     }
 
-    public function setPermissionsAttribute(array $allowed)
+    public function setPermissionsAttribute( $allowed = [])
     {
         $permissions = \Config::get('global.staff.permissions');
         foreach ($permissions as $key => $module) {
-            $permissions[$key] = (array_key_exists($key, array_flip($allowed))) ? true : false;
+            $permissions[$key] = (array_key_exists($key, array_flip((array)$allowed))) ? true : false;
         }
         $this->attributes['permissions'] = json_encode($permissions);
     }

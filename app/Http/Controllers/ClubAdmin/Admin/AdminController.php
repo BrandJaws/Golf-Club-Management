@@ -142,7 +142,7 @@ class AdminController extends Controller {
 		
 		$request->session ()->regenerate ();
 		
-		return redirect ( '/' );
+		return redirect ( route('admin.login') );
 	}
 	
 	/**

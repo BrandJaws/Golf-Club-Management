@@ -95,6 +95,7 @@ class StaffController extends Controller
         }
         if(empty($request->old())){
             $employee = $employee->toArray();
+            if(!is_null($employee['permissions']))
             $employee['permissions'] = array_keys(json_decode($employee['permissions'], true),true);
         }else{
             $employee = $request->old();

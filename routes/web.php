@@ -238,6 +238,22 @@ Route::group([
                 'uses' => 'ClubAdmin\Beacon\BeaconController@create'
             ]);
         });
+        /**
+         * Routes related to warnings
+         */
+        Route::group([
+            'prefix' => 'warnings',
+            'as' => 'warnings.'
+        ], function () {
+            Route::get('/', [
+                'as' => 'warnings',
+                'uses' => 'ClubAdmin\Warnings\WarningsController@index'
+            ]);
+            Route::get('/create', [
+                'as' => 'create',
+                'uses' => 'ClubAdmin\Warnings\WarningsController@create'
+            ]);
+        });
     });
 });
 Route::get('/home', 'HomeController@index');

@@ -123,7 +123,7 @@
 @include("admin.__vue_components.staff.staff-table")
 <script>
         
-        var baseUrl = "{{url('')}}";
+        var baseUrl = "{{url('admin/staff')}}";
         var vue = new Vue({
             el: "#staff-list-table",
             data: {
@@ -167,7 +167,7 @@
                             url: _url,
                             method: "GET",
                             success:function(msg){
-                                
+                                        
                                         this.ajaxRequestInProcess = false;
                                         if(this.searchRequestHeld){
                                            
@@ -176,7 +176,7 @@
                                             
                                         }
                                         
-                                        pageDataReceived = JSON.parse(msg);
+                                        pageDataReceived = msg;
                                         membersList = pageDataReceived.data ;
                                         
                                         //Success code to follow

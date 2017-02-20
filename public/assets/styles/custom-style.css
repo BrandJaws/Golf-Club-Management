@@ -544,6 +544,11 @@ a.btn-def {
 	width: 100% !important;
 }
 
+.autocomplete-input {
+    border: 0px !important;
+    outline: none !important;
+}
+
 .easy-autocomplete input {
 	border-color: rgba(120, 130, 140, 0.2) !important;
 	border-radius: 0 !important;
@@ -572,6 +577,10 @@ a.btn-def {
 	color: #E7334B;
 }
 /** easy-autocomplete.css override **/
+.easy-autocomplete-container {
+    z-index: 99;
+}
+
 .easy-autocomplete-container ul li {
 	margin: 0 !important;
 	padding: 2px 5px 2px 5px !important;

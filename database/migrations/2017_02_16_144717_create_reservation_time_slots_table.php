@@ -15,8 +15,7 @@ class CreateReservationTimeSlotsTable extends Migration
     {
         Schema::create('reservation_time_slots', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('reservation_id');
-            $table->morphs('reservation_type','reservation_timeslots_reservation_type_morph_index');
+            $table->morphs('reservation');
             $table->dateTime('time_start');
         });
     }

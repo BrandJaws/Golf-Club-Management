@@ -15,8 +15,7 @@ class CreateReservationPlayersTable extends Migration
     {
         Schema::create('reservation_players', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('reservation_id');
-            $table->morphs('reservation_type','reservation_timeslots_reservation_type_morph_index');
+            $table->morphs('reservation');
             $table->bigInteger('member_id')->unsigned();
             $table->enum('status', array('PENDING','CONFIRMED','CANCELLED','NA'));
            

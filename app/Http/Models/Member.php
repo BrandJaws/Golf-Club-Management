@@ -129,8 +129,8 @@ class Member extends Authenticatable
         })
             ->take(15)
             ->get([
-            'member.id',
-            \DB::raw("CONCAT(firstName,' ', lastName) AS name")
+            'member.id as playerId',
+            \DB::raw("CONCAT(firstName,' ', lastName) AS playerName")
         ]);
     }
 

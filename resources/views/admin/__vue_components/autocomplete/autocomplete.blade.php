@@ -4,14 +4,15 @@
         Vue.component('auto-complete-box', {
                 template: `
                             <div style="width: 186px;" class="easy-autocomplete eac-plate-dark eac-description">
-                                <input v-model="textFieldValue" class="form-control autocomplete-input" type="text" @keydown.down="downArrowPressed" @keydown.up="upArrowPressed" @keydown.enter="enterKeyPressed" @blur="focusedOut" @input="inputEvent">
+                                <input v-model="textFieldValue" class="form-control autocomplete-input" type="text" @keydown.down="downArrowPressed" @keydown.up="upArrowPressed" @keydown.enter="enterKeyPressed" @keydown.esc="closeDropDownWithoutAction" @input="inputEvent" @blur="closeDropDownWithoutAction">
                                 <div id="eac-container-eac-5104" class="easy-autocomplete-container" v-if="panelVisible" style="position:absolute;">
                                     <ul style="display: block;">
-                                        <li v-for="(data,dataIndex) in dataListData" :class="[data.selected ? 'selected' : '']" @mouseover="mouseOver(dataIndex,data)">
+                                        <li v-for="(data,dataIndex) in dataListData" :class="[data.selected ? 'selected' : '','data-item']" @mouseover="mouseOver(dataIndex,data)" @mousedown="dataOptionClicked">
                                             <div class="eac-item" v-html="data.nameMarkup">
 
                                             </div>
                                         </li>
+                                        
                                     </ul>
                                 </div>
                                 <input type="hidden" :name="fieldName" :value="selectedId" v-if="selectedIndex > -1"/>
@@ -28,7 +29,10 @@
                         "value",
                         "initialTextValue",
                         "searchQueryKey",
-                        "fieldName"
+                        "fieldName",
+                        //to enable the functionality to fire an explicit selection event with selected player
+                        //and clear the input 
+                        "enableExplicitSelection"
                         
 
 
@@ -42,11 +46,14 @@
                                 dataListData:[],
                                 filteredFromSourceData:this.filteredFromSource != null && this.filteredFromSource.toLowerCase() == "true" ? true : false,
                                 includeIdInListData:this.includeIdInList != null && this.includeIdInList.toLowerCase() == "true" ? true : false,
+                                enableExplicitSelectionData:this.enableExplicitSelection != null && this.enableExplicitSelection.toLowerCase() == "true"? true : false,
                                 selectedId:-1,
+                                selectedDataItem:null,
                             }
                 },
                 methods: {
                     mouseOver:function(dataIndex,dataSelected){
+                        
                         this.selectOneIndexAndUnselectOthers(dataIndex);
                         
                     },
@@ -82,8 +89,16 @@
                             this.panelVisible = true;
                         }
                         
+                        this.raiseExplicitSelectionEventWithSelectedDataItem();
+                        
+                        
                     },
-                    focusedOut:function(){
+                    dataOptionClicked:function(){
+                        
+                         this.raiseExplicitSelectionEventWithSelectedDataItem();
+                        
+                    },
+                    closeDropDownWithoutAction:function(){
                        
                         this.panelVisible = false;
                     },
@@ -125,7 +140,7 @@
                                     this.dataListData[x].selected = true;
                                     this.selectedIndex = indexToSelect;
                                     this.textFieldValue = this.dataListData[x][this.propertyForName];
-                                    this.raiseInputEventWithNewSelectedId(this.dataListData[x][this.propertyForId]);
+                                    this.raiseInputEventWithNewSelectedId(this.dataListData[x]);
                                 }
                         }
                         
@@ -133,7 +148,7 @@
                     clearSelectionIfInputTextDoesntMatchSelected:function(){
                         if(this.dataListData[this.selectedIndex] != null && this.dataListData[this.selectedIndex][this.propertyForName] != this.textFieldValue){
                             this.selectedIndex = -1;
-                            this.raiseInputEventWithNewSelectedId(-1);
+                            this.raiseInputEventWithNewSelectedId(null);
                         }
                     },
                     processDataList:function(){
@@ -150,7 +165,7 @@
                                     
                                     this.dataListData[x].selected = true;
                                     this.textFieldValue = this.dataListData[x][this.propertyForName];
-                                    this.raiseInputEventWithNewSelectedId(this.dataListData[x][this.propertyForId]);
+                                    this.raiseInputEventWithNewSelectedId(this.dataListData[x]);
                                     autoSelectionMade = true;
                                 }else{
                                     this.dataListData[x].selected = false;
@@ -175,10 +190,34 @@
                         }
                         return -1;
                     },
-                    raiseInputEventWithNewSelectedId:function(newSelectedId){
-                        this.$emit('input',newSelectedId);
-                        this.selectedId = newSelectedId;
-                    }
+                    //input event to facilitate v-model directive
+                    raiseInputEventWithNewSelectedId:function(newSelectedDataItem){
+                        if(newSelectedDataItem != null){
+                            selectedId = newSelectedDataItem[this.propertyForId];
+                           
+                        }else{
+                            selectedId = -1;
+                           
+                        }
+                        this.selectedDataItem = newSelectedDataItem;
+                        this.selectedId = selectedId;
+                        this.$emit('input',selectedId);
+                        
+                        
+                    },
+                    //explicit selection: to indicate that the user has pressed enter or clicked an item
+                    raiseExplicitSelectionEventWithSelectedDataItem:function(){
+                        //console.log("Explicit Selection Made");
+                        if(this.enableExplicitSelectionData && this.selectedDataItem != null){
+                             this.selectedIndex = -1;
+                             this.textFieldValue = "";
+                             var selectedDataItemTemp = JSON.parse(JSON.stringify(this.selectedDataItem));
+                             delete selectedDataItemTemp.nameMarkup;
+                             this.$emit('explicit-selection',selectedDataItemTemp);
+                        }
+                       
+                        
+                    },
                     
                 },
 

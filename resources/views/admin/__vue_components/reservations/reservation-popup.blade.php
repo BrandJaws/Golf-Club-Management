@@ -21,11 +21,11 @@ Vue.component('reservation-popup', {
                                 </div>
                                 <div class="tags-container">
                                     <ul class="members-add">
-                                        <reservation-player-tag v-for="reservationPlayer in reservation.players" :reservationPlayer="reservationPlayer" @deletePlayer="deletePlayer"></reservation-player-tag>
+                                        <reservation-player-tag v-for="(reservationPlayer,playerIndex) in reservationData.players" :reservationPlayer="reservationPlayer" deletable="true" @deletePlayer="deletePlayer(playerIndex)" ></reservation-player-tag>
                                     </ul>
-                                    <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="id" property-for-name="name"
+                                    <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="playerId" property-for-name="playerName"
                                                     filtered-from-source="true" include-id-in-list="true"
-                                                    v-model="selectedId" initial-text-value="" search-query-key="search" field-name="memberId"> </auto-complete-box>
+                                                    initial-text-value="" search-query-key="search" field-name="memberId" enable-explicit-selection="true" @explicit-selection="explicitSelectionMade"> </auto-complete-box>
                                 </div><!-- tags container ends here -->
                             </div>
                             <div class="col-md-12 text-right">
@@ -75,22 +75,35 @@ Vue.component('reservation-popup', {
     data: function () {
         
       return {
-          reservationData:this.reservation
+          reservationData:JSON.parse(JSON.stringify(this.reservation)),
       }
     },
     methods:{
         closePopup:function(){
             this.$emit('close-popup');
         },
-        deletePlayer:function(reservationPlayer){
-            this.$emit('delete-player',reservationPlayer);
+        deletePlayer:function(playerIndex){
+            this.reservationData.players.splice(playerIndex,1);
+
         },
         closeModal:function(event){
-            console.log(event.target);
-            console.log(event.target.className.search("closePopup"));
+           
             if(event.target.className.search("closePopup") !== -1) {
                 this.closePopup();
             }
+        },
+        explicitSelectionMade:function(dataItemSelected){
+            //Dont create tag if selected 4 or player already in the list
+            playersInSelectionList = this.reservationData.players.length;
+            if(playersInSelectionList >= 4){
+                return;
+            }
+            for(x=0; x<playersInSelectionList; x++){
+                if(this.reservationData.players[x].playerId == dataItemSelected.playerId){
+                    return;
+                }
+            }
+            this.reservationData.players.push(dataItemSelected);
         }
     }
   

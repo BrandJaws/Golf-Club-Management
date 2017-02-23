@@ -66,27 +66,27 @@
 						<div class="form-group {{($errors->has('firstName'))?'has-error':''}}">
                                 <label class="form-control-label">First Name</label> 
                                 <input type="text" name="firstName"  class="form-control" value="{{Request::old('firstName')}}" />
-                                 @if($errors->has('firstName')) <span class="help-block">{{$errors->first('firstName') }}</span> @endif
+                                 @if($errors->has('firstName')) <span class="help-block errorProfilePic">{{$errors->first('firstName') }}</span> @endif
                             </div>
                             <div class="form-group {{($errors->has('lastName'))?'has-error':''}}">
                                 <label class="form-control-label">Last Name</label> 
                                 <input type="text" name="lastName" class="form-control" value="{{Request::old('lastName')}}" />
-                                 @if($errors->has('lastName')) <span class="help-block">{{$errors->first('lastName') }}</span> @endif
+                                 @if($errors->has('lastName')) <span class="help-block errorProfilePic">{{$errors->first('lastName') }}</span> @endif
                             </div>
                             <div class="form-group {{($errors->has('email'))?'has-error':''}}">
                                 <label class="form-control-label">Email</label> 
                                 <input type="email" class="form-control" name="email" value="{{Request::old('email')}}" />
-                                 @if($errors->has('email')) <span class="help-block">{{$errors->first('email') }}</span> @endif
+                                 @if($errors->has('email')) <span class="help-block errorProfilePic">{{$errors->first('email') }}</span> @endif
                             </div>
                               <div class="form-group {{($errors->has('phone'))?'has-error':''}}">
 							<label class="form-control-label">Contact Number</label> 
 							<input type="tel" class="form-control" name="phone" value="{{Request::old('phone')}}"/>
-							 @if($errors->has('phone')) <span class="help-block">{{$errors->first('phone') }}</span> @endif
+							 @if($errors->has('phone')) <span class="help-block errorProfilePic">{{$errors->first('phone') }}</span> @endif
 							</div>
                             <div class="form-group {{($errors->has('password'))?'has-error':''}}">
     							<label class="form-control-label">Password</label> 
     							<input type="password" class="form-control" name="password" />
-    							 @if($errors->has('password')) <span class="help-block">{{$errors->first('password') }}</span> @endif
+    							 @if($errors->has('password')) <span class="help-block errorProfilePic">{{$errors->first('password') }}</span> @endif
 							</div>
                             <div class="row row-sm">
                                 <div class="col-md-3">
@@ -158,7 +158,7 @@
 										</div>
 									</div>
 									<div class="col-md-8">
-										<div class="form-group">
+										<div class="form-group" id="membersPageAutoCom">
 											<auto-complete-box url="{{asset('people.json')}}"
 												property-for-id="email" property-for-name="name"
 												filtered-from-source="false" include-id-in-list="true"
@@ -183,7 +183,7 @@
 							<div class="form-group">
 								<label class="form-control-label">Add Image</label> 
 								<input type="file" class="form-control" name="profilePic" />
-								@if($errors->has('profilePic')) <span class="help-block">{{$errors->first('profilePic') }}</span> @endif
+								@if($errors->has('profilePic')) <span class="help-block errorProfilePic">{{$errors->first('profilePic') }}</span> @endif
 							</div>
 						</div>
 					</div>

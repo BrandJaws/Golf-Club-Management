@@ -260,6 +260,22 @@ Route::group([
                 'uses' => 'ClubAdmin\Warnings\WarningsController@create'
             ]);
         });
+        /**
+         * Routes related to trainings/lessons
+         */
+        Route::group([
+            'prefix' => 'trainings',
+            'as' => 'trainings.'
+        ], function () {
+            Route::get('/', [
+                'as' => 'index',
+                'uses' => 'ClubAdmin\Trainings\TrainingsController@index'
+            ]);
+            Route::get('create', [
+                'as' => 'create',
+                'uses' => 'ClubAdmin\Trainings\TrainingsController@create'
+            ]);
+        });
     });
 });
 Route::get('/home', 'HomeController@index');

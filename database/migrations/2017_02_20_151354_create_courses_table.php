@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRoutineReservationsTable extends Migration
+class CreateCoursesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateRoutineReservationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('routine_reservations', function (Blueprint $table) {
+        Schema::create('courses', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('club_id');
-            $table->bigInteger('course_id');
-            $table->enum('status', array('RESERVED','WAITING','PENDING RESERVED','PENDING WAITING'));
-            $table->tinyInteger('nextJobToProcess');
-           
+            $table->string('name',50);
+            $table->time('openTime');
+            $table->time('closeTime');
+            $table->integer('bookingInterval');
+            $table->integer('bookingDuration');
+            $table->enum('status', array('CLOSED', 'OPEN'));
         });
     }
 
@@ -30,6 +32,6 @@ class CreateRoutineReservationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('routine_reservations');
+        Schema::dropIfExists('courses');
     }
 }

@@ -14,4 +14,8 @@ class TrainingsController extends Controller
     public function create() {
         return view('admin.trainings.create');
     }
+
+    public function edit() {
+        return view('admin.trainings.edit');
+    }
 }

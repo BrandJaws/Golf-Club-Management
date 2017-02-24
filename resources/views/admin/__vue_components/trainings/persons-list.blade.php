@@ -1,35 +1,29 @@
 <script>
 
-    Vue.component('trainings', {
+    Vue.component('person-list', {
 
         template: `
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Lesson Name</th>
-                        <th>Instructor</th>
-                        <th>Total Seats</th>
-                        <th>Seats Reserved</th>
+                        <th>Person Name</th>
+                        <th>Person Email</th>
+                        <th>Person ID</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="training in trainingListData">
+                    <tr v-for="person in personsListData">
                         <td>
-                            @{{ training.name }}
+                            @{{ person.name }}
                         </td>
                         <td>
-                            @{{ training.instructor }}
+                            @{{ person.email }}
                         </td>
                         <td>
-                            @{{ training.seats }}
+                            @{{ person.id }}
                         </td>
                         <td>
-                            @{{ training.seatsReserved }}
-                        </td>
-                        <td>
-                            <a href="{{route("admin.trainings.edit")}}" class="blue-cb">edit</a>
-                            &nbsp;&nbsp;
                             <a href="#." class="del-icon"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
@@ -37,11 +31,11 @@
                 </table>
                 `,
         props: [
-            "trainingsList"
+            "personsList"
         ],
         data: function(){
             return {
-                trainingListData:this.trainingsList
+                personsListData:this.personsList
             }
         },
 

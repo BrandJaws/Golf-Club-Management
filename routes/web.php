@@ -275,6 +275,10 @@ Route::group([
                 'as' => 'create',
                 'uses' => 'ClubAdmin\Trainings\TrainingsController@create'
             ]);
+            Route::get('edit', [
+               'as' => 'edit',
+                'uses' => 'ClubAdmin\Trainings\TrainingsController@edit'
+            ]);
         });
     });
 });

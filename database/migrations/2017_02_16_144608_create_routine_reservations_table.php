@@ -17,8 +17,12 @@ class CreateRoutineReservationsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('club_id');
             $table->bigInteger('course_id');
+            $table->bigInteger('parent_id')->unsigned();
             $table->enum('status', array('RESERVED','WAITING','PENDING RESERVED','PENDING WAITING'));
-            $table->tinyInteger('nextJobToProcess');
+            $table->tinyInteger('nextJobToProcess')->default(0);
+            $table->foreign('parent_id')->references('id')
+              ->on('member')
+              ->onDelete('cascade');
            
         });
     }

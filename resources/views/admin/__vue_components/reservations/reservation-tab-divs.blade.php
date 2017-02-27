@@ -8,24 +8,21 @@ Vue.component('reservation-tab-divs', {
                       <div v-for="(reservationByDate,reservationIndex) in reservationsByDateData" :id="'tab'+(reservationIndex+1)" :class="['tab-pane', 'animated', 'fadeIn', 'text-muted', reservationIndex == 0 ? 'active' : '']" >
                         <div class="tab-pane-content">
                             <div class="booked-list">
-                                    <div class="col-md-3 timeSlots3" v-for="(reservation,reservationIndex) in reservationByDate.reservationsByTimeSlot">
+                                    <div class="col-md-3 timeSlots3" v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot">
                                             <div class="booking-box text-center" >
-                                            <h3>@{{reservation.timeSlot}}</h3>
+                                            <h3>@{{timeSlot.timeSlot}}</h3>
                                                 <p class="min-height-names">
-                                                    <span v-if="reservation.players.length == 0">
+                                                    <span v-if="timeSlot.reservations.length == 0">
                                                         Time Slot Vacant   
                                                     </span>
-                                                    <span v-else v-for="(reservationPlayer,reservationPlayerIndex) in reservation.players" v-if="reservationPlayerIndex < 4">
+                                                    <span v-else v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players">
                                                        @{{reservationPlayer.playerName}}
-                                                       <span v-if="reservationPlayerIndex < 4 && reservationPlayerIndex < reservation.players.length -1">
-                                                             @{{ reservationPlayerIndex < 3 ? "" : "" }}
-                                                       </span> 
                                                     </span>
                                                     
 
                                                 </p>
                                                 <p >
-                                                    <a href="#."data-toggle="modal" data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" :class="reservation.players.length > 0 ? 'booked' : ''" @click.prevent="editReservationClicked(reservation)">@{{ computedValue(reservation.players.length) }}</a>\n\
+                                                    <a href="#."data-toggle="modal" data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" :class="timeSlot.reservations.length > 0 ? 'booked' : ''" @click.prevent="editReservationClicked(reservationByDate.date,reservationByDate.day,timeSlot.timeSlot,timeSlot.reservations)">@{{ computedValue(timeSlot.reservations.length) }}</a>\n\
                                                 </p>
                                             </div>
                                     </div>
@@ -63,14 +60,19 @@ Vue.component('reservation-tab-divs', {
         deletePlayer: function(abc,event){
         
        
-            console.log(abc);
-            console.log(event);
             //this.$emit('deletePlayer');
             
         },
-        editReservationClicked: function(reservation){
-            
-             this.$emit('edit-reservation',reservation);
+        editReservationClicked: function(_date,_day,_timeSlot,reservationsArray){
+            //emit edit reservation event if already has reservations
+            //else emit new reservation event
+             if(reservationsArray.length > 0){
+                 
+                 this.$emit('edit-reservation',reservationsArray[0]);
+             }else{
+                 this.$emit('new-reservation',{date:_date,day:_day,timeSlot:_timeSlot,players:[],guests:0});
+             }
+             
         },
         computedValue: function(initialValue) {
             if(initialValue > 0) {

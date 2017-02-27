@@ -173,14 +173,16 @@
 					<div id="reservations-vue-container" class="row">
 						<div class="col-md-12">
 							<reservation-popup v-if="showPopup"
-								:reservation="reservationToEdit"
+								:reservation="reservationToEdit" 
+                                                                :reservation-type="reservationType" 
 								@close-popup="closePopupTriggered"></reservation-popup>
 							<reservation-tabs :reservations-parent="reservationsParent"
 								style-for-show-more-tab="false"> <reservation-tab-heads
 								:reservations-by-date="reservationsParent.reservationsByDate"
 								show-more-tab="false"></reservation-tab-heads> <reservation-tab-tables
 								:reservations-by-date="reservationsParent.reservationsByDate"
-								@edit-reservation="editReservationEventTriggered"></reservation-tab-tables>
+								@edit-reservation="editReservationEventTriggered" 
+                                                                @new-reservation="newReservationEventTriggered"></reservation-tab-tables>
 							</reservation-tabs>
 
 						</div>
@@ -200,209 +202,214 @@
 @include("admin.__vue_components.reservations.reservation-popup")
 
 <script>
-    var _reservationsParent = 
+var _reservationsParent =
             {
-                course_id:'',
+                club_id:'1',
+                course_id: '1',
                 reservationsByDate: [
-
+                    {
+                        reserved_at:'',
+                        date: '29',
+                        day: 'THURSDAY',
+                        reservationsByTimeSlot: [
+                            {
+                                timeSlot: '06:00 AM',
+                                reservations:[
                                     {
-                                            date:'29',
-                                            day:'THURSDAY',
-                                            reservationsByTimeSlot:[
-                                                            {
-
-                                                                timeSlot:'06:00 AM',
-                                                                players:[
-                                                                          {
-                                                                                playerName:'Kashif Chishti',
-                                                                                 playerId:'1'
-                                                                          },
-                                                                          {
-                                                                                playerName:'Bilal Bin Nisar',
-                                                                                 playerId:'2'
-                                                                          }
-                                                                ]
-
-                                                             },
-                                                             {
-
-                                                                timeSlot:'07:00 AM',
-                                                                players:[
-                                                                          {
-                                                                                playerName:'Bilal Khalid',
-                                                                                 playerId:'3'
-                                                                          },
-                                                                          {
-                                                                                playerName:'Fahad Mansoor',
-                                                                                 playerId:'4'
-                                                                          },
-                                                                          {
-                                                                                playerName:'Bilal Khalid',
-                                                                                 playerId:'3'
-                                                                          },
-                                                                          {
-                                                                                playerName:'Fahad Mansoor',
-                                                                                 playerId:'4'
-                                                                          },
-                                                                          {
-                                                                                playerName:'Bilal Khalid',
-                                                                                 playerId:'3'
-                                                                          },
-                                                                          {
-                                                                                playerName:'Fahad Mansoor',
-                                                                                 playerId:'4'
-                                                                          },
-                                                                          {
-                                                                                playerName:'Bilal Khalid',
-                                                                                 playerId:'3'
-                                                                          },
-                                                                          {
-                                                                                playerName:'Fahad Mansoor',
-                                                                                 playerId:'4'
-                                                                          }
-                                                                ]
-
-                                                             }
-                                            ]
-                                            
-                                    },
-                                    {
-                                            date:'30',
-                                            day:'FRIDAY',
-                                            reservationsByTimeSlot:[
-                                                            {
-
-                                                                timeSlot:'01:00 PM',
-                                                                players:[
-                                                                          {
-                                                                                playerName:'Kashif Chishti',
-                                                                                 playerId:'1'
-                                                                          },
-                                                                          {
-                                                                                playerName:'Bilal Bin Nisar',
-                                                                                 playerId:'2'
-                                                                          }
-                                                                ]
-
-                                                             },
-                                                             {
-
-                                                                timeSlot:'02:00 PM',
-                                                                players:[
-                                                                          {
-                                                                                playerName:'Bilal Khalid',
-                                                                                 playerId:'3'
-                                                                          },
-                                                                          {
-                                                                                playerName:'Fahad Mansoor',
-                                                                                 playerId:'4'
-                                                                          }
-                                                                ]
-
-                                                             }
-                                            ]
-                                            
-                                    },
-                                    {
-                                        date:'31',
-                                        day:'SATURDAY',
-                                        reservationsByTimeSlot:[
-                                            {
-
-                                                timeSlot:'02:00 PM',
-                                                players:[
+                                        reservation_id:3,
+                                        status:'RESERVED',
+                                        players: [
                                                     {
-                                                        playerName:'Kashif Chishti',
-                                                        playerId:'1'
+                                                        playerName: 'Kashif Chishti',
+                                                        playerId: '1'
                                                     },
                                                     {
-                                                        playerName:'Bilal Bin Nisar',
-                                                        playerId:'2'
+                                                        playerName: 'Bilal Bin Nisar',
+                                                        playerId: '2'
                                                     }
-                                                ]
+                                        ],
+                                        guests:0,
+                                    }
+                                ]
+                                    
+                                
 
-                                            },
-                                            {
+                            },
+                            {
+                                timeSlot: '07:00 AM',
+                                reservations:[
+                                   {
+                                        reservation_id:'',
+                                        status:'',
+                                        players: [
+                                                   
+                                        ],
+                                        guests:0,
+                                    }
+                                ]
 
-                                                timeSlot:'03:00 PM',
-                                                players:[
+                            },
+                            {
+                                timeSlot: '08:00 AM',
+                                reservations:[
+                                    {
+                                        reservation_id:'',
+                                        status:'RESERVED',
+                                        players: [
                                                     {
-                                                        playerName:'Bilal Khalid',
-                                                        playerId:'3'
+                                                        playerName: 'Kashif Chishti',
+                                                        playerId: '1'
                                                     },
                                                     {
-                                                        playerName:'Fahad Mansoor',
-                                                        playerId:'4'
+                                                        playerName: 'Bilal Bin Nisar',
+                                                        playerId: '2'
                                                     }
-                                                ]
+                                        ],
+                                        guests:0,
+                                    }
+                                ]
 
-                                            }
-                                        ]
+                            },
+                            {
+                                timeSlot: '09:00 AM',
+                                reservations:[
+                                    {
+                                        reservation_id:'',
+                                        status:'',
+                                        players: [
+                                                   
+                                        ],
+                                        guests:0,
+                                    }
+                                ]
 
-                                    },
-                                        {
-                                            date:'01',
-                                            day:'SUNDAY',
-                                            reservationsByTimeSlot:[
-                                                {
+                            },
+                            {
+                                timeSlot: '10:00 AM',
+                                reservations:[
+                                    {
+                                        reservation_id:'',
+                                        status:'',
+                                        players: [
+                                                   
+                                        ],
+                                        guests:0,
+                                    }
+                                ]
 
-                                                    timeSlot:'02:00 PM',
-                                                    players:[
-                                                        {
-                                                            playerName:'Kashif Chishti',
-                                                            playerId:'1'
-                                                        },
-                                                        {
-                                                            playerName:'Bilal Bin Nisar',
-                                                            playerId:'2'
-                                                        }
-                                                    ]
+                            }
+                        ]
 
-                                                },
-                                                {
+                    },
+                    {
+                        reserved_at:'',
+                        date: '30',
+                        day: 'FRIDAY',
+                        reservationsByTimeSlot: [
+                            {
+                                timeSlot: '01:00 PM',
+                                reservations:[
+                                    {
+                                        reservation_id:'',
+                                        status:'RESERVED',
+                                        players: [
+                                                    {
+                                                        playerName: 'Kashif Chishti',
+                                                        playerId: '1'
+                                                    },
+                                                    {
+                                                        playerName: 'Bilal Bin Nisar',
+                                                        playerId: '2'
+                                                    }
+                                        ],
+                                        guests:0,
+                                    }
+                                ]
 
-                                                    timeSlot:'03:00 PM',
-                                                    players:[
-                                                        {
-                                                            playerName:'Bilal Khalid',
-                                                            playerId:'3'
-                                                        },
-                                                        {
-                                                            playerName:'Fahad Mansoor',
-                                                            playerId:'4'
-                                                        }
-                                                    ]
+                            },
+                            {
+                                timeSlot: '02:00 PM',
+                                reservations:[
+                                   {
+                                        reservation_id:'',
+                                        status:'',
+                                        players: [
+                                                   
+                                        ],
+                                        guests:0,
+                                    }
+                                ]
 
-                                                }
-                                            ]
+                            },
+                            {
+                                timeSlot: '03:00 PM',
+                                reservations:[
+                                   {
+                                        reservation_id:'',
+                                        status:'',
+                                        players: [
+                                                   
+                                        ],
+                                        guests:0,
+                                    }
+                                ]
 
-                                        }
+                            },
+                            {
+                                timeSlot: '04:00 PM',
+                                reservations:[
+                                   {
+                                        reservation_id:'',
+                                        status:'',
+                                        players: [
+                                                   
+                                        ],
+                                        guests:0,
+                                    }
+                                ]
+
+                            }
+                        ]
+
+                    }
 
 
-                       ]
+                ]
 
             }
     var vue = new Vue({
-        el:"#reservations-vue-container",
-        data:{
-            reservationsParent:_reservationsParent,
-            showPopup:false,
-            reservationToEdit:null
+        el: "#reservations-vue-container",
+        data: {
+            reservationsParent: _reservationsParent,
+            showPopup: false,
+            reservationToEdit: null,
+            reservationType:null, //possible values new or edit
         },
-        methods:{
-            editReservationEventTriggered:function(reservation){
-                console.log("Edit Button clicked");
+        methods: {
+            editReservationEventTriggered: function (reservation) {
+                
+                reservationTemp = JSON.parse(JSON.stringify(reservation));
+                this.reservationToEdit = reservationTemp;
+                this.reservationType = "edit";
                 this.showPopup = true;
-                this.reservationToEdit = reservation;
             },
-            closePopupTriggered:function(){
-                console.log("Edit Button clicked");
+            newReservationEventTriggered:function(reservation){
+               
+                 reservationTemp = reservation;
+                 reservationTemp.clubId = this.reservationsParent.club_id;
+                 reservationTemp.courseId = this.reservationsParent.course_id;
+                 this.reservationToEdit = reservationTemp;
+                 this.reservationType = "new";
+                 this.showPopup = true;
+            },
+            closePopupTriggered: function () {
+                
                 this.showPopup = false;
                 this.reservationToEdit = null;
+                this.reservationType = null;
             }
         }
     });
-    console.log(vue.reservationsParent);
 </script>
 
 @endSection

@@ -10,12 +10,12 @@ Vue.component('reservation-tab-tables', {
                         <div class="table-responsive">
                             <table class="table table-hover b-t">
                                 <tbody>
-                                  <tr v-for="(reservation,reservationIndex) in reservationByDate.reservationsByTimeSlot" :key="reservationIndex">
-                                    <td >@{{reservation.timeSlot}}</td>
+                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex">
+                                    <td >@{{timeSlot.timeSlot}}</td>
                                     <td width="80%">
                                       <ul class="members-add">
-                                          <reservation-player-tag v-for="reservationPlayer in reservation.players.slice(0,4)" :reservationPlayer="reservationPlayer" ></reservation-player-tag>
-                                          <li class="add-btn" @click="editReservationClicked(reservation)"><a href="#."><i class="fa fa-plus"></i></a></li>
+                                          <reservation-player-tag  v-for="reservationPlayer in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer" ></reservation-player-tag>
+                                          <li class="add-btn" @click="editReservationClicked(reservationByDate.date,reservationByDate.day,timeSlot.timeSlot,timeSlot.reservations[0])"><a href="#."><i class="fa fa-plus"></i></a></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -50,10 +50,18 @@ Vue.component('reservation-tab-tables', {
     },
     methods: {
         
-        editReservationClicked: function(reservation){
+        editReservationClicked: function(_date,_day,_timeSlot,reservation){
+            //emit edit reservation event if already has reservations
+            //else emit new reservation event
             
-             this.$emit('edit-reservation',reservation);
-        }
+             if(reservation.reservation_id == 0){
+                 this.$emit('new-reservation',{date:_date,day:_day,timeSlot:_timeSlot,players:[],guests:0});
+                 
+             }else{
+                 this.$emit('edit-reservation',reservation);
+             }
+             
+        },
     },
 //    computed: {
 //        reservationsByDateDataSlice: function(){

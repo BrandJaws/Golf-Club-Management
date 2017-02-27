@@ -43,10 +43,26 @@ Route::group([
             'prefix' => 'reservations',
             'as' => 'reservations.'
         ], function () {
-            Route::get('/', [
-                'as' => 'reservations',
-                'uses' => 'ClubAdmin\Reservations\ReservationsController@index'
-            ]);
+                Route::get('/', [
+                    'as' => 'reservations',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@index'
+                ]);
+                Route::post('/', [
+                    'as' => 'store',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@store'
+                ]);
+                Route::put('/', [
+                    'as' => 'store',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@update'
+                ]);
+                Route::delete('/{reservation_id}', [
+                    'as' => 'delete',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@delete'
+                ]);
+                 Route::get('/list-test', [
+                    'as' => 'reservations',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@listTest'
+                ]);
         });
         /**
          * Routes related to segments

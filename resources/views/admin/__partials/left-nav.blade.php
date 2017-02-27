@@ -79,7 +79,7 @@
 					</a></li>
 					@endif
 					@can('training', 'App\Model')
-					<li><a href="#."> <span class="nav-icon"> <i
+					<li><a href="{{route('admin.trainings.index')}}"> <span class="nav-icon"> <i
 								class="fa fa-graduation-cap"></i>
 						</span> <span class="nav-text">Trainings</span>
 					</a></li>

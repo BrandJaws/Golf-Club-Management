@@ -106,6 +106,12 @@
 								<div class="clearfix"></div>
 							</div>
 						</div>
+						@if(Session::has('error'))
+                            <div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
+                        @endif
+                        @if(Session::has('success'))
+                        	<div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
+                        @endif
 						<!-- inner header -->
 						<beacon :beacon-list="beaconList"> </beacon>
 					</div>
@@ -117,34 +123,92 @@
 
 @include('admin.__vue_components.beacon.beacon-list');
 <script>
-        var baseUrl = "{{url('')}}";
-        _beaconList = [{name:'John Wick',court:'Test Court One',major:'0',minor:'0',duration:'12:15',status:'Available'},
-            {name:'Johnny Depp',court:'Test Court Two',major:'0',minor:'0',duration:'12:15',status:'Available'},
-            {name:'Hugh Jackman',court:'Test Court Three',major:'0',minor:'0',duration:'12:15',status:'Busy'},
-            {name:'Rupert Grint',court:'Test Court Four',major:'0',minor:'0',duration:'12:15',status:'Busy'},
-            {name:'Daniel Radcliffe',court:'Test Court Five',major:'0',minor:'0',duration:'12:15',status:'Available'},
-            {name:'Robert Dworney Jr.',court:'Test Court Six',major:'0',minor:'0',duration:'12:15',status:'Busy'},
-            {name:'Evan Jogia',court:'Test Court Seven',major:'0',minor:'0',duration:'12:15',status:'Busy'},
-            {name:'Robert Atinkson',court:'Test Court Eight',major:'0',minor:'0',duration:'12:15',status:'Available'},
-            {name:'Chris Black',court:'Test Court Nine',major:'0',minor:'0',duration:'12:15',status:'Busy'}];
-
+        
+        var baseUrl = "{{url('admin/beacon')}}";
         var vue = new Vue({
             el: "#beacon-list-table",
             data: {
-                beaconList:[],
-                latestPageLoaded:0,
-                ajaxRequestInProcess:false
+            	beaconList:({!! $beacon !!}).data,
+                searchQuery:"",
+                lastSearchTerm:"",
+                nextAvailablePage:2,
+                searchRequestHeld:false,
             },
             methods: {
-                loadNextPage:function(){
-                    if(this.latestPageLoaded == 0){
-                        for(x=0; x<_beaconList.length; x++){
-                            this.beaconList.push(_beaconList[x]);
+                loadNextPage:function(isSearchQuery){
+                    
+    				
+                    if(isSearchQuery){
+                        if(this.ajaxRequestInProcess){
+                            this.searchRequestHeld=true;
+                            return;
                         }
-
+                        if(this.searchQuery !== this.lastSearchTerm){
+                            this.nextAvailablePage = 1;
+                        }
+                        this.lastSearchTerm = this.searchQuery;
+                        _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+                       
+                        
+                    }else if(this.searchQuery != ""){
+                        _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+                    }else{
+                        _url = baseUrl+'?current_page='+(this.nextAvailablePage);
                     }
-                    return;
-                }
+                    
+                  
+                    if(this.nextAvailablePage === null){
+                        return;
+                    }
+                    
+                    if(!this.ajaxRequestInProcess){
+                        this.ajaxRequestInProcess = true;
+                        var request = $.ajax({
+                            
+                            url: _url,
+                            method: "GET",
+                            success:function(msg){
+                                        
+                                        this.ajaxRequestInProcess = false;
+                                        if(this.searchRequestHeld){
+                                           
+                                            this.searchRequestHeld=false;
+                                            this.loadNextPage(true);
+                                            
+                                        }
+                                        
+                                        pageDataReceived = msg;
+                                        membersList = pageDataReceived.data ;
+                                        
+                                        //Success code to follow
+                                            if(pageDataReceived.next_page_url !== null){
+                                                    this.nextAvailablePage = pageDataReceived.current_page+1;
+                                            }else{
+                                                this.nextAvailablePage = null;
+                                            }
+                                        
+                                            if(isSearchQuery){
+                                                
+                                                 this.membersList=membersList;
+                                            }else{
+                                                
+                                               appendArray(this.membersList,membersList);
+                                            }
+                                        
+                                        
+                                        
+                                    }.bind(this),
+
+                            error: function(jqXHR, textStatus ) {
+                                        this.ajaxRequestInProcess = false;
+
+                                        //Error code to follow
+
+
+                                   }.bind(this)
+                        }); 
+                    }
+}
             },
         });
 

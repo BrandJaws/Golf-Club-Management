@@ -16,9 +16,10 @@
 	          			<th>
 	          				Minor
 	          			</th>
-	          			<th>
+	          			<?php /* ?><th>
 	          				Check in Duration
 	          			</th>
+	          			<?php */ ?>
 	          			<th>
 	          				Status
 	          			</th>
@@ -33,7 +34,7 @@
                             @{{beacon.name}}
                         </td>
                          <td>
-                            @{{beacon.court}}
+                            @{{beacon.courseName}}
                         </td>
                         <td>
                             @{{beacon.major}}
@@ -41,9 +42,10 @@
                         <td>
                             @{{beacon.minor}}
                         </td>
-                        <td>
+                        <?php /* ?> <td>
                             @{{beacon.duration}}
                         </td>
+                        <?php */ ?>
                         <td>
                             @{{beacon.status}}
                         </td>

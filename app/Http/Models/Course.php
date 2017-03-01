@@ -15,15 +15,15 @@ use DB;
 
 class Course extends Model {
 	
-	public $timestamps = false;
+    protected  $table = "course";
+    public $timestamps = false;
 	protected $fillable = [ 
 			'name',
 			'club_id',
 			'openTime',
 			'closeTime',
 			'bookingDuration',
-			'ballMachineAvailable',
-			'environment',
+			'bookingInterval',
 			'status' 
 	];
 	public $reservations;
@@ -87,8 +87,8 @@ class Course extends Model {
 	
     
     /**
-	 * To get reservations for all courses with players and other details: detailed = true
-         * To get reservations for all courses with booking indicators for mobile service: detailed = false
+	 * To get reservations for all course with players and other details: detailed = true
+         * To get reservations for all course with booking indicators for mobile service: detailed = false
 	 */
      public static function getReservationsForACourseByIdForADateRange($courseId,$dateStart,$dateEnd, $detailed = true) {
                 //$date = !$date ? Carbon::today()->toDateString() : $date;
@@ -171,12 +171,12 @@ class Course extends Model {
         //dd(RoutineReservation::class);
         //First Set of Data for Routine Reservations
         $query  = " SELECT "; 
-        $query .= " courses.id as course_id, ";
-        $query .= " courses.club_id as club_id, ";
-        $query .= " courses.name as course_name, ";
-        //$query .= " courses.openTime, ";
-        //$query .= " courses.closeTime, ";
-        //$query .= " courses.bookingDuration, ";
+        $query .= " course.id as course_id, ";
+        $query .= " course.club_id as club_id, ";
+        $query .= " course.name as course_name, ";
+        //$query .= " course.openTime, ";
+        //$query .= " course.closeTime, ";
+        //$query .= " course.bookingDuration, ";
         $query .= " routine_reservations.id as reservation_id, ";
         $query .= " ANY_VALUE(reservation_time_slots.reservation_type) as reservation_type, ";
         $query .= " routine_reservations.parent_id, ";
@@ -188,20 +188,20 @@ class Course extends Model {
         $query .= " GROUP_CONCAT(IF(CONCAT_WS(' ', member.firstName, member.lastName) <> ' ',CONCAT_WS(' ', member.firstName, member.lastName),'Guest') ORDER BY reservation_players.id ASC SEPARATOR '||-separation-player-||' ) as member_names, ";
         $query .= " routine_reservations.status ";
         $query .= " FROM ";
-        $query .= " courses ";
-        //$query .= " LEFT JOIN routine_reservations ON routine_reservations.course_id = courses.id ";
+        $query .= " course ";
+        //$query .= " LEFT JOIN routine_reservations ON routine_reservations.course_id = course.id ";
         //Start : To Join reservation type RoutineReservation
-        $query .= " LEFT JOIN routine_reservations ON routine_reservations.course_id = courses.id ";
+        $query .= " LEFT JOIN routine_reservations ON routine_reservations.course_id = course.id ";
         $query .= " LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND STRCMP(reservation_time_slots.reservation_type,'".RoutineReservation::class."') ";
         $query .= " LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND STRCMP(reservation_players.reservation_type,'".RoutineReservation::class."') ";
         
         $query .= " LEFT JOIN member ON reservation_players.member_id = member.id ";
         //End : To Join a reservation type RoutineReservation
         $query .= " WHERE ";
-        $query .= " courses.id = ? ";
+        $query .= " course.id = ? ";
         $query .= " AND DATE(reservation_time_slots.time_start) >= DATE(?) ";
         $query .= " AND DATE(reservation_time_slots.time_start) <= DATE(?) ";
-        $query .= " AND courses.club_id = ? ";
+        $query .= " AND course.club_id = ? ";
         $query .= " GROUP BY routine_reservations.id,reservation_time_slots.time_start ";
         
 //        START:To add other reservation types results in the future
@@ -209,9 +209,9 @@ class Course extends Model {
 //        $query .= " UNION ALL ";
 //
 //        $query .= " SELECT "; 
-//        $query .= " courses.id as course_id, ";
-//        $query .= " courses.club_id as club_id, ";
-//        $query .= " courses.name as course_name, ";
+//        $query .= " course.id as course_id, ";
+//        $query .= " course.club_id as club_id, ";
+//        $query .= " course.name as course_name, ";
 //        $query .= " routine_reservations.id as reservation_id, ";
 //        $query .= " ANY_VALUE(reservation_time_slots.reservation_type) as reservation_type, ";
 //        $query .= " routine_reservations.parent_id, ";
@@ -222,16 +222,16 @@ class Course extends Model {
 //        $query .= " GROUP_CONCAT(IF(CONCAT_WS(' ', member.firstName, member.lastName) <> ' ',CONCAT_WS(' ', member.firstName, member.lastName),'Guest') ORDER BY reservation_players.id ASC SEPARATOR '||-separation-player-||' ) as member_names, ";
 //        $query .= " routine_reservations.status ";
 //        $query .= " FROM ";
-//        $query .= " courses ";
-//        $query .= " LEFT JOIN routine_reservations ON routine_reservations.course_id = courses.id ";
+//        $query .= " course ";
+//        $query .= " LEFT JOIN routine_reservations ON routine_reservations.course_id = course.id ";
 //        $query .= " LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND STRCMP(reservation_time_slots.reservation_type,'".RoutineReservation::class."') ";
 //        $query .= " LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND STRCMP(reservation_players.reservation_type,'".RoutineReservation::class."') ";
 //        $query .= " LEFT JOIN member ON reservation_players.member_id = member.id ";
 //        $query .= " WHERE ";
-//        $query .= " courses.id = ? ";
+//        $query .= " course.id = ? ";
 //        $query .= " AND DATE(reservation_time_slots.time_start) >= DATE(?) ";
 //        $query .= " AND DATE(reservation_time_slots.time_start) <= DATE(?) ";
-//        $query .= " AND courses.club_id = ? ";
+//        $query .= " AND course.club_id = ? ";
 //        $query .= " GROUP BY routine_reservations.id,reservation_time_slots.time_start ";
         
 //        END:To add other reservation types results in the future

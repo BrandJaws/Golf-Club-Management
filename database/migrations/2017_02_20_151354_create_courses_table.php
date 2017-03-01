@@ -13,7 +13,7 @@ class CreateCoursesTable extends Migration
      */
     public function up()
     {
-        Schema::create('courses', function (Blueprint $table) {
+        Schema::create('course', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('club_id');
             $table->string('name',50);
@@ -32,6 +32,6 @@ class CreateCoursesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('courses');
+        Schema::dropIfExists('course');
     }
 }

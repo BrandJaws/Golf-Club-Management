@@ -21,7 +21,7 @@ class MemberSeeder extends Seeder {
 		);
 		
 		$clubList = Club::select ( 'id' )->orderBy ( "id", 'ASC' )->get ()->toArray ();
-		for($i = 0; $i < 500; $i ++) {
+		for($i = 0; $i < 100; $i ++) {
 			$randomClub = $faker->randomElement ( $clubList );
 			
 			$selectedGender = $faker->randomElement ( Config::get ( 'global.gender' ) );

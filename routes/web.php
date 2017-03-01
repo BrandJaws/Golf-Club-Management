@@ -259,6 +259,10 @@ Route::group([
                 'as' => 'create',
                 'uses' => 'ClubAdmin\Beacon\BeaconController@create'
             ]);
+            Route::post('/', [
+                'as' => 'store',
+                'uses' => 'ClubAdmin\Beacon\BeaconController@store'
+            ]);
         });
         /**
          * Routes related to warnings

@@ -55,126 +55,142 @@
 			<div class="row">
 				<div class="col-xs-12 col-md-12">
 					<div class="beacon-configure">
-						<form action="#." method="post" enctype="multipart/form-data">
+						<form action="{{route('admin.beacon.store')}}" method="post" enctype="multipart/form-data">
+						@if(Session::has('error'))
+                        	<div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
+                        @endif
+                        @if(Session::has('success'))
+                        	<div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
+                        @endif
+                        <input type="hidden" name="_method" value="POST" />
+				    	{{ csrf_field() }}
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
-										<label>Course</label> <select name="course"
-											class="form-control">
+									<div class="form-group {{($errors->has('course'))?'has-error':''}}">
+										<label>Course</label> 
+										<select name="course" class="form-control">
 											<option value="1">Course 1</option>
 											<option value="2">Course 2</option>
 											<option value="3">Course 3</option>
 											<option value="4">Course 4</option>
 										</select>
+										 @if($errors->has('course')) <span class="help-block errorProfilePic">{{$errors->first('course') }}</span> @endif
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
-										<label>Beacon Name</label> <input type="text"
-											class="form-control" name="beacon-name">
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>UDID</label> <input type="text" class="form-control"
-											name="udid">
-									</div>
-								</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label>Major</label> <input type="text" class="form-control"
-											name="major">
+									<div class="form-group {{($errors->has('name'))?'has-error':''}}">
+										<label>Beacon Name</label> 
+										<input type="text" class="form-control" name="name">
+										 @if($errors->has('name')) <span class="help-block errorProfilePic">{{$errors->first('name') }}</span> @endif
 									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<div class="form-group">
-										<label>Minor</label> <input type="text" class="form-control"
-											name="minor">
+									<div class="form-group {{($errors->has('UUID'))?'has-error':''}}">
+										<label>UDID</label> <input type="text" class="form-control" name="UUID">
+										 @if($errors->has('UUID')) <span class="help-block errorProfilePic">{{$errors->first('UUID') }}</span> @endif
 									</div>
 								</div>
 								<div class="col-md-6">
-									<div class="form-group">
-										<label>Record Check In</label> <select name="record-check-in"
-											class="form-control">
+									<div class="form-group {{($errors->has('major'))?'has-error':''}}">
+										<label>Major</label> 
+										<input type="text" class="form-control" name="major">
+										 @if($errors->has('major')) <span class="help-block errorProfilePic">{{$errors->first('major') }}</span> @endif
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group {{($errors->has('minor'))?'has-error':''}}">
+										<label>Minor</label> 
+										<input type="text" class="form-control" name="minor">
+										 @if($errors->has('minor')) <span class="help-block errorProfilePic">{{$errors->first('minor') }}</span> @endif
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group {{($errors->has('firstName'))?'has-error':''}}">
+										<label>Record Check In</label> 
+										<select name="record-check-in" class="form-control">
 											<option value="1">Near</option>
 											<option value="2">Far</option>
 											<option value="3">Immediate</option>
 										</select>
+										 @if($errors->has('firstName')) <span class="help-block errorProfilePic">{{$errors->first('firstName') }}</span> @endif
 									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-12">
-									<div class="form-group">
-										<label>Near</label> <select name="near" class="form-control"
-											id="near">
-											<option value="1">Wellcome Message</option>
-											<option value="2">Checkin</option>
-											<option value="3">Checkout</option>
-											<option value="4">Custom Message</option>
+									<div class="form-group {{($errors->has('Near.action'))?'has-error':''}}">
+										<label>Near</label> 
+										<select name="Near[action]" class="form-control" id="near">
+											<option value="welcome">Wellcome Message</option>
+											<option value="checkin">Checkin</option>
+											<option value="checkout">Checkout</option>
+											<option value="custom">Custom Message</option>
 										</select>
+										 @if($errors->has('Near.action')) <span class="help-block errorProfilePic">{{$errors->first('Near.action') }}</span> @endif
 									</div>
 								</div>
 							</div>
 							<div id="custom-message-near" style="display: none;">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="form-group">
+										<div class="form-group {{($errors->has('Near.custom'))?'has-error':''}}">
 											<label>Custom Message</label>
-											<textarea name="custom-message-near" class="form-control"
-												placeholder="Your Message"></textarea>
+											<textarea name="Near[custom]" class="form-control" placeholder="Your Message" ></textarea>
+											 @if($errors->has('Near.custom')) <span class="help-block errorProfilePic">{{$errors->first('Near.custom') }}</span> @endif
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-12">
-									<div class="form-group">
-										<label>Immediate</label> <select name="immediate"
-											class="form-control" id="immediate">
-											<option value="1">Wellcome Message</option>
-											<option value="2">Checkin</option>
-											<option value="3">Checkout</option>
-											<option value="4">Custom Message</option>
+									<div class="form-group {{($errors->has('Immediate.action'))?'has-error':''}}">
+										<label>Immediate</label> 
+										<select name="Immediate[action]" class="form-control" id="immediate">
+											<option value="welcome">Wellcome Message</option>
+											<option value="checkin">Checkin</option>
+											<option value="checkout">Checkout</option>
+											<option value="custom">Custom Message</option>
 										</select>
+										 @if($errors->has('Immediate.action')) <span class="help-block errorProfilePic">{{$errors->first('Immediate.action') }}</span> @endif
 									</div>
 								</div>
 							</div>
 							<div id="custom-message-immediate" style="display: none;">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="form-group">
+										<div class="form-group {{($errors->has('Immediate.custom'))?'has-error':''}}">
 											<label>Custom Message</label>
-											<textarea name="custom-message-immediate"
-												class="form-control" placeholder="Your Message"></textarea>
+											<textarea name="Immediate[custom]" class="form-control" placeholder="Your Message"></textarea>
+											 @if($errors->has('Immediate.custom')) <span class="help-block errorProfilePic">{{$errors->first('Immediate.custom') }}</span> @endif
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-md-12">
-									<div class="form-group">
-										<label>Far</label> <select name="far" class="form-control"
-											id="far">
-											<option value="1">Wellcome Message</option>
-											<option value="2">Checkin</option>
-											<option value="3">Checkout</option>
-											<option value="4">Custom Message</option>
+									<div class="form-group {{($errors->has('Far.action'))?'has-error':''}}">
+										<label>Far</label> 
+										<select name="Far[action]" class="form-control" id="far">
+											<option value="welcome">Wellcome Message</option>
+											<option value="checkin">Checkin</option>
+											<option value="checkout">Checkout</option>
+											<option value="custom">Custom Message</option>
 										</select>
+										 @if($errors->has('Far.action')) <span class="help-block errorProfilePic">{{$errors->first('Far.action') }}</span> @endif
 									</div>
 								</div>
 							</div>
 							<div id="custom-message-far" style="display: none;">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="form-group">
+										<div class="form-group {{($errors->has('Far.custom'))?'has-error':''}}">
 											<label>Custom Message</label>
-											<textarea name="custom-message-far" class="form-control"
-												placeholder="Your Message"></textarea>
+											<textarea name="Far[custom]" class="form-control" placeholder="Your Message"></textarea>
+											 @if($errors->has('Far.custom')) <span class="help-block errorProfilePic">{{$errors->first('Far.custom') }}</span> @endif
 										</div>
 									</div>
 								</div>
@@ -183,13 +199,14 @@
 								<div class="col-md-12">
 									<div class="form-group clearfix">
 										<div class="checkbox-inline">
-											<span class="pull-left"><label><input type="checkbox"
-													value="">Activate Beacon</label></span>
+											<span class="pull-left"><label>
+												<input type="checkbox" value="">Activate Beacon</label>
+											</span>
 										</div>
 									</div>
 								</div>
 								<div class="col-md-12">
-									<button class="btn btn-def">
+									<button type="submit" class="btn btn-def">
 										<i class="fa fa-floppy-o"></i> &nbsp; Configure Beacon
 									</button>
 									&nbsp;&nbsp; <a class="btn btn-outline b-primary text-primary"

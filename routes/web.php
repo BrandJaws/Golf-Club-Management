@@ -59,10 +59,7 @@ Route::group([
                     'as' => 'delete',
                     'uses' => 'ClubAdmin\Reservations\ReservationsController@delete'
                 ]);
-                 Route::get('/list-test', [
-                    'as' => 'reservations',
-                    'uses' => 'ClubAdmin\Reservations\ReservationsController@listTest'
-                ]);
+                 
         });
         /**
          * Routes related to segments

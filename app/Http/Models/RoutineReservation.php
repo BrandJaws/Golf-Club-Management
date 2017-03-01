@@ -62,6 +62,28 @@ class RoutineReservation extends Model
                        
     }
     
+    public function modifyReservationObjectForReponseOnCRUDOperations(){
+          $players = [];
+          $this->load('reservation_players.member');
+          foreach($this->reservation_players as $player){
+              $players[] = ["reservation_player_id"=>$player->id,
+                            "member_id"=>$player->member != null ? $player->member->id : 0,
+                            "member_name"=>$player->member != null ? $player->member->firstName." ".$player->member->lastName : 'Guest'
+                           ];
+          }
+          
+          $this->reservation_type = RoutineReservation::class;
+          $this->players = $players;
+          
+          
+          unset($this->status);
+          unset($this->nextJobToProcess);
+          unset($this->reservation_players);
+          
+          
+          
+         
+    }
     
     
     

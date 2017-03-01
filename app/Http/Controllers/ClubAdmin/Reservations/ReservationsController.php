@@ -12,7 +12,10 @@ use App\Http\Models\RoutineReservation;
 use Carbon\Carbon;
 class ReservationsController extends Controller {
 	public function index() {
-		return view ( 'admin.reservations.reservations' );
+                $dayToday = Carbon::today()->toDateString();
+                $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
+                $reservations = Course::getReservationsForACourseByIdForADateRange(1,$dayToday,$fourDaysFromNow);
+                return view ( 'admin.reservations.reservations' ,["reservations"=>json_encode($reservations)]);
 	}
         
         public function store(Request $request) {
@@ -399,6 +402,7 @@ class ReservationsController extends Controller {
 //			$reservation->date = Carbon::parse ( $reservation->time_start )->format ( 'm/d/Y' );
 //			$reservation->time_start = Carbon::parse ( $reservation->time_start )->format ( 'h:i A' );
 //			
+                        $reservation->modifyReservationObjectForReponseOnCRUDOperations();
 			$this->response = $reservation;
 			\DB::commit ();
 		} catch ( \Exception $e ) {
@@ -457,8 +461,6 @@ class ReservationsController extends Controller {
 		return $this->response ();
 	}
         
-        public function listTest(){
-            Course::getAllReservationsAtACourseForADateRange(1,"2017-02-23 07:00:00","2017-02-24 07:00:00");
-        }
+       
      
 }

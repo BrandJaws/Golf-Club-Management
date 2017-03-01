@@ -172,18 +172,10 @@
 					<!-- row -->
 					<div id="reservations-vue-container" class="row">
 						<div class="col-md-12">
-							<reservation-popup v-if="showPopup"
-								:reservation="reservationToEdit" 
-                                                                :reservation-type="reservationType" 
-								@close-popup="closePopupTriggered"></reservation-popup>
-							<reservation-tabs :reservations-parent="reservationsParent"
-								style-for-show-more-tab="false"> <reservation-tab-heads
-								:reservations-by-date="reservationsParent.reservationsByDate"
-								show-more-tab="false"></reservation-tab-heads> <reservation-tab-tables
-								:reservations-by-date="reservationsParent.reservationsByDate"
-								@edit-reservation="editReservationEventTriggered" 
-                                                                @new-reservation="newReservationEventTriggered"></reservation-tab-tables>
-							</reservation-tabs>
+                                                    <reservations-container :reservations="reservationsParent"
+                                                                            for-reservations-page="false">
+                                                        
+                                                    </reservations-container>
 
 						</div>
 					</div>
@@ -197,218 +189,18 @@
 </div>
 <div></div>
 
-@include("admin.__vue_components.reservations.reservation-tabs")
-@include("admin.__vue_components.reservations.reservation-tab-tables")
-@include("admin.__vue_components.reservations.reservation-popup")
 
+@include("admin.__vue_components.reservations.reservations-container")
 <script>
-var _reservationsParent =
-            {
-                club_id:'1',
-                course_id: '1',
-                reservationsByDate: [
-                    {
-                        reserved_at:'',
-                        date: '29',
-                        day: 'THURSDAY',
-                        reservationsByTimeSlot: [
-                            {
-                                timeSlot: '06:00 AM',
-                                reservations:[
-                                    {
-                                        reservation_id:3,
-                                        status:'RESERVED',
-                                        players: [
-                                                    {
-                                                        playerName: 'Kashif Chishti',
-                                                        playerId: '1'
-                                                    },
-                                                    {
-                                                        playerName: 'Bilal Bin Nisar',
-                                                        playerId: '2'
-                                                    }
-                                        ],
-                                        guests:0,
-                                    }
-                                ]
-                                    
-                                
-
-                            },
-                            {
-                                timeSlot: '07:00 AM',
-                                reservations:[
-                                   {
-                                        reservation_id:'',
-                                        status:'',
-                                        players: [
-                                                   
-                                        ],
-                                        guests:0,
-                                    }
-                                ]
-
-                            },
-                            {
-                                timeSlot: '08:00 AM',
-                                reservations:[
-                                    {
-                                        reservation_id:'',
-                                        status:'RESERVED',
-                                        players: [
-                                                    {
-                                                        playerName: 'Kashif Chishti',
-                                                        playerId: '1'
-                                                    },
-                                                    {
-                                                        playerName: 'Bilal Bin Nisar',
-                                                        playerId: '2'
-                                                    }
-                                        ],
-                                        guests:0,
-                                    }
-                                ]
-
-                            },
-                            {
-                                timeSlot: '09:00 AM',
-                                reservations:[
-                                    {
-                                        reservation_id:'',
-                                        status:'',
-                                        players: [
-                                                   
-                                        ],
-                                        guests:0,
-                                    }
-                                ]
-
-                            },
-                            {
-                                timeSlot: '10:00 AM',
-                                reservations:[
-                                    {
-                                        reservation_id:'',
-                                        status:'',
-                                        players: [
-                                                   
-                                        ],
-                                        guests:0,
-                                    }
-                                ]
-
-                            }
-                        ]
-
-                    },
-                    {
-                        reserved_at:'',
-                        date: '30',
-                        day: 'FRIDAY',
-                        reservationsByTimeSlot: [
-                            {
-                                timeSlot: '01:00 PM',
-                                reservations:[
-                                    {
-                                        reservation_id:'',
-                                        status:'RESERVED',
-                                        players: [
-                                                    {
-                                                        playerName: 'Kashif Chishti',
-                                                        playerId: '1'
-                                                    },
-                                                    {
-                                                        playerName: 'Bilal Bin Nisar',
-                                                        playerId: '2'
-                                                    }
-                                        ],
-                                        guests:0,
-                                    }
-                                ]
-
-                            },
-                            {
-                                timeSlot: '02:00 PM',
-                                reservations:[
-                                   {
-                                        reservation_id:'',
-                                        status:'',
-                                        players: [
-                                                   
-                                        ],
-                                        guests:0,
-                                    }
-                                ]
-
-                            },
-                            {
-                                timeSlot: '03:00 PM',
-                                reservations:[
-                                   {
-                                        reservation_id:'',
-                                        status:'',
-                                        players: [
-                                                   
-                                        ],
-                                        guests:0,
-                                    }
-                                ]
-
-                            },
-                            {
-                                timeSlot: '04:00 PM',
-                                reservations:[
-                                   {
-                                        reservation_id:'',
-                                        status:'',
-                                        players: [
-                                                   
-                                        ],
-                                        guests:0,
-                                    }
-                                ]
-
-                            }
-                        ]
-
-                    }
-
-
-                ]
-
-            }
+var _reservationsParent = {!!$reservations!!};
+           
     var vue = new Vue({
         el: "#reservations-vue-container",
         data: {
             reservationsParent: _reservationsParent,
-            showPopup: false,
-            reservationToEdit: null,
-            reservationType:null, //possible values new or edit
-        },
-        methods: {
-            editReservationEventTriggered: function (reservation) {
-                
-                reservationTemp = JSON.parse(JSON.stringify(reservation));
-                this.reservationToEdit = reservationTemp;
-                this.reservationType = "edit";
-                this.showPopup = true;
-            },
-            newReservationEventTriggered:function(reservation){
-               
-                 reservationTemp = reservation;
-                 reservationTemp.clubId = this.reservationsParent.club_id;
-                 reservationTemp.courseId = this.reservationsParent.course_id;
-                 this.reservationToEdit = reservationTemp;
-                 this.reservationType = "new";
-                 this.showPopup = true;
-            },
-            closePopupTriggered: function () {
-                
-                this.showPopup = false;
-                this.reservationToEdit = null;
-                this.reservationType = null;
-            }
+            
         }
+        
     });
 </script>
 

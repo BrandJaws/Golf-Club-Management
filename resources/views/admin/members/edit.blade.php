@@ -154,7 +154,7 @@
                                         </div>
                                         <div class="col-md-8">
                                             <div class="form-group" id="membersPageAutoCom">
-                                                <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="id" property-for-name="name"
+                                                <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
                                                                    filtered-from-source="true" include-id-in-list="true"
                                                                    v-model="selectedId" initial-text-value="" search-query-key="search" field-name="memberId"> </auto-complete-box>
                                             </div>

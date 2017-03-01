@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
+use Carbon\Carbon;
 
 class AdminController extends Controller {
 	
@@ -154,6 +155,9 @@ class AdminController extends Controller {
 		return Auth::guard ();
 	}
 	public function dashboard() {
-		return view ( 'admin.auth.dashboard' );
+                $dayToday = Carbon::today()->toDateString();
+                $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
+                $reservations = \App\Http\Models\Course::getReservationsForACourseByIdForADateRange(1,$dayToday,$fourDaysFromNow);
+                return view ( 'admin.auth.dashboard',["reservations"=>json_encode($reservations)] );
 	}
 }

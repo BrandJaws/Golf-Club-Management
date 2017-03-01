@@ -23,7 +23,7 @@ Vue.component('reservation-popup', {
                                     <ul class="members-add">
                                         <reservation-player-tag v-for="(reservationPlayer,playerIndex) in reservationData.players" :reservationPlayer="reservationPlayer" deletable="true" @deletePlayer="deletePlayer(playerIndex)" ></reservation-player-tag>
                                     </ul>
-                                    <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="playerId" property-for-name="playerName"
+                                    <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
                                                     filtered-from-source="true" include-id-in-list="true"
                                                     initial-text-value="" search-query-key="search" field-name="memberId" enable-explicit-selection="true" @explicit-selection="explicitSelectionMade"> </auto-complete-box>
                                 </div><!-- tags container ends here -->
@@ -42,7 +42,8 @@ Vue.component('reservation-popup', {
                                         <div class="col-md-6">
                                                 <div class="guest-search text-left">
                                             <label>Add Number Of Guests</label>
-                                            <input name="search-guest" class="form-control" type="nubmer" v-model="reservationData.guests"><br>
+                                            <input name="search-guest" class="form-control" type="nubmer" v-model="guestsCounter"><br>
+                                            <button type="button" class="btn btn-outline b-primary text-primary" @click="addGuestsClicked" ><i class="fa fa-plus"></i> &nbsp;Add Guests</button>
                                             <i>How many guests do you have!</i></div>
                                         </div>
                                         <div class="col-md-6">
@@ -72,11 +73,13 @@ Vue.component('reservation-popup', {
             
             
             
+            
     ],
     data: function () {
         
       return {
           reservationData:this.reservation,
+          guestsCounter:0,
       }
     },
     methods:{
@@ -100,11 +103,24 @@ Vue.component('reservation-popup', {
                 return;
             }
             for(x=0; x<playersInSelectionList; x++){
-                if(this.reservationData.players[x].playerId == dataItemSelected.playerId){
+                if(this.reservationData.players[x].member_id == dataItemSelected.member_id){
                     return;
                 }
             }
             this.reservationData.players.push(dataItemSelected);
+            console.log(dataItemSelected);
+        },
+        addGuestsClicked:function(){
+            //Dont create tag if selected 4 or player already in the list
+            playersInSelectionList = this.reservationData.players.length;
+            
+            if((playersInSelectionList + parseInt(this.guestsCounter)) > 4){
+                return;
+            }
+            for(x=0; x<this.guestsCounter; x++){
+                this.reservationData.players.push({member_id:'',member_name:'Guest'});
+            }
+            this.guestsCounter = 0;
         },
         saveReservationClicked:function(){
             
@@ -116,10 +132,10 @@ Vue.component('reservation-popup', {
         },
         reserveSlot:function(){
             
-            _players = [];
-            for(x=0;x<this.reservationData.players.length; x++){
-                _players[x] = this.reservationData.players[x].playerId;
-            }
+            guestsAndPlayers = this.returnGuestsAndPlayerIdsListFromPlayersList();
+            _players = guestsAndPlayers.players;
+            _guests = guestsAndPlayers.guests;
+           
             var request = $.ajax({
                                        
                                         url: "{{url('admin/reservations')}}",
@@ -129,12 +145,11 @@ Vue.component('reservation-popup', {
                                         },
                                         data:{ 
                                             club_id:this.reservationData.clubId, 
-                                            course_id:this.reservationData.courseId, 
-                                            date:this.reservationData.date, 
-                                            day:this.reservationData.day, 
+                                            course_id:this.reservationData.courseId,
+                                            reserved_at:this.reservationData.reserved_at, 
                                             time:this.reservationData.timeSlot, 
                                             player:_players,
-                                            guests:this.reservationData.guests,
+                                            guests:_guests,
                                             parent_id:_players[0],
                                             _token: "{{ csrf_token() }}",
 
@@ -157,10 +172,10 @@ Vue.component('reservation-popup', {
         },
         updateReservation:function(){
             
-            _players = [];
-            for(x=0;x<this.reservationData.players.length; x++){
-                _players[x] = this.reservationData.players[x].playerId;
-            }
+            guestsAndPlayers = this.returnGuestsAndPlayerIdsListFromPlayersList();
+            _players = guestsAndPlayers.players;
+            _guests = guestsAndPlayers.guests;
+           
             var request = $.ajax({
                                        
                                         url: "{{url('admin/reservations')}}",
@@ -173,7 +188,7 @@ Vue.component('reservation-popup', {
                                             reservation_id:this.reservationData.reservation_id,
                                             parent_id:_players[0],
                                             player:_players,
-                                            guests:this.reservationData.guests,
+                                            guests:_guests,
                                             _token: "{{ csrf_token() }}",
 
                                         },
@@ -222,6 +237,20 @@ Vue.component('reservation-popup', {
 
                                                }.bind(this)
                                     }); 
+        },
+        returnGuestsAndPlayerIdsListFromPlayersList:function(){
+            playersAndGuests = {};
+            playersAndGuests.players = [];
+            playersAndGuests.guests = 0;
+            for(x=0;x<this.reservationData.players.length; x++){
+                if(this.reservationData.players[x].member_id == ''){
+                   playersAndGuests.guests++; 
+                }else{
+                    playersAndGuests.players[x] = this.reservationData.players[x].member_id;
+                }
+                
+            }
+            return playersAndGuests;
         }
     }
   

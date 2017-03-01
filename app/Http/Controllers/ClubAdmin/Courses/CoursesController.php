@@ -117,7 +117,7 @@ class CoursesController extends Controller {
 	 * @return Json Object
 	 */
 	public function getReservations(Request $request) {
-		$courses = Course::getReservationsForAllCourses ();
+		$courses = Course::getReservationsForACourseByIdForADateRange ();
 		
 		if ($courses) {
 			
@@ -136,7 +136,7 @@ class CoursesController extends Controller {
 			return $this->response ();
 		}
 		// dd($date);
-		$courses = Course::getReservationsForAllCourses( $date );
+		$courses = Course::getReservationsForACourseByIdForADateRange( $date );
 		
 		if ($courses) {
 			

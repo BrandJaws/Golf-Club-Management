@@ -15,7 +15,7 @@ Vue.component('reservation-tab-tables', {
                                     <td width="80%">
                                       <ul class="members-add">
                                           <reservation-player-tag  v-for="reservationPlayer in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer" ></reservation-player-tag>
-                                          <li class="add-btn" @click="editReservationClicked(reservationByDate.date,reservationByDate.day,timeSlot.timeSlot,timeSlot.reservations[0])"><a href="#."><i class="fa fa-plus"></i></a></li>
+                                          <li class="add-btn" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])"><a href="#."><i class="fa fa-plus"></i></a></li>
                                       </ul>
                                     </td>
                                     <td>
@@ -50,12 +50,12 @@ Vue.component('reservation-tab-tables', {
     },
     methods: {
         
-        editReservationClicked: function(_date,_day,_timeSlot,reservation){
+        editReservationClicked: function(_reserved_at,_timeSlot,reservation){
             //emit edit reservation event if already has reservations
             //else emit new reservation event
             
              if(reservation.reservation_id == 0){
-                 this.$emit('new-reservation',{date:_date,day:_day,timeSlot:_timeSlot,players:[],guests:0});
+                 this.$emit('new-reservation',{reserved_at:_reserved_at,timeSlot:_timeSlot,players:[],guests:0});
                  
              }else{
                  this.$emit('edit-reservation',reservation);

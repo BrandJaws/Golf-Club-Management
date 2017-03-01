@@ -160,7 +160,7 @@
 									<div class="col-md-8">
 										<div class="form-group" id="membersPageAutoCom">
 											<auto-complete-box url="{{asset('people.json')}}"
-												property-for-id="email" property-for-name="name"
+												property-for-id="member_id" property-for-name="member_name"
 												filtered-from-source="false" include-id-in-list="true"
 												v-model="selectedId" initial-text-value=""> </auto-complete-box>
 										</div>

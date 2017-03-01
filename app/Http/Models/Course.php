@@ -90,127 +90,80 @@ class Course extends Model {
 	 * To get reservations for all courses with players and other details: detailed = true
          * To get reservations for all courses with booking indicators for mobile service: detailed = false
 	 */
-     public static function getReservationsForAllCourses($date = false, $detailed = true) {
-                $date = !$date ? Carbon::today()->toDateString() : $date;
-		$coursesListRaw = Course::courseList ();
-                $allCoursesWithReservations = Course::getAllReservationsAtACourseForADateRange($date);
-		$coursesForReservations = [ ];
-		foreach ( $coursesListRaw as $course ) {
-                    $foundCourseWithExistingReservations = false;
-                    foreach($allCoursesWithReservations as $courseWithReservation){
-                        if($course->id == $courseWithReservation->course_id){
-                            $foundCourseWithExistingReservations = true;
-                            if($detailed){
-                                $coursesForReservations [] = Course::returnCourseWithCompleteReservationsObject ( $course, Course::generateReservationsTimeSlotsComplete ( $course, $courseWithReservation->timeSlots ) );
-                            }else{
-                                $coursesForReservations [] = Course::returnCourseWithCompleteReservationsObject ( $course, Course::generateReservationsTimeSlotsComplete ( $course, $courseWithReservation->timeSlots,false ) );
+     public static function getReservationsForACourseByIdForADateRange($courseId,$dateStart,$dateEnd, $detailed = true) {
+                //$date = !$date ? Carbon::today()->toDateString() : $date;
+                
+		$course = Course::find($courseId);
+                
+                $allCurrentReservationsInDateRange = Course::getAllReservationsAtACourseForADateRange($courseId,Carbon::parse($dateStart)->toDateString(),Carbon::parse($dateEnd)->toDateString());
+                $dates = [];
+                Carbon::parse($dateStart)->diffInDaysFiltered(function (Carbon $date) use (&$dates) {
+			$dates [] = $date->toDateString();
+		}, Carbon::parse($dateEnd)->addDay());
+                
+                $reservationsParent = new \stdClass();
+                $reservationsParent->club_id = $course->club_id;
+                $reservationsParent->course_id = $course->id;
+                $reservationsParent->reservationsByDate = [];
+                foreach($dates as $date){
+                    $reservationsByDate = new \stdClass();
+                    $dateObject = Carbon::parse($date);
+                    $reservationsByDate->reserved_at = $dateObject->toDateString();
+                    $reservationsByDate->dayNumber = $dateObject->day;
+                    $reservationsByDate->dayName = $dateObject->format('l');
+                    $reservationsByDate->reservationsByTimeSlot = [];
+                    Carbon::parse ( $course->openTime )->diffFiltered ( CarbonInterval::minute ( $course->bookingInterval), function (Carbon $time) use (&$reservationsByDate, $date,$allCurrentReservationsInDateRange,$detailed) {
+			$timeSlot = new \stdClass();
+                        $timeSlot->timeSlot = $time->format ( 'h:i A' );
+                        $foundExistingReservationsForTimeSlot = false;
+                        foreach($allCurrentReservationsInDateRange as $reservation){
+                            
+                            if($reservation->reserved_at == $date){
+                                 
+                                foreach($reservation->reservationsByTimeSlots as $reservationsByTimeSlot ){
+                                   
+                                    if($reservationsByTimeSlot->timeSlot == $time->toTimeString()){
+                                        
+                                        $timeSlot->reservations = $reservationsByTimeSlot->reservations;
+                                        $foundExistingReservationsForTimeSlot = true;
+                                    }
+                                }
+                               
+                                
                             }
-                           
-                           break;
                         }
-                    }
-                    
-                    if(!$foundCourseWithExistingReservations){
-                        if($detailed){
-                                $coursesForReservations [] = Course::returnCourseWithCompleteReservationsObject ( $course, Course::generateReservationsTimeSlotsComplete ( $course ) );
+                        if(! $foundExistingReservationsForTimeSlot){
+                            if($detailed){
+                                $timeSlot->reservations = [];
+                                $timeSlot->reservations[0] = new \stdClass();
+                                $timeSlot->reservations[0]->reservation_id = '';
+                                $timeSlot->reservations[0]->status = '';
+                                $timeSlot->reservations[0]->players = [];
+                                $timeSlot->reservations[0]->guests = 0;
                             }else{
-                                $coursesForReservations [] = Course::returnCourseWithCompleteReservationsObject ( $course, Course::generateReservationsTimeSlotsComplete ( $course, [],false ) );
+                                $timeSlot->reservations = [];
                             }
-                    }
+                            
+                        }
+                        
+                        
+                        $reservationsByDate->reservationsByTimeSlot[] = $timeSlot;
+                    }, Carbon::parse ( $course->closeTime )->subMinutes($course->bookingDuration-$course->bookingInterval) );
                     
-		}
-                
-                if($detailed){
-                    $coursesForReservationsWithDate = ["date"=>Carbon::parse($date)->format('m/d/Y'), "courses"=>$coursesForReservations];
-                    return $coursesForReservationsWithDate;
-                }else{
-                    return $coursesForReservations;
+                    //TODO
+                    //$reservationsByDate->reservationsByTimeSlot = getAllReservationsBy;
+                    $reservationsParent->reservationsByDate[] = $reservationsByDate;
+                    
                 }
-		
                 
-                //dd($coursesForReservations);
+                return $reservationsParent;
+                
+		
                 
                         
     }
     
-    
-    
-    public static function generateReservationsTimeSlotsComplete($courseForReservation,$existingReservationTimeslotsForCourse = [],$detailed = true) {
-        
-        $open_time = Carbon::parse($courseForReservation->openTime);
-        $close_time = Carbon::parse($courseForReservation->closeTime);
-        $reservations = [];
-        $open_time->diffFiltered(CarbonInterval::minute($courseForReservation->bookingDuration), function(Carbon $date) use(&$reservations,$detailed,$existingReservationTimeslotsForCourse) {
-            $reservation = new \stdClass();
-            $reservation->timeSlot = $date->format('h:i A');
-            
-            //Iterate through existing reservations in the course to see if there is an existing reservation on 
-            //this timeslot if so replace its reservations with existing ones else make an empty array after 
-            //the iteration is complete
-            $foundExistingReservationOnTimeSlot = false;
-           
-            foreach($existingReservationTimeslotsForCourse as $existingReservationTimeslot){
-                //dd($existingReservationTimeslotsForCourse);
-               
-                if(Carbon::parse($existingReservationTimeslot->timeSlot)->format('h:i A') == $reservation->timeSlot){
-                    if($detailed){
-                        $reservation->reservations = $existingReservationTimeslot->reservations;
-                     }else{
-                        $reservation->isReserved = true;
-                        $reservation->players = [];
-                        $populatedPlayers = false;
-                       
-                        foreach($existingReservationTimeslot->reservations as $reservationOnTimeSlot){
-                            
-                            foreach($reservationOnTimeSlot->reservationPlayers as $reservationPlayer){
-                                if($reservationPlayer->player_id == Auth::user()->id){
-                                        $reservation->timeEnd = Carbon::parse($reservationOnTimeSlot->time_end)->format('h:i A');
-                                        foreach($reservationOnTimeSlot->reservationPlayers as $reservationPlayer){
-                                            
-                                            $reservation->players[] = $reservationPlayer->player_name;
-                                            
-                                        }
-                                        $populatedPlayers = true;
-                                        }
-                                        if($populatedPlayers){
-                                            break;
-                                        }
-                                }
-                            
-                            if($populatedPlayers){
-                                    break;
-                            }
-                            
-                        }
-                       
-                    }
-                    $foundExistingReservationOnTimeSlot = true;
-                    break;
-                }
-               
-            }
-                
-            if(!$foundExistingReservationOnTimeSlot){
-                if($detailed){
-
-                    $reservation->reservations = [];
-
-                 }else{
-                    $reservation->time_end = "";
-                    $reservation->isReserved = false;
-                    
-                    $reservation->players = [];
-                    
-                }
-            }
-            
-          
-            $reservations[] = $reservation;
-        }, $close_time);
-        
-        return $reservations;
-    }
-    
+   
     /**
      * returns all reservations with course info 
      */
@@ -227,7 +180,7 @@ class Course extends Model {
         $query .= " routine_reservations.id as reservation_id, ";
         $query .= " ANY_VALUE(reservation_time_slots.reservation_type) as reservation_type, ";
         $query .= " routine_reservations.parent_id, ";
-        $query .= " reservation_time_slots.time_start as time_start, ";
+        $query .= " TIME(reservation_time_slots.time_start) as time_start, ";
         //$query .= " tennis_reservation.time_end, ";
         $query .= " DATE(reservation_time_slots.time_start) as reserved_at, ";
         $query .= " GROUP_CONCAT(IFNULL(reservation_players.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_player_ids, ";
@@ -288,7 +241,7 @@ class Course extends Model {
                                                                    $dateStart,
                                                                    $dateEnd,
                                                                    Auth::user ()->club_id]);
-       // dd($allReservationsWithCourses);
+        //dd($allReservationsWithCourses);
        
         $reservationsByDate = [];
         if(count($allReservationsWithCourses)){
@@ -309,7 +262,7 @@ class Course extends Model {
                     $dateIndex++;
                     $reservationsByDate[$dateIndex] = new \stdClass();
                     $dateObject = Carbon::parse($reservation->time_start);
-                    $reservationsByDate[$dateIndex]->reserved_at = $dateObject->toDateString();
+                    $reservationsByDate[$dateIndex]->reserved_at = $reservation->reserved_at;
                     $reservationsByDate[$dateIndex]->dayNumber = $dateObject->day;
                     $reservationsByDate[$dateIndex]->dayName = $dateObject->format('l');
                     //$reservationsByDate[$dateIndex]->course_id = $reservation->course_id;
@@ -334,6 +287,7 @@ class Course extends Model {
                 
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex] = new \stdClass();
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->reservation_id = $reservation->reservation_id;
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->reservation_type = $reservation->reservation_type;
                 //$reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->time_start = $reservation->time_start;
                 //$reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->time_end = $reservation->time_end;
                 //$reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->reserved_at = $reservation->reserved_at;
@@ -344,20 +298,28 @@ class Course extends Model {
                 $member_names = explode("||-separation-player-||",$reservation->member_names);
                 
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->players =collect([]);
-                
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->guests = 0;
                 foreach($reservation_player_ids as $playerIndex=>$reservation_player_id){
-                    $reservationPlayerObject = new \stdClass();
-                    $reservationPlayerObject->reservation_player_id = trim($reservation_player_ids[$playerIndex]);
-                    $reservationPlayerObject->member_id = trim($member_ids[$playerIndex]);
-                    $reservationPlayerObject->member_name = trim($member_names[$playerIndex]);
-                     
-                     if($reservationPlayerObject->member_id == $reservation->parent_id){
-                     
-                        $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->players->prepend($reservationPlayerObject);
-                     }else{
-                         //bring parent to front
-                         $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->players->push($reservationPlayerObject);
-                     }
+                    
+                        if($member_ids[$playerIndex] == 0){
+                            $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->guests++;
+                        }
+                 
+                        $reservationPlayerObject = new \stdClass();
+                        $reservationPlayerObject->reservation_player_id = trim($reservation_player_ids[$playerIndex]);
+                        $reservationPlayerObject->member_id = trim($member_ids[$playerIndex]);
+                        $reservationPlayerObject->member_name = trim($member_names[$playerIndex]);
+
+
+                        if($reservationPlayerObject->member_id == $reservation->parent_id){
+
+                            $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->players->prepend($reservationPlayerObject);
+                        }else{
+                             //bring parent to front
+                             $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->players->push($reservationPlayerObject);
+                        }
+              
+                    
                      
                 }
 
@@ -365,7 +327,7 @@ class Course extends Model {
                
             }
         }
-        dd($reservationsByDate);
+        //dd($reservationsByDate);
         return $reservationsByDate;
    
     }

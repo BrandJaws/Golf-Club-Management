@@ -186,7 +186,7 @@ class MembersController extends Controller
     {
         $search = $requst->has('search') ? $requst->get('search') : '';
         try {
-            $clubMember = (new Member())->listClubMembers(Auth::user()->club_id, $search);
+            $clubMember = (new Member())->listSearchClubMembers(Auth::user()->club_id, $search);
             if ($clubMember && count($clubMember)) {
                 return $clubMember;
             } else {

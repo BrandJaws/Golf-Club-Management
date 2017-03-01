@@ -6,7 +6,7 @@ var _onDeleteTagStyle = {
 Vue.component('reservation-player-tag', {
     template: `
                 <div>		
-                  <li :style ="[applyDeleteTagBg ? onDeleteTagStyle : null]">@{{reservationPlayer.playerName}}<a href="#." v-if="deletableData" @click.prevent="deletePlayerClicked"><i class="fa fa-times"></i></a></li>
+                  <li :style ="[applyDeleteTagBg ? onDeleteTagStyle : null]">@{{reservationPlayer.member_name}}<a href="#." v-if="deletableData" @click.prevent="deletePlayerClicked"><i class="fa fa-times"></i></a></li>
                 </div>                       
             `,
     props: [

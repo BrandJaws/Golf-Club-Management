@@ -12,17 +12,17 @@ Vue.component('reservation-tab-divs', {
                                             <div class="booking-box text-center" >
                                             <h3>@{{timeSlot.timeSlot}}</h3>
                                                 <p class="min-height-names">
-                                                    <span v-if="timeSlot.reservations.length == 0">
+                                                    <span v-if="timeSlot.reservations[0].reservation_id == ''">
                                                         Time Slot Vacant   
                                                     </span>
                                                     <span v-else v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players">
-                                                       @{{reservationPlayer.playerName}}
+                                                       @{{reservationPlayer.member_name}}
                                                     </span>
                                                     
 
                                                 </p>
                                                 <p >
-                                                    <a href="#."data-toggle="modal" data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" :class="timeSlot.reservations.length > 0 ? 'booked' : ''" @click.prevent="editReservationClicked(reservationByDate.date,reservationByDate.day,timeSlot.timeSlot,timeSlot.reservations)">@{{ computedValue(timeSlot.reservations.length) }}</a>\n\
+                                                    <a href="#."data-toggle="modal" data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" :class="timeSlot.reservations[0].reservation_id !=  '' ? 'booked' : ''" @click.prevent="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations)">@{{ computedButtonTitleValue(timeSlot.reservations) }}</a>\n\
                                                 </p>
                                             </div>
                                     </div>
@@ -45,17 +45,6 @@ Vue.component('reservation-tab-divs', {
       }
 
     },
-    computed: {
-//      computedValue : function() {
-//          if (reservation.players.length > 0) {
-//              return this.value;
-//          }
-//          else {
-//              var value ="Booked";
-//              return this.value;
-//          }
-//      }
-    },
     methods: {
         deletePlayer: function(abc,event){
         
@@ -63,23 +52,24 @@ Vue.component('reservation-tab-divs', {
             //this.$emit('deletePlayer');
             
         },
-        editReservationClicked: function(_date,_day,_timeSlot,reservationsArray){
+        editReservationClicked: function(_reserved_at,_timeSlot,reservationsArray){
             //emit edit reservation event if already has reservations
             //else emit new reservation event
              if(reservationsArray.length > 0){
                  
                  this.$emit('edit-reservation',reservationsArray[0]);
              }else{
-                 this.$emit('new-reservation',{date:_date,day:_day,timeSlot:_timeSlot,players:[],guests:0});
+                 this.$emit('new-reservation',{reserved_at:_reserved_at,timeSlot:_timeSlot,players:[],guests:0});
              }
              
         },
-        computedValue: function(initialValue) {
-            if(initialValue > 0) {
-                return "Booked";
+        computedButtonTitleValue: function(reservations) {
+            if(reservations[0].reservation_id == "") {
+                return "Book Now";
             }
             else {
-                return "Book Now";
+                return "Booked";
+                
             }
         }
     }

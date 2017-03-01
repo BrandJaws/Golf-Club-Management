@@ -119,7 +119,7 @@ class Member extends Authenticatable
      * @param unknown $clubId            
      * @param unknown $search            
      */
-    public function listClubMembers($clubId, $search = null)
+    public function listSearchClubMembers($clubId, $search = null)
     {
         return self::where('club_id', '=', $clubId)->where(function ($query) use ($search) {
             if ($search !== false) {
@@ -129,8 +129,8 @@ class Member extends Authenticatable
         })
             ->take(15)
             ->get([
-            'member.id as playerId',
-            \DB::raw("CONCAT(firstName,' ', lastName) AS playerName")
+            'member.id as member_id',
+            \DB::raw("CONCAT(firstName,' ', lastName) AS member_name")
         ]);
     }
 

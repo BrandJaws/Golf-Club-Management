@@ -69,10 +69,11 @@
 									<div class="form-group {{($errors->has('course'))?'has-error':''}}">
 										<label>Course</label> 
 										<select name="course" class="form-control">
-											<option value="1">Course 1</option>
-											<option value="2">Course 2</option>
-											<option value="3">Course 3</option>
-											<option value="4">Course 4</option>
+											<option value="0">Please Select</option>
+											@foreach($courses as $key=>$value)
+											<option value="{{$key}}">{{$value}}</option>
+											@endforeach
+											
 										</select>
 										 @if($errors->has('course')) <span class="help-block errorProfilePic">{{$errors->first('course') }}</span> @endif
 									</div>
@@ -139,8 +140,8 @@
 									<div class="col-md-12">
 										<div class="form-group {{($errors->has('Near.custom'))?'has-error':''}}">
 											<label>Custom Message</label>
-											<textarea name="Near[custom]" class="form-control" placeholder="Your Message" ></textarea>
-											 @if($errors->has('Near.custom')) <span class="help-block errorProfilePic">{{$errors->first('Near.custom') }}</span> @endif
+											<textarea name="Near[message]" class="form-control" placeholder="Your Message" ></textarea>
+											 @if($errors->has('Near.message')) <span class="help-block errorProfilePic">{{$errors->first('Near.message') }}</span> @endif
 										</div>
 									</div>
 								</div>
@@ -162,10 +163,10 @@
 							<div id="custom-message-immediate" style="display: none;">
 								<div class="row">
 									<div class="col-md-12">
-										<div class="form-group {{($errors->has('Immediate.custom'))?'has-error':''}}">
+										<div class="form-group {{($errors->has('Immediate.message'))?'has-error':''}}">
 											<label>Custom Message</label>
-											<textarea name="Immediate[custom]" class="form-control" placeholder="Your Message"></textarea>
-											 @if($errors->has('Immediate.custom')) <span class="help-block errorProfilePic">{{$errors->first('Immediate.custom') }}</span> @endif
+											<textarea name="Immediate[message]" class="form-control" placeholder="Your Message"></textarea>
+											 @if($errors->has('Immediate.message')) <span class="help-block errorProfilePic">{{$errors->first('Immediate.message') }}</span> @endif
 										</div>
 									</div>
 								</div>
@@ -189,8 +190,8 @@
 									<div class="col-md-12">
 										<div class="form-group {{($errors->has('Far.custom'))?'has-error':''}}">
 											<label>Custom Message</label>
-											<textarea name="Far[custom]" class="form-control" placeholder="Your Message"></textarea>
-											 @if($errors->has('Far.custom')) <span class="help-block errorProfilePic">{{$errors->first('Far.custom') }}</span> @endif
+											<textarea name="Far[message]" class="form-control" placeholder="Your Message"></textarea>
+											 @if($errors->has('Far.message')) <span class="help-block errorProfilePic">{{$errors->first('Far.message') }}</span> @endif
 										</div>
 									</div>
 								</div>

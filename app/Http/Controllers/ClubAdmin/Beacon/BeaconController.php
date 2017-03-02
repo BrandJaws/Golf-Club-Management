@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Collection\BeaconConfiguration;
 use App\Http\Models\Beacon;
 use App\Http\Models\Course;
+use PhpParser\Unserializer;
 
 class BeaconController extends Controller
 {
@@ -31,18 +32,22 @@ class BeaconController extends Controller
         if ($beacon->count() > 0) {
             $beacon = json_encode($beacon);
         }
-        return view('admin.beacon.beacon',compact('beacon'));
+        return view('admin.beacon.beacon', compact('beacon'));
     }
 
     public function create()
     {
-        $courses = (new Course())->getList();
-        dd($courses);
-        return view('admin.beacon.create');
+        $courses = Course::where('club_id', '=', Auth::user()->club_id)->pluck('name', 'id')->toArray();
+        
+        return view('admin.beacon.create', compact('courses'));
     }
 
     public function store(Request $request)
     {
-        $beaconConfig = (new BeaconConfiguration())->boot($request->all());
+        try {
+            $beaconConfig = (new BeaconConfiguration())->boot($request->all());
+        } catch (\Exception $exp) {
+            dd($exp->getMessage());
+        }
     }
 }

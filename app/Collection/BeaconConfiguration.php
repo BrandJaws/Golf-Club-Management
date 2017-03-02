@@ -7,7 +7,7 @@ use PhpParser\Node\Stmt\Foreach_;
 class BeaconConfiguration
 {
 
-    private $skeleton = [
+    protected $skeleton = [
         'Near' => [
             'action' => '',
             'message' => ''
@@ -17,27 +17,42 @@ class BeaconConfiguration
             'message' => ''
         ],
         'Far' => [
-           'action' => '',
-           'message' => ''
+            'action' => '',
+            'message' => ''
         ]
     ];
+
     private $configuration;
-    public function __construct(){
-        $this->configuration =  new Collection([]);
+
+    public function __construct()
+    {
+        $this->configuration = new Collection([]);
     }
-    public function boot(array $configuration){
-        foreach ($this->skeleton as $key=>$value){
+
+    public function boot(array $configuration)
+    {
+        foreach ($this->skeleton as $key => $value) {
             $propertySet = array_get($configuration, $key, null);
-            if(is_null($propertySet))
-                throw new \Exception($key.' is required');
-            else 
-                foreach($this->skeleton[$key] as $propertyKey=>$value){
-                    if(!is_null(array_get($configuration, $key.'.'.$propertyKey, null))){
-                        $this->configuration->put($key, array_get($configuration, $key.'.'.$propertyKey, null));
+            if (is_null($propertySet))
+                throw new \Exception($key . ' is required');
+            else {
+                $action = array_get($configuration, $key . '.action', null);
+                if (! is_null($action)) {
+                    if($action == 'custom' && (array_get($configuration, $key . '.message', null) || array_get($configuration, $key . '.message', null) == null)){
+                        throw new \Exception('Message for '.$key . ' is required');
                     }
-                   
+                    $this->configuration->put($key, [
+                        'action' => $action,
+                        'message' => ($action =='custom')? array_get($configuration, $key . '.message', null):null
+                    ]);
+                }
             }
         }
-        dd($this->configuration);
+        return $this;
+    }
+
+    public function toArray()
+    {
+        return $this->configuration->toArray();
     }
 }

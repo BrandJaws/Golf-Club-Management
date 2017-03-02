@@ -22,7 +22,7 @@ Vue.component('reservation-tab-divs', {
 
                                                 </p>
                                                 <p >
-                                                    <a href="#."data-toggle="modal" data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" :class="timeSlot.reservations[0].reservation_id !=  '' ? 'booked' : ''" @click.prevent="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations)">@{{ computedButtonTitleValue(timeSlot.reservations) }}</a>\n\
+                                                    <a href="#."data-toggle="modal" data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" :class="timeSlot.reservations[0].reservation_id !=  '' ? 'booked' : ''" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])">@{{ computedButtonTitleValue(timeSlot.reservations) }}</a>\n\
                                                 </p>
                                             </div>
                                     </div>
@@ -52,14 +52,14 @@ Vue.component('reservation-tab-divs', {
             //this.$emit('deletePlayer');
             
         },
-        editReservationClicked: function(_reserved_at,_timeSlot,reservationsArray){
+        editReservationClicked: function(_reserved_at,_timeSlot,reservation){
             //emit edit reservation event if already has reservations
             //else emit new reservation event
-             if(reservationsArray.length > 0){
-                 
-                 this.$emit('edit-reservation',reservationsArray[0]);
-             }else{
+              if(reservation.reservation_id == 0){
                  this.$emit('new-reservation',{reserved_at:_reserved_at,timeSlot:_timeSlot,players:[],guests:0});
+                 
+             }else{
+                 this.$emit('edit-reservation',reservation);
              }
              
         },

@@ -9,7 +9,8 @@ Vue.component('reservations-container', {
                 <reservation-popup v-if="showPopup"
                         :reservation="reservationToEdit" 
                         :reservation-type="reservationType" 
-                        @close-popup="closePopupTriggered"></reservation-popup>
+                        @close-popup="closePopupTriggered"
+                        @update-reservations="updateReservations"></reservation-popup>
                 <reservation-tabs v-if="forReservationsPageData"
                           :reservations-parent="reservationsParent"
                           style-for-show-more-tab="true"> 
@@ -81,6 +82,33 @@ Vue.component('reservations-container', {
             this.showPopup = false;
             this.reservationToEdit = null;
             this.reservationType = null;
+        },
+        updateReservations:function(newOrUpdatedReservation){
+            
+                    if(newOrUpdatedReservation.club_id == this.reservations.club_id && 
+                       newOrUpdatedReservation.course_id == this.reservations.course_id){
+                        
+                        for(dateCount=0;dateCount<this.reservations.reservationsByDate.length;dateCount++){
+                            if(this.reservations.reservationsByDate[dateCount].reserved_at == newOrUpdatedReservation.reserved_at){
+                                   
+                                for(timeSlotOriginalReservationsCount=0;timeSlotOriginalReservationsCount<this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot.length;timeSlotOriginalReservationsCount++ ){
+                                    
+                                    for(timeSlotsReceivedCount=0;timeSlotsReceivedCount<newOrUpdatedReservation.timeSlots.length;timeSlotsReceivedCount++){
+                                            
+                                        if(newOrUpdatedReservation.timeSlots[timeSlotsReceivedCount] == this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].timeSlot &&
+                                             (this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == "App\\Http\\Models\\RoutineReservation" || 
+                                              this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == "")){
+                                             
+                                             this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0] = newOrUpdatedReservation;
+                                             console.log(this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount]);
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    
         }
     }
   

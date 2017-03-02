@@ -137,6 +137,7 @@ class Course extends Model {
                                 $timeSlot->reservations = [];
                                 $timeSlot->reservations[0] = new \stdClass();
                                 $timeSlot->reservations[0]->reservation_id = '';
+                                $timeSlot->reservations[0]->reservation_type = '';
                                 $timeSlot->reservations[0]->status = '';
                                 $timeSlot->reservations[0]->players = [];
                                 $timeSlot->reservations[0]->guests = 0;
@@ -178,7 +179,7 @@ class Course extends Model {
         //$query .= " course.closeTime, ";
         //$query .= " course.bookingDuration, ";
         $query .= " routine_reservations.id as reservation_id, ";
-        $query .= " ANY_VALUE(reservation_time_slots.reservation_type) as reservation_type, ";
+        $query .= " reservation_time_slots.reservation_type as reservation_type, ";
         $query .= " routine_reservations.parent_id, ";
         $query .= " TIME(reservation_time_slots.time_start) as time_start, ";
         //$query .= " tennis_reservation.time_end, ";
@@ -202,7 +203,7 @@ class Course extends Model {
         $query .= " AND DATE(reservation_time_slots.time_start) >= DATE(?) ";
         $query .= " AND DATE(reservation_time_slots.time_start) <= DATE(?) ";
         $query .= " AND course.club_id = ? ";
-        $query .= " GROUP BY routine_reservations.id,reservation_time_slots.time_start ";
+        $query .= " GROUP BY routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
         
 //        START:To add other reservation types results in the future
 

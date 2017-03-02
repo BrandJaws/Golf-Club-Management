@@ -3,7 +3,7 @@
 namespace App\Http\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Carbon\Carbon;
 class RoutineReservation extends Model
 {
     public $timestamps = false;
@@ -64,19 +64,30 @@ class RoutineReservation extends Model
     
     public function modifyReservationObjectForReponseOnCRUDOperations(){
           $players = [];
-          $this->load('reservation_players.member');
+          $this->load('reservation_players.member','reservation_time_slots');
           foreach($this->reservation_players as $player){
               $players[] = ["reservation_player_id"=>$player->id,
                             "member_id"=>$player->member != null ? $player->member->id : 0,
                             "member_name"=>$player->member != null ? $player->member->firstName." ".$player->member->lastName : 'Guest'
                            ];
           }
-          
+          $this->reservation_id = $this->id;
           $this->reservation_type = RoutineReservation::class;
           $this->players = $players;
           
+          $reserved_at = null;
+          $timeSlots = [];
+          foreach($this->reservation_time_slots as $timeSlot){
+             if($reserved_at == null){
+                 $reserved_at = Carbon::parse($timeSlot->time_start)->toDateString(); 
+             }
+             $timeSlots[] = Carbon::parse($timeSlot->time_start)->format('h:i A' );
+          }
+         
+          $this->reserved_at = $reserved_at;
+          $this->timeSlots = $timeSlots;
           
-          unset($this->status);
+          unset($this->id);
           unset($this->nextJobToProcess);
           unset($this->reservation_players);
           

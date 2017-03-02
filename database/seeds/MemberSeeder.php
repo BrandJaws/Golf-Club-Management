@@ -19,11 +19,9 @@ class MemberSeeder extends Seeder {
 				'Male',
 				'Female' 
 		);
-		
 		$clubList = Club::select ( 'id' )->orderBy ( "id", 'ASC' )->get ()->toArray ();
-		for($i = 0; $i < 100; $i ++) {
+		for($i = 0; $i < 10; $i ++) {
 			$randomClub = $faker->randomElement ( $clubList );
-			
 			$selectedGender = $faker->randomElement ( Config::get ( 'global.gender' ) );
 			$firstName = ($selectedGender == Config::get ( 'global.gender.male' )) ? $faker->firstNameMale () : $faker->firstNameFemale ();
 			$lastName = $faker->lastName ();

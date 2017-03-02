@@ -38,7 +38,7 @@ class BeaconConfiguration
             else {
                 $action = array_get($configuration, $key . '.action', null);
                 if (! is_null($action)) {
-                    if($action == 'custom' && (array_get($configuration, $key . '.message', null) || array_get($configuration, $key . '.message', null) == null)){
+                    if($action == 'custom' && (array_get($configuration, $key . '.message', null) == '' || array_get($configuration, $key . '.message', null) == null)){
                         throw new \Exception('Message for '.$key . ' is required');
                     }
                     $this->configuration->put($key, [

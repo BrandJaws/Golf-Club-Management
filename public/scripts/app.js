@@ -150,7 +150,7 @@ var options = {
 $(document).ready(function(){
 	//custom message near
     $('#near').on('change', function() {
-      if ( this.value == '4')
+      if ( this.value == 'custom')
       {
         $("#custom-message-near").show();
       }
@@ -161,7 +161,7 @@ $(document).ready(function(){
     });
 	//custom message immediate
 	$('#immediate').on('change', function() {
-      if ( this.value == '4')
+      if ( this.value == 'custom')
       {
         $("#custom-message-immediate").show();
       }
@@ -172,7 +172,7 @@ $(document).ready(function(){
     });
 	//custom message Far
 	$('#far').on('change', function() {
-      if ( this.value == '4')
+      if ( this.value == 'custom')
       {
         $("#custom-message-far").show();
       }

@@ -56,12 +56,12 @@
 				<div class="col-xs-12 col-md-12">
 					<div class="beacon-configure">
 						<form action="{{route('admin.beacon.store')}}" method="post" enctype="multipart/form-data">
-						@if(Session::has('error'))
-                        	<div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
-                        @endif
-                        @if(Session::has('success'))
-                        	<div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
-                        @endif
+    						@if(Session::has('error'))
+                            	<div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
+                            @endif
+                            @if(Session::has('success'))
+                            	<div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
+                            @endif
                         <input type="hidden" name="_method" value="POST" />
 				    	{{ csrf_field() }}
 							<div class="row">
@@ -73,7 +73,6 @@
 											@foreach($courses as $key=>$value)
 											<option value="{{$key}}">{{$value}}</option>
 											@endforeach
-											
 										</select>
 										 @if($errors->has('course')) <span class="help-block errorProfilePic">{{$errors->first('course') }}</span> @endif
 									</div>

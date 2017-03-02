@@ -13,6 +13,15 @@ use PhpParser\Unserializer;
 
 class BeaconController extends Controller
 {
+    protected $rules = array(
+        'name' => 'required|max:50',
+        'UUID' => 'required|max:250',
+        'major' => 'required|digits_between:1,10',
+        'minor' => 'required|digits_between:1,10',
+        'Immediate.message' => 'required_if:Immediate.action,custom',
+        'Far.message' => 'required_if:Far.action,custom',
+        'Near.message' => 'required_if:Near.action,custom'
+    );
 
     public function index(Request $request)
     {
@@ -37,6 +46,11 @@ class BeaconController extends Controller
 
     public function create()
     {
+        if (Auth()->user()->canNot('beacon', 'App\Model')) {
+            return Redirect::route('admin.dashboard')->with([
+                'error' => \trans('message.unauthorized_access')
+            ]);
+        }
         $courses = Course::where('club_id', '=', Auth::user()->club_id)->pluck('name', 'id')->toArray();
         
         return view('admin.beacon.create', compact('courses'));
@@ -44,10 +58,25 @@ class BeaconController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), $this->rules);
+        if ($validator->fails()) {
+            $this->error = $validator->errors();
+            return \Redirect::back()->withInput()->withErrors($this->error);
+        }
         try {
             $beaconConfig = (new BeaconConfiguration())->boot($request->all());
+            $beacon =  new Beacon();
+            $beacon->configuration = serialize($beaconConfig);
+            $beacon->club_id = Auth::user()->club_id;
+            $beacon->course_id = $request->get('course');
+            $beacon->fill($request->all())->save();
+            return \Redirect::route('admin.member.index')->with([
+                'success' => \trans('message.beacon_created_successfully.message')
+            ]);
         } catch (\Exception $exp) {
-            dd($exp->getMessage());
+           return \Redirect::back()->withInput()->with([
+                'error' => $exp->getMessage()
+            ]);
         }
     }
 }

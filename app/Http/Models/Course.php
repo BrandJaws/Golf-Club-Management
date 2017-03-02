@@ -203,7 +203,7 @@ class Course extends Model {
         $query .= " AND DATE(reservation_time_slots.time_start) >= DATE(?) ";
         $query .= " AND DATE(reservation_time_slots.time_start) <= DATE(?) ";
         $query .= " AND course.club_id = ? ";
-        $query .= " GROUP BY routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
+        $query .= " GROUP BY course.id,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
         
 //        START:To add other reservation types results in the future
 

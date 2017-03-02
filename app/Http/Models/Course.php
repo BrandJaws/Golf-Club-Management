@@ -242,7 +242,7 @@ class Course extends Model {
                                                                    $dateStart,
                                                                    $dateEnd,
                                                                    Auth::user ()->club_id]);
-        dd($allReservationsWithCourses);
+        //dd($allReservationsWithCourses);
        
         $reservationsByDate = [];
         if(count($allReservationsWithCourses)){

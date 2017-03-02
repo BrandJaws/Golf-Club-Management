@@ -156,8 +156,7 @@ Vue.component('reservation-popup', {
                                         },
                                         success:function(msg){
                                             console.log(msg);
-                                            $('body').prepend('<div>'+msg+'</div>');
-                                                   
+                                            this.emitUpdateReservationsEvent(msg.response); 
                                                     
                                                 }.bind(this),
 
@@ -193,10 +192,9 @@ Vue.component('reservation-popup', {
 
                                         },
                                         success:function(msg){
+                                            this.emitUpdateReservationsEvent(msg.response);
                                             console.log(msg);
-                                            $('body').prepend('<div>'+msg+'</div>');
-                                                   
-                                                    
+                                            
                                                 }.bind(this),
 
                                         error: function(jqXHR, textStatus ) {
@@ -224,8 +222,7 @@ Vue.component('reservation-popup', {
                                         },
                                         success:function(msg){
                                             console.log(msg);
-                                            $('body').prepend('<div>'+msg+'</div>');
-                                                   
+                                            this.emitUpdateReservationsEvent(msg.response);
                                                     
                                                 }.bind(this),
 
@@ -251,6 +248,9 @@ Vue.component('reservation-popup', {
                 
             }
             return playersAndGuests;
+        },
+        emitUpdateReservationsEvent:function(newOrUpdatedReservation){
+            this.$emit('update-reservations',newOrUpdatedReservation);
         }
     }
   

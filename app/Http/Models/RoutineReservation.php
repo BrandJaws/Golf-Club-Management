@@ -61,7 +61,7 @@ class RoutineReservation extends Model
                 ]);
                        
     }
-    
+   
     public function modifyReservationObjectForReponseOnCRUDOperations(){
           $players = [];
           $this->load('reservation_players.member','reservation_time_slots');

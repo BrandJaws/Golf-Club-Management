@@ -195,9 +195,9 @@ class ReservationsController extends Controller {
 //			}
 //			unset ( $reservation->tennis_reservation_players );
 			
-			$reservation->date = Carbon::parse ( $reservation->time_start )->format ( 'm/d/Y' );
-			$reservation->time_start = Carbon::parse ( $reservation->time_start )->format ( 'h:i A' );
-			
+			//$reservation->date = Carbon::parse ( $reservation->time_start )->format ( 'm/d/Y' );
+			//$reservation->time_start = Carbon::parse ( $reservation->time_start )->format ( 'h:i A' );
+			$reservation->modifyReservationObjectForReponseOnCRUDOperations();
 			$this->response = $reservation;
                         
                         

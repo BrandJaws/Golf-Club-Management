@@ -64,8 +64,12 @@
                                 <textarea name="" id="" class="form-control" rows="8"></textarea>
                             </div>
                             <div class="form-group">
-                                <label class="form-control-label">Instructor Name</label>
-                                <input type="text" class="form-control" />
+                                <label class="form-control-label">Coach Name</label>
+                                <select name="" id="" class="form-control">
+                                    <option value="">Bashir</option>
+                                    <option value="">Jamil</option>
+                                    <option value="">Sarfraz</option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label class="form-control-label">Number of seats available</label>

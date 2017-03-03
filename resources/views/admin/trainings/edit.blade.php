@@ -107,8 +107,12 @@
                                     <textarea name="" id="" class="form-control" rows="4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu velit interdum, pulvinar velit non, varius ex. Fusce ac libero nec mi dictum rutrum quis at leo. Maecenas id fringilla erat. Praesent malesuada at elit a placerat. Aliquam faucibus massa non diam semper dapibus. Quisque convallis eget ipsum vitae viverra.</textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-control-label">Instructor Name</label>
-                                    <input type="text" class="form-control" value="Jack The Monkey" />
+                                    <label class="form-control-label">Coach Name</label>
+                                    <select name="" id="" class="form-control">
+                                        <option selected value="">Bashir</option>
+                                        <option value="">Jamil</option>
+                                        <option value="">Sarfraz</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-control-label">Number of seats available</label>

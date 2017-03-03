@@ -140,6 +140,14 @@ Route::group([
                 'as' => 'create',
                 'uses' => 'ClubAdmin\Notifications\NotificationsController@create'
             ]);
+            Route::get('/view', [
+                'as' => 'view',
+                'uses' => 'ClubAdmin\Notifications\NotificationsController@view'
+            ]);
+            Route::get('/edit', [
+                'as' => 'edit',
+                'uses' => 'ClubAdmin\Notifications\NotificationsController@edit'
+            ]);
         });
         Route::group([
             'prefix' => 'profile',

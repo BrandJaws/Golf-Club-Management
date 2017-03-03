@@ -828,3 +828,11 @@ label {
 }
 
 .p-10 { padding: 10px !important; }
+
+
+/*notification view screen*/
+
+.notiViewData { font-weight: bold; }
+.notiViewData.statusSuccess { font-weight: bold; color: #66BB6A; }
+
+/*notification view screen*/

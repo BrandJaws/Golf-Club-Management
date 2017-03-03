@@ -85,22 +85,26 @@ Vue.component('reservations-container', {
         },
         updateReservations:function(newOrUpdatedReservation){
             
-                    if(newOrUpdatedReservation.club_id == this.reservations.club_id && 
-                       newOrUpdatedReservation.course_id == this.reservations.course_id){
+                    if(newOrUpdatedReservation.club_id == this.reservationsParent.club_id && 
+                       newOrUpdatedReservation.course_id == this.reservationsParent.course_id){
                         
-                        for(dateCount=0;dateCount<this.reservations.reservationsByDate.length;dateCount++){
+                        for(dateCount=0;dateCount<this.reservationsParent.reservationsByDate.length;dateCount++){
                             if(this.reservations.reservationsByDate[dateCount].reserved_at == newOrUpdatedReservation.reserved_at){
                                    
-                                for(timeSlotOriginalReservationsCount=0;timeSlotOriginalReservationsCount<this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot.length;timeSlotOriginalReservationsCount++ ){
+                                for(timeSlotOriginalReservationsCount=0;timeSlotOriginalReservationsCount<this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot.length;timeSlotOriginalReservationsCount++ ){
                                     
                                     for(timeSlotsReceivedCount=0;timeSlotsReceivedCount<newOrUpdatedReservation.timeSlots.length;timeSlotsReceivedCount++){
-                                            
-                                        if(newOrUpdatedReservation.timeSlots[timeSlotsReceivedCount] == this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].timeSlot &&
-                                             (this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == "App\\Http\\Models\\RoutineReservation" || 
-                                              this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == "")){
                                              
-                                             this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0] = newOrUpdatedReservation;
-                                             console.log(this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount]);
+                                        if(newOrUpdatedReservation.timeSlots[timeSlotsReceivedCount] == this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].timeSlot &&
+                                             (this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == "App\\Http\\Models\\RoutineReservation" || 
+                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == "")){
+                                             
+                                             this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_id = newOrUpdatedReservation.reservation_id;
+                                             this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type = newOrUpdatedReservation.reservation_type;
+                                             this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].players = newOrUpdatedReservation.players;
+                                             this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].status = newOrUpdatedReservation.status;
+                                             
+                                            // console.log(this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount]);
                                         }
                                     }
                                 }

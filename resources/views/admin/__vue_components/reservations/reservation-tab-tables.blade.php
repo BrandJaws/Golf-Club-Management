@@ -45,8 +45,13 @@ Vue.component('reservation-tab-tables', {
     data: function () {
       
       return {
-          reservationsByDateData:this.reservationsByDate
+          //reservationsByDateData:this.reservationsByDate
       }
+    },
+    computed:{
+        reservationsByDateData:function(){
+            return this.reservationsByDate;
+        }
     },
     methods: {
         

@@ -249,7 +249,7 @@ Route::group([
             'as' => 'beacon.'
         ], function () {
             Route::get('/', [
-                'as' => 'beacon',
+                'as' => 'index',
                 'uses' => 'ClubAdmin\Beacon\BeaconController@index'
             ]);
             Route::get('/create', [
@@ -259,6 +259,10 @@ Route::group([
             Route::post('/', [
                 'as' => 'store',
                 'uses' => 'ClubAdmin\Beacon\BeaconController@store'
+            ]);
+            Route::get('/edit/{beacon_id}', [
+                'as' => 'edit',
+                'uses' => 'ClubAdmin\Beacon\BeaconController@edit'
             ]);
         });
         /**

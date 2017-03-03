@@ -13,6 +13,7 @@ use PhpParser\Unserializer;
 
 class BeaconController extends Controller
 {
+
     protected $rules = array(
         'name' => 'required|max:50',
         'UUID' => 'required|max:250',
@@ -65,18 +66,36 @@ class BeaconController extends Controller
         }
         try {
             $beaconConfig = (new BeaconConfiguration())->boot($request->all());
-            $beacon =  new Beacon();
+            $beacon = new Beacon();
             $beacon->configuration = serialize($beaconConfig);
             $beacon->club_id = Auth::user()->club_id;
             $beacon->course_id = $request->get('course');
-            $beacon->fill($request->all())->save();
+            $beacon->fill($request->all())
+                ->save();
             return \Redirect::route('admin.member.index')->with([
                 'success' => \trans('message.beacon_created_successfully.message')
             ]);
         } catch (\Exception $exp) {
-           return \Redirect::back()->withInput()->with([
+            return \Redirect::back()->withInput()->with([
                 'error' => $exp->getMessage()
             ]);
         }
+    }
+
+    public function edit(Request $request, $beacon_id)
+    {
+       $beacon = Beacon::find($beacon_id);
+       if(!$beacon instanceof Beacon){
+           return \Redirect::route('beacon.index')->with([
+               'error' => 'Invalid beacon type'
+           ]);
+       }
+       if(!$beacon->club_id != Auth::user()->club_id){
+           return \Redirect::route('beacon.index')->with([
+               'error' => 'You are not authorized to edit this beacon'
+           ]);
+       }
+       $configuration = unserialize($beacon->configuration);
+     
     }
 }

@@ -26,10 +26,11 @@
 		<!-- aside -->
 		@include('admin.__partials.left-nav')
 		<!-- / -->
-
+		<div id="content" class="app-content box-shadow-z0" role="main">
+		 @include('admin.__layouts.top-bar');
 		<!-- content -->
 		@yield('main')
-
+		</div>
 		<!-- / -->
 	</div>
 	@include ('admin.__partials.js-assets')

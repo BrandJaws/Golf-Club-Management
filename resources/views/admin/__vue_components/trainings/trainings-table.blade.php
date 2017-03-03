@@ -7,7 +7,7 @@
                 <thead>
                     <tr>
                         <th>Lesson Name</th>
-                        <th>Instructor</th>
+                        <th>Coach</th>
                         <th>Total Seats</th>
                         <th>Seats Reserved</th>
                         <th>Actions</th>

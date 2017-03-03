@@ -49,7 +49,7 @@
 					</a></li>
 					@endif
 					@can('beacon', 'App\Model')
-					<li><a href="{{route('admin.beacon.beacon')}}"> <span
+					<li><a href="{{route('admin.beacon.index')}}"> <span
 							class="nav-icon"> <i class="fa fa-pie-chart"></i>
 						</span> <span class="nav-text">Beacon</span>
 					</a></li>

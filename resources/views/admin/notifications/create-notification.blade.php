@@ -108,10 +108,35 @@
 						<textarea class="form-control" rows="8"></textarea>
 					</div>
 					<div class="form-group">
+					    <div class="row">
+							<div class="col-md-4">
+								<label>Notification Type</label>
+							</div>
+							<div class="col-md-4">
+								<div class="radio">
+									<label class="ui-check">
+										<input type="radio" checked name="notificationType" value="general" class="has-value">
+										<i class="dark-white"></i>
+										General
+									</label>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="radio">
+									<label class="ui-check">
+										<input type="radio" name="notificationType" value="bookingOnly" class="has-value">
+										<i class="dark-white"></i>
+										Booking Only
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
 						<button class="btn-def btn">
 							<i class="fa fa-paper-plane-o"></i> &nbsp;Send Now
 						</button>
-						<button class="btn btn-outline b-primary text-primary">Cancel</button>
+						<a href="{{route("admin.notifications.notifications")}}" class="btn btn-outline b-primary text-primary">Cancel</a>
 					</div>
 				</div>
 				<div class="col-md-4">

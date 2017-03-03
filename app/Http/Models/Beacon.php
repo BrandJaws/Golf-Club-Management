@@ -23,7 +23,7 @@ class Beacon extends Model {
 	public function paginatedList($club_id, $perPage, $currentPage) {
 		return self::where ( 'beacon.club_id', '=', $club_id )->leftJoin ( 'course', function ($join) {
 			$join->on ( 'course.id', '=', 'beacon.course_id' );
-		} )->paginate ( $perPage, [ 
+		} )->orderBy('id','DESC')->paginate ( $perPage, [ 
 				'beacon.*',
 				'course.name as courseName' 
 		], 'current_page', $currentPage );

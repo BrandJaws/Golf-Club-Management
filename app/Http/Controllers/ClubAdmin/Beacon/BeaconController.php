@@ -70,9 +70,10 @@ class BeaconController extends Controller
             $beacon->configuration = serialize($beaconConfig);
             $beacon->club_id = Auth::user()->club_id;
             $beacon->course_id = $request->get('course');
+            $beacon->status = ($request->has('status')) ? config('global.status.active') : config('global.status.inactive');
             $beacon->fill($request->all())
                 ->save();
-            return \Redirect::route('admin.member.index')->with([
+            return \Redirect::route('admin.beacon.index')->with([
                 'success' => \trans('message.beacon_created_successfully.message')
             ]);
         } catch (\Exception $exp) {
@@ -84,18 +85,65 @@ class BeaconController extends Controller
 
     public function edit(Request $request, $beacon_id)
     {
-       $beacon = Beacon::find($beacon_id);
-       if(!$beacon instanceof Beacon){
-           return \Redirect::route('beacon.index')->with([
-               'error' => 'Invalid beacon type'
-           ]);
-       }
-       if(!$beacon->club_id != Auth::user()->club_id){
-           return \Redirect::route('beacon.index')->with([
-               'error' => 'You are not authorized to edit this beacon'
-           ]);
-       }
-       $configuration = unserialize($beacon->configuration);
-     
+        $beacon = Beacon::find($beacon_id);
+        if (! $beacon instanceof Beacon) {
+            return \Redirect::route('admin.beacon.index')->with([
+                'error' => 'Invalid beacon type'
+            ]);
+        }
+        if ($beacon->club_id != Auth::user()->club_id) {
+            return \Redirect::route('admin.beacon.index')->with([
+                'error' => 'You are not authorized to edit this beacon'
+            ]);
+        }
+        $configuration = unserialize($beacon->configuration);
+        $courses = Course::where('club_id', '=', Auth::user()->club_id)->pluck('name', 'id')->toArray();
+        return view('admin.beacon.edit', compact('courses', 'beacon', 'configuration'));
+    }
+
+    public function update(Request $request, $beacon_id)
+    {
+        $validator = Validator::make($request->all(), $this->rules);
+        if ($validator->fails()) {
+            $this->error = $validator->errors();
+            return \Redirect::back()->withInput()->withErrors($this->error);
+        }
+        $beacon = Beacon::find($beacon_id);
+        if (! $beacon instanceof Beacon) {
+            return \Redirect::route('admin.beacon.index')->with([
+                'error' => 'Invalid beacon type'
+            ]);
+        }
+        if ($beacon->club_id != Auth::user()->club_id) {
+            return \Redirect::route('admin.beacon.index')->with([
+                'error' => 'You are not authorized to edit this beacon'
+            ]);
+        }
+        try {
+            $beaconConfig = (new BeaconConfiguration())->boot($request->all());
+            $beacon->configuration = serialize($beaconConfig);
+            $beacon->club_id = Auth::user()->club_id;
+            $beacon->course_id = $request->get('course');
+            $beacon->status = ($request->has('status')) ? config('global.status.active') : config('global.status.inactive');
+            $beacon->fill($request->all())
+                ->save();
+            return \Redirect::route('admin.beacon.index')->with([
+                'success' => \trans('message.beacon_created_successfully.message')
+            ]);
+        } catch (\Exception $exp) {
+            return \Redirect::back()->withInput()->with([
+                'error' => $exp->getMessage()
+            ]);
+        }
+    }
+    public function destroy($beacon_id)
+    {
+        try {
+            Beacon::find($beacon_id)->delete();
+            return "success";
+        } catch (\Exception $e) {
+            return $e->getMessage();
+            return "failure";
+        }
     }
 }

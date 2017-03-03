@@ -264,6 +264,14 @@ Route::group([
                 'as' => 'edit',
                 'uses' => 'ClubAdmin\Beacon\BeaconController@edit'
             ]);
+            Route::put('/{beacon_id}', [
+                'as' => 'update',
+                'uses' => 'ClubAdmin\Beacon\BeaconController@update'
+            ]);
+            Route::delete('/{beacon_id}', [
+                'as' => 'delete',
+                'uses' => 'ClubAdmin\Staff\BeaconController@destroy'
+            ]);
         });
         /**
          * Routes related to warnings

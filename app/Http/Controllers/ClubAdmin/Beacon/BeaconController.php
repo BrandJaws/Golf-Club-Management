@@ -97,6 +97,9 @@ class BeaconController extends Controller
             ]);
         }
         $configuration = unserialize($beacon->configuration);
+        if(!$configuration){
+            $configuration = new BeaconConfiguration();
+        }
         $courses = Course::where('club_id', '=', Auth::user()->club_id)->pluck('name', 'id')->toArray();
         return view('admin.beacon.edit', compact('courses', 'beacon', 'configuration'));
     }
@@ -122,7 +125,6 @@ class BeaconController extends Controller
         try {
             $beaconConfig = (new BeaconConfiguration())->boot($request->all());
             $beacon->configuration = serialize($beaconConfig);
-            $beacon->club_id = Auth::user()->club_id;
             $beacon->course_id = $request->get('course');
             $beacon->status = ($request->has('status')) ? config('global.status.active') : config('global.status.inactive');
             $beacon->fill($request->all())

@@ -25,8 +25,8 @@
                         </td>
                         <td>
                             <div class="section-3 sec-style">
-                                <a href="#." class="blue-cb" v-if="notification.status == 'sent'">view</a>
-                                <a href="#." class="blue-cb" v-if="notification.status == 'schedule'">edit</a>
+                                <a href="{{route('admin.notifications.view')}}" class="blue-cb" v-if="notification.status == 'sent'">view</a>
+                                <a href="{{route('admin.notifications.edit')}}" class="blue-cb" v-if="notification.status == 'schedule'">edit</a>
                                 &nbsp;&nbsp;
                                 <a href="#." class="del-icon"><i class="fa fa-trash"></i></a>
                             </div>

@@ -140,6 +140,14 @@ Route::group([
                 'as' => 'create',
                 'uses' => 'ClubAdmin\Notifications\NotificationsController@create'
             ]);
+            Route::get('/view', [
+                'as' => 'view',
+                'uses' => 'ClubAdmin\Notifications\NotificationsController@view'
+            ]);
+            Route::get('/edit', [
+                'as' => 'edit',
+                'uses' => 'ClubAdmin\Notifications\NotificationsController@edit'
+            ]);
         });
         Route::group([
             'prefix' => 'profile',
@@ -249,7 +257,7 @@ Route::group([
             'as' => 'beacon.'
         ], function () {
             Route::get('/', [
-                'as' => 'beacon',
+                'as' => 'index',
                 'uses' => 'ClubAdmin\Beacon\BeaconController@index'
             ]);
             Route::get('/create', [
@@ -259,6 +267,18 @@ Route::group([
             Route::post('/', [
                 'as' => 'store',
                 'uses' => 'ClubAdmin\Beacon\BeaconController@store'
+            ]);
+            Route::get('/edit/{beacon_id}', [
+                'as' => 'edit',
+                'uses' => 'ClubAdmin\Beacon\BeaconController@edit'
+            ]);
+            Route::put('/{beacon_id}', [
+                'as' => 'update',
+                'uses' => 'ClubAdmin\Beacon\BeaconController@update'
+            ]);
+            Route::delete('/{beacon_id}', [
+                'as' => 'delete',
+                'uses' => 'ClubAdmin\Staff\BeaconController@destroy'
             ]);
         });
         /**

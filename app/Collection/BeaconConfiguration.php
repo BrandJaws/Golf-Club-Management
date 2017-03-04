@@ -50,7 +50,14 @@ class BeaconConfiguration
         }
         return $this;
     }
-
+    
+    public function hasAction($zone, $action){
+        
+        return array_get($this->configuration->get($zone), 'action', null) == $action;    
+    }
+    public function getMessage($zone){
+        return array_get($this->configuration->get($zone), 'message', null);
+    }
     public function toArray()
     {
         return $this->configuration->toArray();

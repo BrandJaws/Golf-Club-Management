@@ -15,14 +15,14 @@ class CoachesController extends Controller {
         $currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
         $perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
         $coaches = (new Coach())->listClubCoachesPaginated(Auth::user()->club_id, $currentPage, $perPage, $search);
-        dd($coaches);
+        //dd($coaches);
         if ($request->ajax()) {
             
             return $coaches;
         } else {
-            if ($coaches->count() > 0) {
+           // if ($coaches->count() > 0) {
              $coaches = json_encode($coaches);
-            }
+           // }
             return view('admin.coaches.coaches', compact('coaches'));
         }
     }

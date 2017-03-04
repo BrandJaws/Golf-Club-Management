@@ -74,10 +74,12 @@ class ReservationsController extends Controller {
                 }
                
                 if (! $request->has ( 'parent_id' ) || ($request->get ( 'parent_id' ) == 0)) {
-			$this->error = "reservation_parent_missing";
-			return $this->response ();
+			//$this->error = "reservation_parent_missing";
+			//return $this->response ();
+                }else{
+                    $players[] = $request->get ( 'parent_id' );
                 }
-                $players[] = $request->get ( 'parent_id' );
+                
               
                 $players = array_filter ( $players,function($val){
                     if($val == 0 || trim($val) == ""){
@@ -107,37 +109,20 @@ class ReservationsController extends Controller {
 		try {
 			\DB::beginTransaction ();
 			
-                        $bookingsFoundOnTimeSlotForRequestedCourse = [];
                         
-                        //Get existing bookings data on timeslot if numberOfBookings is 1.
-                        //This data will be used to decide if the booking status needs to be reserved or waiting
-                        //In case of multiple booking it has to be reserved else it cant be booked
+                        $reservationsOnTimeSlot = $course->getResevationsAtCourseForAGivenDateAndTimeSlot($startTime);
                         
-//                        if($numberOfBookings == 1){
-//                            $bookingsFoundOnTimeSlotIndependentOfCourse = $reservation->getReservationsAgainstTimeSlotIndependentOfCourse( $startTime->toDateTimeString(),$endTime->toDateTimeString(),$request->get( 'club_id'));
-//                            
-//                            foreach($bookingsFoundOnTimeSlotIndependentOfCourse as $booking){
-//                                if($booking->course_id == $request->get('course_id')){
-//                                    $bookingsFoundOnTimeSlotForRequestedCourse[] = $booking;
-//                                }
-//                            }
-//                            
-//                            foreach ( $bookingsFoundOnTimeSlotIndependentOfCourse as $pastReservation ) {
-//
-//                                    if ($pastReservation ["parent_id"] == Auth::user ()->id) {
-//                                       
-//                                            $this->error = "already_made_a_reservation";
-//                                            return $this->response ();
-//                                    }
-//                            }
-//                        }
-//                      
-//			if (count ( $bookingsFoundOnTimeSlotForRequestedCourse ) >= 1) {
-//				$this->error = "mobile_slot_already_reserved";
-//				return $this->response ();
-//			}
-                        
-			$reservationData ['club_id'] = $course->club_id;
+			if ($reservationsOnTimeSlot->count() >= 1) {
+				$this->error = "mobile_slot_already_reserved";
+				return $this->response ();
+			}
+                        $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course,$startTime,$players);
+                        if($playersWithOtherReservationsInBetween != null ){
+                                $this->error = "players_already_have_booking";
+                                $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
+                                return $this->response();
+                        }
+                        $reservationData ['club_id'] = $course->club_id;
 			$reservationData ['course_id'] = $course->id;
 			$reservationData ['parent_id'] = $request->get ( 'parent_id' );
 			
@@ -247,10 +232,12 @@ class ReservationsController extends Controller {
                 }
                 
                 if (! $request->has ( 'parent_id' ) || ($request->get ( 'parent_id' ) == 0)) {
-			$this->error = "reservation_parent_missing";
-			return $this->response ();
+			//$this->error = "reservation_parent_missing";
+			//return $this->response ();
+                }else{
+                    $players[] = $request->get ( 'parent_id' );
                 }
-                $players[] = $request->get ( 'parent_id' );
+                
               
 		//$players = array_filter ( $request->get ( 'player' ) );
                 $players = array_filter ( $players,function($val){
@@ -262,6 +249,8 @@ class ReservationsController extends Controller {
                 } );
 		//array_unshift($players,Auth::user ()->id);
 		$players = array_unique ( $players );
+                $club = \App\Http\models\Club::find($reservation->club_id);
+                $course = \App\Http\models\Course::find($reservation->course_id);
                 
                 //add number of guests as separate values to the players array 
                 if($request->has('guests') && $request->get('guests') > 0){
@@ -298,10 +287,22 @@ class ReservationsController extends Controller {
                     }
                 }
                 
+                $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course,$reservation->reservation_time_slots[0]->time_start,$new_players_received_including_guests);
+                if($playersWithOtherReservationsInBetween != null ){
+                        $this->error = "players_already_have_booking";
+                        $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
+                        return $this->response();
+                }
+                
 		try {
                       \DB::beginTransaction ();
-                      $reservation->parent_id = $request->get('parent_id');
-                      $reservation->save();
+                      if($request->get ( 'parent_id' )){
+                           $reservation->parent_id = $request->get('parent_id');
+                           
+                      }else{
+                          $reservation->parent_id = null;
+                      }
+                     $reservation->save();
             //    iterate through new players array and check if there are any elements left
             //    in tennis reservation players to update or delete array. If found any, update
             //    that element with the element from new players array and unset both elements 
@@ -448,7 +449,9 @@ class ReservationsController extends Controller {
 				// Unset properties not meant to be sent to the user
 				unset ( $reservation->players );
 				$reservation->delete ();
+                                //dd($reservationResponseIfSucceeds);
 				\DB::commit ();
+                                
 				$this->response = $reservationResponseIfSucceeds;
 			} catch ( \Exception $e ) {
 				

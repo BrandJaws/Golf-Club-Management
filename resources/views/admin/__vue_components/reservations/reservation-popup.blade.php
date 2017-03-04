@@ -83,7 +83,7 @@ Vue.component('reservation-popup', {
       }
     },
     methods:{
-        closePopup:function(){
+        emitClosePopup:function(){
             this.$emit('close-popup');
         },
         deletePlayer:function(playerIndex){
@@ -93,7 +93,7 @@ Vue.component('reservation-popup', {
         closeModal:function(event){
            
             if(event.target.className.search("closePopup") !== -1) {
-                this.closePopup();
+                this.emitClosePopup();
             }
         },
         explicitSelectionMade:function(dataItemSelected){
@@ -155,10 +155,11 @@ Vue.component('reservation-popup', {
 
                                         },
                                         success:function(msg){
-                                            console.log(msg);
+                                            
                                             this.emitUpdateReservationsEvent(msg.response); 
-                                                    
+                                            this.emitClosePopup();        
                                                 }.bind(this),
+                                            
 
                                         error: function(jqXHR, textStatus ) {
                                                     this.ajaxRequestInProcess = false;
@@ -193,7 +194,7 @@ Vue.component('reservation-popup', {
                                         },
                                         success:function(msg){
                                             this.emitUpdateReservationsEvent(msg.response);
-                                            console.log(msg);
+                                            this.emitClosePopup();
                                             
                                                 }.bind(this),
 
@@ -223,7 +224,7 @@ Vue.component('reservation-popup', {
                                         success:function(msg){
                                             console.log(msg);
                                             this.emitUpdateReservationsEvent(msg.response);
-                                                    
+                                            this.emitClosePopup();        
                                                 }.bind(this),
 
                                         error: function(jqXHR, textStatus ) {

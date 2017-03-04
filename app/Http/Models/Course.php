@@ -333,8 +333,8 @@ class Course extends Model {
    
     }
     
-    public static function getResevationsAtCourseForAGivenDateAndTimeSlot($reserved_at,$timeSlot){
-        
+    public function getResevationsAtCourseForAGivenDateAndTimeSlot($startTime){
+        return DB::table('reservations_by_timeslots')->where("course_id",$this->id)->where("time_start",$startTime)->get();
     }
     
     public static function getCourseByClubId($course_id, $club_id) {

@@ -500,6 +500,11 @@ return [
         'httpCode' => '200',
         'message' => 'Successfuly Updated A News Feed'
     ],
+    'players_already_have_booking'=>[
+                                'code'=>'87',
+                                'httpCode' => '412',
+                                'message'=>':player_names already have a booking during this timeslot'
+    ],
     'pushNotificationMessageBodies' => [
         'reservation_confirmation_prompt' => "%s has added you to a reservation at %s on %s for court %s. Are you available?",
         'reservation_confirmation_prompt_final' => "You have a reservation at %s on %s for court %s. Are you still available?",

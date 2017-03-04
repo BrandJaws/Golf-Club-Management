@@ -168,7 +168,7 @@
                             url: _url,
                             method: "GET",
                             success:function(msg){
-                                        
+                                        console.log(msg);
                                         this.ajaxRequestInProcess = false;
                                         if(this.searchRequestHeld){
                                            
@@ -178,7 +178,7 @@
                                         }
                                         
                                         pageDataReceived = msg;
-                                        membersList = pageDataReceived.data ;
+                                        beaconList = pageDataReceived.data ;
                                         
                                         //Success code to follow
                                             if(pageDataReceived.next_page_url !== null){
@@ -189,10 +189,10 @@
                                         
                                             if(isSearchQuery){
                                                 
-                                                 this.membersList=membersList;
+                                                 this.beaconList=membersList;
                                             }else{
                                                 
-                                               appendArray(this.membersList,membersList);
+                                               appendArray(this.beaconList,beaconList);
                                             }
                                         
                                         

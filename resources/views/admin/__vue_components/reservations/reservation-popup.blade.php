@@ -155,7 +155,7 @@ Vue.component('reservation-popup', {
 
                                         },
                                         success:function(msg){
-                                            
+                                           
                                             this.emitUpdateReservationsEvent(msg.response); 
                                             this.emitClosePopup();        
                                                 }.bind(this),

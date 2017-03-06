@@ -120,9 +120,9 @@ class Course extends Model {
                             
                             if($reservation->reserved_at == $date){
                                  
-                                foreach($reservation->reservationsByTimeSlots as $reservationsByTimeSlot ){
+                                foreach($reservation->reservationsByTimeSlot as $reservationsByTimeSlot ){
                                    
-                                    if($reservationsByTimeSlot->timeSlot == $time->toTimeString()){
+                                    if($reservationsByTimeSlot->timeSlot == $time->format ( 'h:i A' )){
                                         
                                         $timeSlot->reservations = $reservationsByTimeSlot->reservations;
                                         $foundExistingReservationsForTimeSlot = true;
@@ -243,98 +243,40 @@ class Course extends Model {
                                                                    $dateEnd,
                                                                    Auth::user ()->club_id]);
         //dd($allReservationsWithCourses);
-       
-        $reservationsByDate = [];
-        if(count($allReservationsWithCourses)){
-            $tempDate = 0;
-            $tempTimeSlot = "";
-            $dateIndex = -1;
-            $timeSlotIndex = 0;
-            $reservationIndex = 0;
-            $reservationsByDate = [];
-            
-            foreach($allReservationsWithCourses as $reservation){
-             
-                //Change course if the id is different
-                if($tempDate != $reservation->reserved_at){
-                    //reset timeslot index on change of course
-                    $timeSlotIndex = 0;
-                    $tempDate = $reservation->reserved_at;
-                    $dateIndex++;
-                    $reservationsByDate[$dateIndex] = new \stdClass();
-                    $dateObject = Carbon::parse($reservation->time_start);
-                    $reservationsByDate[$dateIndex]->reserved_at = $reservation->reserved_at;
-                    $reservationsByDate[$dateIndex]->dayNumber = $dateObject->day;
-                    $reservationsByDate[$dateIndex]->dayName = $dateObject->format('l');
-                    //$reservationsByDate[$dateIndex]->course_id = $reservation->course_id;
-                    //$reservationsByDate[$dateIndex]->openTime = $reservation->openTime;
-                    //$reservationsByDate[$dateIndex]->closeTime = $reservation->closeTime;
-                    //$reservationsByDate[$dateIndex]->bookingDuration = $reservation->bookingDuration;
-                    $reservationsByDate[$dateIndex]->reservationsByTimeSlots = [];
-                    $tempTimeSlot = "";
-                }
-                
-                //Change timeslot if different
-                if($tempTimeSlot != $reservation->time_start){
-                    $tempTimeSlot = $reservation->time_start;
-                    //reset reservation index on change of time slot
-                    $reservationIndex = 0;
-                    
-                    $timeSlotIndex++;
-                    $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex] = new \stdClass();
-                    $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->timeSlot = $reservation->time_start;
-                    $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations = [];
-                }
-                
-                $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex] = new \stdClass();
-                $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->reservation_id = $reservation->reservation_id;
-                $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->reservation_type = $reservation->reservation_type;
-                //$reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->time_start = $reservation->time_start;
-                //$reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->time_end = $reservation->time_end;
-                //$reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->reserved_at = $reservation->reserved_at;
-                $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->status = $reservation->status;
-                
-                $reservation_player_ids = explode("||-separation-player-||",$reservation->reservation_player_ids);
-                $member_ids = explode("||-separation-player-||",$reservation->member_ids);
-                $member_names = explode("||-separation-player-||",$reservation->member_names);
-                
-                $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->players =collect([]);
-                $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->guests = 0;
-                foreach($reservation_player_ids as $playerIndex=>$reservation_player_id){
-                    
-                        if($member_ids[$playerIndex] == 0){
-                            $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->guests++;
-                        }
-                 
-                        $reservationPlayerObject = new \stdClass();
-                        $reservationPlayerObject->reservation_player_id = trim($reservation_player_ids[$playerIndex]);
-                        $reservationPlayerObject->member_id = trim($member_ids[$playerIndex]);
-                        $reservationPlayerObject->member_name = trim($member_names[$playerIndex]);
-
-
-                        if($reservationPlayerObject->member_id == $reservation->parent_id){
-
-                            $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->players->prepend($reservationPlayerObject);
-                        }else{
-                             //bring parent to front
-                             $reservationsByDate[$dateIndex]->reservationsByTimeSlots[$timeSlotIndex]->reservations[$reservationIndex]->players->push($reservationPlayerObject);
-                        }
-              
-                    
-                     
-                }
-
-                $reservationIndex++;
-               
-            }
-        }
-        //dd($reservationsByDate);
+        $reservationsByDate = Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
         return $reservationsByDate;
    
     }
     
-    public function getResevationsAtCourseForAGivenDateAndTimeSlot($startTime){
-        return DB::table('reservations_by_timeslots')->where("course_id",$this->id)->where("time_start",$startTime)->get();
+    /**
+     * 
+     * @param string $startDateTime
+     * @return reservation object 
+     * Gets reseravtion in accordance with the reservations_by_timeslots view i-e excludes players
+     * Useful where we need to find how many reservations we have on a timeslot such as in the validation process
+     * for reservations etc
+     */
+    public function getResevationsAtCourseForATimeSlot($startDateTime){
+        return DB::table('reservations_by_timeslots')->where("course_id",$this->id)->where("time_start",$startDateTime)->get();
+    }
+    
+    /**
+     * 
+     * @param int $course_id
+     * @param array $reservation_time_slots
+     * @return reservation objects array 
+     * Gets reseravtion objects array for a datetimes array i-e start times. Returns an array of reservation
+     * objects in the same format as of the all reservations list for court
+     * 
+     */
+    public static function getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($course_id,$reservation_time_slots){
+        $allReservationsWithCourses = [];
+        foreach($reservation_time_slots as $time_slot){
+            $allReservationsWithCourses[] = DB::table('compound_reservations_aggregated')->where("course_id",$course_id)->where("time_start",$time_slot->time_start)->first();
+            
+        }
+        return Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
+        
     }
     
     public static function getCourseByClubId($course_id, $club_id) {
@@ -350,24 +292,94 @@ class Course extends Model {
     		return 0;
     	}
     }
-    
-    /**
-     * 
-     * @param \App\Http\Models\Course $course
-     * @param array $reservationsArray
-     */
-    public static function returnCourseWithCompleteReservationsObject(Course $course, $reservationsArray){
-        $courseWithCompleteReservations = new \stdClass();
-        
-        $courseWithCompleteReservations->course_id = $course->id;
-        $courseWithCompleteReservations->club_id = $course->club_id;
-        $courseWithCompleteReservations->course_name = $course->name;
-        $courseWithCompleteReservations->openTime = $course->openTime;
-        $courseWithCompleteReservations->closeTime = $course->closeTime;
-        $courseWithCompleteReservations->bookingDuration = $course->bookingDuration;
-        $courseWithCompleteReservations->reservations = $reservationsArray;
-        
-        return $courseWithCompleteReservations;
-    }
+   
+   /**
+    * 
+    * @param type $reservationsArray
+    * @return reservation objects array by date
+    * converts and returns reservations results from a query on compound_reservations_aggregate view 
+    * to reservation objects 
+    */
+   public static function returnReseravtionObjectsArrayFromReservationArray($reservationsArray){
+       $reservationsByDate = [];
+        if(count($reservationsArray)){
+            $tempDate = 0;
+            $tempTimeSlot = "";
+            $dateIndex = -1;
+            $timeSlotIndex = 0;
+            $reservationIndex = 0;
+            
+            foreach($reservationsArray as $reservation){
+             
+                //Change course if the id is different
+                if($tempDate != $reservation->reserved_at){
+                    //reset timeslot index on change of course
+                    $timeSlotIndex = 0;
+                    $tempDate = $reservation->reserved_at;
+                    $dateIndex++;
+                    $reservationsByDate[$dateIndex] = new \stdClass();
+                    $reservationsByDate[$dateIndex]->course_id = $reservation->course_id;
+                    $dateObject = Carbon::parse($reservation->time_start);
+                    $reservationsByDate[$dateIndex]->reserved_at = $reservation->reserved_at;
+                    $reservationsByDate[$dateIndex]->dayNumber = $dateObject->day;
+                    $reservationsByDate[$dateIndex]->dayName = $dateObject->format('l');
+                    $reservationsByDate[$dateIndex]->reservationsByTimeSlot = [];
+                    $tempTimeSlot = "";
+                }
+                
+                //Change timeslot if different
+                if($tempTimeSlot != $reservation->time_start){
+                    $tempTimeSlot = $reservation->time_start;
+                    //reset reservation index on change of time slot
+                    $reservationIndex = 0;
+                    
+                    $timeSlotIndex++;
+                    $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex] = new \stdClass();
+                    $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->timeSlot = Carbon::parse($reservation->time_start)->format ( 'h:i A' );
+                    $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations = [];
+                }
+                
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex] = new \stdClass();
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_id = $reservation->reservation_id;
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_type = $reservation->reservation_type;
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->status = $reservation->status;
+                
+                $reservation_player_ids = explode("||-separation-player-||",$reservation->reservation_player_ids);
+                $member_ids = explode("||-separation-player-||",$reservation->member_ids);
+                $member_names = explode("||-separation-player-||",$reservation->member_names);
+                
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players =collect([]);
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->guests = 0;
+                foreach($reservation_player_ids as $playerIndex=>$reservation_player_id){
+                    
+                        if($member_ids[$playerIndex] == 0){
+                            $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->guests++;
+                        }
+                 
+                        $reservationPlayerObject = new \stdClass();
+                        $reservationPlayerObject->reservation_player_id = trim($reservation_player_ids[$playerIndex]);
+                        $reservationPlayerObject->member_id = trim($member_ids[$playerIndex]);
+                        $reservationPlayerObject->member_name = trim($member_names[$playerIndex]);
+
+
+                        if($reservationPlayerObject->member_id == $reservation->parent_id){
+
+                            $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players->prepend($reservationPlayerObject);
+                        }else{
+                             //bring parent to front
+                             $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players->push($reservationPlayerObject);
+                        }
+              
+                    
+                     
+                }
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot = array_values($reservationsByDate[$dateIndex]->reservationsByTimeSlot);
+                $reservationIndex++;
+               
+            }
+        }
+        //dd($reservationsByDate);
+        return $reservationsByDate;
+   }
 
 }

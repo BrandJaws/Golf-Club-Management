@@ -26,10 +26,11 @@ use App\Http\Models\Member;
  * @author kas
  */
 class CoursesController extends Controller {
-	use \Notification;
+	//use \Notification;
 	private $timeSlots = [ ];
 	public function index() {
 		$this->response = Course::courseList ();
+        return view('admin.courses.courses-list');
 		return $this->response ();
 	}
 	public function store(Request $request) {

@@ -317,6 +317,18 @@ Route::group([
                 'uses' => 'ClubAdmin\Trainings\TrainingsController@edit'
             ]);
         });
+        /**
+         * Routes related to courses
+         */
+        Route::group([
+            'prefix' => 'courses',
+            'as' => 'courses.'
+        ], function() {
+            Route::get('/', [
+                'as' => 'index',
+                'uses' => 'ClubAdmin\Courses\CoursesController@index'
+            ]);
+        });
     });
 });
 Route::get('/home', 'HomeController@index');

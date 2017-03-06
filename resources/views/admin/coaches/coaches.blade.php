@@ -45,48 +45,114 @@
 
 @include("admin.__vue_components.coaches.coaches-table")
 <script>
-        var baseUrl = "{{url('')}}";
-        _coachesList = [{name:'John Wick',email:'john.wick@mail.com',contact:'0423456783',spcl:'Strong, Fast, Lean'},
-            {name:'Johnny Depp',email:'johnny.depp@mail.com',contact:'042343284',spcl:'Great Runner, Bowler, Chakka'},
-            {name:'Emma Watson',email:'emma.watson@mail.com',contact:'98323456783',spcl:'Diver, Swimmer, Noob'},
-            {name:'Emma Brows',email:'emma.brown@mail.com',contact:'0423656783',spcl:'Lovely, Amazing, Nerd'},
-            {name:'Harry Potter',email:'harry.potter@mail.com',contact:'34563456783',spcl:'Great Runner, Bowler, Chakka'},
-            {name:'Atif Aslam',email:'atif.aslam@mail.com',contact:'65472836399',spcl:'Lovely, Amazing, Nerd'},
-            {name:'Emma Watson',email:'emma.watson@mail.com',contact:'98323456783',spcl:'Strong, Fast, Lean'},
-            {name:'Emma Brows',email:'emma.brown@mail.com',contact:'0423656783',spcl:'Diver, Swimmer, Noob'},
-            {name:'Harry Potter',email:'harry.potter@mail.com',contact:'34563456783',spcl:'Lovely, Amazing, Nerd'},];
+       
+        
+	var baseUrl = "{{url('admin/coaches')}}";
+	var vue = new Vue({
+		el: "#coaches-list-table",
+		data: {
+			coachesList:({!! $coaches !!}).data,
+			ajaxRequestInProcess:false,
+                        searchQuery:"",
+                        lastSearchTerm:"",
+                        nextAvailablePage:2,
+                        searchRequestHeld:false,
+                        
+                        
+                        
+		},
+		methods: {
+                    
+			loadNextPage:function(isSearchQuery){
+                               
+				
+                                if(isSearchQuery){
+                                    if(this.ajaxRequestInProcess){
+                                        this.searchRequestHeld=true;
+                                        return;
+                                    }
+                                    if(this.searchQuery !== this.lastSearchTerm){
+                                        this.nextAvailablePage = 1;
+                                    }
+                                    this.lastSearchTerm = this.searchQuery;
+                                    _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+                                   
+                                    
+                                }else if(this.searchQuery != ""){
+                                    _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+                                }else{
+                                    _url = baseUrl+'?current_page='+(this.nextAvailablePage);
+                                }
+                                
+                              
+                                if(this.nextAvailablePage === null){
+                                    return;
+                                }
+                                
+                                if(!this.ajaxRequestInProcess){
+                                    this.ajaxRequestInProcess = true;
+                                    var request = $.ajax({
+                                        
+                                        url: _url,
+                                        method: "GET",
+                                        success:function(msg){
+                                            
+                                                    this.ajaxRequestInProcess = false;
+                                                    if(this.searchRequestHeld){
+                                                       
+                                                        this.searchRequestHeld=false;
+                                                        this.loadNextPage(true);
+                                                        
+                                                    }
+                                                    
+                                                    pageDataReceived = msg;
+                                                    coachesList = pageDataReceived.data ;
+                                                    
+                                                    //Success code to follow
+                                                        if(pageDataReceived.next_page_url !== null){
+                                                                this.nextAvailablePage = pageDataReceived.current_page+1;
+                                                        }else{
+                                                            this.nextAvailablePage = null;
+                                                        }
+                                                    
+                                                        if(isSearchQuery){
+                                                            
+                                                             this.coachesList=coachesList;
+                                                        }else{
+                                                            
+                                                           appendArray(this.coachesList,coachesList);
+                                                        }
+                                                    
+                                                    
+                                                    
+                                                }.bind(this),
 
-        var vue = new Vue({
-            el: "#coaches-list-table",
-            data: {
-                coachesList:[],
-                latestPageLoaded:0,
-                ajaxRequestInProcess:false
-            },
-            methods: {
-                loadNextPage:function(){
-                    if(this.latestPageLoaded == 0){
-                        for(x=0; x<_coachesList.length; x++){
-                            this.coachesList.push(_coachesList[x]);
-                        }
+                                        error: function(jqXHR, textStatus ) {
+                                                    this.ajaxRequestInProcess = false;
 
-                    }
-                    return;
-                }
-            },
-        });
+                                                    //Error code to follow
 
-        $(document).ready(function() {
-            vue.loadNextPage();
-            console.log("bottom!");
 
-        });
-        $(window).scroll(function() {
-            if($(window).scrollTop() + $(window).height() == $(document).height()) {
-                vue.loadNextPage();
-                console.log("bottom!");
-            }
-        });
-    </script>
+                                               }.bind(this)
+                                    }); 
+                                }
+			}
+		},
+	});
+
+	/* $(document).ready(function() {
+       vue.loadNextPage();
+    }); */
+    $(window).scroll(function() {
+       if($(window).scrollTop() + $(window).height() == $(document).height()) {
+       
+            vue.loadNextPage(false);
+           
+       }
+    });
+    
+ 
+   
+</script>
 
 @endSection

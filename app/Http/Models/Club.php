@@ -4,7 +4,7 @@ namespace App\Http\models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\DB;
 class Club extends Model {
 	protected $table = 'club';
 	protected $fillable = [ 
@@ -41,4 +41,89 @@ class Club extends Model {
 	public function listPlayers() {
 		return $this->hasMany ( '\App\Http\Models\Member' )->where ( 'member.id', '!=', Auth::user ()->id );
 	}
+        
+        /**
+         * 
+         * @param int $clubId
+         * @param array $players
+         * 
+         * checks and returns an array of players who already have bookings between requested reservation
+         * timeslot and a normal reservation's duration
+         */
+        public function getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($courseRequested,$startDateTime,$players){
+            $playersWithReservations = [];
+            $playersNamesWithReservations = "";
+            $endDateTime = \Carbon\Carbon::parse($startDateTime)->addMinutes($courseRequested->bookingDuration)->toDateTimeString(); 
+            //What actually needs to be checked is the intersection of times i-e 4 cases: 
+            //  - The requested start time falls between the duration of another reservation for the same player
+            //  - Or The requested end time falls between the duration of another reservation for the same player
+            //  Or
+            //  - Any existing reservation's start time falls between the duration of requested reservation for the same player
+            //  - Or Any existing reservation's end time falls between the duration of requested reservation for the same player
+        
+            
+            $playersFound = DB::table('compound_reservations')
+                        ->select('member_name')
+                        ->where("club_id",$this->id)
+                        ->where ( function ($query) use ($startDateTime, $endDateTime) {
+
+                                $query->where ( function ($query) use ($startDateTime,$endDateTime) {
+                                            $query->where ( function ($query) use ($startDateTime) {
+
+                                                $query->where ( 'date_time_start', '<=', $startDateTime )
+                                                      ->whereRaw ( "TIMESTAMPADD(MINUTE,bookingDuration,date_time_start) > '".$startDateTime."'" );
+
+                                            } )
+                                            ->orWhere ( function ($query) use ($endDateTime) {
+
+                                                    $query->where ( 'date_time_start', '<', $endDateTime )
+                                                          ->whereRaw ( "TIMESTAMPADD(MINUTE,bookingDuration,date_time_start) >= '". $endDateTime."'" );
+
+                                            });
+
+                                        } )
+                                      ->orWhere ( function ($query) use ($startDateTime,$endDateTime) {
+                                            $query->where ( function ($query) use ($startDateTime,$endDateTime) {
+
+                                                $query->where ( 'date_time_start', '>=', $startDateTime)
+                                                      ->where ( 'date_time_start', ' <', $endDateTime);
+
+                                            } )
+                                            ->orWhere ( function ($query) use ($startDateTime,$endDateTime) {
+
+                                                    $query->whereRaw ( "TIMESTAMPADD(MINUTE,bookingDuration,date_time_start) >'". $startDateTime ."'")
+                                                          ->whereRaw ( "TIMESTAMPADD(MINUTE,bookingDuration,date_time_start) <= '". $endDateTime."'" );
+
+                                            });
+
+                                        });
+
+                        })
+                        ->whereIn('member_id',$players)
+                        ->get();
+            foreach($playersFound as $index=>$playerFound){
+                if(strpos($playersNamesWithReservations,$playerFound->member_name) === false){
+                   
+                        if($playersNamesWithReservations == ""){
+                            $playersNamesWithReservations .= $playerFound->member_name;
+                        }else if($index < ($playersFound->count() - 2)){
+                            $playersNamesWithReservations .= ", ".$playerFound->member_name;
+                        }else{
+                            $playersNamesWithReservations .= " and ".$playerFound->member_name;
+                        }
+
+                   
+                }
+                
+            }
+            
+            if($playersNamesWithReservations != ""){
+                return $playersNamesWithReservations;
+
+            }else{
+                return null;
+            }
+            
+            
+        }
 }

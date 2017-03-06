@@ -25,7 +25,7 @@
 										<select name="course" class="form-control">
 											<option value="0">Please Select</option>
 											@foreach($courses as $key=>$value)
-											<option value="{{$key}}" {{($key == $beacon->course_id)?'selected="selected"':''}}>{{$value}}</option>
+												<option value="{{$key}}" {{($key == $beacon->course_id)?'selected="selected"':''}}>{{$value}}</option>
 											@endforeach
 										</select>
 										 @if($errors->has('course')) <span class="help-block errorProfilePic">{{$errors->first('course') }}</span> @endif
@@ -77,7 +77,7 @@
 									</div>
 								</div>
 							</div>
-							<div id="custom-message-near" style="display: none;">
+							<div id="custom-message-near" style="{{(old('Near.action') == 'custom')?'':($configuration->hasAction('Near','custom'))?'':'display:none'}}">
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group {{($errors->has('Near.custom'))?'has-error':''}}">
@@ -102,7 +102,7 @@
 									</div>
 								</div>
 							</div>
-							<div id="custom-message-immediate" style="display: none;">
+							<div id="custom-message-immediate" style="{{(old('Immediate.action') == 'custom')?'':($configuration->hasAction('Immediate','custom'))?'':'display:none'}}">
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group {{($errors->has('Immediate.message'))?'has-error':''}}">
@@ -127,7 +127,7 @@
 									</div>
 								</div>
 							</div>
-							<div id="custom-message-far" style="display: none;">
+							<div id="custom-message-far" style="{{(old('Far.action') == 'custom')?'':($configuration->hasAction('Far','custom'))?'':'display:none'}}">
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group {{($errors->has('Far.custom'))?'has-error':''}}">

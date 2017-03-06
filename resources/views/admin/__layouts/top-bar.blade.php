@@ -19,7 +19,7 @@
             </li>
             <li class="nav-item dropdown"><a class="nav-link clear" href
                                              data-toggle="dropdown"> <span class="avatar w-32"> <img
-                                src="../assets/images/a0.jpg" alt="..."> <i
+                                src="{{asset("/assets/images/a0.jpg")}}" alt="..."> <i
                                 class="on b-white bottom"></i>
 					</span>
                 </a>

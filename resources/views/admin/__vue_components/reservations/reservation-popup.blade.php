@@ -222,7 +222,7 @@ Vue.component('reservation-popup', {
 
                                         },
                                         success:function(msg){
-                                            console.log(msg);
+                                            
                                             this.emitUpdateReservationsEvent(msg.response);
                                             this.emitClosePopup();        
                                                 }.bind(this),

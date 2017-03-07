@@ -455,9 +455,11 @@ class ReservationsController extends Controller {
 				unset ( $reservation->players );
 				$reservation->delete ();
                                 //dd($reservationResponseIfSucceeds);
+                                $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id,$reservation->reservation_time_slots);
+                               
+                                $this->response = $firstReservationsOnTimeSlots;
 				\DB::commit ();
                                 
-				$this->response = $reservationResponseIfSucceeds;
 			} catch ( \Exception $e ) {
 				
 				\Log::info ( __METHOD__, [ 

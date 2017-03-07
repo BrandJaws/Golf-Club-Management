@@ -55,6 +55,7 @@ class CreateViews extends Migration
         $query .= "     routine_reservations.id as reservation_id, ";
         $query .= "     reservation_time_slots.reservation_type as reservation_type, ";
         $query .= "     routine_reservations.parent_id, ";
+        $query .= "     reservation_time_slots.time_start as date_time_start, ";
         $query .= "     TIME(reservation_time_slots.time_start) as time_start, ";
         $query .= "     DATE(reservation_time_slots.time_start) as reserved_at, ";
         $query .= "     GROUP_CONCAT(IFNULL(reservation_players.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_player_ids, ";

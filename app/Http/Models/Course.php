@@ -101,21 +101,11 @@ class Course extends Model {
 			$dates [] = $date->toDateString();
 		}, Carbon::parse($dateEnd)->addDay());
                 
-                $reservationsParent = new \stdClass();
-                $reservationsParent->club_id = $course->club_id;
-                $reservationsParent->course_id = $course->id;
-                $reservationsParent->reservationsByDate = [];
+                $reservationsParent = Course::createAllReservationsParentObject($course->club_id,$course->id);
                 foreach($dates as $date){
-                    $reservationsByDate = new \stdClass();
-                    $dateObject = Carbon::parse($date);
-                    $reservationsByDate->reserved_at = $dateObject->toDateString();
-                    $reservationsByDate->dayNumber = $dateObject->day;
-                    $reservationsByDate->dayName = $dateObject->format('l');
-                    $reservationsByDate->reservationsByTimeSlot = [];
+                    $reservationsByDate = Course::createReservationsByDateObject($date);
                     Carbon::parse ( $course->openTime )->diffFiltered ( CarbonInterval::minute ( $course->bookingInterval), function (Carbon $time) use (&$reservationsByDate, $date,$allCurrentReservationsInDateRange,$detailed) {
-			$timeSlot = new \stdClass();
-                        $timeSlot->timeSlot = $time->format ( 'h:i A' );
-                        $foundExistingReservationsForTimeSlot = false;
+			$timeSlot = Course::createReservationsByTimeSlotsObject($time,$detailed);
                         foreach($allCurrentReservationsInDateRange as $reservation){
                             
                             if($reservation->reserved_at == $date){
@@ -132,21 +122,6 @@ class Course extends Model {
                                 
                             }
                         }
-                        if(! $foundExistingReservationsForTimeSlot){
-                            if($detailed){
-                                $timeSlot->reservations = [];
-                                $timeSlot->reservations[0] = new \stdClass();
-                                $timeSlot->reservations[0]->reservation_id = '';
-                                $timeSlot->reservations[0]->reservation_type = '';
-                                $timeSlot->reservations[0]->status = '';
-                                $timeSlot->reservations[0]->players = [];
-                                $timeSlot->reservations[0]->guests = 0;
-                            }else{
-                                $timeSlot->reservations = [];
-                            }
-                            
-                        }
-                        
                         
                         $reservationsByDate->reservationsByTimeSlot[] = $timeSlot;
                     }, Carbon::parse ( $course->closeTime )->subMinutes($course->bookingDuration-$course->bookingInterval) );
@@ -272,9 +247,29 @@ class Course extends Model {
     public static function getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($course_id,$reservation_time_slots){
         $allReservationsWithCourses = [];
         foreach($reservation_time_slots as $time_slot){
-            $allReservationsWithCourses[] = DB::table('compound_reservations_aggregated')->where("course_id",$course_id)->where("time_start",$time_slot->time_start)->first();
+            $reservation = DB::table('compound_reservations_aggregated')->where("course_id",$course_id)->where("date_time_start",$time_slot->time_start)->first();
             
+            if($reservation){
+                $allReservationsWithCourses[] = $reservation;
+            }else{
+                $time = Carbon::parse($time_slot->time_start);
+                $blankReservation = new \stdClass();
+                $blankReservation->club_id = "";
+                $blankReservation->course_id = $course_id;
+                $blankReservation->reserved_at = $time->toDateString() ;
+                $blankReservation->time_start = $time->toTimeString() ;
+                $blankReservation->reservation_id = "";
+                $blankReservation->reservation_type = "";
+                $blankReservation->status = "";
+                $blankReservation->reservation_player_ids = "";
+                $blankReservation->member_ids = "";
+                $blankReservation->member_names = "";
+                $blankReservation->parent_id = "";
+                $allReservationsWithCourses[] = $blankReservation;
+                
+            }
         }
+       
         return Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
         
     }
@@ -344,14 +339,14 @@ class Course extends Model {
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_type = $reservation->reservation_type;
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->status = $reservation->status;
                 
-                $reservation_player_ids = explode("||-separation-player-||",$reservation->reservation_player_ids);
-                $member_ids = explode("||-separation-player-||",$reservation->member_ids);
-                $member_names = explode("||-separation-player-||",$reservation->member_names);
+                $reservation_player_ids = $reservation->reservation_player_ids !== "" ? explode("||-separation-player-||",$reservation->reservation_player_ids) : [];
+                $member_ids = $reservation->member_ids !== "" ? explode("||-separation-player-||",$reservation->member_ids) : [];
+                $member_names = $reservation->member_names !== "" ? explode("||-separation-player-||",$reservation->member_names) : [];
                 
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players =collect([]);
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->guests = 0;
                 foreach($reservation_player_ids as $playerIndex=>$reservation_player_id){
-                    
+                        
                         if($member_ids[$playerIndex] == 0){
                             $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->guests++;
                         }
@@ -380,6 +375,44 @@ class Course extends Model {
         }
         //dd($reservationsByDate);
         return $reservationsByDate;
+   }
+   
+   public static function createAllReservationsParentObject($clubId, $courseId){
+        $reservationsParent = new \stdClass();
+        $reservationsParent->club_id = $clubId;
+        $reservationsParent->course_id = $courseId;
+        $reservationsParent->reservationsByDate = [];
+        
+        return $reservationsParent;
+   }
+   
+   public static function createReservationsByDateObject($date){
+        $reservationsByDate = new \stdClass();
+        $dateObject = Carbon::parse($date);
+        $reservationsByDate->reserved_at = $dateObject->toDateString();
+        $reservationsByDate->dayNumber = $dateObject->day;
+        $reservationsByDate->dayName = $dateObject->format('l');
+        $reservationsByDate->reservationsByTimeSlot = [];
+        
+        return $reservationsByDate;
+   }
+   
+   public static function createReservationsByTimeSlotsObject($time,$detailed){
+        $timeSlot = new \stdClass();
+        $timeSlot->timeSlot = $time->format ( 'h:i A' );
+        if($detailed){
+            $timeSlot->reservations = [];
+            $timeSlot->reservations[0] = new \stdClass();
+            $timeSlot->reservations[0]->reservation_id = '';
+            $timeSlot->reservations[0]->reservation_type = '';
+            $timeSlot->reservations[0]->status = '';
+            $timeSlot->reservations[0]->players = [];
+            $timeSlot->reservations[0]->guests = 0;
+        }else{
+            $timeSlot->reservations = [];
+        }
+
+        return $timeSlot;
    }
 
 }

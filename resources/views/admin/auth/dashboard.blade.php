@@ -186,11 +186,13 @@ var _reservationsParent = {!!$reservations!!};
 			values: [ 9, 12 ],
 			slide: function( event, ui ) {
 				$( "#amount" ).val( "" + ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-			}
+			},
+            change: function( event, ui ) {}
 		});
 		$( "#amount" ).val( "" + $( "#slider-range" ).slider( "values", 0 ) +
 			" - " + $( "#slider-range" ).slider( "values", 1 ) );
 	} );
+    $( "#slider-range" ).on( "slidechange", function( event, ui ) { console.log("working!") } );
 	$( function() {
 		$( "#slider-range-min" ).slider({
 			range: "max",

@@ -42,10 +42,10 @@
                                 @{{ course.bookingInterval }}
                             </td>
                             <td>
-                                @{{ course.bookingDuration }}
+                                @{{ course.bookingDuration/60 }} Hours
                             </td>
                             <td>
-                                @{{ course.hole }}
+                                @{{ course.numberOfHoles }}
                             </td>
                             <td>
                                 <a href="{{Request::url()}}/edit" class="blue-cb" >edit</a>

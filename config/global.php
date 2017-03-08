@@ -17,7 +17,8 @@ return [
             'social' => false,
             'training' => false,
             'coach' => false,
-            'league' => false
+            'league' => false,
+            'course'=>false
         ]
     ],
     'deviceType' => [

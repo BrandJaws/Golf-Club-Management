@@ -98,4 +98,9 @@ class AdminPolicy
     {
         return (array_get($this->permissions, 'league')) ?: false;
     }
+
+    public function course(Employee $employee)
+    {
+        return (array_get($this->permissions, 'course')) ?: false;
+    }
 }

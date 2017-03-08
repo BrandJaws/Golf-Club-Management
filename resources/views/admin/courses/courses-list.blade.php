@@ -3,8 +3,9 @@
     Courses
     @endSection
 @section('main')
-    <div class="app-body" id="view">
+    <div ui-view  class="app-body" id="view">
         <!-- ############ PAGE START-->
+        
         <div class="profile-main padding" id="selectionDepHidden">
             <div class="row inner-header">
                 <div class="col-md-6">
@@ -25,40 +26,95 @@
     @include("admin.__vue_components.autocomplete.autocomplete")
     @include("admin.__vue_components.courses.courses-table");
     <script>
-
-        var baseUrl = "{{url('')}}";
-        _courses = [{name:'FORES',openTime:'9AM',closeTime:'03PM',bookingInterval:'15 Min',bookingDuration:'12 Min',hole:'4'},
-            {name:'CHORES',openTime:'4AM',closeTime:'04PM',bookingInterval:'19 Min',bookingDuration:'15 Min',hole:'5'},
-            {name:'LOLS',openTime:'3AM',closeTime:'05PM',bookingInterval:'16 Min',bookingDuration:'13 Min',hole:'7'},
-            {name:'GRO',openTime:'7AM',closeTime:'03PM',bookingInterval:'15 Min',bookingDuration:'12 Min',hole:'3'},
-            {name:'LAPOO',openTime:'6AM',closeTime:'06PM',bookingInterval:'14 Min',bookingDuration:'11 Min',hole:'6'},
-            {name:'DIPLO',openTime:'5AM',closeTime:'07PM',bookingInterval:'13 Min',bookingDuration:'15 Min',hole:'3'},
-            {name:'FANTO',openTime:'4AM',closeTime:'05PM',bookingInterval:'12 Min',bookingDuration:'16 Min',hole:'2'},
-            {name:'LOPEE',openTime:'3AM',closeTime:'03PM',bookingInterval:'17 Min',bookingDuration:'14 Min',hole:'8'},
-        ];
-
+        
+        var baseUrl = "{{url('admin/courses')}}";
         var vue = new Vue({
             el: "#selectionDepHidden",
             data: {
-                showParentSelector:false,
-                selectedId: '',
-                courses:[],
-                latestPageLoaded:0,
-                ajaxRequestInProcess:false,
+            	courses:({!! $courses !!}).data,
+                searchQuery:"",
+                lastSearchTerm:"",
+                nextAvailablePage:2,
+                searchRequestHeld:false,
             },
             methods: {
-                loadNextPage:function() {
-                    //add sample data to array to check scroll functionality
-                    if (this.latestPageLoaded == 0) {
-                        for (x = 0; x < _courses.length; x++) {
-                            this.courses.push(_courses[x]);
+                loadNextPage:function(isSearchQuery){
+                    
+    				
+                    if(isSearchQuery){
+                        if(this.ajaxRequestInProcess){
+                            this.searchRequestHeld=true;
+                            return;
                         }
-
+                        if(this.searchQuery !== this.lastSearchTerm){
+                            this.nextAvailablePage = 1;
+                        }
+                        this.lastSearchTerm = this.searchQuery;
+                        _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+                       
+                        
+                    }else if(this.searchQuery != ""){
+                        _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+                    }else{
+                        _url = baseUrl+'?current_page='+(this.nextAvailablePage);
                     }
-                    return;
-                }
-            }
+                    
+                  
+                    if(this.nextAvailablePage === null){
+                        return;
+                    }
+                    
+                    if(!this.ajaxRequestInProcess){
+                        this.ajaxRequestInProcess = true;
+                        var request = $.ajax({
+                            
+                            url: _url,
+                            method: "GET",
+                            success:function(msg){
+                                        
+                                        this.ajaxRequestInProcess = false;
+                                        if(this.searchRequestHeld){
+                                           
+                                            this.searchRequestHeld=false;
+                                            this.loadNextPage(true);
+                                            
+                                        }
+                                        
+                                        pageDataReceived = msg;
+                                        membersList = pageDataReceived.data ;
+                                        
+                                        //Success code to follow
+                                            if(pageDataReceived.next_page_url !== null){
+                                                    this.nextAvailablePage = pageDataReceived.current_page+1;
+                                            }else{
+                                                this.nextAvailablePage = null;
+                                            }
+                                        
+                                            if(isSearchQuery){
+                                                
+                                                 this.membersList=membersList;
+                                            }else{
+                                                
+                                               appendArray(this.membersList,membersList);
+                                            }
+                                        
+                                        
+                                        
+                                    }.bind(this),
+
+                            error: function(jqXHR, textStatus ) {
+                                        this.ajaxRequestInProcess = false;
+
+                                        //Error code to follow
+
+
+                                   }.bind(this)
+                        }); 
+                    }
+}
+            },
         });
+
         $(document).ready(function() {
             vue.loadNextPage();
             console.log("bottom!");

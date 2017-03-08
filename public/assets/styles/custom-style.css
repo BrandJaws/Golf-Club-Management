@@ -836,3 +836,9 @@ label {
 .notiViewData.statusSuccess { font-weight: bold; color: #66BB6A; }
 
 /*notification view screen*/
+
+/* reservations scree range selector */
+
+.ui-widget-header { background: #C4061F !important; }
+
+/* reservations scree range selector */

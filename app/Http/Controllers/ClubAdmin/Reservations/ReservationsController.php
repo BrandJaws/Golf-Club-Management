@@ -110,7 +110,7 @@ class ReservationsController extends Controller {
 			\DB::beginTransaction ();
 			
                         
-                        $reservationsOnTimeSlot = $course->getResevationsAtCourseForAGivenDateAndTimeSlot($startTime);
+                        $reservationsOnTimeSlot = $course->getResevationsAtCourseForATimeSlot($startTime);
                         
 			if ($reservationsOnTimeSlot->count() >= 1) {
 				$this->error = "mobile_slot_already_reserved";
@@ -182,13 +182,16 @@ class ReservationsController extends Controller {
 			
 			//$reservation->date = Carbon::parse ( $reservation->time_start )->format ( 'm/d/Y' );
 			//$reservation->time_start = Carbon::parse ( $reservation->time_start )->format ( 'h:i A' );
-			$reservation->modifyReservationObjectForReponseOnCRUDOperations();
-			$this->response = $reservation;
+			//$reservation->modifyReservationObjectForReponseOnCRUDOperations();
+			
+                        $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id,$reservation->reservation_time_slots);
+                        //dd($firstReservationsOnTimeSlots);
+                        $this->response = $firstReservationsOnTimeSlots;
                         
                         
 			\DB::commit ();
 		} catch ( \Exception $e ) {
-                        dd($e);
+                        //dd($e);
 			\DB::rollback ();
                        
 			\Log::info ( __METHOD__, [ 
@@ -403,11 +406,13 @@ class ReservationsController extends Controller {
 //			$reservation->date = Carbon::parse ( $reservation->time_start )->format ( 'm/d/Y' );
 //			$reservation->time_start = Carbon::parse ( $reservation->time_start )->format ( 'h:i A' );
 //			
-                        $reservation->modifyReservationObjectForReponseOnCRUDOperations();
-			$this->response = $reservation;
+                        //$reservation->modifyReservationObjectForReponseOnCRUDOperations();
+			 $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id,$reservation->reservation_time_slots);
+                         //dd($firstReservationsOnTimeSlots);
+                        $this->response = $firstReservationsOnTimeSlots;
 			\DB::commit ();
 		} catch ( \Exception $e ) {
-                        dd($e);
+                        //dd($e);
 			\DB::rollback ();
 			\Log::info ( __METHOD__, [ 
 					'error' => $e->getMessage () 
@@ -450,9 +455,11 @@ class ReservationsController extends Controller {
 				unset ( $reservation->players );
 				$reservation->delete ();
                                 //dd($reservationResponseIfSucceeds);
+                                $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id,$reservation->reservation_time_slots);
+                               
+                                $this->response = $firstReservationsOnTimeSlots;
 				\DB::commit ();
                                 
-				$this->response = $reservationResponseIfSucceeds;
 			} catch ( \Exception $e ) {
 				
 				\Log::info ( __METHOD__, [ 

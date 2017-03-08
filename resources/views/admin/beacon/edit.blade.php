@@ -3,6 +3,10 @@
 	Edit Beacon
 	@endSection
 @section('main')
+
+{{$name or 'johon'}}
+
+<?php exit();?>
 	<div class="app-body" id="view">
 		<!-- ############ PAGE START-->
 		<div class="profile-main padding">

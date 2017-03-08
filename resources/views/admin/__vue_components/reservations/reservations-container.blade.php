@@ -84,7 +84,7 @@ Vue.component('reservations-container', {
             this.reservationType = null;
         },
         updateReservations:function(newOrUpdatedReservation){
-                    
+                    //console.log(newOrUpdatedReservation);
                     if(newOrUpdatedReservation[0].course_id == this.reservationsParent.course_id){
 
                          for(dateCount=0;dateCount<this.reservationsParent.reservationsByDate.length;dateCount++){

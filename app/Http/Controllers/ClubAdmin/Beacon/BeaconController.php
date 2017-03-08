@@ -85,6 +85,7 @@ class BeaconController extends Controller
 
     public function edit(Request $request, $beacon_id)
     {
+        
         $beacon = Beacon::find($beacon_id);
         if (! $beacon instanceof Beacon) {
             return \Redirect::route('admin.beacon.index')->with([

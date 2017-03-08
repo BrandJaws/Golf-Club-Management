@@ -32,6 +32,11 @@
 						</span> <span class="nav-text">Reservations</span>
 					</a></li>
 					@endif
+					@can('courses', 'App\Model')
+					<li><a href="{{route('admin.courses.index')}}"> <span class="nav-icon"><i class="fa fa-map-marker"></i>
+							</span> <span class="nav-text">Courses</span>
+					</a></li>
+					@endif
 					<li><a href="{{route('admin.profile.profile')}}"> <span
 							class="nav-icon"> <i class="fa fa-user"></i>
 						</span> <span class="nav-text">Profile / Settings</span>
@@ -95,11 +100,7 @@
 						</span> <span class="nav-text">Leagues</span>
 					</a></li>
 					@endif
-					@can('courses', 'App\Model')
-					<li><a href="{{route('admin.courses.index')}}"> <span class="nav-icon"><i class="fa fa-map-marker"></i>
-							</span> <span class="nav-text">Courses</span>
-					</a></li>
-					@endif
+					
 				</ul>
 			</nav>
 		</div>

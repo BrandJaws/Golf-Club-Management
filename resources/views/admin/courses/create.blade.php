@@ -26,14 +26,14 @@
                             <div class="col-md-6">
                                 <div class="form-group {{($errors->has('openTime'))?'has-error':''}}">
                                     <label class="form-control-label">Open Time</label>
-                                    <input type="text" class="form-control" placeholder="AM" name="openTime" value="{{Request::old('openTime')}}"/>
+                                    <input type="time" class="form-control" placeholder="AM" name="openTime" value="{{Request::old('openTime')}}"/>
                                     @if($errors->has('openTime')) <span class="help-block errorProfilePic">{{$errors->first('openTime') }}</span> @endif
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group {{($errors->has('closeTime'))?'has-error':''}}">
                                     <label class="form-control-label">Close Time</label>
-                                    <input type="text" class="form-control" placeholder="PM" name="closeTime" value="{{Request::old('closeTime')}}"/>
+                                    <input type="time" class="form-control" placeholder="PM" name="closeTime" value="{{Request::old('closeTime')}}"/>
                                     @if($errors->has('closeTime')) <span class="help-block errorProfilePic">{{$errors->first('closeTime') }}</span> @endif
                                 </div>
                             </div>

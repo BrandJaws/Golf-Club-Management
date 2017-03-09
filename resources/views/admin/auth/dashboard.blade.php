@@ -144,7 +144,8 @@
 					<div id="reservations-vue-container" class="row">
 						<div class="col-md-12">
                                                     <reservations-container :reservations="reservationsParentComputed"
-                                                                            for-reservations-page="false">
+                                                                            for-reservations-page="false"
+                                                                            @update-reservations="updateReservations">
                                                         
                                                     </reservations-container>
 
@@ -192,6 +193,7 @@
         },
         computed:{
             reservationsParentComputed:function(){
+             
                 var tempReservations = JSON.parse(JSON.stringify(this.reservationsParent));
                
                 for(dateCount=0; dateCount<tempReservations.reservationsByDate.length; dateCount++){
@@ -233,10 +235,21 @@
         },
         methods:{
             getReservationsForSelectedDate:function(selectedDate){
-                
-                                if(moment(selectedDate).format('MMMM Do YYYY, h:mm:ss a')==moment(this.currentSelectedDate).format('MMMM Do YYYY, h:mm:ss a')){
+                                
+                                if(moment(selectedDate).format('MMMM Do YYYY, h:mm:ss a')==moment(this.currentSelectedDate).format('MMMM Do YYYY, h:mm:ss a') ){
+                                    if(this.filters.showDefaultDates){
+                                        if(this.reservationsParent.reservationsByDate.length == 5){
+                                            this.filters.showDefaultDates = false;
+                                            this.$nextTick(function(){
+                                                    $('.nav-tabs a[data-target="#tab5"]').tab('show');  
+                                            });
+                                            
+                                        }
+                                    }
                                     
-                                    return;
+                                    return;  
+                                    
+                                    
                                 }
                                
                                 var request = $.ajax({
@@ -277,16 +290,60 @@
                                 
                                    
             },
+             updateReservations:function(newOrUpdatedReservation){
+                    
+                    if(newOrUpdatedReservation[0].course_id == this.reservationsParent.course_id){
+
+                         for(dateCount=0;dateCount<this.reservationsParent.reservationsByDate.length;dateCount++){
+                             if(this.reservationsParent.reservationsByDate[dateCount].reserved_at == newOrUpdatedReservation[0].reserved_at){
+
+                                 for(timeSlotOriginalReservationsCount=0;timeSlotOriginalReservationsCount<this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot.length;timeSlotOriginalReservationsCount++ ){
+
+                                     for(timeSlotsReceivedCount=0;timeSlotsReceivedCount<newOrUpdatedReservation[0].reservationsByTimeSlot.length;timeSlotsReceivedCount++){
+                                        
+                                         if(newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].timeSlot == this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].timeSlot 
+                                            &&
+                                            (this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == "App\\Http\\Models\\RoutineReservation" || 
+                                             this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == ""
+                                             )
+                                          ){
+                                            
+                                             
+                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_id = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].reservation_id;
+                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].reservation_type;
+                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].players = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].players;
+                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].status = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].status;
+
+                                              
+                                         }
+                                     }
+                                 }
+                                 break;
+                             }
+                         }
+                    }
+                    
+                    
+                    
+        },
+            restoreDefaultDates:function(){
+                
+                this.filters.showDefaultDates = true;
+                
+            }
+            
         }
         
     });
     
     vue.$nextTick(function(){
+  
         $( "#date-reserv" ).datepicker()
                            .on('changeDate', function(e) {
                                vue.getReservationsForSelectedDate(e.date);
                                   
                             });
+                            
         
     });
     

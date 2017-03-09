@@ -37,7 +37,7 @@
                                     <label class="form-control-label">Booking Duration</label>
                                     <input type="number" class="form-control" placeholder="Minutes" />
                                 </div>
-                            </div>
+                            </d iv>
                         </div>
                         <div class="row">
                             <div class="col-md-3">

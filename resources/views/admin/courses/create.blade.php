@@ -50,7 +50,7 @@
                                     <input type="number" class="form-control" placeholder="Minutes" name="bookingDuration" value="{{Request::old('bookingDuration')}}"/>
                                     @if($errors->has('bookingDuration')) <span class="help-block errorProfilePic">{{$errors->first('bookingDuration') }}</span> @endif
                                 </div>
-                            </div>
+                            </d iv>
                         </div>
                         <div class="row">
                             <div class="col-md-6">

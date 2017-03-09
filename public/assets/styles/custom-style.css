@@ -351,6 +351,10 @@ a.btn-def {
 	border-right: 2px solid #eee !important;
 }
 
+.tsheet-tabs-reser .nav-tabs li a.dateCloseIcon {
+    background: #fff !important;
+}
+
 .tsheet-tabs-reser .nav-tabs li a.active {
 	background: #fff !important;
 }
@@ -842,3 +846,6 @@ label {
 .ui-widget-header { background: #C4061F !important; }
 
 /* reservations scree range selector */
+
+.modal-header .close { color: #000; }
+.dateCloseIcon { display: inline-block; position: absolute; z-index: 999; left: 195px; background: #ffffff !important; padding: 10px 15px 5px 15px !important; }

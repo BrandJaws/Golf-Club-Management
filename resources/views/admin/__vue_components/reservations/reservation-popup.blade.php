@@ -11,7 +11,9 @@ Vue.component('reservation-popup', {
                       <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="closePopup">×</span></button>
                             <h5 class="modal-title">Reservation</h5>
-                            <small>Uit arcu tempor, dignissim erat in</small>
+                            <div class="alert alert-danger">
+                                Reservation couldn't update successfully, please try again!
+                            </div>
                       </div>
                       <div class="modal-body text-center p-lg borderBottom">
                         <div class="row">

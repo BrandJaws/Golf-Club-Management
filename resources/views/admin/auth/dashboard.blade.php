@@ -134,7 +134,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <p>
-                                                    <label for="amount">Number of Empty Slots:</label>
+                                                    <label for="amount">Minimum number of Empty Slots:</label>
                                                     <input type="text" id="amountmin" readonly style="border:0; color:#C4061F; font-weight:bold;">
                                                 </p>
                                                 <div id="slider-empty-slots"></div>

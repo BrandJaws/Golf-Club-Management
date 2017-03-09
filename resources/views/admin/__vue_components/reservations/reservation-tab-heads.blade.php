@@ -6,7 +6,7 @@ Vue.component('reservation-tab-heads', {
                 <div class="b-b nav-active-bg">
                   <ul class="nav nav-tabs">
                     <li class="nav-item" v-for="(reservation,reservationIndex) in reservationsByDate" v-if="reservation.dateIsVisible">
-                      <a href="#." v-if="reservationIndex == 4" @click="restoreDefaultDatesClicked"><i class="fa fa-times"></i></a>
+                      <a class="dateCloseIcon" href="#." v-if="reservationIndex == 4" @click="restoreDefaultDatesClicked"><i class="fa fa-times"></i></a>
                       <a  :class="['nav-link', reservationIndex == 0 ? 'active' : '']" href data-toggle="tab" :data-target="'#tab'+(reservationIndex+1)">
                       <p>@{{reservation.dayNumber}}</p><p>@{{reservation.dayName}}</p>
                       </a>

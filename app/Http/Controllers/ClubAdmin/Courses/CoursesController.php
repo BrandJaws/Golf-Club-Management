@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Models\Course;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Description of CourseController
@@ -68,6 +69,7 @@ class CoursesController extends Controller
             $course = $course->toArray();
         } else {
             $course = $request->old();
+            $course['id'] = $course_id;
         }
         
         return view('admin.courses.edit', compact('course'));
@@ -82,8 +84,8 @@ class CoursesController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:1,max:50',
-            'openTime' => 'required|numeric',
-            'closeTime' => 'required|numeric',
+            'openTime' => 'required|date_format:H:i:s',
+            'closeTime' => 'required|date_format:H:i:s',
             'bookingDuration' => 'required|numeric',
             'bookingInterval' => 'required|numeric',
             'numberOfHoles' => 'required|numeric'
@@ -125,8 +127,8 @@ class CoursesController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:1,max:50',
-            'openTime' => 'required|numeric',
-            'closeTime' => 'required|numeric',
+            'openTime' => 'required|date_format:H:i:s',
+            'closeTime' => 'required|date_format:H:i:s',
             'bookingDuration' => 'required|numeric',
             'bookingInterval' => 'required|numeric',
             'numberOfHoles' => 'required|numeric'
@@ -145,7 +147,7 @@ class CoursesController extends Controller
                 'bookingInterval',
                 'numberOfHoles'
             ]);
-            $course = Course::findOrFail($memberId);
+            $course = Course::findOrFail($courseId);
             $course->status = ($request->has('status')) ? config('global.status.open') : config('global.status.closed');
             $course->fill($data)->update();
             return \Redirect::route('admin.courses.index')->with([

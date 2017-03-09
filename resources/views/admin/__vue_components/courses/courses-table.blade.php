@@ -28,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="course in courseListData">
+                        <tr v-for="course in listData">
                             <td>
                                 @{{ course.name }}
                             </td>
@@ -48,9 +48,9 @@
                                 @{{ course.numberOfHoles }}
                             </td>
                             <td>
-                                <a href="{{Request::url()}}/edit" class="blue-cb" >edit</a>
+                                <a :href="generateEditRoute('{{Request::url()}}',course.id)" class="blue-cb" >edit</a>
 						        &nbsp;&nbsp;
-						        <a href="#." class="del-icon"><i class="fa fa-trash"></i></a>
+						        <a href="#." @click="deleteObject('{{Request::url()}}',course.id,bIndex)" class="del-icon"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
 
@@ -60,12 +60,49 @@
         props: [
             "courses"
         ],
-        data: function() {
+        computed: {
+                            listData: function () {
+                                                return this.courses;
+                                              }
+                },
+		methods: {
+			generateEditRoute: function(baseRouteToCurrentPage,id){
+                            return baseRouteToCurrentPage+'/edit/'+id;
+			},
+			deleteObject:function(baseRouteToCurrentPage,id,bIndex){
+                            _url = baseRouteToCurrentPage+'/'+id
+                            var request = $.ajax({
+                                        
+                                        url: _url,
+                                        method: "POST",
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{csrf_token()}}',
+                                        },
+                                        data:{
+                                            
+                                            _method:"DELETE",
+                                            _token: "{{ csrf_token() }}",
+                                            
+                                        },
+                                        success:function(msg){
+                                            
+                                                  if(msg=="success"){
+                                                      this.listData.splice(bIndex,1);
+                                                  }else{
+                                                      
+                                                  }
+                                                    
+                                                }.bind(this),
 
-            return {
-                courseListData:this.courses
-            }
+                                        error: function(jqXHR, textStatus ) {
+                                                    this.ajaxRequestInProcess = false;
+                                                    $("body").append(jqXHR.responseText);
+                                                    //Error code to follow
 
-        },
+
+                                               }.bind(this)
+                                    }); 
+                        }
+		}
     });
 </script>

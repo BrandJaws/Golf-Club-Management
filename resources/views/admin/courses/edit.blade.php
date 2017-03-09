@@ -1,6 +1,6 @@
 @extends('admin.__layouts.admin-layout')
 @section('heading')
-    Add Course
+    Edit Course
     @endSection
 @section('main')
     <div class="app-body" id="view">
@@ -26,14 +26,14 @@
                             <div class="col-md-6">
                                 <div class="form-group {{($errors->has('openTime'))?'has-error':''}}">
                                     <label class="form-control-label">Open Time</label>
-                                    <input type="text" class="form-control" placeholder="AM" name="openTime" value="{{$course['openTime']}}"/>
+                                    <input type="time" class="form-control" placeholder="AM" name="openTime" value="{{$course['openTime']}}"/>
                                     @if($errors->has('openTime')) <span class="help-block errorProfilePic">{{$errors->first('openTime') }}</span> @endif
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group {{($errors->has('closeTime'))?'has-error':''}}">
                                     <label class="form-control-label">Close Time</label>
-                                    <input type="text" class="form-control" placeholder="PM" name="closeTime" value="{{$course['closeTime']}}"/>
+                                    <input type="time" class="form-control" placeholder="PM" name="closeTime" value="{{$course['closeTime']}}"/>
                                     @if($errors->has('closeTime')) <span class="help-block errorProfilePic">{{$errors->first('closeTime') }}</span> @endif
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
 									</div>
 								</div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-def"><i class="fa fa-floppy-o"></i> &nbsp;Add Course</button> &nbsp;&nbsp;
+                                <button type="submit" class="btn btn-def"><i class="fa fa-floppy-o"></i> &nbsp;Update Course</button> &nbsp;&nbsp;
                                 <a href="{{route('admin.courses.index')}}" class="btn btn-outline b-primary text-primary"><i class="fa fa-ban"></i> &nbsp;Cancel</a>
                             </div>
                         </div>

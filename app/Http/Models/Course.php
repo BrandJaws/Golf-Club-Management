@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Models;
 
 use Illuminate\Support\Facades\Auth;
@@ -7,85 +6,105 @@ use App\Http\Models\Club;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
-//use \App\CustomModels\CoursesAndReservations\CourseForReservations;
-//use \App\CustomModels\CoursesAndReservations\ReservationWrapper;
-//use \App\CustomModels\CoursesAndReservations\ReservationInfo;
-//use \App\CustomModels\CoursesAndReservations\ReservationPlayer;
+// use \App\CustomModels\CoursesAndReservations\CourseForReservations;
+// use \App\CustomModels\CoursesAndReservations\ReservationWrapper;
+// use \App\CustomModels\CoursesAndReservations\ReservationInfo;
+// use \App\CustomModels\CoursesAndReservations\ReservationPlayer;
 use DB;
 
-class Course extends Model {
-	
-    protected  $table = "course";
+class Course extends Model
+{
+
+    protected $table = "course";
+
     public $timestamps = false;
-	protected $fillable = [ 
-			'name',
-			'club_id',
-			'openTime',
-			'closeTime',
-			'bookingDuration',
-			'bookingInterval',
-			'status' 
-	];
-	public $reservations;
-	public function populate($data = []) {
-		if (array_key_exists ( 'name', $data )) {
-			$this->name = $data ['name'];
-		}
-		if (array_key_exists ( 'club_id', $data )) {
-			$this->club_id = $data ['club_id'];
-		}
-		if (array_key_exists ( 'openTime', $data )) {
-			$this->openTime = $data ['openTime'];
-		}
-		if (array_key_exists ( 'closeTime', $data )) {
-			$this->closeTime = $data ['closeTime'];
-		}
-		if (array_key_exists ( 'bookingDuration', $data )) {
-			$this->bookingDuration = $data ['bookingDuration'];
-		}
-		if (array_key_exists ( 'status', $data )) {
-			$this->status = $data ['status'];
-		}
-		if (array_key_exists ( 'ballMachineAvailable', $data )) {
-			$this->ballMachineAvailable = $data ['ballMachineAvailable'];
-		}
-		if (array_key_exists ( 'environment', $data )) {
-			$this->environment = $data ['environment'];
-		}
-		return $this;
-	}
-	public function club() {
-		return $this->belongsTo ( '\App\Http\Models\Club', 'club_id' );
-	}
-	public static function getById($id) {
-		return self::find ( $id );
-	}
-	public static function courseList() {
-		return Club::find ( Auth::user ()->club_id )->course;
-	}
-	public static function courseListByClubId($club_id, $count=false) {
-		$course =  self::where ( 'club_id', '=', $club_id );
-		if($count)
-			return $course->count();
-		return $course->get();
-	}
-	public function timeSlots() {
-		$open_time = Carbon::parse ( $this->openTime );
-		$close_time = Carbon::parse ( $this->closeTime );
-		$timeSlots = [ ];
-		// $that = $this;
-		$open_time->diffFiltered ( CarbonInterval::minute ( $this->bookingDuration ), function (Carbon $date) use (&$timeSlots) {
-			$timeSlots [] = $date->format ( 'h:i A' );
-		}, $close_time );
-		$this->reservations = $timeSlots;
-		return $this;
-	}
-	
-	/**
-	 * 
-	 */
-	
-    
+
+    protected $fillable = [
+        'name',
+        'openTime',
+        'closeTime',
+        'bookingDuration',
+        'bookingInterval',
+        'numberOfHoles',
+        'status'
+    ];
+
+    private $gaurded = [
+        'club_id'
+    ];
+
+    public $reservations;
+
+    /**
+     *
+     * @deprecated use fill instead
+     * @param array $data            
+     * @return \App\Http\Models\Course
+     */
+    public function populate($data = [])
+    {
+        if (array_key_exists('name', $data)) {
+            $this->name = $data['name'];
+        }
+        if (array_key_exists('club_id', $data)) {
+            $this->club_id = $data['club_id'];
+        }
+        if (array_key_exists('openTime', $data)) {
+            $this->openTime = $data['openTime'];
+        }
+        if (array_key_exists('closeTime', $data)) {
+            $this->closeTime = $data['closeTime'];
+        }
+        if (array_key_exists('bookingDuration', $data)) {
+            $this->bookingDuration = $data['bookingDuration'];
+        }
+        if (array_key_exists('status', $data)) {
+            $this->status = $data['status'];
+        }
+        if (array_key_exists('ballMachineAvailable', $data)) {
+            $this->ballMachineAvailable = $data['ballMachineAvailable'];
+        }
+        if (array_key_exists('environment', $data)) {
+            $this->environment = $data['environment'];
+        }
+        return $this;
+    }
+
+    public function club()
+    {
+        return $this->belongsTo('\App\Http\Models\Club', 'club_id');
+    }
+
+    public static function getById($id)
+    {
+        return self::find($id);
+    }
+
+    public static function courseList()
+    {
+        return Club::find(Auth::user()->club_id)->course;
+    }
+
+    public static function courseListByClubId($club_id, $count = false)
+    {
+        $course = self::where('club_id', '=', $club_id);
+        if ($count)
+            return $course->count();
+        return $course->get();
+    }
+
+    public function timeSlots()
+    {
+        $open_time = Carbon::parse($this->openTime);
+        $close_time = Carbon::parse($this->closeTime);
+        $timeSlots = [];
+        // $that = $this;
+        $open_time->diffFiltered(CarbonInterval::minute($this->bookingDuration), function (Carbon $date) use (&$timeSlots) {
+            $timeSlots[] = $date->format('h:i A');
+        }, $close_time);
+        $this->reservations = $timeSlots;
+        return $this;
+    }
     /**
 	 * To get reservations for all course with players and other details: detailed = true
          * To get reservations for all course with booking indicators for mobile service: detailed = false
@@ -429,5 +448,26 @@ class Course extends Model {
 
         return $timeSlot;
    }
-
+    /**
+     * Get paginated list of members for logedin club
+     * @usage Web
+     *
+     * @param unknown $clubId            
+     * @param unknown $currentPage            
+     * @param unknown $perPage            
+     */
+    public function listClubCoursesPaginated($clubId, $currentPage, $perPage, $searchTerm = false)
+    {
+        return $this->where('club_id', '=', $clubId)
+            ->where(function ($query) use ($searchTerm) {
+            if ($searchTerm) {
+                $query->orWhere('course.name', 'like', "%$searchTerm%");
+            }
+        })
+            ->select('course.id as id', 'course.name', 'course.openTime', 'course.closeTime', 'course.bookingInterval', 'course.bookingDuration', 'course.numberOfHoles', 'course.status')
+            ->orderby('course.id', 'DESC')
+            ->paginate($perPage, array(
+            '*'
+        ), 'current_page', $currentPage);
+    }
 }

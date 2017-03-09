@@ -1,185 +1,175 @@
 <?php
-
 namespace App\Http\Controllers\ClubAdmin\Courses;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Models\Club;
 use App\Http\Models\Course;
-use Carbon\Carbon;
-use Carbon\CarbonInterval;
-use Validator;
-use App\Http\Models\TennisReservation;
-use App\Http\Models\TennisReservationPlayer;
-use App\Http\Models\Member;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Description of CourseController
  *
  * @author kas
  */
-class CoursesController extends Controller {
-	//use \Notification;
-	private $timeSlots = [ ];
-	public function index() {
-		$this->response = Course::courseList ();
-        return view('admin.courses.courses-list');
-		return $this->response ();
-	}
-	public function store(Request $request) {
-		if (! $request->has ( 'name' )) {
-			$this->error = 'email_not_present';
-			return $this->response ();
-		}
-		if (! $request->has ( 'openTime' )) {
-			$this->error = 'password_not_present';
-			return $this->response ();
-		}
-		if (! $request->has ( 'closeTime' )) {
-			$this->error = 'password_not_present';
-			return $this->response ();
-		}
-		if (! $request->has ( 'bookingDuration' )) {
-			$this->error = 'password_not_present';
-			return $this->response ();
-		}
-		if (! $request->has ( 'status' )) {
-			$this->error = 'password_not_present';
-			return $this->response ();
-		}
-		try {
-			\DB::beginTransaction ();
-			$course = new Course ();
-			$data = $request->all ();
-			$data ['club_id'] = Auth::user ()->club_id;
-			$course->populate ( $data )->save ();
-			\DB::commit ();
-			$this->response = "course_registered_successfully";
-		} catch ( \Exception $e ) {
-			\DB::rollback ();
-			$this->error = "exception";
-		}
-		
-		return $this->response ();
-	}
-	public function update(Request $request, $courseId) {
-		if (! $request->has ( 'name' )) {
-			$this->error = 'email_not_present';
-			return $this->response ();
-		}
-		if (! $request->has ( 'openTime' )) {
-			$this->error = 'password_not_present';
-			return $this->response ();
-		}
-		if (! $request->has ( 'closeTime' )) {
-			$this->error = 'password_not_present';
-			return $this->response ();
-		}
-		if (! $request->has ( 'bookingDuration' )) {
-			$this->error = 'password_not_present';
-			return $this->response ();
-		}
-		if (! $request->has ( 'status' )) {
-			$this->error = 'password_not_present';
-			return $this->response ();
-		}
-		try {
-			\DB::beginTransaction ();
-			$data = $request->all ();
-			$course = Course::getById ( $courseId );
-			$course->populate ( $data )->save ();
-			\DB::commit ();
-			$this->response = "course_updated_successfully";
-		} catch ( \Exception $e ) {
-			\Log::info ( __METHOD__, [ 
-					'error' => $e->getMessage () 
-			] );
-			\DB::rollback ();
-			$this->error = "exception";
-		}
-		return $this->response ();
-	}
-	public function show($courseId) {
-		$this->response = Course::getById ( $courseId );
-		return $this->response ();
-	}
-	
-	/**
-	 * Get list of course in a club
-	 * for authorized users.
-	 *
-	 * @return Json Object
-	 */
-	public function getReservations(Request $request) {
-		$courses = Course::getReservationsForACourseByIdForADateRange ();
-		
-		if ($courses) {
-			
-			$this->response = $courses;
-		} else {
-			$this->error = "course_not_available";
-		}
-		
-		return $this->response ();
-	}
-	public function getReservationsByDate(Request $request, $date) {
-		try {
-			$date = Carbon::parse ( $date )->toDateString ();
-		} catch ( \Exception $e ) {
-			$this->error = "invalid_date_format";
-			return $this->response ();
-		}
-		// dd($date);
-		$courses = Course::getReservationsForACourseByIdForADateRange( $date );
-		
-		if ($courses) {
-			
-			$this->response = $courses;
-		} else {
-			$this->error = "course_not_available";
-		}
-		
-		return $this->response ();
-	}
+class CoursesController extends Controller
+{
+
+    public function index(Request $request)
+    {
+        if (Auth()->user()->canNot('course', 'App\Model')) {
+            return Redirect::route('admin.dashboard')->with([
+                'error' => \trans('message.unauthorized_access')
+            ]);
+        }
+        $search = $request->has('search') ? $request->get('search') : false;
+        $currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
+        $perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
+        $courses = (new Course())->listClubCoursesPaginated(Auth::user()->club_id, $currentPage, $perPage, $search);
         
+        if ($request->ajax()) {
+            return $courses;
+        } else {
+            if ($courses->count() > 0) {
+                $courses = json_encode($courses);
+            }
+            return view('admin.courses.courses-list', compact('courses'));
+        }
+    }
+
+    public function create()
+    {
+        if (Auth()->user()->canNot('course', 'App\Model')) {
+            return Redirect::route('admin.dashboard')->with([
+                'error' => \trans('message.unauthorized_access')
+            ]);
+        }
+        return view('admin.courses.create');
+    }
+
+    public function edit(Request $request, $course_id)
+    {
+        if (Auth()->user()->canNot('course', 'App\Model')) {
+            return Redirect::route('admin.dashboard')->with([
+                'error' => \trans('message.unauthorized_access')
+            ]);
+        }
+        try {
+            $course = Course::findOrFail($course_id);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
+            return Redirect::route('admin.courses.index')->with([
+                'error' => \trans('message.not_found')
+            ]);
+        } catch (\Exception $exp) {
+            return Redirect::back()->with([
+                'error' => $exp->getMessage()
+            ]);
+        }
+        if (empty($request->old())) {
+            $course = $course->toArray();
+        } else {
+            $course = $request->old();
+        }
         
-       
-	public function getStats() {
-		try {
-			$totalBookAbleHours = 0;
-			$totalCourses = 0;
-			$courses = Club::find ( Auth::user ()->club_id )->course;
-			if ($courses) {
-				$totalCourses = $courses->count ();
-				foreach ( $courses as $key => $course ) {
-					$totalBookAbleHours += $course->timeSlots ()->countTotalHours ();
-				}
-			}
-			$members = Member::countClubMembers ( Auth::user ()->club_id );
-			$totalHoursBooked = (new TennisReservation ())->getBookedHours ( Auth::user ()->club_id );
-			$totalUnbookedHours = $totalBookAbleHours - $totalHoursBooked;
-			$this->response = [ 
-					'courses' => $totalCourses,
-					'members' => $members,
-					'totalHoursBooked' => $totalHoursBooked,
-					'totalUnbookedHours' => $totalUnbookedHours 
-			];
-		} catch ( \Exception $e ) {
-			\DB::rollback ();
-			\Log::info ( __METHOD__, [ 
-					'error' => $e->getMessage () 
-			] );
-			$this->error = "exception";
-		}
-		return $this->response ();
-	}
+        return view('admin.courses.edit', compact('course'));
+    }
+
+    public function store(Request $request)
+    {
+        if (Auth()->user()->canNot('course', 'App\Model')) {
+            return Redirect::route('admin.dashboard')->with([
+                'error' => \trans('message.unauthorized_access')
+            ]);
+        }
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:1,max:50',
+            'openTime' => 'required|numeric',
+            'closeTime' => 'required|numeric',
+            'bookingDuration' => 'required|numeric',
+            'bookingInterval' => 'required|numeric',
+            'numberOfHoles' => 'required|numeric'
+        ]);
         
-       
-}
+        if ($validator->fails()) {
+            $this->error = $validator->errors();
+            return \Redirect::back()->withInput()->withErrors($this->error);
+        }
+        try {
+            $data = $request->only([
+                'name',
+                'openTime',
+                'closeTime',
+                'bookingDuration',
+                'bookingInterval',
+                'numberOfHoles'
+            ]);
+            $course = new Course();
+            $course->status = ($request->has('status')) ? config('global.status.open') : config('global.status.closed');
+            $course->club_id = \Auth::user()->club_id;
+            $course->fill($data)->save();
+            return \Redirect::route('admin.courses.index')->with([
+                'success' => \trans('message.course_created_success')
+            ]);
+        } catch (\Exception $exp) {
+            return \Redirect::back()->withInput()->with([
+                'error' => $exp->getMessage()
+            ]);
+        }
+    }
+
+    public function update(Request $request, $courseId)
+    {
+        if (Auth()->user()->canNot('course', 'App\Model')) {
+            return Redirect::route('admin.dashboard')->with([
+                'error' => \trans('message.unauthorized_access')
+            ]);
+        }
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|min:1,max:50',
+            'openTime' => 'required|numeric',
+            'closeTime' => 'required|numeric',
+            'bookingDuration' => 'required|numeric',
+            'bookingInterval' => 'required|numeric',
+            'numberOfHoles' => 'required|numeric'
+        ]);
+        
+        if ($validator->fails()) {
+            $this->error = $validator->errors();
+            return \Redirect::back()->withInput()->withErrors($this->error);
+        }
+        try {
+            $data = $request->only([
+                'name',
+                'openTime',
+                'closeTime',
+                'bookingDuration',
+                'bookingInterval',
+                'numberOfHoles'
+            ]);
+            $course = Course::findOrFail($memberId);
+            $course->status = ($request->has('status')) ? config('global.status.open') : config('global.status.closed');
+            $course->fill($data)->update();
+            return \Redirect::route('admin.courses.index')->with([
+                'success' => \trans('message.course_update_success')
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
+            return Redirect::back()->with([
+                'error' => \trans('message.not_found')
+            ]);
+        } catch (\Exception $exp) {
+            return \Redirect::back()->withInput()->with([
+                'error' => $exp->getMessage()
+            ]);
+        }
+    }
+
+    public function destroy($course_id)
+    {
+        try {
+            Course::find($memberId)->delete();
+            return "success";
+        } catch (\Exception $e) {
+            return $e->getMessage();
+            return "failure";
+        }
+    }
+}   

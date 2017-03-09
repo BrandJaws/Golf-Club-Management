@@ -51,6 +51,14 @@
 						<div class="row row-sm">
 							<div class="col-md-12">
 								<div class="row row-sm">
+								<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="course" name="permissions[]" {{(Request::old('permissions') && array_key_exists('course',array_flip(Request::old('permissions'))))?'checked':''}}>
+												Courses
+											</label>
+										</div>
+									</div>
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
@@ -75,6 +83,9 @@
 											</label>
 										</div>
 									</div>
+									
+								</div>
+								<div class="row row-sm">
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
@@ -83,8 +94,6 @@
 											</label>
 										</div>
 									</div>
-								</div>
-								<div class="row row-sm">
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
@@ -109,6 +118,9 @@
 											</label>
 										</div>
 									</div>
+									
+								</div>
+								<div class="row row-sm">
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
@@ -117,8 +129,6 @@
 											</label>
 										</div>
 									</div>
-								</div>
-								<div class="row row-sm">
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>
@@ -143,6 +153,9 @@
 											</label>
 										</div>
 									</div>
+									
+								</div>
+								<div class="row row-sm">
 									<div class="col-md-3">
 										<div class="checkbox">
 											<label>

@@ -21,6 +21,7 @@ class CreateCoursesTable extends Migration
             $table->time('closeTime');
             $table->integer('bookingInterval');
             $table->integer('bookingDuration');
+            $table->integer('numberOfHoles')->default(0);
             $table->enum('status', array('CLOSED', 'OPEN'));
         });
     }

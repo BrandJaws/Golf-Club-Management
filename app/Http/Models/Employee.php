@@ -74,6 +74,7 @@ class Employee extends Authenticatable
     public function listClubEmployeesPaginated($clubId, $currentPage, $perPage, $searchTerm = false)
     {
         return $this->where('club_id', '=', $clubId)
+            ->where('employee.id','<>', \Auth::user()->id)
             ->where(function ($query) use ($searchTerm) {
             if ($searchTerm) {
                 $query->orWhere('employee.firstName', 'like', "%$searchTerm%");

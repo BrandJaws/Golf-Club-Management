@@ -332,6 +332,26 @@ Route::group([
                 'as' => 'index',
                 'uses' => 'ClubAdmin\Courses\CoursesController@index'
             ]);
+            Route::get('/create', [
+                'as' => 'create',
+                'uses' => 'ClubAdmin\Beacon\CoursesController@create'
+            ]);
+            Route::get('/edit/{course_id}', [
+                'as' => 'edit',
+                'uses' => 'ClubAdmin\Beacon\CoursesController@edit'
+            ]);
+            Route::post('/', [
+                'as' => 'store',
+                'uses' => 'ClubAdmin\Beacon\CoursesController@store'
+            ]);
+            Route::put('/{course_id}', [
+                'as' => 'update',
+                'uses' => 'ClubAdmin\Beacon\CoursesController@update'
+            ]);
+            Route::delete('/{course_id}', [
+                'as' => 'delete',
+                'uses' => 'ClubAdmin\Staff\CoursesController@destroy'
+            ]);
         });
     });
 });

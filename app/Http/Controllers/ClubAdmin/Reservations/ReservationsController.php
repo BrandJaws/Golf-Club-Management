@@ -17,6 +17,11 @@ class ReservationsController extends Controller {
                 $reservations = Course::getReservationsForACourseByIdForADateRange(1,$dayToday,$fourDaysFromNow);
                 return view ( 'admin.reservations.reservations' ,["reservations"=>json_encode($reservations)]);
 	}
+        public function getReservationByDate($date) {
+               
+                $reservations = Course::getReservationsForACourseByIdForADateRange(1,$date,$date);
+                return json_encode($reservations);
+	}
         
         public function store(Request $request) {
 		// dd(Carbon::now()->toDateTimeString());

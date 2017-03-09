@@ -14,9 +14,7 @@
 <!-- for Chrome on Android, multi-resolution icon of 196x196 -->
 <meta name="mobile-web-app-capable" content="yes">
 @include ('admin.__partials.css-assets')
-<script src="{{asset('/libs/jquery/jquery/dist/jquery.js')}}"></script>
-<script src="{{asset('/libs/vuejs/vue.js')}}"></script>
-<script src="{{asset('/libs/helpers.js')}}"></script>
+
 </head>
 <body>
 	<div class="app" id="app">
@@ -34,5 +32,6 @@
 		<!-- / -->
 	</div>
 	@include ('admin.__partials.js-assets')
+        @yield('page-specific-scripts')
 </body>
 </html>

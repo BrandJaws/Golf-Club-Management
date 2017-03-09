@@ -59,6 +59,10 @@ Route::group([
                     'as' => 'delete',
                     'uses' => 'ClubAdmin\Reservations\ReservationsController@delete'
                 ]);
+                Route::get('/date/{date}', [
+                    'as' => 'date',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@getReservationByDate'
+                ]);
                  
         });
         /**

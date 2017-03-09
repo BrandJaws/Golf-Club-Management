@@ -12,29 +12,30 @@ Vue.component('reservations-container', {
                         @close-popup="closePopupTriggered"
                         @update-reservations="updateReservations"></reservation-popup>
                 <reservation-tabs v-if="forReservationsPageData"
-                          :reservations-parent="reservationsParent"
+                          :reservations-parent="reservations"
                           style-for-show-more-tab="true"> 
                         <reservation-tab-heads
-                                  :reservations-by-date="reservationsParent.reservationsByDate"
-                                  show-more-tab="true">
+                                  :reservations-by-date="reservations.reservationsByDate"
+                                  show-more-tab="true"
+                                  @restore-default-dates="restoreDefaultDates">
                         </reservation-tab-heads> 
                         <reservation-tab-divs
-                                  :reservations-by-date="reservationsParent.reservationsByDate"
+                                  :reservations-by-date="reservations.reservationsByDate"
                                   @edit-reservation="editReservationEventTriggered" 
                                   @new-reservation="newReservationEventTriggered">
 			</reservation-tab-divs>\n\
                 </reservation-tabs>
                 <reservation-tabs v-else
-                                  :reservations-parent="reservationsParent"
+                                  :reservations-parent="reservations"
                                   style-for-show-more-tab="false">
                         <reservation-tab-heads
                             
-                            :reservations-by-date="reservationsParent.reservationsByDate"
+                            :reservations-by-date="reservations.reservationsByDate"
                             show-more-tab="false">
                         </reservation-tab-heads> 
                         
                         <reservation-tab-tables
-                                :reservations-by-date="reservationsParent.reservationsByDate"
+                                :reservations-by-date="reservations.reservationsByDate"
                                 @edit-reservation="editReservationEventTriggered" 
                                 @new-reservation="newReservationEventTriggered">
                         </reservation-tab-tables>
@@ -85,40 +86,15 @@ Vue.component('reservations-container', {
         },
         updateReservations:function(newOrUpdatedReservation){
                     //console.log(newOrUpdatedReservation);
-                    if(newOrUpdatedReservation[0].course_id == this.reservationsParent.course_id){
-
-                         for(dateCount=0;dateCount<this.reservationsParent.reservationsByDate.length;dateCount++){
-                             if(this.reservations.reservationsByDate[dateCount].reserved_at == newOrUpdatedReservation[0].reserved_at){
-
-                                 for(timeSlotOriginalReservationsCount=0;timeSlotOriginalReservationsCount<this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot.length;timeSlotOriginalReservationsCount++ ){
-
-                                     for(timeSlotsReceivedCount=0;timeSlotsReceivedCount<newOrUpdatedReservation[0].reservationsByTimeSlot.length;timeSlotsReceivedCount++){
-                                        
-                                         if(newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].timeSlot == this.reservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].timeSlot 
-                                            &&
-                                            (this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == "App\\Http\\Models\\RoutineReservation" || 
-                                             this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == ""
-                                             )
-                                          ){
-                                            
-                                             
-                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_id = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].reservation_id;
-                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].reservation_type;
-                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].players = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].players;
-                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].status = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].status;
-
-                                              
-                                         }
-                                     }
-                                 }
-                                 break;
-                             }
-                         }
-                    }
+                      
+                    this.$emit("update-reservations",newOrUpdatedReservation);
                     
                     
-                    
-        }
+        },
+        restoreDefaultDates:function(){
+        
+            this.$emit("restore-default-dates");
+        },
     }
   
 });

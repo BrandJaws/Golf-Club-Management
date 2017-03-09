@@ -5,12 +5,12 @@ Vue.component('reservation-tab-divs', {
     template: `
               		
                 <div class="tab-content m-b-md">
-                      <div v-for="(reservationByDate,reservationIndex) in reservationsByDateData" :id="'tab'+(reservationIndex+1)" :class="['tab-pane', 'animated', 'fadeIn', 'text-muted', reservationIndex == 0 ? 'active' : '']" >
+                      <div v-for="(reservationByDate,reservationIndex) in reservationsByDate" v-if="reservationByDate.dateIsVisible" :id="'tab'+(reservationIndex+1)" :class="['tab-pane', 'animated', 'fadeIn', 'text-muted', reservationIndex == 0 ? 'active' : '']" >
                         <div class="tab-pane-content">
                             <div class="booked-list">
-                                    <div class="col-md-3 timeSlots3" v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot">
+                                    <div class="col-md-3 timeSlots3" v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" v-if="timeSlot.isVisibleUnderFilter">
                                             <div class="booking-box text-center" >
-                                            <h3>@{{timeSlot.timeSlot}}</h3>
+                                                <h3>@{{timeSlot.timeSlot}}</h3>
                                                 <p class="min-height-names">
                                                     <span v-if="timeSlot.reservations[0].reservation_id == ''">
                                                         Time Slot Vacant   
@@ -41,7 +41,7 @@ Vue.component('reservation-tab-divs', {
     data: function () {
       
       return {
-          reservationsByDateData:this.reservationsByDate
+          
       }
 
     },

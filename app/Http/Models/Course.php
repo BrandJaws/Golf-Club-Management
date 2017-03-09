@@ -101,7 +101,7 @@ class Course extends Model {
 			$dates [] = $date->toDateString();
 		}, Carbon::parse($dateEnd)->addDay());
                 
-                $reservationsParent = Course::createAllReservationsParentObject($course->club_id,$course->id);
+                $reservationsParent = Course::createAllReservationsParentObject($course);
                 foreach($dates as $date){
                     $reservationsByDate = Course::createReservationsByDateObject($date);
                     Carbon::parse ( $course->openTime )->diffFiltered ( CarbonInterval::minute ( $course->bookingInterval), function (Carbon $time) use (&$reservationsByDate, $date,$allCurrentReservationsInDateRange,$detailed) {
@@ -175,8 +175,13 @@ class Course extends Model {
         //End : To Join a reservation type RoutineReservation
         $query .= " WHERE ";
         $query .= " course.id = ? ";
-        $query .= " AND DATE(reservation_time_slots.time_start) >= DATE(?) ";
-        $query .= " AND DATE(reservation_time_slots.time_start) <= DATE(?) ";
+        if($dateStart == $dateEnd){
+            $query .= " AND DATE(reservation_time_slots.time_start) = DATE(?) ";
+        }else{
+            $query .= " AND DATE(reservation_time_slots.time_start) >= DATE(?) ";
+            $query .= " AND DATE(reservation_time_slots.time_start) <= DATE(?) ";
+        }
+        
         $query .= " AND course.club_id = ? ";
         $query .= " GROUP BY course.id,course.club_id,course.name,routine_reservations.parent_id,routine_reservations.status,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
         
@@ -212,11 +217,19 @@ class Course extends Model {
         
 //        END:To add other reservation types results in the future
         $query .= "ORDER BY time_start ASC, reservation_id ASC   ";
-  
-        $allReservationsWithCourses = DB::select(DB::raw($query), [$courseId,
+        if($dateStart == $dateEnd){
+            $allReservationsWithCourses = DB::select(DB::raw($query), [$courseId,
+                                                                   $dateStart,
+                                                                   Auth::user ()->club_id]); 
+        }else{
+            
+            $allReservationsWithCourses = DB::select(DB::raw($query), [$courseId,
                                                                    $dateStart,
                                                                    $dateEnd,
-                                                                   Auth::user ()->club_id]);
+                                                                   Auth::user ()->club_id]); 
+        }
+       
+        
         //dd($allReservationsWithCourses);
         $reservationsByDate = Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
         return $reservationsByDate;
@@ -377,10 +390,12 @@ class Course extends Model {
         return $reservationsByDate;
    }
    
-   public static function createAllReservationsParentObject($clubId, $courseId){
+   public static function createAllReservationsParentObject($course){
         $reservationsParent = new \stdClass();
-        $reservationsParent->club_id = $clubId;
-        $reservationsParent->course_id = $courseId;
+        $reservationsParent->club_id = $course->club_id;
+        $reservationsParent->course_id = $course->id;
+        $reservationsParent->courseOpenTime = $course->openTime;
+        $reservationsParent->courseCloseTime = $course->closeTime;
         $reservationsParent->reservationsByDate = [];
         
         return $reservationsParent;

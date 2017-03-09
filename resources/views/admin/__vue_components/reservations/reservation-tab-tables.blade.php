@@ -10,7 +10,7 @@ Vue.component('reservation-tab-tables', {
                         <div class="table-responsive">
                             <table class="table table-hover b-t">
                                 <tbody>
-                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex">
+                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter"> 
                                     <td >@{{timeSlot.timeSlot}}</td>
                                     <td width="80%">
                                       <ul class="members-add">

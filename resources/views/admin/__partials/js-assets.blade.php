@@ -1,5 +1,13 @@
 <!-- build:js scripts/app.html.js -->
 <!-- jQuery -->
+<script src="{{asset('/libs/jquery/jquery/dist/jquery.js')}}"></script>
+<script src="{{asset('/libs/helpers.js')}}"></script>
+<script src="{{asset('/libs/momentjs/moment.min.js')}}"></script>
+<script src="{{asset('/scripts/jquery-ui.min.js')}}"></script>
+
+<!-- VueJS -->
+<script src="{{asset('/libs/vuejs/vue.js')}}"></script>
+
 
 <!-- Bootstrap -->
 <script src="{{asset('/libs/jquery/tether/dist/js/tether.min.js')}}"></script>
@@ -8,9 +16,6 @@
 <script src="{{asset('/chat/script.js')}}"></script>
 <!-- core -->
 
-<script>
-    $( "#date-reserv" ).datepicker();
-</script>
 <!-- owl -->
 <script src="{{asset('/scripts/owl/js/owl.carousel.js')}}"></script>
 <!-- owl -->
@@ -30,7 +35,7 @@
 <script src="{{asset('/scripts/ui-scroll-to.js')}}"></script>
 <script src="{{asset('/scripts/ui-toggle-class.js')}}"></script>
 <script src="{{asset('/scripts/app.js')}}"></script>
-<script src="{{asset('/scripts/jquery-ui.min.js')}}"></script>
+
 
 <!-- ajax -->
 <script src="{{asset('/libs/jquery/jquery-pjax/jquery.pjax.js')}}"></script>

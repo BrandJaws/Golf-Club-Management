@@ -12,7 +12,7 @@
                     <div class="inner-page-heading text-left"><h3>Courses Listing</h3></div>
                 </div>
                 <div class="col-md-6 text-right">
-                    <a href="" class="btn-def btn"><i class="fa fa-plus-circle"></i> &nbsp;Add new courses</a>
+                    <a href="{{route('admin.courses.create')}}" class="btn-def btn"><i class="fa fa-plus-circle"></i> &nbsp;Add new courses</a>
                 </div>
             </div>
             <div class="row bg-white">
@@ -22,6 +22,10 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('page-specific-scripts')
+
 
     @include("admin.__vue_components.autocomplete.autocomplete")
     @include("admin.__vue_components.courses.courses-table");

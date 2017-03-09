@@ -167,7 +167,7 @@ class CoursesController extends Controller
     public function destroy($course_id)
     {
         try {
-            Course::find($memberId)->delete();
+            Course::find($course_id)->delete();
             return "success";
         } catch (\Exception $e) {
             return $e->getMessage();

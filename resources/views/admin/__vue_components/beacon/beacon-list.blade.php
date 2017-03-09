@@ -29,7 +29,7 @@
 	          		</tr>
                 </thead>
                 <tbody>
-                    <tr v-for="beacon in beaconsListData">
+                    <tr v-for="(beacon, beaconIndex) in beaconsListData">
                         <td>
                             @{{beacon.name}}
                         </td>

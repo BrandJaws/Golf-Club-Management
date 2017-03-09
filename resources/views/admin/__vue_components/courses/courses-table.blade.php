@@ -28,7 +28,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="course in listData">
+                        <tr v-for="(course, bIndex) in listData">
                             <td>
                                 @{{ course.name }}
                             </td>

@@ -17,14 +17,6 @@
 						</div>
 						<!-- col-6 -->
 						<div class="col-md-8 text-right">
-							<div class="col-md-7">
-								<div class="input-group">
-									<input type="text" class="form-control"
-										   placeholder="Search for..."> <span class="input-group-btn">
-									<button class="btn btn-default" type="button">Go!</button>
-									</span>
-								</div>
-							</div>
 							<button class="btn btn-def" id="filterResults"><i class="fa fa-filter"></i> &nbsp;Filter Results</button>
 							<button id = "reset-filters" class="btn btn-outline b-primary text-primary"><i class="fa fa-mail-reply"></i> &nbsp;Reset Filters</button>
 							<!-- /input-group -->

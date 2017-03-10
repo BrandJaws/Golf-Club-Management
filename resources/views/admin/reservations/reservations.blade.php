@@ -255,10 +255,10 @@
             max: $courseCloseTime,
             values: [ $courseOpenTime, $courseCloseTime],
             slide: function( event, ui ) {
-                var value1 = ui.values[ 0 ] <= 12 ? ui.values[ 0 ]+ ":00 AM" : ui.values[ 0 ]%12 + ":00 PM"
+                var value1 = ui.values[ 0 ] < 12 ? ui.values[ 0 ]+ ":00 AM" : ui.values[ 0 ]%12 + ":00 PM"
                 var value2 = ui.values[ 1 ] <= 12 ? ui.values[ 1 ]+ ":00 AM" : ui.values[ 1 ]%12 + ":00 PM"
                 $( "#amount" ).val( "" + value1+ " - " + value2 );
-                
+
                 vue.filters.timeStart = ui.values[ 0 ];
                 vue.filters.timeEnd = ui.values[ 1 ];
                 

@@ -161,7 +161,9 @@
 			</div>
 		</div>
 	</div>
+@endsection
 
+@section('page-specific-scripts')
 <script>
         $( function() {
             $( "#datePicker" ).datepicker();

@@ -42,7 +42,9 @@
 			</div>
 		</div>
 	</div>
+@endsection
 
+@section('page-specific-scripts')
 @include("admin.__vue_components.coaches.coaches-table")
 <script>
        

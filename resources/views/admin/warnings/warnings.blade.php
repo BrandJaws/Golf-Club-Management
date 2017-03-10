@@ -21,7 +21,9 @@
                 </div>
             </div>
         </div>
+@endsection
 
+@section('page-specific-scripts')
     @include("admin.__vue_components.autocomplete.autocomplete")
     @include("admin.__vue_components.warnings.warnings");
     <script>

@@ -39,7 +39,9 @@
 			</div>
 		</div>
 	</div>
+@endsection
 
+@section('page-specific-scripts')
 @include("admin.__vue_components.rewards.rewards-table")
 <script>
         var baseUrl = "{{url('')}}";

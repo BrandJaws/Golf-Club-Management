@@ -47,7 +47,9 @@
 		<!-- Segments Page End -->
 	</div>
 
+@endsection
 
+@section('page-specific-scripts')
 @include("admin.__vue_components.segments.segments-table")
 <script>
     var baseUrl = "{{url('')}}";

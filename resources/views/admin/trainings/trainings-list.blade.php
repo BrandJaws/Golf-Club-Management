@@ -30,7 +30,9 @@
                 </div>
             </div>
         </div>
+@endsection
 
+@section('page-specific-scripts')
     @include("admin.__vue_components.trainings.trainings-table")
     <script>
         var baseUrl = "{{url('')}}";

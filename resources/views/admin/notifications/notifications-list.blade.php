@@ -30,7 +30,9 @@
 			</div>
 		</div>
 	</div>
+@endsection
 
+@section('page-specific-scripts')
 @include("admin.__vue_components.notifications.notifications-table")
 <script>
         var baseUrl = "{{url('')}}";

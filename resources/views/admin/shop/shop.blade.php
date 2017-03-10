@@ -457,7 +457,9 @@
 
 	</div>
 
+@endsection
 
+@section('page-specific-scripts')
 @include("admin.__vue_components.shop.shop-scroller");
 @include("admin.__vue_components.shop.shop-menu");
 <script>

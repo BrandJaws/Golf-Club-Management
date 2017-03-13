@@ -255,8 +255,8 @@
             max: $courseCloseTime,
             values: [ $courseOpenTime, $courseCloseTime],
             slide: function( event, ui ) {
-                var value1 = ui.values[ 0 ] < 12 ? ui.values[ 0 ]+ ":00 AM" : ui.values[ 0 ]%12 + ":00 PM"
-                var value2 = ui.values[ 1 ] <= 12 ? ui.values[ 1 ]+ ":00 AM" : ui.values[ 1 ]%12 + ":00 PM"
+                var value1 = ui.values[ 0 ] <= 12 ? ui.values[ 0 ]+ ":00 "+ (ui.values[ 0 ] < 12 ? "AM" : "PM") : ui.values[ 0 ]%12 + ":00 PM";
+                var value2 = ui.values[ 1 ] <= 12 ? ui.values[ 1 ]+ ":00 "+ (ui.values[ 1 ] < 12 ? "AM" : "PM") : ui.values[ 1 ]%12 + ":00 PM";
                 $( "#amount" ).val( "" + value1+ " - " + value2 );
 
                 vue.filters.timeStart = ui.values[ 0 ];
@@ -264,8 +264,8 @@
                 
             }
         });
-         var value1 = $( "#slider-time-range" ).slider( "values", 0 ) <= 12 ? $( "#slider-time-range" ).slider( "values", 0 )+ ":00 AM" : $( "#slider-time-range" ).slider( "values", 0 )%12 + ":00 PM"
-         var value2 = $( "#slider-time-range" ).slider( "values", 1 ) <= 12 ? $( "#slider-time-range" ).slider( "values", 1 )+ ":00 AM" : $( "#slider-time-range" ).slider( "values", 1 )%12 + ":00 PM"
+         var value1 = $( "#slider-time-range" ).slider( "values", 0 ) <= 12 ? $( "#slider-time-range" ).slider( "values", 0 )+ ":00 "+ ($( "#slider-time-range" ).slider( "values", 0 ) < 12 ? "AM" : "PM") : $( "#slider-time-range" ).slider( "values", 0 )%12 + ":00 PM";
+         var value2 = $( "#slider-time-range" ).slider( "values", 1 ) <= 12 ? $( "#slider-time-range" ).slider( "values", 1 )+ ":00 "+ ($( "#slider-time-range" ).slider( "values", 1 ) < 12 ? "AM" : "PM")  : $( "#slider-time-range" ).slider( "values", 1 )%12 + ":00 PM";
                 $( "#amount" ).val( "" + value1+ " - " + value2 );
         $( "#slider-empty-slots" ).slider({
             range: "max",

@@ -17,7 +17,13 @@ class CreateReservationPlayersTable extends Migration
             $table->bigIncrements('id');
             $table->morphs('reservation');
             $table->bigInteger('member_id')->unsigned();
-            $table->enum('status', array('PENDING','CONFIRMED','CANCELLED','NA'));
+            $table->bigInteger('parent_id')->unsigned()->nullable();
+            $table->enum('response_status', array('PENDING','CONFIRMED','CANCELLED','NA'));
+            $table->enum('reservation_status', array('RESERVED','WAITING','PENDING RESERVED','PENDING WAITING'));
+            $table->tinyInteger('nextJobToProcess')->default(0);
+            $table->foreign('parent_id')->references('id')
+                ->on('member')
+                ->onDelete('cascade');
            
         });
     }

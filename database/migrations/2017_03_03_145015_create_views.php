@@ -24,14 +24,14 @@ class CreateViews extends Migration
         $query .= "     course.bookingDuration , ";
         $query .= "     routine_reservations.id as reservation_id, ";
         $query .= "     reservation_time_slots.reservation_type as reservation_type, ";
-        $query .= "     routine_reservations.parent_id, ";
+        $query .= "     reservation_players.parent_id, ";
         $query .= "     reservation_time_slots.time_start as date_time_start, ";
         $query .= "     TIME(reservation_time_slots.time_start) as time_start, ";
         $query .= "     DATE(reservation_time_slots.time_start) as reserved_at, ";
         $query .= "     reservation_players.id as reservation_player_id, ";
         $query .= "     member.id as member_id, ";
         $query .= "     CONCAT_WS(' ', member.firstName, member.lastName)as member_name, ";
-        $query .= "     routine_reservations.status ";
+        $query .= "     reservation_players.reservation_status ";
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";
@@ -54,21 +54,21 @@ class CreateViews extends Migration
         $query .= "     course.name as course_name, ";
         $query .= "     routine_reservations.id as reservation_id, ";
         $query .= "     reservation_time_slots.reservation_type as reservation_type, ";
-        $query .= "     routine_reservations.parent_id, ";
+        $query .= "     reservation_players.parent_id, ";
         $query .= "     reservation_time_slots.time_start as date_time_start, ";
         $query .= "     TIME(reservation_time_slots.time_start) as time_start, ";
         $query .= "     DATE(reservation_time_slots.time_start) as reserved_at, ";
         $query .= "     GROUP_CONCAT(IFNULL(reservation_players.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_player_ids, ";
         $query .= "     GROUP_CONCAT(IFNULL(member.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as member_ids, ";
         $query .= "     GROUP_CONCAT(IF(CONCAT_WS(' ', member.firstName, member.lastName) <> ' ',CONCAT_WS(' ', member.firstName, member.lastName),'Guest') ORDER BY reservation_players.id ASC SEPARATOR '||-separation-player-||' ) as member_names, ";
-        $query .= "     routine_reservations.status ";
+        $query .= "     reservation_players.reservation_status ";
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";
         $query .= "     LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND STRCMP(reservation_time_slots.reservation_type,'".RoutineReservation::class."') ";
         $query .= "     LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND STRCMP(reservation_players.reservation_type,'".RoutineReservation::class."') ";
         $query .= "     LEFT JOIN member ON reservation_players.member_id = member.id ";
-        $query .= "     GROUP BY course.id,course.club_id,course.name,routine_reservations.parent_id,routine_reservations.status,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
+        $query .= "     GROUP BY course.id,course.club_id,course.name,reservation_players.parent_id,reservation_players.reservation_status,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
         //Add other reservation types as and when created here with a UNION ALL clause
         
         DB::statement($query);
@@ -84,8 +84,8 @@ class CreateViews extends Migration
         $query .= "     course.name as course_name, ";
         $query .= "     routine_reservations.id as reservation_id, ";
         $query .= "     reservation_time_slots.reservation_type as reservation_type, ";
-        $query .= "     reservation_time_slots.time_start as time_start, ";
-        $query .= "     routine_reservations.status ";
+        $query .= "     reservation_time_slots.time_start as time_start ";
+        //$query .= "     routine_reservations.status ";
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";

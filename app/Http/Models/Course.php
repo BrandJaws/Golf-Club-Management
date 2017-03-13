@@ -174,14 +174,14 @@ class Course extends Model
         //$query .= " course.bookingDuration, ";
         $query .= " routine_reservations.id as reservation_id, ";
         $query .= " reservation_time_slots.reservation_type as reservation_type, ";
-        $query .= " routine_reservations.parent_id, ";
+        $query .= " reservation_players.parent_id, ";
         $query .= " TIME(reservation_time_slots.time_start) as time_start, ";
         //$query .= " tennis_reservation.time_end, ";
         $query .= " DATE(reservation_time_slots.time_start) as reserved_at, ";
         $query .= " GROUP_CONCAT(IFNULL(reservation_players.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_player_ids, ";
         $query .= " GROUP_CONCAT(IFNULL(member.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as member_ids, ";
         $query .= " GROUP_CONCAT(IF(CONCAT_WS(' ', member.firstName, member.lastName) <> ' ',CONCAT_WS(' ', member.firstName, member.lastName),'Guest') ORDER BY reservation_players.id ASC SEPARATOR '||-separation-player-||' ) as member_names, ";
-        $query .= " routine_reservations.status ";
+        $query .= " reservation_players.reservation_status ";
         $query .= " FROM ";
         $query .= " course ";
         //$query .= " LEFT JOIN routine_reservations ON routine_reservations.course_id = course.id ";
@@ -202,7 +202,7 @@ class Course extends Model
         }
         
         $query .= " AND course.club_id = ? ";
-        $query .= " GROUP BY course.id,course.club_id,course.name,routine_reservations.parent_id,routine_reservations.status,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
+        $query .= " GROUP BY course.id,course.club_id,course.name,reservation_players.parent_id,reservation_players.reservation_status,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
         
 //        START:To add other reservation types results in the future
 

@@ -1,11 +1,11 @@
 <?php
-
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateCoachesTable extends Migration
 {
+
     /**
      * Run the migrations.
      *
@@ -20,6 +20,9 @@ class CreateCoachesTable extends Migration
             $table->string('lastName', 50);
             $table->string('email', 50);
             $table->string('phone', 50);
+            $table->text('specialities')
+                ->nullable()
+                ->default(NULL);
             $table->string('profilePic', 250)
                 ->nullable()
                 ->default(NULL);

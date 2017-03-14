@@ -64,9 +64,16 @@
                         <div class="row">
                        		<div class="col-md-12">
 									<div class="form-group clearfix">
+                                        <div class="checkbox">
+                                            <label class="ui-check">
+                                                <input type="checkbox" value="open" name="status">
+                                                <i class="dark-white"></i>
+                                                Is Open?
+                                            </label>
+                                        </div>
 										<div class="checkbox-inline">
 											<span class="pull-left"><label>
-												<input type="checkbox" value="open" name="status"> &nbsp;Is Open?</label>
+
 											</span>
 										</div>
 									</div>

@@ -24,16 +24,16 @@
                 <tbody>
                     <tr v-for="coach in coachesListData">
                         <td>
-                            @{{coach.name}}
-            </td>
+                            @{{coach.firstName}} @{{coach.lastName}}
+            			</td>
              <td>
                 @{{coach.email}}
             </td>
             <td>
-                @{{coach.contact}}
+                @{{coach.phone}}
             </td>
             <td>
-                @{{coach.spcl}}
+                @{{coach.specialities}}
             </td>
             <td>
                     <a :href="generateEditCoachRoute('{{Request::url()}}',coach.id)" class="blue-cb" >edit</a>

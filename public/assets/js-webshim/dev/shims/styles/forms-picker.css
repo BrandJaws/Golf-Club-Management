@@ -13,6 +13,7 @@
 	display: table;
 	clear: both;
 	content: ' ';
+	position: absolute;
 }
 
 /* style picker api */

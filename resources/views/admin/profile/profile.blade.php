@@ -36,48 +36,6 @@
 						</div>
 						<div class="profile-content">
 							<div class="row">
-								<div class="margin-20-tb">
-									<div class="col-md-6">
-										<div class="text-right">
-											<label>Booking Differences</label>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="text-left">
-											<span>10 Min</span>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="margin-20-tb">
-									<div class="col-md-6">
-										<div class="text-right">
-											<label>Courses</label>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="text-left">
-											<span>9 Hole</span>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="margin-20-tb">
-									<div class="col-md-6">
-										<div class="text-right">
-											<label>Opening/ Closing Hours</label>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="text-left">
-											<span>10 Min</span>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
 								<div class="col-md-2"></div>
 								<div class="col-md-8">
 									<div class="heading-inner">

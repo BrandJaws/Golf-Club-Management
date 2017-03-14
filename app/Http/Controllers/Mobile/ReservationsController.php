@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mobile\Reservations;
+namespace App\Http\Controllers\Mobile;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -38,7 +38,7 @@ class ReservationsController extends Controller
         }
         $club = Club::find($request->get('club_id'));
 
-        if (!club) {
+        if (!$club) {
             $this->error = "mobile_invalid_club";
             return $this->response();
         }
@@ -120,9 +120,11 @@ class ReservationsController extends Controller
             \DB::beginTransaction();
 
 
-            $reservationsOnTimeSlot = $course->getResevationsAtCourseForATimeSlot($startTime);
-
-            if ($reservationsOnTimeSlot->count() >= 1) {
+            $reservationIdOnTimeSlot = $course->validateIfAllowedRoutineReservationAndReturnIdIfAlreadyExists($startTime);
+            RoutineReservation::findAndGroupReservationForReservationProcess($reservationIdOnTimeSlot);
+        
+            if ($reservationIdOnTimeSlot == 0)
+            {
                 $this->error = "mobile_slot_already_reserved";
                 return $this->response();
             }
@@ -201,7 +203,7 @@ class ReservationsController extends Controller
 
             \DB::commit();
         } catch (\Exception $e) {
-            //dd($e);
+            dd($e);
             \DB::rollback();
 
             \Log::info(__METHOD__, [

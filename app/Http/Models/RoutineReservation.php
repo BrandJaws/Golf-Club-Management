@@ -6,14 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 class RoutineReservation extends Model
 {
-    public $timestamps = false;
+
     protected $fillable = [ 
 			'id',
 			'club_id',
-			'course_id',
-                        'parent_id',
-                        'status',
-                        'nextJobToProcess'
+			'course_id'
 	];
     
     public function reservation_time_slots(){
@@ -62,6 +59,77 @@ class RoutineReservation extends Model
                 ]);
                        
     }
+
+    /**
+     * @return int|null
+     *
+     * counts and returns no. of players with a status reserved + groupsizes for groups that are pending reserved
+     * i-e method will return a number that will reflect the number of players that will eventually play
+     */
+    public function sumOfReservedAndPendingReservedIntendedSize(){
+
+            if($this->reservation_groups){
+                $sum = 0;
+                foreach($this->reservation_groups as $group){
+                    if($group->reservation_status == \Config::get ( 'global.reservation.reserved' ) ||
+                        $group->reservation_status == \Config::get ( 'global.reservation.pending_reserved' )){
+                        $sum += $group->group_size;
+                    }
+                }
+                return $sum;
+            }else{
+                return null;
+            }
+    }
+
+    /**
+     * @param int $reservation_id
+     * @return RoutineReservation
+     *
+     * finds a reservation by id and then processes it to make groups based on parent, ordering time etc criteria
+     * to facilitate the process of reservations
+     */
+    public static function findAndGroupReservationForReservationProcess($reservation_id){
+
+            $reservation = RoutineReservation::where('id',$reservation_id)->with(['reservation_players' => function ($query) {
+                                                                                        $query->orderBy('created_at', 'asc');
+                                                                                        $query->orderBy('updated_at', 'asc');
+                                                                                    }])->first();
+            $reservation_groups = [];
+
+            if($reservation && $reservation->reservation_players){
+
+                $groupCount = -1;
+                $tempParentId = 0;
+                $totalRequestedReservationSlots = 0;
+
+                 foreach($reservation->reservation_players as $reservationPlayer){
+                     if($tempParentId != $reservationPlayer->parent_id ){
+                         $groupCount++;
+                         $tempParentId = $reservationPlayer->parent_id;
+                         $reservation_groups[$groupCount] = new \stdClass();
+                         $reservation_groups[$groupCount]->parent_id = $reservationPlayer->parent_id;
+                         $reservation_groups[$groupCount]->reservation_status = $reservationPlayer->reservation_status;
+                         $reservation_groups[$groupCount]->group_size = $reservationPlayer->group_size;
+                         $reservation_groups[$groupCount]->players = [];
+                         $totalRequestedReservationSlots += $reservationPlayer->group_size;
+
+
+                     }
+                     $reservation_groups[$groupCount]->players[] = $reservationPlayer;
+
+                 }
+            }
+            $reservation->reservation_groups = $reservation_groups;
+            $reservation->requested_reservation_slots = $totalRequestedReservationSlots;
+            dd($reservation->toArray());
+
+
+
+
+    }
+    
+    
    
     public function modifyReservationObjectForReponseOnCRUDOperations(){
           $players = [];
@@ -96,7 +164,6 @@ class RoutineReservation extends Model
           
          
     }
-    
     
     
     

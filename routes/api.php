@@ -18,4 +18,31 @@ Route::get ( '/user', function (Request $request) {
 
 Route::post('/login', '\App\Http\Controllers\Mobile\MembersController@login');
 Route::post('/password/forgot', '\App\Http\Controllers\Mobile\MembersController@forgotPassword');
-   
+
+
+Route::group([
+	'prefix' => 'reservations',
+	'as' => 'reservations.'
+], function () {
+	Route::get('/', [
+		'as' => 'reservations',
+		'uses' => 'Mobile\ReservationsController@index'
+	]);
+	Route::post('/', [
+		'as' => 'store',
+		'uses' => 'Mobile\ReservationsController@store'
+	]);
+	Route::put('/', [
+		'as' => 'store',
+		'uses' => 'Mobile\ReservationsController@update'
+	]);
+	Route::delete('/{reservation_id}', [
+		'as' => 'delete',
+		'uses' => 'Mobile\ReservationsController@delete'
+	]);
+	Route::get('/date/{date}', [
+		'as' => 'date',
+		'uses' => 'ClubAdmin\Reservations\ReservationsController@getReservationByDate'
+	]);
+
+});

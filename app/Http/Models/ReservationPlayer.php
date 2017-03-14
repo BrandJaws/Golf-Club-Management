@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReservationPlayer extends Model
 {
-    public $timestamps = false;
+
     protected $fillable = [
         'reservation_id',
         'reservation_type',
         'member_id',
-        'status'
+        'status',
+        'response_status',
+        'reservation_status',
+        'nextJobToProcess'
     ];
     
     public function reservation(){

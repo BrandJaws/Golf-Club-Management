@@ -196,7 +196,7 @@ class ReservationsController extends Controller {
                         
 			\DB::commit ();
 		} catch ( \Exception $e ) {
-                        //dd($e);
+                        dd($e);
 			\DB::rollback ();
                        
 			\Log::info ( __METHOD__, [ 

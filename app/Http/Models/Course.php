@@ -254,6 +254,55 @@ class Course extends Model
         return $reservationsByDate;
    
     }
+
+
+    /**
+     * @param string $startDateTime
+     * @return int
+     *
+     * The method will check if a validation is allowed on a timeslot by getting all reservations and then
+     * checking if a reservation for a type with higher priority than routine reservation exists. Otherwise return
+     * the reservation id
+     *
+     * returns bool false  if reservation is not allowed
+     * returns 0 if no reservation is found
+     * returns reservation id is a routine reservation is found and is allowed reservation
+     */
+    public function validateIfAllowedRoutineReservationAndReturnIdIfAlreadyExists($startDateTime){
+        $reservations =  DB::table('reservations_by_timeslots')->where("course_id",$this->id)->where("time_start",$startDateTime)->get();
+        $firstRoutineReservation = null;
+        $reservationNotAllowedAtTimeSlot = 0;
+        foreach($reservations as $reservation)
+        {
+            if($reservation->reservation_type == RoutineReservation::class)
+            {
+                $firstRoutineReservation = $firstRoutineReservation == null ? $reservation : $firstRoutineReservation;
+            }
+            //Blocks to follow will test other reservation types and if existence of any other restricts routine reservations
+            //set the reservationNotAllowedAtTimeSlot variable to true
+            else if(false)
+            {
+                $reservationNotAllowedAtTimeSlot = true;
+            }
+
+        }
+        //return with false if not allowed a reservation
+        if($reservationNotAllowedAtTimeSlot)
+        {
+            return false;
+        }
+        else
+        {
+            if($firstRoutineReservation != null){
+                return $firstRoutineReservation->reservation_id;
+            }else{
+                return 0;
+            }
+
+        }
+
+
+    }
     
     /**
      * 
@@ -266,6 +315,8 @@ class Course extends Model
     public function getResevationsAtCourseForATimeSlot($startDateTime){
         return DB::table('reservations_by_timeslots')->where("course_id",$this->id)->where("time_start",$startDateTime)->get();
     }
+
+
     
     /**
      * 
@@ -369,7 +420,7 @@ class Course extends Model
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex] = new \stdClass();
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_id = $reservation->reservation_id;
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_type = $reservation->reservation_type;
-                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->status = $reservation->status;
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_status = $reservation->reservation_status;
                 
                 $reservation_player_ids = $reservation->reservation_player_ids !== "" ? explode("||-separation-player-||",$reservation->reservation_player_ids) : [];
                 $member_ids = $reservation->member_ids !== "" ? explode("||-separation-player-||",$reservation->member_ids) : [];

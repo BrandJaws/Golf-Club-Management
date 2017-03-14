@@ -17,6 +17,7 @@ class CreateRoutineReservationsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('club_id');
             $table->bigInteger('course_id');
+            $table->timestamps();
             
            
         });

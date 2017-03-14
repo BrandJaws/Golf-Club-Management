@@ -11,5 +11,6 @@ class DatabaseSeeder extends Seeder {
 		$this->call ( MemberSeeder::class );
 		$this->call ( CourseSeeder::class );
 		$this->call ( BeaconSeeder::class );
+		$this->call ( CoachSeeder::class );
 	}
 }

@@ -4,6 +4,7 @@
 <script src="{{asset('/libs/helpers.js')}}"></script>
 <script src="{{asset('/libs/momentjs/moment.min.js')}}"></script>
 <script src="{{asset('/scripts/jquery-ui.min.js')}}"></script>
+<script src="{{asset('/scripts/tags-input/bootstrap-tagsinput.js')}}"></script>
 
 <!-- VueJS -->
 <script src="{{asset('/libs/vuejs/vue.js')}}"></script>

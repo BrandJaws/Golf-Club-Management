@@ -7,6 +7,8 @@
 <link rel="stylesheet"
 	href="{{asset('/assets/glyphicons/glyphicons.css')}}" type="text/css" />
 <link rel="stylesheet"
+	  href="{{asset('/scripts/tags-input/bootstrap-tagsinput.css')}}" type="text/css" />
+<link rel="stylesheet"
 	href="{{asset('/assets/font-awesome/css/font-awesome.min.css')}}"
 	type="text/css" />
 <link rel="stylesheet"

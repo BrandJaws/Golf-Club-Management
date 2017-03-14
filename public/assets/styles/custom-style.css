@@ -211,7 +211,7 @@
 }
 
 .profile-content {
-	padding: 50px 20px 60px 20px;
+	padding: 0px 20px 60px 20px;
 }
 
 .edit-btn {
@@ -718,7 +718,7 @@ label {
 .socialMediaConnect li {
 	list-style: none;
 	float: left;
-	text-align: center;
+	text-align: left;
 }
 
 .socialMediaConnect li.facebook a {
@@ -726,6 +726,13 @@ label {
 	text-decoration: none;
 	color: #fff;
 	text-transform: uppercase;
+}
+
+.socialMediaConnect li a i {
+	width: 60px;
+    height: 68px;
+    text-align: center;
+    /*line-height: 38px;*/
 }
 
 .socialMediaConnect li.twitter a {
@@ -768,7 +775,14 @@ label {
 .socialMediaConnected li {
 	list-style: none;
 	float: left;
-	text-align: center;
+	text-align: left;
+}
+
+.socialMediaConnected li a i {
+    width: 60px;
+    height: 68px;
+    text-align: center;
+    /*line-height: 38px;*/
 }
 
 .socialMediaConnected li.facebook a {

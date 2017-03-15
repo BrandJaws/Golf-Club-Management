@@ -23,8 +23,8 @@
 						</div>
 						<div class="form-group">
 							<label class="form-control-label">Specialities</label> <input
-								type="text" class="form-control" /> <span
-								class="help-block m-b-none">Each separated with a comma.</span>
+								type="text" class="form-control" id="coachSpecialities" data-role="tagsinput" /> <span
+								class="help-block m-b-none" style="font-style: italic">Each separated with a comma.</span>
 						</div>
 						<br />
 						<div class="form-group">
@@ -50,4 +50,13 @@
 		</div>
 	</div>
 
+
 @endSection
+@section('page-specific-scripts')
+	<script>
+        $("#coachSpecialities").tagsinput({
+            tagClass: 'label red'
+        });
+	</script>
+
+@endsection

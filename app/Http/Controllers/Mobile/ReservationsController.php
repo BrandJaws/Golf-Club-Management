@@ -30,6 +30,7 @@ class ReservationsController extends Controller
 
     public function store(Request $request)
     {
+        dd(Auth::user());
         // dd(Carbon::now()->toDateTimeString());
         // dd($request->all());
         if (!$request->has('club_id')) {
@@ -110,61 +111,102 @@ class ReservationsController extends Controller
 
         }
 
-        if (count($players) < 1 || count($players) > 4) {
+//        if (count($players) < 1 || count($players) > 4) {
+//            $this->error = "mobile_players_are_not_enough";
+//            return $this->response();
+//        }
+        if ($request->get('group_size') > 4) {
             $this->error = "mobile_players_are_not_enough";
             return $this->response();
         }
 
 
+
         try {
-            \DB::beginTransaction();
+
 
 
             $reservationIdOnTimeSlot = $course->validateIfAllowedRoutineReservationAndReturnIdIfAlreadyExists($startTime);
-            RoutineReservation::findAndGroupReservationForReservationProcess($reservationIdOnTimeSlot);
-        
-            if ($reservationIdOnTimeSlot == 0)
+            if ($reservationIdOnTimeSlot === false)
             {
                 $this->error = "mobile_slot_already_reserved";
                 return $this->response();
             }
+
             $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime, $players);
             if ($playersWithOtherReservationsInBetween != null) {
                 $this->error = "players_already_have_booking";
                 $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
                 return $this->response();
             }
-            $reservationData ['club_id'] = $course->club_id;
-            $reservationData ['course_id'] = $course->id;
-            $reservationData ['parent_id'] = $request->get('parent_id');
 
-            //Check if there are already bookings on timeslot. If not this one goes to reservation
-            //otherwise it goes to waiting
-            //if (count ( $bookingsFoundOnTimeSlotForRequestedCourse ) == 0) {
-            //Check if there are any guests along with parent
-            //If so parent + any guests fulfill the criteria for confirmed reservation
+            if($reservationIdOnTimeSlot > 0)
+            {
+                $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservationIdOnTimeSlot);
+                dd($reservation->sumOfGroupSizes("both"));
+            }
+            else
+            {
+                $result = $this->createNewReservation($request,$course,$players,$startTime);
+                dd($result);
+            }
 
-            //    if($request->has('guests') && (int)$request->get('guests') > 0){
 
-            $reservationData ['status'] = \Config::get('global.reservation.reserved');
-            //    }else{
-            //        $reservationData ['status'] = \Config::get ( 'global.reservation.pending_reserved' );
-            //    }
 
-            //} else {
-            //Check if there are any guests along with parent
-            //If so parent + any guests fulfill the criteria for confirmed waiting
-            //     if($request->has('guests') && (int)$request->get('guests') > 0){
-            //        $reservationData ['status'] = \Config::get ( 'global.reservation.waiting' );
-            //    }else{
-            //        $reservationData ['status'] = \Config::get ( 'global.reservation.pending_waiting' );
-            //    }
 
-            //}
+
+
+
+
+        } catch (\Exception $e) {
+            dd($e);
+            \DB::rollback();
+
+            \Log::info(__METHOD__, [
+                'error' => $e->getMessage()
+            ]);
+            $this->error = "exception";
+        }
+
+        return $this->response();
+    }
+
+    public function createNewReservation(Request $request, $course, $players, $startTime){
+
+
+        $reservationData ['club_id'] = $course->club_id;
+        $reservationData ['course_id'] = $course->id;
+        //$reservationData ['parent_id'] = $request->get('parent_id');
+
+        //Check if there are already bookings on timeslot. If not this one goes to reservation
+        //otherwise it goes to waiting
+        //if (count ( $bookingsFoundOnTimeSlotForRequestedCourse ) == 0) {
+        //Check if there are any guests along with parent
+        //If so parent + any guests fulfill the criteria for confirmed reservation
+
+        //    if($request->has('guests') && (int)$request->get('guests') > 0){
+
+        //$reservationData ['status'] = \Config::get('global.reservation.reserved');
+        //    }else{
+        //        $reservationData ['status'] = \Config::get ( 'global.reservation.pending_reserved' );
+        //    }
+
+        //} else {
+        //Check if there are any guests along with parent
+        //If so parent + any guests fulfill the criteria for confirmed waiting
+        //     if($request->has('guests') && (int)$request->get('guests') > 0){
+        //        $reservationData ['status'] = \Config::get ( 'global.reservation.waiting' );
+        //    }else{
+        //        $reservationData ['status'] = \Config::get ( 'global.reservation.pending_waiting' );
+        //    }
+
+        //}
+        try{
+            \DB::beginTransaction();
             $reservation = RoutineReservation::create($reservationData);
             //$reservation->populate ( $reservationData )->save ();
 
-            $reservation->attachPlayers($players, $reservationData ['parent_id'], true);
+            $reservation->attachPlayers($players, $request->get('parent_id'), true, $request->get('group_size'),'PENDING RESERVED');
             $reservation->attachTimeSlot($startTime);
             // Send push notifications to players associated with the reservation
             //$playersToNotify = TennisReservationPlayer::returnTennisReservationPlayersFromPlayerIdsArray ( $reservation->id, $players, true );
@@ -185,7 +227,7 @@ class ReservationsController extends Controller
             // Unset properties not meant to be sent to the user
 
 //                        $reservation->players = $reservation->getTennisReservationPlayersWithNameByReservationId ();
-//                           
+//
 //			foreach ( $reservation->players as $index => $player ) {
 //				unset ( $reservation->players [$index]->device_registeration_id );
 //				unset ( $reservation->players [$index]->device_type );
@@ -199,20 +241,13 @@ class ReservationsController extends Controller
             $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
             //dd($firstReservationsOnTimeSlots);
             $this->response = $firstReservationsOnTimeSlots;
-
-
             \DB::commit();
-        } catch (\Exception $e) {
+            return true;
+        }catch(\Exception $e){
             dd($e);
-            \DB::rollback();
-
-            \Log::info(__METHOD__, [
-                'error' => $e->getMessage()
-            ]);
-            $this->error = "exception";
+            return false;
         }
 
-        return $this->response();
     }
 
     public function update(Request $request)

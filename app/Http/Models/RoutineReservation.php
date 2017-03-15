@@ -21,33 +21,39 @@ class RoutineReservation extends Model
     public function reservation_players(){
         return $this->morphMany("App\Http\Models\ReservationPlayer","reservation");
     }
-    
-     public function attachPlayers($players, $parent = 0, $confirmAll = false) {
-		if (is_array ( $players ) && ! empty ( $players )) {
-			foreach ( $players as $player ) {
-                                
-                                $status = ($parent  && $player == $parent) || $player == "guest" ||  $confirmAll ? \Config::get ( 'global.reservation.confirmed' )  :  \Config::get ( 'global.reservation.pending' ) ;
-                               
-                                if($player == "guest"){
-                                    ReservationPlayer::create([ 
-						'reservation_id' => $this->id,
-                                                'reservation_type'=>self::class,
-						'member_id' => 0,
-						'status' => $status 
-                                    ]);
-                                  
-                                }else{
-                                    ReservationPlayer::create([ 
-						'reservation_id' => $this->id,
-                                                'reservation_type'=>self::class,
-						'member_id' => $player,
-						'status' => $status  
-                                    ]);
-                                }
-				
-			}
-		}
-		
+
+    public function attachPlayers($players, $parent = 0, $confirmAll = false, $group_size,$reservation_status) {
+        if (is_array ( $players ) && ! empty ( $players )) {
+            foreach ( $players as $player ) {
+
+                $status = ($parent  && $player == $parent) || $player == "guest" ||  $confirmAll ? \Config::get ( 'global.reservation.confirmed' )  :  \Config::get ( 'global.reservation.pending' ) ;
+
+                if($player == "guest"){
+                    ReservationPlayer::create([
+                        'reservation_id' => $this->id,
+                        'reservation_type'=>self::class,
+                        'member_id' => 0,
+                        'parent_id' => $parent,
+                        'group_size' => $group_size,
+                        'response_status' => $status,
+                        'reservation_status' => $reservation_status
+                    ]);
+
+                }else{
+                    ReservationPlayer::create([
+                        'reservation_id' => $this->id,
+                        'reservation_type'=>self::class,
+                        'member_id' => $player,
+                        'parent_id' => $parent,
+                        'group_size' => $group_size,
+                        'response_status' => $status,
+                        'reservation_status' => $reservation_status
+                    ]);
+                }
+
+            }
+        }
+
     }
     
     public function attachTimeSlot($timeSlot) {
@@ -61,20 +67,29 @@ class RoutineReservation extends Model
     }
 
     /**
+     * @param string $reservation_status
      * @return int|null
      *
      * counts and returns no. of players with a status reserved + groupsizes for groups that are pending reserved
      * i-e method will return a number that will reflect the number of players that will eventually play
+     * values for reservation status can be
+     * -reserved
+     * -both
      */
-    public function sumOfReservedAndPendingReservedIntendedSize(){
+    public function sumOfGroupSizes($reservation_status){
 
             if($this->reservation_groups){
                 $sum = 0;
                 foreach($this->reservation_groups as $group){
-                    if($group->reservation_status == \Config::get ( 'global.reservation.reserved' ) ||
-                        $group->reservation_status == \Config::get ( 'global.reservation.pending_reserved' )){
+                    if($reservation_status == "reserved"){
+                        if($group->reservation_status == \Config::get ( 'global.reservation.reserved' ) ||
+                            $group->reservation_status == \Config::get ( 'global.reservation.pending_reserved' )){
+                            $sum += $group->group_size;
+                        }
+                    }else if($reservation_status == "both"){
                         $sum += $group->group_size;
                     }
+
                 }
                 return $sum;
             }else{
@@ -122,7 +137,7 @@ class RoutineReservation extends Model
             }
             $reservation->reservation_groups = $reservation_groups;
             $reservation->requested_reservation_slots = $totalRequestedReservationSlots;
-            dd($reservation->toArray());
+            return $reservation;
 
 
 

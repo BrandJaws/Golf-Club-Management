@@ -500,10 +500,20 @@ return [
         'httpCode' => '200',
         'message' => 'Successfuly Updated A News Feed'
     ],
-    'players_already_have_booking'=>[
-                                'code'=>'87',
-                                'httpCode' => '412',
-                                'message'=>':player_names already have a booking during this timeslot'
+    'players_already_have_booking' => [
+        'code' => '87',
+        'httpCode' => '412',
+        'message' => ':player_names already have a booking during this timeslot'
+    ],
+    'coach_created_successfully' => [
+        'code' => '200',
+        'httpCode' => '200',
+        'message' => 'Coach registered successfully'
+    ],
+    'coach_updated_successfully' => [
+        'code' => '200',
+        'httpCode' => '200',
+        'message' => 'Coach updated successfully'
     ],
     'pushNotificationMessageBodies' => [
         'reservation_confirmation_prompt' => "%s has added you to a reservation at %s on %s for court %s. Are you available?",
@@ -518,5 +528,4 @@ return [
         'status_reserved' => 'Your status is Reserved.',
         'status_pending' => 'Your status is Pending.'
     ]
-]
-;
+];

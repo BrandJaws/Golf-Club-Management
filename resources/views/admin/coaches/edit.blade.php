@@ -7,41 +7,41 @@
 		<!-- ############ PAGE START-->
 		<div class="profile-main padding" id="selectionDepHidden">
 			<div class="row details-section">
-				<form action="{{route('admin.coaches.store')}}"  method="post" enctype="multipart/form-data">
+				<form action="{{route('admin.coaches.update', $coach['id'])}}"  method="post" enctype="multipart/form-data">
 				@if(Session::has('error'))
                     <div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
                     @endif
                     @if(Session::has('success'))
                     <div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
                     @endif
-					<input type="hidden" name="_method" value="POST" />
-				   {{ csrf_field() }}
+					<input type="hidden" name="_method" value="PUT" />
+                    	{{ csrf_field() }}
 					<div class="col-md-8">
 						<div class="form-group {{($errors->has('firstName'))?'has-error':''}}">
                               <label class="form-control-label">First Name</label> 
-                              <input type="text" name="firstName"  class="form-control" value="{{Request::old('firstName')}}" />
+                              <input type="text" name="firstName"  class="form-control" value="{{$coach['firstName']}}" />
                               @if($errors->has('firstName')) <span class="help-block errorProfilePic">{{$errors->first('firstName') }}</span> @endif
                         </div>
                         <div class="form-group {{($errors->has('lastName'))?'has-error':''}}">
                               <label class="form-control-label">Last Name</label> 
-                              <input type="text" name="lastName" class="form-control" value="{{Request::old('lastName')}}" />
+                              <input type="text" name="lastName" class="form-control" value="{{$coach['lastName']}}" />
                               @if($errors->has('lastName')) <span class="help-block errorProfilePic">{{$errors->first('lastName') }}</span> @endif
                         </div>
                         <div class="form-group {{($errors->has('email'))?'has-error':''}}">
                              <label class="form-control-label">Email</label> 
-                             <input type="email" class="form-control" name="email" value="{{Request::old('email')}}" />
+                             <input type="email" class="form-control" name="email" value="{{$coach['email']}}" />
                              @if($errors->has('email')) <span class="help-block errorProfilePic">{{$errors->first('email') }}</span> @endif
                         </div>
 						<div class="form-group {{($errors->has('phone'))?'has-error':''}}">
 							<label class="form-control-label">Contact Number</label> 
-							<input type="tel" class="form-control" name="phone" value="{{Request::old('phone')}}"/>
+							<input type="tel" class="form-control" name="phone" value="{{$coach['phone']}}"/>
 							@if($errors->has('phone')) <span class="help-block errorProfilePic">{{$errors->first('phone') }}</span> @endif
 						</div>
-						<div class="form-group">
+						<div class="form-group {{($errors->has('specialities'))?'has-error':''}}">
 							<label class="form-control-label">Specialities</label> 
-							<input type="text" class="form-control" id="coachSpecialities" data-role="tagsinput" name="specialities" value="{{Request::old('specialities')}}" />
+							<input type="text" class="form-control" id="coachSpecialities" data-role="tagsinput" name="specialities" value="{{$coach['specialities']}}" />
 							<span class="help-block m-b-none" style="font-style: italic">Each separated with a comma.</span>
-							@if($errors->has('phone')) <span class="help-block errorProfilePic">{{$errors->first('phone') }}</span> @endif
+							@if($errors->has('specialities')) <span class="help-block errorProfilePic">{{$errors->first('specialities') }}</span> @endif
 						</div>
 						<br />
 						<div class="form-group">
@@ -52,16 +52,16 @@
 								class="fa fa-ban"></i> &nbsp;Cancel</a>
 						</div>
 					</div>
-						<div class="col-md-4">
-						<div class="text-center">
-							<img src="{{asset('assets/images/user.png')}}" class="img-responsive img-circle defaultImg" />
-							<div class="form-group">
+						  <div class="col-md-4">
+                            <div class="text-center">
+							<img src="{{(isset($coach['profilePic']) && $coach['profilePic'])? asset($coach['profilePic']): asset('assets/images/user.png')}}" class="img-responsive img-circle defaultImg" />
+							<div class="form-group {{($errors->has('profilePic'))?'has-error':''}}">
 								<label class="form-control-label">Add Image</label> 
-								<input type="file" class="form-control" name="profilePic" />
+								<input type="file" name="profilePic" class="form-control" />
 								@if($errors->has('profilePic')) <span class="help-block errorProfilePic">{{$errors->first('profilePic') }}</span> @endif
 							</div>
 						</div>
-					</div>
+                        </div>
 				</form>
 			</div>
 		</div>

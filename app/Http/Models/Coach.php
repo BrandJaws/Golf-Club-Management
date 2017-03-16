@@ -20,6 +20,7 @@ class Coach extends Model
         'profilePic',
         'gender',
         'dob',
+        'specialities',
         'status'
     ];
 
@@ -34,7 +35,11 @@ class Coach extends Model
         return $this->belongsTo('App\Http\Models\Club');
     }
 
-  
+  /**
+   * @deprecated use fill instead of populate
+   * @param array $data
+   * @return \App\Http\Models\Coach
+   */
     public function populate($data = [])
     {
         if (array_key_exists('firstName', $data)) {
@@ -115,8 +120,8 @@ class Coach extends Model
                 $query->orWhere('coaches.email', 'like', "%$searchTerm%");
             }
         })
-            ->select('coaches.id as id', 'coaches.firstName', 'coaches.lastName', 'coaches.email', 'coaches.phone', 'coaches.gender')
-            ->orderby('coaches.created_at', 'ASC')
+            ->select('coaches.id as id', 'coaches.firstName', 'coaches.lastName', 'coaches.email','coaches.phone', 'coaches.specialities')
+            ->orderby('coaches.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'
         ), 'current_page', $currentPage);

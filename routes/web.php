@@ -252,6 +252,22 @@ Route::group([
                 'as' => 'create',
                 'uses' => 'ClubAdmin\Coaches\CoachesController@create'
             ]);
+            Route::post('/', [
+                'as' => 'store',
+                'uses' => 'ClubAdmin\Coaches\CoachesController@store'
+            ]);
+            Route::get('/edit/{coach_id}', [
+                'as' => 'edit',
+                'uses' => 'ClubAdmin\Coaches\CoachesController@edit'
+            ]);
+            Route::put('/{coach_id}', [
+                'as' => 'update',
+                'uses' => 'ClubAdmin\Coaches\CoachesController@update'
+            ]);
+            Route::delete('/{coach_id}', [
+                'as' => 'delete',
+                'uses' => 'ClubAdmin\Coaches\CoachesController@destroy'
+            ]);
         });
         /**
          * routes related to beacons

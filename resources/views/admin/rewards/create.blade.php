@@ -58,7 +58,9 @@
 						</div>
 					</form>
 				</div>
-				<div class="col-md-4"></div>
+				<div class="col-md-4">
+					<img src="{{asset('/assets/images/offer-preview.jpg')}}" class="img-responsive" alt="" />
+				</div>
 			</div>
 		</div>
 	</div>

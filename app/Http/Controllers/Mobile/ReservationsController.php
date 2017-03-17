@@ -30,8 +30,9 @@ class ReservationsController extends Controller
 
     public function store(Request $request)
     {
+
         // dd(Carbon::now()->toDateTimeString());
-        // dd($request->all());
+
         if (!$request->has('club_id')) {
             $this->error = "mobile_invalid_club_identifire";
             return $this->response();
@@ -72,24 +73,12 @@ class ReservationsController extends Controller
 
         if (!$request->has('player') || (is_array($request->get('player')) && empty ($request->get('player')))) {
 
-            if (!$request->has('guests')) {
-                $this->error = "player_missing";
-                return $this->response();
-            } else if ((int)$request->get('guests') <= 0) {
-                $this->error = "player_missing";
-                return $this->response();
-            }
             $players = [];
         } else {
             $players = $request->get('player');
         }
 
-        if (!$request->has('parent_id') || ($request->get('parent_id') == 0)) {
-            //$this->error = "reservation_parent_missing";
-            //return $this->response ();
-        } else {
-            $players[] = $request->get('parent_id');
-        }
+        $parent_id = Auth::user()->id;
 
 
         $players = array_filter($players, function ($val) {
@@ -105,114 +94,132 @@ class ReservationsController extends Controller
         //add number of guests as separate values to the players array
         if ($request->has('guests') && $request->get('guests') > 0) {
             for ($x = 0; $x < $request->get('guests'); $x++) {
-                $players[] = "guest";
+                array_unshift($players, "guest");
             }
 
         }
 
-        if (count($players) < 1 || count($players) > 4) {
+        if ($request->get('group_size') > 4 || $request->get('guests') > 3) {
             $this->error = "mobile_players_are_not_enough";
+            return $this->response();
+        }
+        array_unshift($players, $parent_id);
+
+        if(count($players) < $request->get('group_size')){
+            $this->error = "players_less_than_group_size";
+            return $this->response();
+        }
+
+        $reservationIdOnTimeSlot = $course->validateIfAllowedRoutineReservationAndReturnIdIfAlreadyExists($startTime);
+        if ($reservationIdOnTimeSlot === false) {
+
+            $this->error = "mobile_slot_already_reserved";
             return $this->response();
         }
 
 
-        try {
-            \DB::beginTransaction();
-
-
-            $reservationIdOnTimeSlot = $course->validateIfAllowedRoutineReservationAndReturnIdIfAlreadyExists($startTime);
-            RoutineReservation::findAndGroupReservationForReservationProcess($reservationIdOnTimeSlot);
-        
-            if ($reservationIdOnTimeSlot == 0)
-            {
+        if ($reservationIdOnTimeSlot > 0) {
+            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservationIdOnTimeSlot);
+            if (($reservation->sumOfGroupSizes('both') + $request->group_size) > 16) {
                 $this->error = "mobile_slot_already_reserved";
                 return $this->response();
             }
+            $reservationWithSelfAsParent = $reservation->getGroupByParentId(Auth::user()->id);
+            if ($reservationWithSelfAsParent) {
+                $this->error = "you_already_have_booking";
+                return $this->response();
+            }
+
             $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime, $players);
             if ($playersWithOtherReservationsInBetween != null) {
                 $this->error = "players_already_have_booking";
                 $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
                 return $this->response();
             }
-            $reservationData ['club_id'] = $course->club_id;
-            $reservationData ['course_id'] = $course->id;
-            $reservationData ['parent_id'] = $request->get('parent_id');
 
-            //Check if there are already bookings on timeslot. If not this one goes to reservation
-            //otherwise it goes to waiting
-            //if (count ( $bookingsFoundOnTimeSlotForRequestedCourse ) == 0) {
-            //Check if there are any guests along with parent
-            //If so parent + any guests fulfill the criteria for confirmed reservation
+            $result = $this->addNewGroupToExistingReservation($request, $reservation, $players, $parent_id);
 
-            //    if($request->has('guests') && (int)$request->get('guests') > 0){
 
-            $reservationData ['status'] = \Config::get('global.reservation.reserved');
-            //    }else{
-            //        $reservationData ['status'] = \Config::get ( 'global.reservation.pending_reserved' );
-            //    }
+        } else {
 
-            //} else {
-            //Check if there are any guests along with parent
-            //If so parent + any guests fulfill the criteria for confirmed waiting
-            //     if($request->has('guests') && (int)$request->get('guests') > 0){
-            //        $reservationData ['status'] = \Config::get ( 'global.reservation.waiting' );
-            //    }else{
-            //        $reservationData ['status'] = \Config::get ( 'global.reservation.pending_waiting' );
-            //    }
+            $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime, $players);
+            if ($playersWithOtherReservationsInBetween != null) {
+                $this->error = "players_already_have_booking";
+                $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
+                return $this->response();
+            }
 
-            //}
+            $result = $this->createNewReservationAndGroup($request, $course, $players, $parent_id, $startTime);
+
+
+        }
+        if ($result == "success") {
+            $this->response = "mobile_reservation_successfull";
+        } else {
+            $this->error = $result;
+        }
+
+
+        return $this->response();
+
+    }
+
+    private function createNewReservationAndGroup(Request $request, $course, $players, $parent_id, $startTime)
+    {
+
+
+        $reservationData ['club_id'] = $course->club_id;
+        $reservationData ['course_id'] = $course->id;
+
+        try {
+            \DB::beginTransaction();
             $reservation = RoutineReservation::create($reservationData);
-            //$reservation->populate ( $reservationData )->save ();
-
-            $reservation->attachPlayers($players, $reservationData ['parent_id'], true);
+            $reservation->attachPlayers($players, $parent_id, false, $request->get('group_size'), \Config::get('global.reservation.pending_waiting'));
             $reservation->attachTimeSlot($startTime);
-            // Send push notifications to players associated with the reservation
-            //$playersToNotify = TennisReservationPlayer::returnTennisReservationPlayersFromPlayerIdsArray ( $reservation->id, $players, true );
+            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation->id);
+            $reservation->updateReservationStatusesForAReservation();
 
-            //$parent = Member::find ( $reservation->parent_id );
-
-            //foreach ( $playersToNotify as $player ) {
-            //	$player->sendNotificationToPlayerForReservationConfirmation ( $reservation, $parent, $course->name );
-            //}
-
-            //$players_confirmed = $reservation->number_of_confirm_players();
-            //if($players_confirmed >=2){
-            //    $reservation->status = \Config::get ( 'global.reservation.reserved' );
-            //}
             // Dispatch job to assess reservation status after given time delay
             //$reservation->dispatchMakeReservationDecisionJob ();
 
-            // Unset properties not meant to be sent to the user
-
-//                        $reservation->players = $reservation->getTennisReservationPlayersWithNameByReservationId ();
-//                           
-//			foreach ( $reservation->players as $index => $player ) {
-//				unset ( $reservation->players [$index]->device_registeration_id );
-//				unset ( $reservation->players [$index]->device_type );
-//			}
-//			unset ( $reservation->tennis_reservation_players );
-
-            //$reservation->date = Carbon::parse ( $reservation->time_start )->format ( 'm/d/Y' );
-            //$reservation->time_start = Carbon::parse ( $reservation->time_start )->format ( 'h:i A' );
-            //$reservation->modifyReservationObjectForReponseOnCRUDOperations();
-
-            $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
-            //dd($firstReservationsOnTimeSlots);
-            $this->response = $firstReservationsOnTimeSlots;
-
 
             \DB::commit();
+            return "success";
         } catch (\Exception $e) {
-            dd($e);
             \DB::rollback();
 
             \Log::info(__METHOD__, [
                 'error' => $e->getMessage()
             ]);
-            $this->error = "exception";
+            return "exception";
         }
 
-        return $this->response();
+    }
+
+    private function addNewGroupToExistingReservation(Request $request, $reservation, $players, $parent_id)
+    {
+
+        try {
+            \DB::beginTransaction();
+
+            $reservation->attachPlayers($players, $parent_id, false, $request->get('group_size'), \Config::get('global.reservation.pending_waiting'));
+            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation->id);
+            $reservation->updateReservationStatusesForAReservation();
+
+            // Dispatch job to assess reservation status after given time delay
+            //$reservation->dispatchMakeReservationDecisionJob ();
+
+            \DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            \DB::rollback();
+
+            \Log::info(__METHOD__, [
+                'error' => $e->getMessage()
+            ]);
+            return "exception";
+        }
+
     }
 
     public function update(Request $request)

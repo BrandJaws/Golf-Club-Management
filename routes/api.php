@@ -21,8 +21,10 @@ Route::post('/password/forgot', '\App\Http\Controllers\Mobile\MembersController@
 
 
 Route::group([
+	'middleware'=>'auth.mobile',
 	'prefix' => 'reservations',
-	'as' => 'reservations.'
+	'as' => 'reservations.',
+
 ], function () {
 	Route::get('/', [
 		'as' => 'reservations',

@@ -11,7 +11,8 @@ class ReservationPlayer extends Model
         'reservation_id',
         'reservation_type',
         'member_id',
-        'status',
+        'parent_id',
+        'group_size',
         'response_status',
         'reservation_status',
         'nextJobToProcess'

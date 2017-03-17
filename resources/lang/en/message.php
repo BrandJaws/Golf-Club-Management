@@ -515,6 +515,16 @@ return [
         'httpCode' => '200',
         'message' => 'Coach updated successfully'
     ],
+    'players_less_than_group_size'=>[
+        'code'=>'88',
+        'httpCode' => '412',
+        'message'=>'Number of players sent is less than group size for reservation'
+    ],
+    'you_already_have_booking'=>[
+        'code'=>'89',
+        'httpCode' => '412',
+        'message'=>':You already have a booking during this timeslot'
+    ],
     'pushNotificationMessageBodies' => [
         'reservation_confirmation_prompt' => "%s has added you to a reservation at %s on %s for court %s. Are you available?",
         'reservation_confirmation_prompt_final' => "You have a reservation at %s on %s for court %s. Are you still available?",

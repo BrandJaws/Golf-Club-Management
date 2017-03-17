@@ -35,7 +35,7 @@ Route::group([
 		'uses' => 'Mobile\ReservationsController@store'
 	]);
 	Route::put('/', [
-		'as' => 'store',
+		'as' => 'update',
 		'uses' => 'Mobile\ReservationsController@update'
 	]);
 	Route::delete('/{reservation_id}', [
@@ -43,8 +43,16 @@ Route::group([
 		'uses' => 'Mobile\ReservationsController@delete'
 	]);
 	Route::get('/date/{date}', [
-		'as' => 'date',
+		'as' => 'bydate',
 		'uses' => 'ClubAdmin\Reservations\ReservationsController@getReservationByDate'
+	]);
+	Route::get('/accept/{reservation_player_id}', [
+		'as' => 'accept',
+		'uses' => 'Mobile\ReservationsController@acceptReservationRequest'
+	]);
+	Route::get('/decline/{reservation_player_id}', [
+		'as' => 'decline',
+		'uses' => 'Mobile\ReservationsController@deleteReservationPlayer'
 	]);
 
 });

@@ -515,20 +515,30 @@ return [
         'httpCode' => '200',
         'message' => 'Coach updated successfully'
     ],
-    'players_less_than_group_size'=>[
-        'code'=>'88',
+    'players_less_than_group_size' => [
+        'code' => '88',
         'httpCode' => '412',
-        'message'=>'Number of players sent is less than group size for reservation'
+        'message' => 'Number of players sent is less than group size for reservation'
     ],
-    'you_already_have_booking'=>[
-        'code'=>'89',
+    'you_already_have_booking' => [
+        'code' => '89',
         'httpCode' => '412',
-        'message'=>':You already have a booking during this timeslot'
+        'message' => 'You already have a booking during this timeslot'
     ],
-    'training_created_success'=>[
-        'code'=>'90',
+    'mobile_not_enough_slots_remaining' => [
+        'code' => '90',
+        'httpCode' => '412',
+        'message' => 'Not enough slots remaining for reservation'
+    ],
+    'group_already_complete' => [
+        'code' => '91',
+        'httpCode' => '412',
+        'message' => 'The group you were added to has been filled by other players. Do you want to reserve your place separate from the group?'
+    ],
+    'training_created_success' => [
+        'code' => '90',
         'httpCode' => '200',
-        'message'=>'Training created successfully'
+        'message' => 'Training created successfully'
     ],
     'pushNotificationMessageBodies' => [
         'reservation_confirmation_prompt' => "%s has added you to a reservation at %s on %s for court %s. Are you available?",

@@ -28,8 +28,8 @@ return [
     'reservation' => [
         'pending' => 'PENDING',
         'confirmed' => 'CONFIRMED',
-        'cancelled' => 'CANCELLED',
-        'na' => 'NA',
+        'dropped' => 'DROPPED',
+        'new_addition' => 'NEW ADDITION',
         'waiting' => 'WAITING',
         'reserved' => 'RESERVED',
         'pending_reserved' => 'PENDING RESERVED',

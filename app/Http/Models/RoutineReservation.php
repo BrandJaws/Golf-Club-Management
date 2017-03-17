@@ -72,13 +72,39 @@ class RoutineReservation extends Model
 
     }
 
+
+    /**
+     * Updates reservation statuses for a reservation
+     * Shrinks group size if the number of players falls below intended group size
+     * Changes status from pending to reserved or waiting if the intended group size is matched
+     * Promotes from waiting to reserved if the slots on top are available
+     *
+     *
+     */
     public function updateReservationStatusesForAReservation()
     {
         if ($this->reservation_groups) {
 
             foreach ($this->reservation_groups as $group) {
-                //Sync number of remaining players to group size
+
+                //Expand existing reservation if there are new additions
+                $newAdditions = $this->playersInAGroupWithReservationStatusNewAddition($group);
+                if ($newAdditions && $group->reservation_status == \Config::get('global.reservation.reserved')) {
+                    $group->group_size += $newAdditions;
+                    $group->reservation_status = \Config::get('global.reservation.pending_reserved');
+                    foreach ($group->players as $player) {
+
+                            $player->reservation_status = \Config::get('global.reservation.pending_reserved');
+                            $player->group_size = $group->group_size;
+                            $player->save();
+                  
+                    }
+
+                }
+
+                //Shrink group size if number of remaining players is less than group size
                 if (count($group->players) < $group->group_size) {
+                    $group->group_size = count($group->players);
                     foreach ($group->players as $player) {
                         if ($player->group_size != count($group->players)) {
                             $player->group_size = count($group->players);
@@ -90,7 +116,15 @@ class RoutineReservation extends Model
 
                 //change status to reserved or waiting from pending based on the number of members who have accepted
                 if ($this->playersInAGroupWithResponseStatusConfirmed($group) >= $group->group_size) {
-                    for ($x = 0; $x < $group->group_size; $x++) {
+
+                        if ($group->reservation_status == \Config::get('global.reservation.pending_reserved')) {
+                            $group->reservation_status = \Config::get('global.reservation.reserved');
+
+                        } else if ($group->reservation_status == \Config::get('global.reservation.pending_waiting')) {
+                            $group->reservation_status = \Config::get('global.reservation.waiting');
+
+                        }
+
                         foreach ($group->players as $player) {
                             if ($player->reservation_status == \Config::get('global.reservation.pending_reserved')) {
                                 $player->reservation_status = \Config::get('global.reservation.reserved');
@@ -101,7 +135,7 @@ class RoutineReservation extends Model
                             }
                         }
 
-                    }
+
 
                 }
 
@@ -112,9 +146,16 @@ class RoutineReservation extends Model
                      ($group->reservation_status == \Config::get('global.reservation.pending_waiting') ||
                       $group->reservation_status == \Config::get('global.reservation.waiting') ) &&
                       $sumOfGroupSizesReserved < 4 &&
-                      $this->group_size <= (4-$sumOfGroupSizesReserved)
+                      $group->group_size <= (4-$sumOfGroupSizesReserved)
 
                 ){
+                    if ($group->reservation_status == \Config::get('global.reservation.pending_waiting')) {
+                        $group->reservation_status = \Config::get('global.reservation.pending_reserved');
+
+                    } else if ($group->reservation_status == \Config::get('global.reservation.waiting')) {
+                        $group->reservation_status = \Config::get('global.reservation.reserved');
+
+                    }
                     foreach ($group->players as $player) {
                         if ($player->reservation_status == \Config::get('global.reservation.pending_waiting')) {
                             $player->reservation_status = \Config::get('global.reservation.pending_reserved');
@@ -158,6 +199,17 @@ class RoutineReservation extends Model
         }
 
         return $pendingPlayers;
+    }
+    public function playersInAGroupWithReservationStatusNewAddition($group)
+    {
+        $newAdditions = 0;
+        foreach ($group->players as $player) {
+            if ($player->reservation_status == \Config::get('global.reservation.new_addition')) {
+                $newAdditions++;
+            }
+        }
+
+        return $newAdditions;
     }
 
     public function getGroupByParentId($parent_id)
@@ -249,12 +301,14 @@ class RoutineReservation extends Model
                 $reservation_groups[$groupCount]->players[] = $reservationPlayer;
 
             }
-        }
-        usort($reservation_groups, function ($a, $b) {
+            usort($reservation_groups, function ($a, $b) {
 
-            return $a->created_at->diffInSeconds($b->created_at);
-        });
-        $reservation->reservation_groups = $reservation_groups;
+                return $a->created_at->diffInSeconds($b->created_at);
+            });
+
+            $reservation->reservation_groups = $reservation_groups;
+        }
+
 
         return $reservation;
 

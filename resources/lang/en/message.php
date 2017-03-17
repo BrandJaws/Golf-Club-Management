@@ -525,6 +525,11 @@ return [
         'httpCode' => '412',
         'message'=>':You already have a booking during this timeslot'
     ],
+    'training_created_success'=>[
+        'code'=>'90',
+        'httpCode' => '200',
+        'message'=>'Training created successfully'
+    ],
     'pushNotificationMessageBodies' => [
         'reservation_confirmation_prompt' => "%s has added you to a reservation at %s on %s for court %s. Are you available?",
         'reservation_confirmation_prompt_final' => "You have a reservation at %s on %s for court %s. Are you still available?",

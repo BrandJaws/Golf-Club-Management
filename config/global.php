@@ -18,7 +18,7 @@ return [
             'training' => false,
             'coach' => false,
             'league' => false,
-            'course'=>false
+            'course' => false
         ]
     ],
     'deviceType' => [
@@ -36,11 +36,15 @@ return [
         'pending_waiting' => 'PENDING WAITING',
         'timeForReservationInSeconds' => 3600
     ],
-    'status'=>[
-        'active'=>'ACTIVE',
-        'inactive'=>'INACTIVE',
-        'closed'=>'CLOSED',
-        'open'=>'OPEN'
-        
-    ],
+    'status' => [
+        'active' => 'ACTIVE',
+        'inactive' => 'INACTIVE',
+        'closed' => 'CLOSED',
+        'open' => 'OPEN'
+    ]
+    ,
+    'contentType' => [
+        'image' => 'IMAGE',
+        'video' => 'VIDEO'
+    ]
 ];

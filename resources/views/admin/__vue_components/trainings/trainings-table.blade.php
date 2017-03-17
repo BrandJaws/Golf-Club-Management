@@ -19,7 +19,7 @@
                             @{{ training.name }}
                         </td>
                         <td>
-                            @{{ training.instructor }}
+                            @{{ training.coach }}
                         </td>
                         <td>
                             @{{ training.seats }}
@@ -28,9 +28,9 @@
                             @{{ training.seatsReserved }}
                         </td>
                         <td>
-                            <a href="{{route("admin.trainings.edit")}}" class="blue-cb">edit</a>
+                            <a :href="generateEditRoute('{{Request::url()}}',training.id)" class="blue-cb">edit</a>
                             &nbsp;&nbsp;
-                            <a href="#." class="del-icon"><i class="fa fa-trash"></i></a>
+                            <a href="#." class="del-icon" @click="destroy('{{Request::url()}}',training.id,memberIndex)"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
                 </tbody>
@@ -44,7 +44,45 @@
                 trainingListData:this.trainingsList
             }
         },
+        methods: {
+        	generateEditRoute: function(baseRouteToCurrentPage,id){
+                return baseRouteToCurrentPage+'/edit/'+id;
+            },
+            destroy:function(baseRouteToCurrentPage,id,memberIndex){
+                _url = baseRouteToCurrentPage+'/'+id
+                var request = $.ajax({
 
+                            url: _url,
+                            method: "POST",
+                            headers: {
+                                'X-CSRF-TOKEN': '{{csrf_token()}}',
+                            },
+                            data:{
+
+                                _method:"DELETE",
+                                _token: "{{ csrf_token() }}",
+
+                            },
+                            success:function(msg){
+
+                                      if(msg=="success"){
+                                          this.staffMembers.splice(memberIndex,1);
+                                      }else{
+
+                                      }
+
+                                    }.bind(this),
+
+                            error: function(jqXHR, textStatus ) {
+                                        this.ajaxRequestInProcess = false;
+                                        $("body").append(jqXHR.responseText);
+                                        //Error code to follow
+
+
+                                   }.bind(this)
+                        }); 
+            }
+        }
     });
 
 </script>

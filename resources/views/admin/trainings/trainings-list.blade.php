@@ -35,55 +35,105 @@
 @section('page-specific-scripts')
     @include("admin.__vue_components.trainings.trainings-table")
     <script>
-        var baseUrl = "{{url('')}}";
-        _trainingsList = [{name:'Fantastic Start to Sunday Lunch Promotion',instructor:'Bootstrap Bill',seats:'12',seatsReserved:'08'},
-            {name:'Our best ever full membership offer!!',instructor:'General Swan',seats:'12',seatsReserved:'08'},
-            {name:'Mother Day Sunday Lunch offer',instructor:'Captain Barbosa',seats:'12',seatsReserved:'08'},
-            {name:'Our best ever full membership offer!!',instructor:'Jack The Monkey',seats:'12',seatsReserved:'08'},
-            {name:'Fantastic Start to Sunday Lunch Promotion',instructor:'Captain Jack Sparrow',seats:'12',seatsReserved:'08'},
-            {name:'Fantastic Start to Sunday Lunch Promotion',instructor:'Bootstrap Bill',seats:'12',seatsReserved:'08'},
-            {name:'Our best ever full membership offer!!',instructor:'General Swan',seats:'12',seatsReserved:'08'},
-            {name:'Mother Day Sunday Lunch offer',instructor:'Captain Barbosa',seats:'12',seatsReserved:'08'},
-            {name:'Our best ever full membership offer!!',instructor:'Jack The Monkey',seats:'12',seatsReserved:'08'},
-            {name:'Fantastic Start to Sunday Lunch Promotion',instructor:'Captain Jack Sparrow',seats:'12',seatsReserved:'08'},
-            {name:'Fantastic Start to Sunday Lunch Promotion',instructor:'Bootstrap Bill',seats:'12',seatsReserved:'08'},
-            {name:'Our best ever full membership offer!!',instructor:'General Swan',seats:'12',seatsReserved:'08'},
-            {name:'Mother Day Sunday Lunch offer',instructor:'Captain Barbosa',seats:'12',seatsReserved:'08'},
-            {name:'Our best ever full membership offer!!',instructor:'Jack The Monkey',seats:'12',seatsReserved:'08'},
-            {name:'Fantastic Start to Sunday Lunch Promotion',instructor:'Captain Jack Sparrow',seats:'12',seatsReserved:'08'},
-            {name:'Our best ever full membership offer!!',instructor:'John Smith',seats:'12',seatsReserved:'08'}];
-
-        var vue = new Vue({
-            el: "#trainings-list-table",
-            data: {
-                trainingsList:[],
-                latestPageLoaded:0,
-                ajaxRequestInProcess:false
-            },
-            methods: {
-                loadNextPage:function(){
-                    if(this.latestPageLoaded == 0){
-                        for(x=0; x<_trainingsList.length; x++){
-                            this.trainingsList.push(_trainingsList[x]);
-                        }
-
-                    }
+var baseUrl = "{{url('admin/trainings')}}";
+var vue = new Vue({
+    el: "#trainings-list-table",
+    data: {
+    	trainingsList:({!! $trainings !!}).data,
+        searchQuery:"",
+        lastSearchTerm:"",
+        nextAvailablePage:2,
+        searchRequestHeld:false,
+    },
+    methods: {
+        loadNextPage:function(isSearchQuery){
+            
+			
+            if(isSearchQuery){
+                if(this.ajaxRequestInProcess){
+                    this.searchRequestHeld=true;
                     return;
                 }
-            },
-        });
-
-        $(document).ready(function() {
-            vue.loadNextPage();
-            console.log("bottom!");
-
-        });
-        $(window).scroll(function() {
-            if($(window).scrollTop() + $(window).height() == $(document).height()) {
-                vue.loadNextPage();
-                console.log("bottom!");
+                if(this.searchQuery !== this.lastSearchTerm){
+                    this.nextAvailablePage = 1;
+                }
+                this.lastSearchTerm = this.searchQuery;
+                _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+               
+                
+            }else if(this.searchQuery != ""){
+                _url = baseUrl+'?search='+this.searchQuery+'&current_page='+(this.nextAvailablePage);
+            }else{
+                _url = baseUrl+'?current_page='+(this.nextAvailablePage);
             }
-        });
+            
+          
+            if(this.nextAvailablePage === null){
+                return;
+            }
+            
+            if(!this.ajaxRequestInProcess){
+                this.ajaxRequestInProcess = true;
+                var request = $.ajax({
+                    
+                    url: _url,
+                    method: "GET",
+                    success:function(msg){
+                                
+                                this.ajaxRequestInProcess = false;
+                                if(this.searchRequestHeld){
+                                   
+                                    this.searchRequestHeld=false;
+                                    this.loadNextPage(true);
+                                    
+                                }
+                                
+                                pageDataReceived = msg;
+                                membersList = pageDataReceived.data ;
+                                
+                                //Success code to follow
+                                    if(pageDataReceived.next_page_url !== null){
+                                            this.nextAvailablePage = pageDataReceived.current_page+1;
+                                    }else{
+                                        this.nextAvailablePage = null;
+                                    }
+                                
+                                    if(isSearchQuery){
+                                        
+                                         this.trainingsList=membersList;
+                                    }else{
+                                        
+                                       appendArray(this.trainingsList,membersList);
+                                    }
+                                
+                                
+                                
+                            }.bind(this),
+
+                    error: function(jqXHR, textStatus ) {
+                                this.ajaxRequestInProcess = false;
+
+                                //Error code to follow
+
+
+                           }.bind(this)
+                }); 
+            }
+}
+    },
+});
+
+$(document).ready(function() {
+    vue.loadNextPage();
+    console.log("bottom!");
+
+});
+$(window).scroll(function() {
+    if($(window).scrollTop() + $(window).height() == $(document).height()) {
+        vue.loadNextPage();
+        console.log("bottom!");
+    }
+});
     </script>
 
     @endSection

@@ -332,9 +332,21 @@ Route::group([
                 'as' => 'create',
                 'uses' => 'ClubAdmin\Trainings\TrainingsController@create'
             ]);
-            Route::get('edit', [
+            Route::get('edit/{training_id}', [
                'as' => 'edit',
                 'uses' => 'ClubAdmin\Trainings\TrainingsController@edit'
+            ]);
+            Route::post('/', [
+                'as' => 'store',
+                'uses' => 'ClubAdmin\Trainings\TrainingsController@store'
+            ]);
+            Route::put('/{training_id}', [
+                'as' => 'update',
+                'uses' => 'ClubAdmin\Trainings\TrainingsController@update'
+            ]);
+            Route::delete('/{training_id}', [
+                'as' => 'destroy',
+                'uses' => 'ClubAdmin\Trainings\TrainingsController@destroy'
             ]);
         });
         /**

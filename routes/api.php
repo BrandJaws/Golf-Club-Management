@@ -21,38 +21,43 @@ Route::post('/password/forgot', '\App\Http\Controllers\Mobile\MembersController@
 
 
 Route::group([
-	'middleware'=>'auth.mobile',
-	'prefix' => 'reservations',
-	'as' => 'reservations.',
+	'middleware'=>'auth.mobile'
 
 ], function () {
-	Route::get('/', [
-		'as' => 'reservations',
-		'uses' => 'Mobile\ReservationsController@index'
-	]);
-	Route::post('/', [
-		'as' => 'store',
-		'uses' => 'Mobile\ReservationsController@store'
-	]);
-	Route::put('/', [
-		'as' => 'update',
-		'uses' => 'Mobile\ReservationsController@update'
-	]);
-	Route::delete('/{reservation_id}', [
-		'as' => 'delete',
-		'uses' => 'Mobile\ReservationsController@delete'
-	]);
-	Route::get('/date/{date}', [
-		'as' => 'bydate',
-		'uses' => 'ClubAdmin\Reservations\ReservationsController@getReservationByDate'
-	]);
-	Route::get('/accept/{reservation_player_id}', [
-		'as' => 'accept',
-		'uses' => 'Mobile\ReservationsController@acceptReservationRequest'
-	]);
-	Route::get('/decline/{reservation_player_id}', [
-		'as' => 'decline',
-		'uses' => 'Mobile\ReservationsController@deleteReservationPlayer'
-	]);
+	Route::group([
+		'prefix' => 'reservations',
+		'as' => 'reservations.',
+
+	], function () {
+		Route::get('/', [
+			'as' => 'reservations',
+			'uses' => 'Mobile\ReservationsController@index'
+		]);
+		Route::post('/', [
+			'as' => 'store',
+			'uses' => 'Mobile\ReservationsController@store'
+		]);
+		Route::put('/', [
+			'as' => 'update',
+			'uses' => 'Mobile\ReservationsController@update'
+		]);
+		Route::delete('/', [
+			'as' => 'delete',
+			'uses' => 'Mobile\ReservationsController@delete'
+		]);
+		Route::get('/date/{date}', [
+			'as' => 'bydate',
+			'uses' => 'ClubAdmin\Reservations\ReservationsController@getReservationByDate'
+		]);
+		Route::get('/accept/{reservation_player_id}', [
+			'as' => 'accept',
+			'uses' => 'Mobile\ReservationsController@acceptReservationRequest'
+		]);
+		Route::get('/decline/{reservation_player_id}', [
+			'as' => 'decline',
+			'uses' => 'Mobile\ReservationsController@declineReservationRequest'
+		]);
+
+	});
 
 });

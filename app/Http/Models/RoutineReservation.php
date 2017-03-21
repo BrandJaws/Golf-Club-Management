@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class RoutineReservation extends Model
 {
+    
 
     protected $fillable = [
         'id',
@@ -34,7 +35,7 @@ class RoutineReservation extends Model
                 $status = ($parent && $player == $parent) || $player == "guest" || $confirmAll ? \Config::get('global.reservation.confirmed') : \Config::get('global.reservation.pending');
 
                 if ($player == "guest") {
-                    ReservationPlayer::create([
+                    $reservation_player_created = ReservationPlayer::create([
                         'reservation_id' => $this->id,
                         'reservation_type' => self::class,
                         'member_id' => 0,
@@ -45,7 +46,7 @@ class RoutineReservation extends Model
                     ]);
 
                 } else {
-                    ReservationPlayer::create([
+                    $reservation_player_created = ReservationPlayer::create([
                         'reservation_id' => $this->id,
                         'reservation_type' => self::class,
                         'member_id' => $player,
@@ -55,9 +56,12 @@ class RoutineReservation extends Model
                         'reservation_status' => $reservation_status
                     ]);
                 }
-
+                
             }
+
         }
+
+
 
     }
 
@@ -129,6 +133,14 @@ class RoutineReservation extends Model
                             if ($player->reservation_status == \Config::get('global.reservation.pending_reserved')) {
                                 $player->reservation_status = \Config::get('global.reservation.reserved');
                                 $player->save();
+
+                                //Dispatch Final Cycle Job When the status is reserved
+                                if($player->response_status ==  \Config::get('global.reservation.confirmed')){
+                                    $player->dispatchMakeReservationDecisionJobForFinalCycle();
+                                }
+
+
+
                             } else if ($player->reservation_status == \Config::get('global.reservation.pending_waiting')) {
                                 $player->reservation_status = \Config::get('global.reservation.waiting');
                                 $player->save();
@@ -163,6 +175,10 @@ class RoutineReservation extends Model
                         } else if ($player->reservation_status == \Config::get('global.reservation.waiting')) {
                             $player->reservation_status = \Config::get('global.reservation.reserved');
                             $player->save();
+                            //Dispatch Final Cycle Job When the status is reserved
+                            if($player->response_status ==  \Config::get('global.reservation.confirmed')){
+                                $player->dispatchMakeReservationDecisionJobForFinalCycle();
+                            }
                         }
                     }
                 }

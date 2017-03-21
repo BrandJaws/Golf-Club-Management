@@ -14,6 +14,7 @@ use Carbon\Carbon;
 
 class ReservationsController extends Controller
 {
+    use \PushNotification;
     public function index()
     {
         $dayToday = Carbon::today()->toDateString();
@@ -138,7 +139,7 @@ class ReservationsController extends Controller
                 return $this->response();
             }
 
-            $result = $this->addNewGroupToExistingReservation($request, $reservation, $players, $parent_id);
+            $result = $this->addNewGroupToExistingReservation($request, $reservation, $course, $players, $parent_id, $startTime);
 
 
         } else {
@@ -155,6 +156,7 @@ class ReservationsController extends Controller
 
         }
         if ($result == "success") {
+
             $this->response = "mobile_reservation_successfull";
         } else {
             $this->error = $result;
@@ -180,8 +182,13 @@ class ReservationsController extends Controller
             $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation->id);
             $reservation->updateReservationStatusesForAReservation();
 
-            // Dispatch job to assess reservation status after given time delay
-            //$reservation->dispatchMakeReservationDecisionJob ();
+            // Send message and Dispatch job to assess reservation status after given time delay
+            foreach($reservation->reservation_players as $reservation_player){
+                if(in_array($reservation_player->member_id,$players)){
+                    $reservation_player->sendNotificationToPlayerForReservationConfirmation($startTime, Auth::user(),$course->name);
+                    $reservation_player->dispatchMakeReservationPlayerDecisionJob();
+                }
+            }
 
 
             \DB::commit();
@@ -197,7 +204,7 @@ class ReservationsController extends Controller
 
     }
 
-    private function addNewGroupToExistingReservation(Request $request, $reservation, $players, $parent_id)
+    private function addNewGroupToExistingReservation(Request $request, $reservation, $course, $players, $parent_id, $startTime)
     {
 
         try {
@@ -207,8 +214,15 @@ class ReservationsController extends Controller
             $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation->id);
             $reservation->updateReservationStatusesForAReservation();
 
-            // Dispatch job to assess reservation status after given time delay
-            //$reservation->dispatchMakeReservationDecisionJob ();
+            // Send message and Dispatch job to assess reservation status after given time delay
+            foreach($reservation->reservation_players as $reservation_player){
+
+                if(in_array($reservation_player->member_id,$players)){
+                    $reservation_player->sendNotificationToPlayerForReservationConfirmation($startTime, Auth::user(),$course->name);
+                    $reservation_player->dispatchMakeReservationPlayerDecisionJob();
+                }
+
+            }
 
             \DB::commit();
             return true;
@@ -302,7 +316,8 @@ class ReservationsController extends Controller
             return $this->response();
         }
 
-        $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $reservation->reservation_time_slots[0]->time_start, $players);
+        $startTime = $reservation->reservation_time_slots->first()->time_start;
+        $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime , $players);
         if ($playersWithOtherReservationsInBetween != null) {
             $this->error = "players_already_have_booking";
             $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
@@ -316,11 +331,20 @@ class ReservationsController extends Controller
             $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($request->get('reservation_id'));
             $reservation->updateReservationStatusesForAReservation();
 
+            // Dispatch job to assess reservation status after given time delay
+            foreach($reservation->reservation_players as $reservation_player){
+                if(in_array($reservation_player->member_id,$players)){
+                    $reservation_player->sendNotificationToPlayerForReservationConfirmation($startTime, Auth::user(),$course->name);
+                    $reservation_player->dispatchMakeReservationPlayerDecisionJob();
+                }
+
+            }
+
             $this->response = "mobile_reservation_successfull";
 
             \DB::commit();
         } catch (\Exception $e) {
-            //dd($e);
+
             \DB::rollback();
             \Log::info(__METHOD__, [
                 'error' => $e->getMessage()
@@ -331,52 +355,43 @@ class ReservationsController extends Controller
         return $this->response();
     }
 
-    public function delete($reservation_id)
+    public function delete(Request $request)
     {
-        if (!isset ($reservation_id) || ( int )$reservation_id === 0) {
+        if (!$request->has('reservation_player_id')) {
 
             $this->error = "tennis_reservation_id_missing";
             return $this->response();
         }
-        $reservation = RoutineReservation::find($reservation_id);
-        $reservationResponseIfSucceeds = $reservation;
-        //$reservationResponseIfSucceeds->players = $reservationResponseIfSucceeds->getTennisReservationPlayersWithNameByReservationId ();
-        //$reservationResponseIfSucceeds->date = Carbon::parse ( $reservationResponseIfSucceeds->time_start )->format ( 'm/d/Y' );
-        // dd($reservationPlayersAgainstReservation);
-        if ($reservation == null) {
-
-            $this->error = "invalid_reservation";
+        $reservation_player = ReservationPlayer::find($request->get('reservation_player_id'));
+        $member_id = Auth::user()->id;
+        if(!$reservation_player){
+            $this->error = 'reservation_not_found';
             return $this->response();
-        } else {
-
-            try {
-                \DB::beginTransaction();
-                foreach ($reservation->reservation_players as $player) {
-                    $player->delete();
-                }
-                foreach ($reservation->reservation_time_slots as $timeSlot) {
-                    $timeSlot->delete();
-                }
-                // Send push notifications to players associated with the reservation
-                // $this->sendNotificationToMembersForReservation("Title Of Message", "Body of Message",$tennisReservationResponseIfSucceeds->players);
-
-                // Unset properties not meant to be sent to the user
-                unset ($reservation->players);
-                $reservation->delete();
-                //dd($reservationResponseIfSucceeds);
-                $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
-
-                $this->response = $firstReservationsOnTimeSlots;
-                \DB::commit();
-
-            } catch (\Exception $e) {
-
-                \Log::info(__METHOD__, [
-                    'error' => $e->getMessage()
-                ]);
-                $this->error = "exception";
-            }
         }
+        if($reservation_player->member_id !== $member_id){
+            $this->error = 'user_not_parent';
+            return $this->response();
+        }
+
+        try {
+            \DB::beginTransaction();
+
+            $reservation_player->delete();
+            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_player->reservation_id);
+            $reservation->updateReservationStatusesForAReservation();
+
+            $this->response = "cancel_reservation_success";
+            \DB::commit();
+
+
+        } catch (\Exception $e) {
+
+            \Log::info(__METHOD__, [
+                'error' => $e->getMessage()
+            ]);
+            $this->error = "exception";
+        }
+
         return $this->response();
     }
 
@@ -414,7 +429,7 @@ class ReservationsController extends Controller
                     $reservation_player->response_status = \Config::get('global.reservation.dropped');
                     $reservation_player->save();
 
-                    //Dispatch Job
+
 
 
                     $this->error = "group_already_complete";
@@ -451,17 +466,24 @@ class ReservationsController extends Controller
         return $this->response();
     }
 
-    public function deleteReservationPlayer($reservation_player_id){
+    public function declineReservationRequest($reservation_player_id){
         $reservation_player = ReservationPlayer::find($reservation_player_id);
-        $member_id = Auth::user()->id;
-        if(!$reservation_player){
-            $this->error = 'reservation_not_found';
-            return $this->response();
+        //Block to run only when Auth:user() is found i-e when request is explicitly from the decline request route
+        //In other cases when we want to cancel a reservation such as from the queue job, same method can be used but
+        //will ignore this part when Auth::user() returns null
+        if($user = Auth::user()){
+            $member_id = $user->id;
+            if(!$reservation_player){
+                $this->error = 'reservation_not_found';
+                return $this->response();
+            }
+            if($reservation_player->member_id !== $member_id){
+                $this->error = 'user_not_parent';
+                return $this->response();
+            }
         }
-        if($reservation_player->member_id !== $member_id){
-            $this->error = 'user_not_parent';
-            return $this->response();
-        }
+
+
 
 
         try {
@@ -473,6 +495,8 @@ class ReservationsController extends Controller
 
             $this->response = "success_decline";
             \DB::commit();
+            //Send message to parent
+            $reservation_player->sendNotificationToParentOnRequestDeclinedByPlayer();
 
         } catch (\Exception $e) {
 

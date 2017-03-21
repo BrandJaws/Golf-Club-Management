@@ -18,7 +18,7 @@ return [
             'training' => false,
             'coach' => false,
             'league' => false,
-            'course'=>false
+            'course' => false
         ]
     ],
     'deviceType' => [
@@ -68,4 +68,9 @@ return [
         'reservation_confirmed' => 'reservation_confirmed',
         'announcement' => 'announcement'
     ],
+
+    'contentType' => [
+        'image' => 'IMAGE',
+        'video' => 'VIDEO'
+    ]
 ];

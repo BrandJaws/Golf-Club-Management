@@ -862,4 +862,4 @@ label {
 /* reservations scree range selector */
 
 .modal-header .close { color: #000; }
-.dateCloseIcon { display: inline-block; position: absolute; z-index: 999; left: 195px; background: #ffffff !important; padding: 10px 15px 5px 15px !important; }
+.dateCloseIcon { display: inline-block; position: absolute; z-index: 999; background: #ffffff !important; padding: 10px 15px 5px 15px !important; top: 0; right: -2px; }

@@ -500,32 +500,46 @@ return [
         'httpCode' => '200',
         'message' => 'Successfuly Updated A News Feed'
     ],
-    'players_already_have_booking'=>[
-                                'code'=>'87',
-                                'httpCode' => '412',
-                                'message'=>':player_names already have a booking during this timeslot'
-    ],
-    'players_less_than_group_size'=>[
-        'code'=>'88',
+    'players_already_have_booking' => [
+        'code' => '87',
         'httpCode' => '412',
-        'message'=>'Number of players sent is less than group size for reservation'
+        'message' => ':player_names already have a booking during this timeslot'
     ],
-    'you_already_have_booking'=>[
-        'code'=>'89',
+    'coach_created_successfully' => [
+        'code' => '200',
+        'httpCode' => '200',
+        'message' => 'Coach registered successfully'
+    ],
+    'coach_updated_successfully' => [
+        'code' => '200',
+        'httpCode' => '200',
+        'message' => 'Coach updated successfully'
+    ],
+    'players_less_than_group_size' => [
+        'code' => '88',
         'httpCode' => '412',
-        'message'=>'You already have a booking during this timeslot'
+        'message' => 'Number of players sent is less than group size for reservation'
     ],
-    'mobile_not_enough_slots_remaining'=>[
-        'code'=>'90',
+    'you_already_have_booking' => [
+        'code' => '89',
         'httpCode' => '412',
-        'message'=>'Not enough slots remaining for reservation'
+        'message' => 'You already have a booking during this timeslot'
     ],
-    'group_already_complete'=>[
-        'code'=>'91',
+    'mobile_not_enough_slots_remaining' => [
+        'code' => '90',
         'httpCode' => '412',
-        'message'=>'The group you were added to has been filled by other players. Do you want to reserve your place separate from the group?'
+        'message' => 'Not enough slots remaining for reservation'
     ],
-
+    'group_already_complete' => [
+        'code' => '91',
+        'httpCode' => '412',
+        'message' => 'The group you were added to has been filled by other players. Do you want to reserve your place separate from the group?'
+    ],
+    'training_created_success' => [
+        'code' => '90',
+        'httpCode' => '200',
+        'message' => 'Training created successfully'
+    ],
     'pushNotificationMessageBodies' => [
         'reservation_confirmation_prompt' => "%s has added you to a reservation at %s on %s for court %s. Are you available?",
         'reservation_confirmation_prompt_final' => "You have a reservation at %s on %s for court %s. Are you still available?",
@@ -539,5 +553,4 @@ return [
         'status_reserved' => 'Your status is Reserved.',
         'status_pending' => 'Your status is Pending.'
     ]
-]
-;
+];

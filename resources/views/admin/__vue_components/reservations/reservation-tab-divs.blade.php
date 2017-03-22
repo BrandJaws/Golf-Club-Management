@@ -15,14 +15,17 @@ Vue.component('reservation-tab-divs', {
                                                     <span v-if="timeSlot.reservations[0].reservation_id == ''">
                                                         Time Slot Vacant   
                                                     </span>
-                                                    <span v-else v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players">
+                                                    <span v-else v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players.slice(0,4)">
                                                        @{{reservationPlayer.member_name}}
                                                     </span>
-                                                    
+                                                    <span v-if="timeSlot.reservations[0].players.length > 4">
+                                                       @{{"..."}}
+                                                     </span>
 
-                                                </p>
-                                                <p >
-                                                    <a href="#."data-toggle="modal" data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" :class="timeSlot.reservations[0].reservation_id !=  '' ? 'booked' : ''" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])">@{{ computedButtonTitleValue(timeSlot.reservations) }}</a>\n\
+
+        </p>
+        <p >
+            <a href="#."data-toggle="modal" data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" :class="timeSlot.reservations[0].reservation_id !=  '' ? 'booked' : ''" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])">@{{ computedButtonTitleValue(timeSlot.reservations) }}</a>\n\
                                                 </p>
                                             </div>
                                     </div>

@@ -68,12 +68,7 @@ Vue.component('reservation-tab-tables', {
              
         },
     },
-//    computed: {
-//        reservationsByDateDataSlice: function(){
-//            console.log("abd");
-//            console.log(this.reservationsByDateData.slice(0,4));
-//        }
-//    }
+
   
 });
 </script>

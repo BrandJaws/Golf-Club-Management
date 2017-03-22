@@ -152,7 +152,6 @@ Vue.component('reservation-popup', {
                                             time:this.reservationData.timeSlot, 
                                             player:_players,
                                             guests:_guests,
-                                            parent_id:_players[0],
                                             _token: "{{ csrf_token() }}",
 
                                         },
@@ -188,7 +187,6 @@ Vue.component('reservation-popup', {
                                         data:{
                                             _method:"PUT",
                                             reservation_id:this.reservationData.reservation_id,
-                                            parent_id:_players[0],
                                             player:_players,
                                             guests:_guests,
                                             _token: "{{ csrf_token() }}",
@@ -210,6 +208,7 @@ Vue.component('reservation-popup', {
                                     }); 
         },
         deleteReservation:function(){
+
           
             var request = $.ajax({
                                        

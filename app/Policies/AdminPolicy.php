@@ -18,12 +18,16 @@ class AdminPolicy
      * @param unknown $ability            
      * @return boolean
      */
-    public function before(Employee $user, $ability)
+    public function before($user, $ability)
     {
-        if (is_null($user->permissions)) {
-            return true;
+        if (get_class($user) == 'App\Http\Models\Employee') {
+            if (is_null($user->permissions)) {
+                return true;
+            } else {
+                $this->permissions = json_decode($user->permissions, true);
+            }
         } else {
-            $this->permissions = json_decode($user->permissions, true);
+            return true;
         }
     }
 

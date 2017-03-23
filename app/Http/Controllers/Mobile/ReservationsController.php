@@ -20,7 +20,7 @@ class ReservationsController extends Controller
         $dayToday = Carbon::today()->toDateString();
         $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
         $reservations = Course::getReservationsForACourseByIdForADateRange(1, $dayToday, $fourDaysFromNow);
-        return view('admin.reservations.reservations', ["reservations" => json_encode($reservations)]);
+        return json_decode(json_encode($reservations),true);
     }
 
     public function getReservationByDate($date)

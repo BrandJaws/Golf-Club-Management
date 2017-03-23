@@ -37,7 +37,8 @@ Vue.component('reservations-container', {
                         <reservation-tab-tables
                                 :reservations-by-date="reservations.reservationsByDate"
                                 @edit-reservation="editReservationEventTriggered" 
-                                @new-reservation="newReservationEventTriggered">
+                                @new-reservation="newReservationEventTriggered"
+                                @delete-reservation="deleteReservation">
                         </reservation-tab-tables>
                 
                 </reservation-tabs>
@@ -94,6 +95,38 @@ Vue.component('reservations-container', {
         restoreDefaultDates:function(){
         
             this.$emit("restore-default-dates");
+        },
+        deleteReservation:function(){
+
+
+            var request = $.ajax({
+
+                url: "{{url('admin/reservations')}}"+"/"+this.reservationData.reservation_id,
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}',
+                },
+                data:{
+                    _method:"DELETE",
+                    _token: "{{ csrf_token() }}",
+
+                },
+                success:function(msg){
+
+                    this.emitUpdateReservationsEvent(msg.response);
+                    this.emitClosePopup();
+                }.bind(this),
+
+                error: function(jqXHR, textStatus ) {
+                    this.ajaxRequestInProcess = false;
+
+                    //Error code to follow
+                    if(jqXHR.hasOwnProperty("responseText")){
+                        this.errorMessage = JSON.parse(jqXHR.responseText).response;
+                    }
+
+                }.bind(this)
+            });
         },
     }
   

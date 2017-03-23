@@ -20,8 +20,7 @@ Vue.component('reservation-tab-tables', {
                                     </td>
                                     <td>
                                       <div class="ts-action-btn">
-                                          <a href="#." class="save-btn"><i class="fa fa-save"></i></a>&nbsp;
-                                          <a href="#." class="cancel-btn"><i class="fa fa-ban"></i></a>
+                                          <a href="#." class="cancel-btn" @click="deleteReservationClicked"><i class="fa fa-ban"></i></a>
                                       </div>
                                     </td>
 
@@ -67,6 +66,9 @@ Vue.component('reservation-tab-tables', {
              }
              
         },
+        deleteReservationClicked(){
+
+        }
     },
 
   

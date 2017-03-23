@@ -81,7 +81,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="radio">
-                                                    <label class="ui-check"> <input v-model="memberType"  type="radio" name="relation" value="parent"  class="has-value" @change="affiliate()"  /> <i class="dark-white"></i> Parent
+                                                    <label class="ui-check"> <input v-model="memberType"  type="radio" name="relation" value="parent"  class="has-value" @change="affiliate()" /> <i class="dark-white"></i> Parent
                                                     </label>
                                                 </div>
                                             </div>
@@ -89,9 +89,8 @@
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <div class="radio">
-                                                    <label class="ui-check"> <input v-model="memberType"
-                                                                                    type="radio" name="relation" value="affiliate"
-                                                                                    class="has-value" @change="affiliate()" /> <i
+                                                    <label class="ui-check"> 
+                                                    <input v-model="memberType"  type="radio" name="relation" value="affiliate"  class="has-value" @change="affiliate()" /> <i
                                                                 class="dark-white"></i> Affiliate Member
                                                     </label>
                                                 </div>
@@ -114,7 +113,8 @@
                                             <div class="form-group" id="membersPageAutoCom">
                                                 <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
                                                                    filtered-from-source="true" include-id-in-list="true"
-                                                                   v-model="selectedId" initial-text-value="" search-query-key="search" field-name="memberId"> </auto-complete-box>
+                                                                   v-model="selectedId" initial-text-value="" search-query-key="search" field-name="parentMember"> </auto-complete-box>
+                                            	@if($errors->has('parentMember')) <span class="help-block errorProfilePic">{{$errors->first('parentMember') }}</span> @endif
                                             </div>
                                         </div>
                                     </div>

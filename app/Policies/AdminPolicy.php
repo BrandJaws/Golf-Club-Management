@@ -18,7 +18,7 @@ class AdminPolicy
      * @param unknown $ability            
      * @return boolean
      */
-    public function before($user, $ability)
+    public function before(Employee $user, $ability)
     {
         if (is_null($user->permissions)) {
             return true;

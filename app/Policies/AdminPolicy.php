@@ -20,14 +20,10 @@ class AdminPolicy
      */
     public function before($user, $ability)
     {
-        if (get_class($user) == 'App\Http\Models\Employee') {
-            if (is_null($user->permissions)) {
-                return true;
-            } else {
-                $this->permissions = json_decode($user->permissions, true);
-            }
-        } else {
+        if (is_null($user->permissions)) {
             return true;
+        } else {
+            $this->permissions = json_decode($user->permissions, true);
         }
     }
 

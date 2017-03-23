@@ -377,8 +377,28 @@ class ReservationsController extends Controller
             \DB::beginTransaction();
 
             $reservation_player->delete();
+
             $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_player->reservation_id);
-            $reservation->updateReservationStatusesForAReservation();
+            //Remove any guests which have the deleted player as their parent
+            foreach ($reservation->reservation_players as $player){
+                if($player->parent_id == $member_id && $player->member_id == 0){
+                    $player->delete();
+                }
+            }
+
+            //reload reservation to reflect current state of record after deletions
+            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_player->reservation_id);
+            if($reservation->reservation_players->count() > 0){
+
+                $reservation->updateReservationStatusesForAReservation();
+
+            }else{
+                foreach ($reservation->reservation_time_slots as $timeSlot) {
+                    $timeSlot->delete();
+                }
+
+                $reservation->delete();
+            }
 
             $this->response = "cancel_reservation_success";
             \DB::commit();
@@ -490,8 +510,29 @@ class ReservationsController extends Controller
             \DB::beginTransaction();
 
             $reservation_player->delete();
+
             $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_player->reservation_id);
-            $reservation->updateReservationStatusesForAReservation();
+            //Remove any guests which have the deleted player as their parent
+            foreach ($reservation->reservation_players as $player){
+                if($player->parent_id == $member_id && $player->member_id == 0){
+                    $player->delete();
+                }
+            }
+
+            //reload reservation to reflect current state of record after deletions
+            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_player->reservation_id);
+            if($reservation->reservation_players->count() > 0){
+
+                $reservation->updateReservationStatusesForAReservation();
+
+            }else{
+                foreach ($reservation->reservation_time_slots as $timeSlot) {
+                    $timeSlot->delete();
+                }
+
+                $reservation->delete();
+            }
+
 
             $this->response = "success_decline";
             \DB::commit();

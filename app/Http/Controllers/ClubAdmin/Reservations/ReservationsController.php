@@ -30,8 +30,6 @@ class ReservationsController extends Controller
 
     public function store(Request $request)
     {
-        // dd(Carbon::now()->toDateTimeString());
-        // dd($request->all());
         if (!$request->has('club_id')) {
             $this->error = "mobile_invalid_club_identifire";
             return $this->response();
@@ -184,14 +182,6 @@ class ReservationsController extends Controller
             $players = $request->get('player');
         }
 
-        if (!$request->has('parent_id') || ($request->get('parent_id') == 0)) {
-            //$this->error = "reservation_parent_missing";
-            //return $this->response ();
-        } else {
-            $players[] = $request->get('parent_id');
-        }
-
-
         //$players = array_filter ( $request->get ( 'player' ) );
         $players = array_filter($players, function ($val) {
             if ($val == 0 || trim($val) == "") {
@@ -213,10 +203,10 @@ class ReservationsController extends Controller
 
         }
 
-//        if (count($players) < 1 || count($players) > 4) {
-//            $this->error = "mobile_players_are_not_enough";
-//            return $this->response();
-//        }
+        if (count($players) < 1 || count($players) > 4) {
+            $this->error = "mobile_players_are_not_enough";
+            return $this->response();
+        }
 
         $existing_player_ids_to_be_kept = [];
         $new_players_received_including_guests = [];
@@ -234,7 +224,8 @@ class ReservationsController extends Controller
         //In that case we cannot update. We will only allow updation if the total players competing for the playable
         //or topmost 4 slots are less than or equal to 4
         if($reservationPlayersWithReservationStatusReservedOrPendingReserved->count() > 4){
-            $this->error = "mobile_players_are_not_enough";
+
+            $this->error = "reservation_status_not_final";
             return $this->response();
         }
 
@@ -279,11 +270,7 @@ class ReservationsController extends Controller
             for ($x = 0; $x < count($new_players_received_including_guests); $x++) {
                 if (count($reservation_players_to_be_updated_or_deleted) > 0) {
 
-//                                $useCase =  \Config::get ( 'global.pushNotificationsUseCases.reservation_cancelled_by_parent' );
-//                                $msgTitle = "Reservation Cancelled";
-//                                $msgBody = sprintf(trans('message.pushNotificationMessageBodies.reservation_cancelled_by_parent'),Carbon::parse($reservation->time_start)->format('h:i A'));
-//                                $reservation_players_to_be_updated_or_deleted[0]->sendNotificationToPlayerGeneral($useCase,$msgTitle,$msgBody);
-//                                
+
                     if ($new_players_received_including_guests[$x] == "guest") {
                         $reservation_players_to_be_updated_or_deleted[0]->member_id = 0;
 
@@ -318,58 +305,23 @@ class ReservationsController extends Controller
             if (count($new_players_received_including_guests)) {
 
                 $reservation->attachPlayers($new_players_received_including_guests, 0, true, 1, \Config::get('global.reservation.reserved'));
-        }
+            }
 
 
-//                        $remainingConfirmedPlayers = $reservation->number_of_confirm_players();
-//                        if($remainingConfirmedPlayers < 2){
-//                            //reset status of reservation if the changes have reduced remaining confirmed players
-//                            //below the threshold
-//                            if($reservation->status == \Config::get ( 'global.reservation.reserved' )){
-//                                $reservation->status =  \Config::get ( 'global.reservation.pending_reserved' );
-//                            }else if($reservation->status == \Config::get ( 'global.reservation.waiting' )){
-//                                $reservation->status =  \Config::get ( 'global.reservation.pending_waiting' );
-//                            }
-//                            $reservation->save();
+//            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($request->get('reservation_id'));
+//            if($reservation->reservation_players->count() > 0){
 //
+//                $reservation->updateReservationStatusesForAReservation();
 //
-//                        }
-            //Send messages to newly added players
-//                        $parent = Member::find ( $reservation->parent_id );
-//			$course = Course::find ( $reservation->course_id );
-//			foreach ( $reservation->tennis_reservation_players as $player ) {
-//				$player->sendNotificationToPlayerForReservationConfirmation ( $reservation, $parent, $course->name );
-//			}
+//            }else{
+//                foreach ($reservation->reservation_time_slots as $timeSlot) {
+//                    $timeSlot->delete();
+//                }
+//
+//                $reservation->delete();
+//            }
 
-            // Dispatch job to assess reservation status after given time delay
-//			$reservation->dispatchMakeReservationDecisionJob ();
-//			$this->response = "reservation_updated_successfuly";
-
-            //$playersWithNames = $reservation->getTennisReservationPlayersWithNameByReservationId ();
-
-
-            // Send push notifications to players associated with the reservation
-            // $this->sendNotificationToMembersForReservation("Title Of Message", "Body of Message",$reservation->players);
-
-            // Unset properties not meant to be sent to the user
-//			foreach ( $playersWithNames as $index => $player ) {
-//				unset ( $playersWithNames [$index]->device_registeration_id );
-//				unset ( $playersWithNames [$index]->device_type );
-//                                //Push parent to first place
-//                                if($player->player_id == $reservation->parent_id){
-//                                    $playersWithNames->prepend($player);
-//                                    unset($playersWithNames[$index]);
-//                                }
-//                                
-//			}
-//			unset ( $reservation->tennis_reservation_players );
-//			$reservation->players = array_values($playersWithNames->toArray());
-//			$reservation->date = Carbon::parse ( $reservation->time_start )->format ( 'm/d/Y' );
-//			$reservation->time_start = Carbon::parse ( $reservation->time_start )->format ( 'h:i A' );
-//			
-            //$reservation->modifyReservationObjectForReponseOnCRUDOperations();
             $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
-            //dd($firstReservationsOnTimeSlots);
             $this->response = $firstReservationsOnTimeSlots;
             \DB::commit();
         } catch (\Exception $e) {
@@ -410,17 +362,15 @@ class ReservationsController extends Controller
 
                 }
 
-                $reservation->load('reservation_players');
+                $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_id);
                 if($reservation->reservation_players->count() > 0){
-                    $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_id);
+
                     $reservation->updateReservationStatusesForAReservation();
 
                 }else{
                     foreach ($reservation->reservation_time_slots as $timeSlot) {
                         $timeSlot->delete();
                     }
-                    // Send push notifications to players associated with the reservation
-                    // $this->sendNotificationToMembersForReservation("Title Of Message", "Body of Message",$tennisReservationResponseIfSucceeds->players);
 
                     $reservation->delete();
                 }

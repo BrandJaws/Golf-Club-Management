@@ -9,7 +9,7 @@ Vue.component('reservation-popup', {
                   <div class="modal-dialog  modal-lg fade-down" id="animate" ui-class="fade-down">
                     <div class="modal-content">
                       <div class="modal-header">
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="closePopup">×</span></button>
+                          <button type="button" class="close closePopup" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="">×</span></button>
                             <h5 class="modal-title">Reservation</h5>
                             <div class="alert alert-danger" v-if="errorMessage != '' ">
                                 @{{ errorMessage }}
@@ -32,7 +32,7 @@ Vue.component('reservation-popup', {
                             </div>
                             <div class="col-md-12 text-right">
                                 <br />
-                                <button type="button" class="btn btn-outline b-primary text-primary" @click="deleteReservation"><i class="fa fa-ban"></i> &nbsp; Cancel Booking</button>
+                                <button type="button" class="closePopup btn btn-outline b-primary text-primary" @click="deleteReservation"><i class="fa fa-ban"></i> &nbsp; Cancel Booking</button>
                             </div>
                         </div>
                       </div>
@@ -64,7 +64,7 @@ Vue.component('reservation-popup', {
                   </div>
                   
                 </div>
-                <div class="modal-backdrop fade in closePopup"></div>
+                <div class="fade in closePopup"></div>
         </div>
                      
           

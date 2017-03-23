@@ -30,7 +30,8 @@ class Member extends Authenticatable
 
     protected $gaurded = [
         'profilePic',
-        'password'
+        'password',
+        'main_member_id'
     ];
 
     public static function getUserByEmail($email)

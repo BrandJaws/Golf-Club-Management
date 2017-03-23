@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class RoutineReservation extends Model
 {
+    
 
     protected $fillable = [
         'id',
@@ -31,33 +32,39 @@ class RoutineReservation extends Model
         if (is_array($players) && !empty ($players)) {
             foreach ($players as $player) {
 
-                $status = ($parent && $player == $parent) || $player == "guest" || $confirmAll ? \Config::get('global.reservation.confirmed') : \Config::get('global.reservation.pending');
-
-                if ($player == "guest") {
-                    ReservationPlayer::create([
-                        'reservation_id' => $this->id,
-                        'reservation_type' => self::class,
-                        'member_id' => 0,
-                        'parent_id' => $parent,
-                        'group_size' => $group_size,
-                        'response_status' => $status,
-                        'reservation_status' => $reservation_status
-                    ]);
-
-                } else {
-                    ReservationPlayer::create([
-                        'reservation_id' => $this->id,
-                        'reservation_type' => self::class,
-                        'member_id' => $player,
-                        'parent_id' => $parent,
-                        'group_size' => $group_size,
-                        'response_status' => $status,
-                        'reservation_status' => $reservation_status
-                    ]);
+                $response_status = ($parent && $player == $parent) || $player == "guest" || $confirmAll ? \Config::get('global.reservation.confirmed') : \Config::get('global.reservation.pending');
+                $memberId = $player == "guest" ? 0 : $player;
+                //if there isn't a parent and player is guest set parent to null
+                //if there isn't a parent and member is registered set his own id as parent
+                //else set parent to the provided value
+                if($parent == 0){
+                    if($player == "guest"){
+                        $parentId = null;
+                    }else{
+                        $parentId = $player;
+                    }
+                }else{
+                    $parentId = $parent;
                 }
 
+
+                $playerData = [];
+                $playerData["reservation_id"] =$this->id;
+                $playerData["reservation_type"] =self::class;
+                $playerData["member_id"] = $memberId;
+                $playerData["parent_id"] = $parentId;
+                $playerData["group_size"] = $group_size;
+                $playerData["response_status"] = $response_status;
+                $playerData["reservation_status"] =$reservation_status;
+
+                ReservationPlayer::create($playerData);
+
+                
             }
+
         }
+
+
 
     }
 
@@ -129,6 +136,14 @@ class RoutineReservation extends Model
                             if ($player->reservation_status == \Config::get('global.reservation.pending_reserved')) {
                                 $player->reservation_status = \Config::get('global.reservation.reserved');
                                 $player->save();
+
+                                //Dispatch Final Cycle Job When the status is reserved
+                                if($player->response_status ==  \Config::get('global.reservation.confirmed')){
+                                    $player->dispatchMakeReservationDecisionJobForFinalCycle();
+                                }
+
+
+
                             } else if ($player->reservation_status == \Config::get('global.reservation.pending_waiting')) {
                                 $player->reservation_status = \Config::get('global.reservation.waiting');
                                 $player->save();
@@ -163,6 +178,10 @@ class RoutineReservation extends Model
                         } else if ($player->reservation_status == \Config::get('global.reservation.waiting')) {
                             $player->reservation_status = \Config::get('global.reservation.reserved');
                             $player->save();
+                            //Dispatch Final Cycle Job When the status is reserved
+                            if($player->response_status ==  \Config::get('global.reservation.confirmed')){
+                                $player->dispatchMakeReservationDecisionJobForFinalCycle();
+                            }
                         }
                     }
                 }
@@ -287,7 +306,7 @@ class RoutineReservation extends Model
 
 
             foreach ($reservation->reservation_players as $reservationPlayer) {
-                if ($tempParentId != $reservationPlayer->parent_id) {
+                if ($tempParentId != $reservationPlayer->parent_id || $reservationPlayer->parent_id == null ) {
                     $groupCount++;
                     $tempParentId = $reservationPlayer->parent_id;
                     $reservation_groups[$groupCount] = new \stdClass();

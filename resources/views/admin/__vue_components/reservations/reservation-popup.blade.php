@@ -11,8 +11,8 @@ Vue.component('reservation-popup', {
                       <div class="modal-header">
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="closePopup">×</span></button>
                             <h5 class="modal-title">Reservation</h5>
-                            <div class="alert alert-danger">
-                                Reservation couldn't update successfully, please try again!
+                            <div class="alert alert-danger" v-if="errorMessage != '' ">
+                                @{{ errorMessage }}
                             </div>
                       </div>
                       <div class="modal-body text-center p-lg borderBottom">
@@ -82,6 +82,7 @@ Vue.component('reservation-popup', {
       return {
           reservationData:this.reservation,
           guestsCounter:0,
+          errorMessage:"",
       }
     },
     methods:{
@@ -152,7 +153,6 @@ Vue.component('reservation-popup', {
                                             time:this.reservationData.timeSlot, 
                                             player:_players,
                                             guests:_guests,
-                                            parent_id:_players[0],
                                             _token: "{{ csrf_token() }}",
 
                                         },
@@ -167,7 +167,10 @@ Vue.component('reservation-popup', {
                                                     this.ajaxRequestInProcess = false;
                                                     
                                                     //Error code to follow
-                                                    console.log(jqXHR);
+                                                    if(jqXHR.hasOwnProperty("responseText")){
+                                                        this.errorMessage = JSON.parse(jqXHR.responseText).response;
+                                                    }
+
 
                                                }.bind(this)
                                     }); 
@@ -188,7 +191,6 @@ Vue.component('reservation-popup', {
                                         data:{
                                             _method:"PUT",
                                             reservation_id:this.reservationData.reservation_id,
-                                            parent_id:_players[0],
                                             player:_players,
                                             guests:_guests,
                                             _token: "{{ csrf_token() }}",
@@ -204,12 +206,15 @@ Vue.component('reservation-popup', {
                                                     this.ajaxRequestInProcess = false;
                                                     
                                                     //Error code to follow
-                                                    console.log(jqXHR);
+                                                    if(jqXHR.hasOwnProperty("responseText")){
+                                                        this.errorMessage = JSON.parse(jqXHR.responseText).response;
+                                                    }
 
                                                }.bind(this)
                                     }); 
         },
         deleteReservation:function(){
+
           
             var request = $.ajax({
                                        
@@ -233,7 +238,9 @@ Vue.component('reservation-popup', {
                                                     this.ajaxRequestInProcess = false;
                                                     
                                                     //Error code to follow
-                                                    console.log(jqXHR);
+                                                    if(jqXHR.hasOwnProperty("responseText")){
+                                                        this.errorMessage = JSON.parse(jqXHR.responseText).response;
+                                                    }
 
                                                }.bind(this)
                                     }); 

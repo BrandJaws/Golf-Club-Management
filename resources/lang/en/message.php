@@ -458,7 +458,7 @@ return [
     'reservation_status_not_final' => [
         'code' => '81',
         'httpCode' => '412',
-        'message' => 'Reservation has not yet reached a decision.'
+        'message' => 'Cannot proceed since reservation has not yet reached a decision.'
     ],
     'player_not_in_reservation' => [
         'code' => '82',

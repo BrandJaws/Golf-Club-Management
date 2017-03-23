@@ -115,6 +115,7 @@ class Course extends Model
 		$course = Course::find($courseId);
                 
                 $allCurrentReservationsInDateRange = Course::getAllReservationsAtACourseForADateRange($courseId,Carbon::parse($dateStart)->toDateString(),Carbon::parse($dateEnd)->toDateString());
+
                 $dates = [];
                 Carbon::parse($dateStart)->diffInDaysFiltered(function (Carbon $date) use (&$dates) {
 			$dates [] = $date->toDateString();
@@ -130,12 +131,16 @@ class Course extends Model
                             if($reservation->reserved_at == $date){
                                  
                                 foreach($reservation->reservationsByTimeSlot as $reservationsByTimeSlot ){
-                                   
-                                    if($reservationsByTimeSlot->timeSlot == $time->format ( 'h:i A' )){
-                                        
-                                        $timeSlot->reservations = $reservationsByTimeSlot->reservations;
-                                        $foundExistingReservationsForTimeSlot = true;
-                                    }
+                                   try{
+                                       if($reservationsByTimeSlot->timeSlot == $time->format ( 'h:i A' )){
+
+                                           $timeSlot->reservations = $reservationsByTimeSlot->reservations;
+
+                                       }
+                                   }catch (\Exception $e){
+
+                                   }
+
                                 }
                                
                                 
@@ -145,12 +150,11 @@ class Course extends Model
                         $reservationsByDate->reservationsByTimeSlot[] = $timeSlot;
                     }, Carbon::parse ( $course->closeTime )->subMinutes($course->bookingDuration-$course->bookingInterval) );
                     
-                    //TODO
-                    //$reservationsByDate->reservationsByTimeSlot = getAllReservationsBy;
+
                     $reservationsParent->reservationsByDate[] = $reservationsByDate;
                     
                 }
-                
+                //dd($reservationsParent);
                 return $reservationsParent;
                 
 		
@@ -165,77 +169,18 @@ class Course extends Model
     public static function getAllReservationsAtACourseForADateRange($courseId,$dateStart,$dateEnd){
         //dd(RoutineReservation::class);
         //First Set of Data for Routine Reservations
-        $query  = " SELECT "; 
-        $query .= " course.id as course_id, ";
-        $query .= " course.club_id as club_id, ";
-        $query .= " course.name as course_name, ";
-        //$query .= " course.openTime, ";
-        //$query .= " course.closeTime, ";
-        //$query .= " course.bookingDuration, ";
-        $query .= " routine_reservations.id as reservation_id, ";
-        $query .= " reservation_time_slots.reservation_type as reservation_type, ";
-        $query .= " reservation_players.parent_id, ";
-        $query .= " TIME(reservation_time_slots.time_start) as time_start, ";
-        //$query .= " tennis_reservation.time_end, ";
-        $query .= " DATE(reservation_time_slots.time_start) as reserved_at, ";
-        $query .= " GROUP_CONCAT(IFNULL(reservation_players.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_player_ids, ";
-        $query .= " GROUP_CONCAT(IFNULL(member.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as member_ids, ";
-        $query .= " GROUP_CONCAT(IF(CONCAT_WS(' ', member.firstName, member.lastName) <> ' ',CONCAT_WS(' ', member.firstName, member.lastName),'Guest') ORDER BY reservation_players.id ASC SEPARATOR '||-separation-player-||' ) as member_names, ";
-        $query .= " reservation_players.reservation_status ";
-        $query .= " FROM ";
-        $query .= " course ";
-        //$query .= " LEFT JOIN routine_reservations ON routine_reservations.course_id = course.id ";
-        //Start : To Join reservation type RoutineReservation
-        $query .= " LEFT JOIN routine_reservations ON routine_reservations.course_id = course.id ";
-        $query .= " LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND STRCMP(reservation_time_slots.reservation_type,'".RoutineReservation::class."') ";
-        $query .= " LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND STRCMP(reservation_players.reservation_type,'".RoutineReservation::class."') ";
-        
-        $query .= " LEFT JOIN member ON reservation_players.member_id = member.id ";
-        //End : To Join a reservation type RoutineReservation
+        $query  = " SELECT * FROM compound_reservations_aggregated ";
         $query .= " WHERE ";
-        $query .= " course.id = ? ";
+        $query .= " course_id = ? ";
         if($dateStart == $dateEnd){
-            $query .= " AND DATE(reservation_time_slots.time_start) = DATE(?) ";
+            $query .= " AND DATE(date_time_start) = DATE(?) ";
         }else{
-            $query .= " AND DATE(reservation_time_slots.time_start) >= DATE(?) ";
-            $query .= " AND DATE(reservation_time_slots.time_start) <= DATE(?) ";
+            $query .= " AND DATE(date_time_start) >= DATE(?) ";
+            $query .= " AND DATE(date_time_start) <= DATE(?) ";
         }
-        
-        $query .= " AND course.club_id = ? ";
-        $query .= " GROUP BY course.id,course.club_id,course.name,reservation_players.parent_id,reservation_players.reservation_status,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
-        
-//        START:To add other reservation types results in the future
-
-//        $query .= " UNION ALL ";
-//
-//        $query .= " SELECT "; 
-//        $query .= " course.id as course_id, ";
-//        $query .= " course.club_id as club_id, ";
-//        $query .= " course.name as course_name, ";
-//        $query .= " routine_reservations.id as reservation_id, ";
-//        $query .= " ANY_VALUE(reservation_time_slots.reservation_type) as reservation_type, ";
-//        $query .= " routine_reservations.parent_id, ";
-//        $query .= " reservation_time_slots.time_start as time_start, ";
-//        $query .= " reservation_time_slots.time_start as reserved_at, ";
-//        $query .= " GROUP_CONCAT(IFNULL(reservation_players.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_players_ids, ";
-//        $query .= " GROUP_CONCAT(IFNULL(member.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as member_ids, ";
-//        $query .= " GROUP_CONCAT(IF(CONCAT_WS(' ', member.firstName, member.lastName) <> ' ',CONCAT_WS(' ', member.firstName, member.lastName),'Guest') ORDER BY reservation_players.id ASC SEPARATOR '||-separation-player-||' ) as member_names, ";
-//        $query .= " routine_reservations.status ";
-//        $query .= " FROM ";
-//        $query .= " course ";
-//        $query .= " LEFT JOIN routine_reservations ON routine_reservations.course_id = course.id ";
-//        $query .= " LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND STRCMP(reservation_time_slots.reservation_type,'".RoutineReservation::class."') ";
-//        $query .= " LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND STRCMP(reservation_players.reservation_type,'".RoutineReservation::class."') ";
-//        $query .= " LEFT JOIN member ON reservation_players.member_id = member.id ";
-//        $query .= " WHERE ";
-//        $query .= " course.id = ? ";
-//        $query .= " AND DATE(reservation_time_slots.time_start) >= DATE(?) ";
-//        $query .= " AND DATE(reservation_time_slots.time_start) <= DATE(?) ";
-//        $query .= " AND course.club_id = ? ";
-//        $query .= " GROUP BY routine_reservations.id,reservation_time_slots.time_start ";
-        
-//        END:To add other reservation types results in the future
+        $query .= " AND course_id = ? ";
         $query .= "ORDER BY time_start ASC, reservation_id ASC   ";
+
         if($dateStart == $dateEnd){
             $allReservationsWithCourses = DB::select(DB::raw($query), [$courseId,
                                                                    $dateStart,
@@ -247,7 +192,7 @@ class Course extends Model
                                                                    $dateEnd,
                                                                    Auth::user ()->club_id]); 
         }
-       
+
         
         //dd($allReservationsWithCourses);
         $reservationsByDate = Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
@@ -420,7 +365,7 @@ class Course extends Model
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex] = new \stdClass();
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_id = $reservation->reservation_id;
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_type = $reservation->reservation_type;
-                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_status = $reservation->reservation_status;
+                //$reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_status = $reservation->reservation_status;
                 
                 $reservation_player_ids = $reservation->reservation_player_ids !== "" ? explode("||-separation-player-||",$reservation->reservation_player_ids) : [];
                 $member_ids = $reservation->member_ids !== "" ? explode("||-separation-player-||",$reservation->member_ids) : [];
@@ -440,13 +385,8 @@ class Course extends Model
                         $reservationPlayerObject->member_name = trim($member_names[$playerIndex]);
 
 
-                        if($reservationPlayerObject->member_id == $reservation->parent_id){
+                        $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players->push($reservationPlayerObject);
 
-                            $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players->prepend($reservationPlayerObject);
-                        }else{
-                             //bring parent to front
-                             $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players->push($reservationPlayerObject);
-                        }
               
                     
                      
@@ -456,7 +396,7 @@ class Course extends Model
                
             }
         }
-        //dd($reservationsByDate);
+        ;
         return $reservationsByDate;
    }
    

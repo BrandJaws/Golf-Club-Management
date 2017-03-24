@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ClubAdmin\Reservations;
 
 use App\Http\Controllers\Controller;
+use App\Http\Models\ReservationPlayer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
@@ -212,17 +213,24 @@ class ReservationsController extends Controller
         $new_players_received_including_guests = [];
         $reservation_players_to_be_updated_or_deleted = [];
         $newly_added__reservation_players = [];
-        $reservationPlayersWithReservationStatusReservedOrPendingReserved = $reservation->reservation_players()->where(function($query){
-                                                                                                                        //To exclude dropped players when the status is reserved
-                                                                                                                        $query->where("reservation_status",\Config::get('global.reservation.reserved'));
-                                                                                                                        $query->where("response_status",\Config::get('global.reservation.confirmed'));
+        $reservationPlayersWithReservationStatusReservedOrPendingReserved = ReservationPlayer::where(function($query){
+
+                                                                                                                            $query->where(function($query){
+                                                                                                                                //To exclude dropped players when the status is reserved
+                                                                                                                                $query->where("reservation_status",\Config::get('global.reservation.reserved'));
+                                                                                                                                $query->where("response_status",\Config::get('global.reservation.confirmed'));
+                                                                                                                            });
+                                                                                                                            $query->orWhere("reservation_status",\Config::get('global.reservation.pending_reserved'));
+
                                                                                                                 })
-                                                                                                                ->orWhere("reservation_status",\Config::get('global.reservation.pending_reserved'))
+                                                                                                                ->where("reservation_id",$request->get('reservation_id'))
+                                                                                                                ->where("reservation_type",RoutineReservation::class)
                                                                                                                 ->get();
 
         //In case of group bookings from mobile, group size intended can be smaller than total players sent
         //In that case we cannot update. We will only allow updation if the total players competing for the playable
         //or topmost 4 slots are less than or equal to 4
+    
         if($reservationPlayersWithReservationStatusReservedOrPendingReserved->count() > 4){
 
             $this->error = "reservation_status_not_final";

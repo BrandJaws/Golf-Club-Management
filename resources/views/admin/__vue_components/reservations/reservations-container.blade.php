@@ -10,7 +10,11 @@ Vue.component('reservations-container', {
                         :reservation="reservationToEdit" 
                         :reservation-type="reservationType" 
                         @close-popup="closePopupTriggered"
-                        @update-reservations="updateReservations"></reservation-popup>
+                        @update-reservations="updateReservations"
+                        :popup-message="popupMessage"
+                        @delete-reservation="deleteReservation"
+                        @update-reservation="updateReservation"
+                        @reserve-slot="reserveSlot"></reservation-popup>
                 <reservation-tabs v-if="forReservationsPageData"
                           :reservations-parent="reservations"
                           style-for-show-more-tab="true"> 
@@ -38,7 +42,8 @@ Vue.component('reservations-container', {
                                 :reservations-by-date="reservations.reservationsByDate"
                                 @edit-reservation="editReservationEventTriggered" 
                                 @new-reservation="newReservationEventTriggered"
-                                @delete-reservation="deleteReservation">
+                                @delete-reservation="deleteReservation"
+                        >
                         </reservation-tab-tables>
                 
                 </reservation-tabs>
@@ -60,6 +65,7 @@ Vue.component('reservations-container', {
           showPopup: false,
           reservationToEdit: null,
           reservationType:null, //possible values new or edit
+          popupMessage:"",
       }
     },
     methods: {
@@ -96,12 +102,92 @@ Vue.component('reservations-container', {
         
             this.$emit("restore-default-dates");
         },
-        deleteReservation:function(){
+        reserveSlot:function(reservation){
+
+            guestsAndPlayers = this.returnGuestsAndPlayerIdsListFromPlayersList(reservation.players);
+            _players = guestsAndPlayers.players;
+            _guests = guestsAndPlayers.guests;
+
+            var request = $.ajax({
+
+                url: "{{url('admin/reservations')}}",
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}',
+                },
+                data:{
+                    club_id:reservation.clubId,
+                    course_id:reservation.courseId,
+                    reserved_at:reservation.reserved_at,
+                    time:reservation.timeSlot,
+                    player:_players,
+                    guests:_guests,
+                    _token: "{{ csrf_token() }}",
+
+                },
+                success:function(msg){
+
+                    this.updateReservations(msg.response);
+                    this.closePopupTriggered();
+                }.bind(this),
+
+
+                error: function(jqXHR, textStatus ) {
+                    this.ajaxRequestInProcess = false;
+
+                    //Error code to follow
+                    if(jqXHR.hasOwnProperty("responseText")){
+                        this.popupMessage = JSON.parse(jqXHR.responseText).response;
+                    }
+
+
+                }.bind(this)
+            });
+        },
+        updateReservation:function(reservation){
+
+            guestsAndPlayers = this.returnGuestsAndPlayerIdsListFromPlayersList(reservation.players);
+            _players = guestsAndPlayers.players;
+            _guests = guestsAndPlayers.guests;
+
+            var request = $.ajax({
+
+                url: "{{url('admin/reservations')}}",
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}',
+                },
+                data:{
+                    _method:"PUT",
+                    reservation_id:reservation.reservation_id,
+                    player:_players,
+                    guests:_guests,
+                    _token: "{{ csrf_token() }}",
+
+                },
+                success:function(msg){
+                    this.updateReservations(msg.response);
+                    this.closePopupTriggered();
+
+                }.bind(this),
+
+                error: function(jqXHR, textStatus ) {
+                    this.ajaxRequestInProcess = false;
+
+                    //Error code to follow
+                    if(jqXHR.hasOwnProperty("responseText")){
+                        this.popupMessage = JSON.parse(jqXHR.responseText).response;
+                    }
+
+                }.bind(this)
+            });
+        },
+        deleteReservation:function($reservationId){
 
 
             var request = $.ajax({
 
-                url: "{{url('admin/reservations')}}"+"/"+this.reservationData.reservation_id,
+                url: "{{url('admin/reservations')}}"+"/"+$reservationId,
                 method: "POST",
                 headers: {
                     'X-CSRF-TOKEN': '{{csrf_token()}}',
@@ -113,8 +199,8 @@ Vue.component('reservations-container', {
                 },
                 success:function(msg){
 
-                    this.emitUpdateReservationsEvent(msg.response);
-                    this.emitClosePopup();
+                    this.updateReservations(msg.response);
+                    this.closePopupTriggered();
                 }.bind(this),
 
                 error: function(jqXHR, textStatus ) {
@@ -122,11 +208,25 @@ Vue.component('reservations-container', {
 
                     //Error code to follow
                     if(jqXHR.hasOwnProperty("responseText")){
-                        this.errorMessage = JSON.parse(jqXHR.responseText).response;
+                        this.popupMessage = JSON.parse(jqXHR.responseText).response;
                     }
 
                 }.bind(this)
             });
+        },
+        returnGuestsAndPlayerIdsListFromPlayersList:function(players){
+            playersAndGuests = {};
+            playersAndGuests.players = [];
+            playersAndGuests.guests = 0;
+            for(x=0;x<players.length; x++){
+                if(players[x].member_id == ''){
+                    playersAndGuests.guests++;
+                }else{
+                    playersAndGuests.players[x] = players[x].member_id;
+                }
+
+            }
+            return playersAndGuests;
         },
     }
   

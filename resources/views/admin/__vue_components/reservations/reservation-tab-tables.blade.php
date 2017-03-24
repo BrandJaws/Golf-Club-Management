@@ -20,7 +20,7 @@ Vue.component('reservation-tab-tables', {
                                     </td>
                                     <td>
                                       <div class="ts-action-btn">
-                                          <a href="#." class="cancel-btn" @click="deleteReservationClicked"><i class="fa fa-ban"></i></a>
+                                          <a href="#." class="cancel-btn" @click="deleteReservationClicked(timeSlot.reservations[0].reservation_id)"><i class="fa fa-ban"></i></a>
                                       </div>
                                     </td>
 
@@ -66,8 +66,8 @@ Vue.component('reservation-tab-tables', {
              }
              
         },
-        deleteReservationClicked(){
-
+        deleteReservationClicked(reservation_id){
+            this.$emit('delete-reservation',reservation_id);
         }
     },
 

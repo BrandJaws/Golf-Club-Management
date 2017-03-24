@@ -44,6 +44,10 @@ class Member extends Authenticatable
         return self::find($id);
     }
 
+    public function main_member(){
+        return $this->belongsTo('App\Http\Models\Member');
+    }
+
     /**
      * Relation with club
      * @usage Mobile, Web
@@ -154,7 +158,7 @@ class Member extends Authenticatable
             'member.lastName',
             'member.phone',
             'member.profilePic',
-            DB::raw("(if( (select count(*) from favorite_member_member where member_id = " . $userId . " and favorite_member_id = member.id) > 0, true,  false) ) as isFavorite ")
+            //DB::raw("(if( (select count(*) from favorite_member_member where member_id = " . $userId . " and favorite_member_id = member.id) > 0, true,  false) ) as isFavorite ")
         ], 'page', $currentPage);
         
         foreach ($members as $index => $member) {

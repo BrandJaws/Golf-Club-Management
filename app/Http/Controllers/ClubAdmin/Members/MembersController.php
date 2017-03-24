@@ -53,6 +53,7 @@ class MembersController extends Controller
         }
         try {
             $member = Member::findOrFail($memberId);
+            $member->main_member->setHidden(['club_id','email','phone','profilePic','password','gender','dob','device_registeration_id','device_type','main_member_id','status','auth_token','created_at','updated_at','deleted_at']);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
             return Redirect::back()->with([
                 'error' => \trans('message.not_found')

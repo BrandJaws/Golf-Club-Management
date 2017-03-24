@@ -156,11 +156,14 @@
             </div>
         </div>
 @endsection
-
+<?php dd($member); ?>
 @section('page-specific-scripts')
     @include("admin.__vue_components.autocomplete.autocomplete")
     @include("admin.__vue_components.warnings.warnings");
     <script>
+
+
+        var parentSelectionError =  "{{$errors->has('parentMember') ? $errors->first('parentMember'): '' }}" ;
 
         var baseUrl = "{{url('')}}";
         _warnings = [{name:'FORES',description:'Lorem impsul dolar esmit...',date:'Dec 9 2016 - 2:13:00 AM'},
@@ -176,7 +179,7 @@
         var vue = new Vue({
             el: "#selectionDepHidden",
             data: {
-                showParentSelector:false,
+                showParentSelector:parentSelectionError !== "" ? true :false,
                 memberType:'{{($member['main_member_id'] == 0)?'parent':'affiliate'}}',
                 selectedId: '',
                 warnings:[],

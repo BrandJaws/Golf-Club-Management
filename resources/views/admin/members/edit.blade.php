@@ -162,7 +162,7 @@
     @include("admin.__vue_components.warnings.warnings");
     <script>
 
-        var main_member = {!!  $member['main_member'] != null ? json_encode($member['main_member']): null !!} ;
+        var main_member = {!!  $member['main_member'] != null ? json_encode($member['main_member']): "''" !!} ;
         var parentSelectionError =  "{{$errors->has('parentMember')  ? $errors->first('parentMember'): '' }}" ;
 
         var baseUrl = "{{url('')}}";
@@ -179,13 +179,13 @@
         var vue = new Vue({
             el: "#selectionDepHidden",
             data: {
-                showParentSelector:parentSelectionError !== "" ||  parent != null ? true :false,
+                showParentSelector:parentSelectionError !== "" ||  main_member != '' ? true :false,
                 memberType:'{{($member['main_member_id'] == 0)?'parent':'affiliate'}}',
-                selectedId: main_member != null ? main_member.id :false,
+                selectedId: main_member != '' ? main_member.id :false,
                 warnings:[],
                 latestPageLoaded:0,
                 ajaxRequestInProcess:false,
-                initialTextForParentInput: main_member != null ? main_member.firstName+' '+main_member.lastName :'',
+                initialTextForParentInput: main_member != '' ? main_member.firstName+' '+main_member.lastName :'',
             },
             methods: {
                 affiliate:function() {

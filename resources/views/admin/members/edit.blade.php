@@ -113,7 +113,7 @@
                                             <div class="form-group" id="membersPageAutoCom">
                                                 <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
                                                                    filtered-from-source="true" include-id-in-list="true"
-                                                                   v-model="selectedId" initial-text-value="" search-query-key="search" field-name="parentMember"> </auto-complete-box>
+                                                                   v-model="selectedId" :initial-text-value="initialTextForParentInput" search-query-key="search" field-name="parentMember"> </auto-complete-box>
                                             	@if($errors->has('parentMember')) <span class="help-block errorProfilePic">{{$errors->first('parentMember') }}</span> @endif
                                             </div>
                                         </div>
@@ -156,14 +156,14 @@
             </div>
         </div>
 @endsection
-<?php dd($member); ?>
+
 @section('page-specific-scripts')
     @include("admin.__vue_components.autocomplete.autocomplete")
     @include("admin.__vue_components.warnings.warnings");
     <script>
 
-
-        var parentSelectionError =  "{{$errors->has('parentMember') ? $errors->first('parentMember'): '' }}" ;
+        var main_member = {!!  $member['main_member'] != null ? json_encode($member['main_member']): null !!} ;
+        var parentSelectionError =  "{{$errors->has('parentMember')  ? $errors->first('parentMember'): '' }}" ;
 
         var baseUrl = "{{url('')}}";
         _warnings = [{name:'FORES',description:'Lorem impsul dolar esmit...',date:'Dec 9 2016 - 2:13:00 AM'},
@@ -179,12 +179,13 @@
         var vue = new Vue({
             el: "#selectionDepHidden",
             data: {
-                showParentSelector:parentSelectionError !== "" ? true :false,
+                showParentSelector:parentSelectionError !== "" ||  parent != null ? true :false,
                 memberType:'{{($member['main_member_id'] == 0)?'parent':'affiliate'}}',
-                selectedId: '',
+                selectedId: main_member != null ? main_member.id :false,
                 warnings:[],
                 latestPageLoaded:0,
                 ajaxRequestInProcess:false,
+                initialTextForParentInput: main_member != null ? main_member.firstName+' '+main_member.lastName :'',
             },
             methods: {
                 affiliate:function() {
@@ -218,6 +219,8 @@
                 console.log("bottom!");
             }
         });
+
+        console.log(parent);
     </script>
     <script>
 

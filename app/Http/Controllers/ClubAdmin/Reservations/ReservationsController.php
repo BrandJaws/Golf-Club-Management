@@ -193,8 +193,8 @@ class ReservationsController extends Controller
         });
         //array_unshift($players,Auth::user ()->id);
         $players = array_unique($players);
-        $club = \App\Http\models\Club::find($reservation->club_id);
-        $course = \App\Http\models\Course::find($reservation->course_id);
+        $club = Club::find($reservation->club_id);
+        $course = Course::find($reservation->course_id);
 
         //add number of guests as separate values to the players array
         if ($request->has('guests') && $request->get('guests') > 0) {

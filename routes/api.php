@@ -24,6 +24,10 @@ Route::group([
 	'middleware'=>'auth.mobile'
 
 ], function () {
+	Route::group(['prefix' => 'club', 'as' => 'club.'], function() {
+		Route::get('/{club_id}/members', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getClubMembers']);
+	});
+
 	Route::group([
 		'prefix' => 'reservations',
 		'as' => 'reservations.',

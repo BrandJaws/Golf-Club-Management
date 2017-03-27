@@ -61,7 +61,9 @@ class CreateViews extends Migration
         $query .= "     GROUP_CONCAT(IFNULL(reservation_players.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_player_ids, ";
         $query .= "     GROUP_CONCAT(IFNULL(member.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as member_ids, ";
         $query .= "     GROUP_CONCAT(IF(CONCAT_WS(' ', member.firstName, member.lastName) <> ' ',CONCAT_WS(' ', member.firstName, member.lastName),'Guest') ORDER BY reservation_players.id ASC SEPARATOR '||-separation-player-||' ) as member_names, ";
-        $query .= "     GROUP_CONCAT(IFNULL(reservation_players.reservation_status,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_statuses ";
+        $query .= "     GROUP_CONCAT(IFNULL( member.profilePic,' ') ORDER BY reservation_players.id ASC SEPARATOR '||-separation-player-||' ) as member_profile_pics, ";
+        $query .= "     GROUP_CONCAT(IFNULL(reservation_players.reservation_status,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_statuses, ";
+        $query .= "     GROUP_CONCAT(IFNULL(reservation_players.response_status,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as response_statuses ";
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";

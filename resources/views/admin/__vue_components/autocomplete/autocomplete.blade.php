@@ -15,7 +15,7 @@
 
                                     </ul>
                                 </div>
-                                <input type="hidden" :name="fieldName" :value="selectedId" v-if="selectedIndex > -1"/>
+                                <input type="hidden" :name="fieldName" :value="selectedId" v-if="selectedIndex > -1 || value > 0"/>
                             </div> 
                             
                             `,
@@ -47,7 +47,7 @@
                                 filteredFromSourceData:this.filteredFromSource != null && this.filteredFromSource.toLowerCase() == "true" ? true : false,
                                 includeIdInListData:this.includeIdInList != null && this.includeIdInList.toLowerCase() == "true" ? true : false,
                                 enableExplicitSelectionData:this.enableExplicitSelection != null && this.enableExplicitSelection.toLowerCase() == "true"? true : false,
-                                selectedId:-1,
+                                selectedId:this.value > 0 ? this.value : -1,
                                 selectedDataItem:null,
                             }
                 },

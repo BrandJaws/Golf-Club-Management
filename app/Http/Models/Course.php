@@ -194,7 +194,7 @@ class Course extends Model
         }
 
         
-        //dd($allReservationsWithCourses);
+
         $reservationsByDate = Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
         return $reservationsByDate;
    
@@ -290,6 +290,8 @@ class Course extends Model
                 $blankReservation->reservation_type = "";
                 $blankReservation->status = "";
                 $blankReservation->reservation_player_ids = "";
+                $blankReservation->member_profile_pics = "";
+                $blankReservation->response_statuses = "";
                 $blankReservation->member_ids = "";
                 $blankReservation->member_names = "";
                 $blankReservation->parent_id = "";
@@ -370,6 +372,8 @@ class Course extends Model
                 $reservation_player_ids = $reservation->reservation_player_ids !== "" ? explode("||-separation-player-||",$reservation->reservation_player_ids) : [];
                 $member_ids = $reservation->member_ids !== "" ? explode("||-separation-player-||",$reservation->member_ids) : [];
                 $member_names = $reservation->member_names !== "" ? explode("||-separation-player-||",$reservation->member_names) : [];
+                $member_profile_pics = $reservation->member_profile_pics !== "" ? explode("||-separation-player-||",$reservation->member_profile_pics) : [];
+                $response_statuses = $reservation->response_statuses !== "" ? explode("||-separation-player-||",$reservation->response_statuses) : [];
                 
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players =collect([]);
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->guests = 0;
@@ -383,7 +387,8 @@ class Course extends Model
                         $reservationPlayerObject->reservation_player_id = trim($reservation_player_ids[$playerIndex]);
                         $reservationPlayerObject->member_id = trim($member_ids[$playerIndex]);
                         $reservationPlayerObject->member_name = trim($member_names[$playerIndex]);
-
+                        $reservationPlayerObject->profilePic = trim($member_profile_pics[$playerIndex]);
+                        $reservationPlayerObject->response_status = trim($response_statuses[$playerIndex]);
 
                         $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players->push($reservationPlayerObject);
 

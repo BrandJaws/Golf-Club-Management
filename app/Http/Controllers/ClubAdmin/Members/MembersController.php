@@ -53,6 +53,11 @@ class MembersController extends Controller
         }
         try {
             $member = Member::findOrFail($memberId);
+
+            if($member->main_member){
+                $member->main_member->setHidden(['club_id','email','phone','profilePic','password','gender','dob','device_registeration_id','device_type','main_member_id','status','auth_token','created_at','updated_at','deleted_at']);
+
+            }
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
             return Redirect::back()->with([
                 'error' => \trans('message.not_found')
@@ -139,17 +144,22 @@ class MembersController extends Controller
             'profilePic' => 'sometimes|image|mimes:jpeg,bmp,png,jpg|max:1024',
             'parentMember' => 'required_if:relation,affiliate'
         ]);
-       
+
+        $member = Member::findOrFail($memberId);
+        if($member->main_member){
+            $member->main_member->setHidden(['club_id','email','phone','profilePic','password','gender','dob','device_registeration_id','device_type','main_member_id','status','auth_token','created_at','updated_at','deleted_at']);
+
+        }
         if ($validator->fails()) {
             $this->error = $validator->errors();
-            return \Redirect::back()->withInput()->withErrors($this->error);
+            return \Redirect::back()->with('member',$member)->withErrors($this->error);
         }
-        
+
         try {
             $data = $request->except([
                 'profilePic'
             ]);
-            $member = Member::findOrFail($memberId);
+
             if ($request->has('password')) {
                 $member->password = bcrypt($request->get('password'));
             }
@@ -164,6 +174,7 @@ class MembersController extends Controller
             }
             if ($request->has('relation') && $request->get('relation') == 'affiliate') {
                 $member->main_member_id = $request->get('parentMember');
+
             } else {
                 $member->main_member_id = 0;
             }
@@ -171,11 +182,14 @@ class MembersController extends Controller
             return \Redirect::route('admin.member.index')->with([
                 'success' => \trans('message.member_update_success')
             ]);
+
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
+
             return Redirect::back()->with([
                 'error' => \trans('message.not_found')
             ]);
         } catch (\Exception $exp) {
+
             return \Redirect::back()->withInput()->with([
                 'error' => $exp->getMessage()
             ]);

@@ -111,28 +111,13 @@ class MembersController extends Controller {
 			$this->error = 'club_not_found';
 			return $this->response ();
 		}
-                /*
-                if(!$request->has('date')){
-                    $this->error = "date_time_not_found";
-                    return $this->response();
-                }else{
-                    try{
-                        $date = Carbon::parse($request->get('date'));
 
-                    }catch(\Exception $e){
-                         $this->error = "date_time_not_found";
-                         return $this->response();
-                    }
-
-                }
-                 * */
-             
 		$currentPage = $request->has ( 'page' ) ? $request->get ( 'page' ) : 0;
 		$perPage = $request->has ( 'perPage' ) ? $request->get ( 'perPage' ) : \Config::get ( 'global.mobile_items_per_page' );
 		$search = $request->has ( 'search' ) ? $request->get ( 'search' ) : false;
-                $date = $request->has ( 'date' ) ? $request->get ( 'date' ) : false;
+
                 
-                $members = (new Member ())->getClubMembers ( $club->id, $currentPage, $perPage,$search ,$date);
+                $members = (new Member ())->listClubMembersPaginated ( $club->id, $currentPage, $perPage,$search );
 		if (count ( $members ) < 1) {
 			$this->error = 'no_members_could_be_found';
 			return $this->response ();

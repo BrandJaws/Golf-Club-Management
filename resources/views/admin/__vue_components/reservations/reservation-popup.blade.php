@@ -9,10 +9,10 @@ Vue.component('reservation-popup', {
                   <div class="modal-dialog  modal-lg fade-down" id="animate" ui-class="fade-down">
                     <div class="modal-content">
                       <div class="modal-header">
-                          <button type="button" class="close closePopup" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="">×</span></button>
+                          <button type="button" class="close closePopup" aria-label="Close"><span aria-hidden="true" class="closePopup">×</span></button>
                             <h5 class="modal-title">Reservation</h5>
-                            <div class="alert alert-danger" v-if="errorMessage != '' ">
-                                @{{ errorMessage }}
+                            <div class="alert alert-danger" v-if="popupMessage != '' ">
+                                @{{ popupMessage }}
                             </div>
                       </div>
                       <div class="modal-body text-center p-lg borderBottom">
@@ -32,7 +32,7 @@ Vue.component('reservation-popup', {
                             </div>
                             <div class="col-md-12 text-right">
                                 <br />
-                                <button type="button" class="closePopup btn btn-outline b-primary text-primary" @click="deleteReservation"><i class="fa fa-ban"></i> &nbsp; Cancel Booking</button>
+                                <button type="button" class="btn btn-outline b-primary text-primary" @click="deleteReservation"><i class="fa fa-ban"></i> &nbsp; Cancel Booking</button>
                             </div>
                         </div>
                       </div>
@@ -56,15 +56,15 @@ Vue.component('reservation-popup', {
                         </div>
                       </div>
                       <div class="modal-footer text-center">
-                        <button type="button" class="btn btn-fw primary" data-dismiss="modal" @click="saveReservationClicked"><i class="fa fa-floppy-o" ></i> &nbsp;Save</button>
+                        <button type="button" class="btn btn-fw primary"  @click="saveReservationClicked"><i class="fa fa-floppy-o" ></i> &nbsp;Save</button>
                         &nbsp;&nbsp;
-                        <button type="button" class="closePopup btn btn-outline b-primary text-primary" data-dismiss="modal" ><i class="fa fa-times-circle"></i> &nbsp;Close</button>
+                        <button type="button" class="closePopup btn btn-outline b-primary text-primary" ><i class="fa fa-times-circle closePopup"></i> &nbsp;Close</button>
                       </div>
                     </div><!-- /.modal-content -->
                   </div>
                   
                 </div>
-                <div class="fade in closePopup"></div>
+                <div class="modal-backdrop fade in closePopup"></div>
         </div>
                      
           
@@ -72,6 +72,7 @@ Vue.component('reservation-popup', {
     props: [
             "reservation",
             "reservationType",
+            'popupMessage'
             
             
             
@@ -82,7 +83,6 @@ Vue.component('reservation-popup', {
       return {
           reservationData:this.reservation,
           guestsCounter:0,
-          errorMessage:"",
       }
     },
     methods:{
@@ -94,7 +94,7 @@ Vue.component('reservation-popup', {
 
         },
         closeModal:function(event){
-           
+           console.log(event.target);
             if(event.target.className.search("closePopup") !== -1) {
                 this.emitClosePopup();
             }
@@ -135,132 +135,16 @@ Vue.component('reservation-popup', {
         },
         reserveSlot:function(){
             
-            guestsAndPlayers = this.returnGuestsAndPlayerIdsListFromPlayersList();
-            _players = guestsAndPlayers.players;
-            _guests = guestsAndPlayers.guests;
-           
-            var request = $.ajax({
-                                       
-                                        url: "{{url('admin/reservations')}}",
-                                        method: "POST",
-                                        headers: {
-                                            'X-CSRF-TOKEN': '{{csrf_token()}}',
-                                        },
-                                        data:{ 
-                                            club_id:this.reservationData.clubId, 
-                                            course_id:this.reservationData.courseId,
-                                            reserved_at:this.reservationData.reserved_at, 
-                                            time:this.reservationData.timeSlot, 
-                                            player:_players,
-                                            guests:_guests,
-                                            _token: "{{ csrf_token() }}",
-
-                                        },
-                                        success:function(msg){
-                                           
-                                            this.emitUpdateReservationsEvent(msg.response); 
-                                            this.emitClosePopup();        
-                                                }.bind(this),
-                                            
-
-                                        error: function(jqXHR, textStatus ) {
-                                                    this.ajaxRequestInProcess = false;
-                                                    
-                                                    //Error code to follow
-                                                    if(jqXHR.hasOwnProperty("responseText")){
-                                                        this.errorMessage = JSON.parse(jqXHR.responseText).response;
-                                                    }
-
-
-                                               }.bind(this)
-                                    }); 
+           this.$emit('reserve-slot',this.reservationData);
         },
         updateReservation:function(){
             
-            guestsAndPlayers = this.returnGuestsAndPlayerIdsListFromPlayersList();
-            _players = guestsAndPlayers.players;
-            _guests = guestsAndPlayers.guests;
-           
-            var request = $.ajax({
-                                       
-                                        url: "{{url('admin/reservations')}}",
-                                        method: "POST",
-                                        headers: {
-                                            'X-CSRF-TOKEN': '{{csrf_token()}}',
-                                        },
-                                        data:{
-                                            _method:"PUT",
-                                            reservation_id:this.reservationData.reservation_id,
-                                            player:_players,
-                                            guests:_guests,
-                                            _token: "{{ csrf_token() }}",
-
-                                        },
-                                        success:function(msg){
-                                            this.emitUpdateReservationsEvent(msg.response);
-                                            this.emitClosePopup();
-                                            
-                                                }.bind(this),
-
-                                        error: function(jqXHR, textStatus ) {
-                                                    this.ajaxRequestInProcess = false;
-                                                    
-                                                    //Error code to follow
-                                                    if(jqXHR.hasOwnProperty("responseText")){
-                                                        this.errorMessage = JSON.parse(jqXHR.responseText).response;
-                                                    }
-
-                                               }.bind(this)
-                                    }); 
+            this.$emit('update-reservation',this.reservationData);
         },
         deleteReservation:function(){
 
-          
-            var request = $.ajax({
-                                       
-                                        url: "{{url('admin/reservations')}}"+"/"+this.reservationData.reservation_id,
-                                        method: "POST",
-                                        headers: {
-                                            'X-CSRF-TOKEN': '{{csrf_token()}}',
-                                        },
-                                        data:{
-                                            _method:"DELETE",
-                                            _token: "{{ csrf_token() }}",
+            this.$emit('delete-reservation',this.reservationData.reservation_id);
 
-                                        },
-                                        success:function(msg){
-                                            
-                                            this.emitUpdateReservationsEvent(msg.response);
-                                            this.emitClosePopup();        
-                                                }.bind(this),
-
-                                        error: function(jqXHR, textStatus ) {
-                                                    this.ajaxRequestInProcess = false;
-                                                    
-                                                    //Error code to follow
-                                                    if(jqXHR.hasOwnProperty("responseText")){
-                                                        this.errorMessage = JSON.parse(jqXHR.responseText).response;
-                                                    }
-
-                                               }.bind(this)
-                                    }); 
-        },
-        returnGuestsAndPlayerIdsListFromPlayersList:function(){
-            playersAndGuests = {};
-            playersAndGuests.players = [];
-            playersAndGuests.guests = 0;
-            for(x=0;x<this.reservationData.players.length; x++){
-                if(this.reservationData.players[x].member_id == ''){
-                   playersAndGuests.guests++; 
-                }else{
-                    playersAndGuests.players[x] = this.reservationData.players[x].member_id;
-                }
-                
-            }
-            return playersAndGuests;
-        },
-        emitUpdateReservationsEvent:function(newOrUpdatedReservation){
-            this.$emit('update-reservations',newOrUpdatedReservation);
         }
     }
   

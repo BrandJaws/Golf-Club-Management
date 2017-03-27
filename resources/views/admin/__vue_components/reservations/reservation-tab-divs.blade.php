@@ -25,7 +25,7 @@ Vue.component('reservation-tab-divs', {
 
         </p>
         <p >
-            <a href="#."data-toggle="modal" data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" :class="timeSlot.reservations[0].reservation_id !=  '' ? 'booked' : ''" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])">@{{ computedButtonTitleValue(timeSlot.reservations) }}</a>\n\
+            <a href="#." data-target="#m-a-a" ui-toggle-class="fade-down" ui-target="#animate" :class="timeSlot.reservations[0].reservation_id !=  '' ? 'booked' : ''" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])">@{{ computedButtonTitleValue(timeSlot.reservations) }}</a>\n\
                                                 </p>
                                             </div>
                                     </div>

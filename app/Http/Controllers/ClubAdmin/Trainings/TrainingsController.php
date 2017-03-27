@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Models\Training;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Models\Coach;
 
 class TrainingsController extends Controller
 {
@@ -39,7 +40,8 @@ class TrainingsController extends Controller
                 'error' => \trans('message.unauthorized_access')
             ]);
         }
-        return view('admin.trainings.create');
+        $coaches = (new Coach())->getCoachDropDownList(Auth::user()->club_id);
+        return view('admin.trainings.create', compact('coaches'));
     }
 
     public function store(Request $request)
@@ -47,11 +49,11 @@ class TrainingsController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:1,max:99',
             'coach' => 'required|numeric',
-            'description' => 'required|email',
-            'seats' => 'numeric',
+            'lessonDescription' => 'required|email',
+            'numberOfSeats' => 'required|numeric',
             'promotionImage' => 'sometimes|image|mimes:jpeg,bmp,png,jpg|max:1024',
             'promotionType' => 'required',
-            'date' => 'required|date_format:Y-m-d'
+            'lessonDate' => 'required|date_format:Y-m-d'
         ]);
         
         if ($validator->fails()) {
@@ -120,11 +122,11 @@ class TrainingsController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:1,max:99',
             'coach' => 'required|numeric',
-            'description' => 'required|email',
-            'seats' => 'numeric',
-            'promotionContent' => 'min:4,max:15',
-            'promotionType' => 'sometimes|image|mimes:jpeg,bmp,png,jpg|max:1024',
-            'date' => 'required|date_format:Y-m-d'
+            'lessonDescription' => 'required|email',
+            'numberOfSeats' => 'required|numeric',
+            'promotionImage' => 'sometimes|image|mimes:jpeg,bmp,png,jpg|max:1024',
+            'lessonMedia' => 'required',
+            'lessonDate' => 'required|date_format:Y-m-d'
         ]);
         
         if ($validator->fails()) {

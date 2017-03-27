@@ -112,11 +112,11 @@
 										</div>
 									</div>
 									<div class="col-md-8">
-										<div class="form-group" id="membersPageAutoCom">
-											<auto-complete-box url="{{asset('people.json')}}"
-												property-for-id="member_id" property-for-name="member_name"
-												filtered-from-source="false" include-id-in-list="true"
-												v-model="selectedId" initial-text-value=""> </auto-complete-box>
+										<div class="form-group {{($errors->has('parentMember'))?'has-error':''}}" id="membersPageAutoCom">
+											 <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
+                                                                   filtered-from-source="true" include-id-in-list="true"
+                                                                   v-model="selectedId" initial-text-value="" search-query-key="search" field-name="parentMember">
+												@if($errors->has('parentMember')) <span class="help-block errorProfilePic">{{$errors->first('parentMember') }}</span> @endif
 										</div>
 									</div>
 								</div>
@@ -154,7 +154,7 @@
             el: "#selectionDepHidden",
             data: {
                 showParentSelector:false,
-                memberType:'parent',
+                memberType:'{{(old('relation') == 'affiliate')?'affiliate':'parent'}}',
                 selectedId: '',
             },
             methods: {

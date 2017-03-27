@@ -290,6 +290,8 @@ class Course extends Model
                 $blankReservation->reservation_type = "";
                 $blankReservation->status = "";
                 $blankReservation->reservation_player_ids = "";
+                $blankReservation->member_profile_pics = "";
+                $blankReservation->response_statuses = "";
                 $blankReservation->member_ids = "";
                 $blankReservation->member_names = "";
                 $blankReservation->parent_id = "";

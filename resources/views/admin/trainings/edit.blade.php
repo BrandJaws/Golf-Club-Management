@@ -7,7 +7,7 @@
             <!-- ############ PAGE START-->
             <div class="profile-main padding" id="selectionDepHidden">
                 <div class="row details-section">
-                    <form name="" action="{{route('admin.update.store',1)}}" method="post" enctype="multipart/form-data">
+                    <form name="" action="{{route('admin.trainings.update',1)}}" method="post" enctype="multipart/form-data">
                         @if(Session::has('error'))
                             <div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
                         @endif
@@ -76,9 +76,25 @@
                                     <label class="form-control-label">Number of seats available</label>
                                     <input type="number" class="form-control" value="24" />
                                 </div>
-                                <div class="form-group">
-                                    <label class="form-control-label">Lesson Date</label>
-                                    <input type="date" class="form-control" value="2017-04-22" data-date-inline-picker="false" data-date-open-on-focus="true" />
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label class="form-control-label">Start Date</label>
+                                        <input type="date" class="form-control" value="2017-04-22" data-date-inline-picker="false" data-date-open-on-focus="true" />
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-control-label">End Date</label>
+                                        <input type="date" class="form-control" value="2017-04-22" data-date-inline-picker="false" data-date-open-on-focus="true" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <label class="form-control-label">Number of Sessions</label>
+                                        <input type="number" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="form-control-label">Price</label>
+                                        <input type="text" class="form-control" />
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-def">

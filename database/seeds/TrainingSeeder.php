@@ -33,8 +33,11 @@ class TrainingSeeder extends Seeder
                 'coach_id' => $randomCoach['id'],
                 'name' => $faker->sentence(2, true),
                 'description' => $faker->paragraph(3, true),
-                'date' => $faker->date('Y-m-d', 'now'),
+                'startDate' => date('Y-m-d'),
+                'endDate' =>  date('Y-m-d', strtotime("+15 days")),
                 'seats' => $faker->randomDigitNotNull,
+                'price' => $faker->randomDigitNotNull,
+                'sessions' => $faker->randomDigitNotNull,
                 'promotionType' => \Config('global.contentType.video'),
                 'promotionContent' => 'https://youtu.be/6v2L2UGZJAM'
             ]);

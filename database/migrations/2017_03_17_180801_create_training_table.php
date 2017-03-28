@@ -22,6 +22,8 @@ class CreateTrainingTable extends Migration
                 ->nullable()
                 ->default(null);
             $table->integer('seats', false, true)->default(0);
+            $table->integer('sessions', false, true)->default(0);
+            $table->integer('price', false, true)->default(0);
             $table->text('promotionContent')
                 ->nullable()
                 ->default(null);
@@ -29,7 +31,10 @@ class CreateTrainingTable extends Migration
                 config('global.contentType.image'),
                 config('global.contentType.video')
             ])->default(config('global.contentType.image'));
-            $table->date('date')
+            $table->date('startDate')
+                ->nullable()
+                ->default(null);
+                $table->date('endDate')
                 ->nullable()
                 ->default(null);
             $table->timestamps();

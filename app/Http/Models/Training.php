@@ -16,7 +16,10 @@ class Training extends Model
         'seats',
         'promotionContent',
         'promotionType',
-        'date'
+        'sessions',
+        'startDate',
+        'endDate',
+        'price'
     ];
 
     public function paginatedList($club_id, $perPage, $currentPage, $search)
@@ -30,7 +33,7 @@ class Training extends Model
                 $query->orWhere('training.name', 'like', "%$search%");
             }
         })
-            ->select('training.id as id', 'training.name', 'training.seats', 'training.date', \DB::raw('CONCAT(coaches.firstName," ",coaches.lastName) as coach'), \DB::raw("'0' as seatsReserved"))
+            ->select('training.id as id', 'training.name', 'training.seats', 'training.startDate', 'training.endDate',\DB::raw('CONCAT(coaches.firstName," ",coaches.lastName) as coach'), \DB::raw("'0' as seatsReserved"))
             ->orderby('training.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'

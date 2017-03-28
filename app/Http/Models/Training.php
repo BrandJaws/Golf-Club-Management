@@ -18,7 +18,8 @@ class Training extends Model
         'promotionType',
         'sessions',
         'startDate',
-        'endDate'
+        'endDate',
+        'price'
     ];
 
     public function paginatedList($club_id, $perPage, $currentPage, $search)

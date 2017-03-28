@@ -595,6 +595,12 @@ return [
         'httpCode' => '404',
         'message' => "No Trainings Found"
     ],
+    'training_doesnt_belong_to_users_club' => [
+        'code' => '104',
+        'httpCode' => '412',
+        'message' => "Requested training doesn't belong to your club"
+    ],
+
 
 
 

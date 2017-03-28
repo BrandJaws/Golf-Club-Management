@@ -81,4 +81,9 @@ Route::group([
 		//Route::get('/notifications/delete-all', ['as' => 'deleteAllNotificatoions', 'uses' => '\App\Http\Controllers\Mobile\MembersController@deleteAllPushNotificationForMember']);
 	});
 
+	Route::group(['prefix' => 'trainings', 'as' => 'trainings.'], function() {
+		Route::get('/', ['as' => 'profile', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@index']);
+
+	});
+
 });

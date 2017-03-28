@@ -1,3 +1,6 @@
+{{--<div id="cancelTest">--}}
+    {{--<reservation-cancel-popup v-if="showCancelPopup"></reservation-cancel-popup>--}}
+{{--</div>--}}
 @include("admin.__vue_components.reservations.reservation-player-tag")
 <script>
 Vue.component('reservation-tab-tables', {
@@ -20,7 +23,8 @@ Vue.component('reservation-tab-tables', {
                                     </td>
                                     <td>
                                       <div class="ts-action-btn">
-                                          <a href="#." class="cancel-btn" @click="deleteReservationClicked(timeSlot.reservations[0].reservation_id)"><i class="fa fa-ban"></i></a>
+                                          {{--<a href="#." class="cancel-btn" @click="deleteReservationClicked(timeSlot.reservations[0].reservation_id)"><i class="fa fa-ban"></i></a>--}}
+                                    <a href="#." class="cancel-btn" @click="cancelPopupEmit"><i class="fa fa-ban"></i></a>
                                       </div>
                                     </td>
 
@@ -33,8 +37,6 @@ Vue.component('reservation-tab-tables', {
                       </div>
                     </div>
                 </div>
-                        
-          
             `,
     props: [
             "reservationsByDate"
@@ -53,7 +55,10 @@ Vue.component('reservation-tab-tables', {
         }
     },
     methods: {
-        
+        cancelPopupEmit:function(){
+            this.$emit('display-cancel-popup');
+//            console.log('emitted');
+        },
         editReservationClicked: function(_reserved_at,_timeSlot,reservation){
             //emit edit reservation event if already has reservations
             //else emit new reservation event

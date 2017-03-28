@@ -22,6 +22,7 @@ class CreateTrainingTable extends Migration
                 ->nullable()
                 ->default(null);
             $table->integer('seats', false, true)->default(0);
+            $table->integer('sessions', false, true)->default(0);
             $table->text('promotionContent')
                 ->nullable()
                 ->default(null);

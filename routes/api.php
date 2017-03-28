@@ -83,6 +83,7 @@ Route::group([
 
 	Route::group(['prefix' => 'trainings', 'as' => 'trainings.'], function() {
 		Route::get('/', ['as' => 'profile', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@index']);
+		Route::get('/{training_id}', ['as' => 'profile', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@show']);
 
 	});
 

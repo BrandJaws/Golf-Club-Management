@@ -59,14 +59,13 @@ class Member extends Authenticatable
         return $this->belongsTo('App\Http\Models\Club');
     }
 
-    /**
-     * Relation
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function tennis_reservation_players()
-    {
-        return $this->hasMany('App\Http\Models\TennisReservationPlayer');
+    public function friends() {
+        return $this->belongsToMany ( "App\Http\Models\Member", "friends_member_member", "member_id", "friend_member_id" )->withTimestamps ();
+    }
+
+    public function groups() {
+        return $this->hasMany ( "App\Http\Models\Group");
+
     }
 
     public function populate($data = [])

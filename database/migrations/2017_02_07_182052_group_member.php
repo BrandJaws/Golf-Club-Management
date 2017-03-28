@@ -9,11 +9,18 @@ class GroupMember extends Migration {
 	 * @return void
 	 */
 	public function up() {
-		Schema::create ( 'group_member', function (Blueprint $table) {
-			$table->bigIncrements ( 'id' );
-			$table->bigInteger ( 'group_id', false, true );
-			$table->bigInteger ( 'member_id', false, true );
-		} );
+		Schema::create('group_member', function (Blueprint $table) {
+			$table->bigInteger('group_id')->unsigned();
+			$table->bigInteger('member_id')->unsigned();
+			$table->foreign('group_id')->references('id')
+				->on('group')
+				->onDelete('cascade');
+			$table->foreign('member_id')->references('id')
+				->on('member')
+				->onDelete('cascade');
+			$table->timestamps();
+
+		});
 	}
 	
 	/**

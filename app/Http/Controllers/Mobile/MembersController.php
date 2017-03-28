@@ -2,12 +2,14 @@
 // use Illuminate;
 namespace App\Http\Controllers\Mobile;
 
+use App\Http\Models\Group;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Member;
 use App\Http\Models\Club;
 use App\Http\Models\Court;
+use Illuminate\Support\Facades\DB;
 use Validator;
 use App\Http\Models\PushNotification;
 use Illuminate\Support\Facades\Hash;
@@ -173,127 +175,7 @@ class MembersController extends Controller {
 		] );
 		return $this->response ();
 	}
-	public function addMemberToFavorites(Request $request) {
-		if (! $request->has ( 'player_id' )) {
-			$this->error = 'player_id_not_present';
-			return $this->response ();
-		} else {
-			$member_to_be_favorited_id = $request->get ( 'player_id' );
-			if ($member_to_be_favorited_id == Auth::user ()->id) {
-				$this->error = 'cannot_add_yourself_to_favorites';
-				return $this->response ();
-			} else {
-				
-				$member_to_be_favorited = Member::find ( $member_to_be_favorited_id );
-				if ($member_to_be_favorited == null) {
-					$this->error = 'invalid_player_id';
-					return $this->response ();
-				}
-				$user = Member::find ( Auth::user ()->id );
-				$member_already_favorited = $user->favorite_members ()->where ( "id", "=", $member_to_be_favorited_id )->get ()->toArray ();
-				
-				if ($member_already_favorited != null) {
-					$this->error = 'player_already_favorited';
-					return $this->response ();
-				}
-			}
-		}
-		
-		$user->favorite_members ()->attach ( $member_to_be_favorited_id );
-		$this->response = "player_added_to_favorites";
-		return $this->response ();
-	}
-	public function removeMemberFromFavorites(Request $request) {
-		if (! $request->has ( 'player_id' )) {
-			$this->error = 'player_id_not_present';
-			return $this->response ();
-		} else {
-			$member_to_be_removed_id = $request->get ( 'player_id' );
-			if ($member_to_be_removed_id == Auth::user ()->id) {
-				$this->error = 'cannot_remove_yourself_from_favorites';
-				return $this->response ();
-			} else {
-				$member_to_be_removed = Member::find ( $member_to_be_removed_id );
-				if ($member_to_be_removed == null) {
-					$this->error = 'invalid_player_id';
-					return $this->response ();
-				}
-				$user = Member::find ( Auth::user ()->id );
-				$member_already_favorited = $user->favorite_members ()->where ( "id", "=", $member_to_be_removed_id )->get ()->toArray ();
-				if ($member_already_favorited == null) {
-					$this->error = 'player_already_not_favorited';
-					return $this->response ();
-				}
-			}
-		}
-		
-		$user->favorite_members ()->detach ( $member_to_be_removed_id );
-		$this->response = "player_removed_from_favorites";
-		return $this->response ();
-	}
-	public function getFavoriteMembers() {
-		$logged_in_member = Member::find ( Auth::user ()->id );
-		$favorited_members = $logged_in_member->favorite_members ()->select ( "id", "email", "firstName", "lastName", "phone", "profilePic" )->get ()->toArray ();
-		if ($favorited_members == null) {
-			$this->error = "no_favorite_members";
-		} else {
-			for($x = 0; $x < count ( $favorited_members ); $x ++) {
-				unset ( $favorited_members [$x]->pivot );
-			}
-			$this->response = $favorited_members;
-		}
-		
-		return $this->response ();
-	}
-	public function addCourtToFavorites(Request $request) {
-		if (! $request->has ( 'court_id' )) {
-			$this->error = 'court_id_not_present';
-			return $this->response ();
-		} else {
-			$court_to_be_favorited_id = $request->get ( 'court_id' );
-			$court_to_be_favorited = Court::find ( $court_to_be_favorited_id );
-			if ($court_to_be_favorited == null) {
-				$this->error = 'invalid_court_id';
-				return $this->response ();
-			}
-			$user = Member::find ( Auth::user ()->id );
-			$court_already_favorited = $user->favorite_courts ()->where ( "id", "=", $court_to_be_favorited_id )->get ()->toArray ();
-			
-			if ($court_already_favorited != null) {
-				$this->error = 'court_already_favorited';
-				return $this->response ();
-			}
-		}
-		
-		$user->favorite_courts ()->attach ( $court_to_be_favorited_id );
-		$this->response = "court_added_to_favorites";
-		return $this->response ();
-	}
-	public function removeCourtFromFavorites(Request $request) {
-		if (! $request->has ( 'court_id' )) {
-			$this->error = 'court_id_not_present';
-			return $this->response ();
-		} else {
-			$court_to_be_removed_id = $request->get ( 'court_id' );
-			$court_to_be_removed = Member::find ( $court_to_be_removed_id );
-			if ($court_to_be_removed == null) {
-				$this->error = 'invalid_court_id';
-				return $this->response ();
-			}
-			
-			$user = Member::find ( Auth::user ()->id );
-			$court_already_favorited = $user->favorite_courts ()->where ( "id", "=", $court_to_be_removed_id )->get ()->toArray ();
-			
-			if ($court_already_favorited == null) {
-				$this->error = 'court_already_not_favorited';
-				return $this->response ();
-			}
-		}
-		
-		$user->favorite_courts ()->detach ( $court_to_be_removed_id );
-		$this->response = "court_removed_from_favorites";
-		return $this->response ();
-	}
+
 	public function getCourtsListForMember() {
 		$courtsForMember = Member::getCourtsListForMemberById ( Auth::user ()->id );
 		
@@ -398,5 +280,398 @@ class MembersController extends Controller {
            
             
         }
+
+	public function addMemberToFriends(Request $request) {
+		if (! $request->has ( 'player_id' )) {
+			$this->error = 'player_id_not_present';
+			return $this->response ();
+		} else {
+			$member_to_be_friended_id = $request->get ( 'player_id' );
+			if ($member_to_be_friended_id == Auth::user ()->id) {
+				$this->error = 'cannot_add_yourself_to_favorites';
+				return $this->response ();
+			} else {
+
+				$member_to_be_friended = Member::find ( $member_to_be_friended_id );
+				if ($member_to_be_friended == null) {
+					$this->error = 'invalid_player_id';
+					return $this->response ();
+				}
+				$user = Member::find ( Auth::user ()->id );
+				$member_already_friended = $user->friends ()->where ( "id", "=", $member_to_be_friended_id )->get ()->toArray ();
+
+				if ($member_already_friended != null) {
+					$this->error = 'player_already_favorited';
+					return $this->response ();
+				}
+			}
+		}
+
+		$user->friends ()->attach ( $member_to_be_friended_id );
+		$this->response = "player_added_to_favorites";
+		return $this->response ();
+	}
+	public function removeMemberFromFriends(Request $request) {
+		if (! $request->has ( 'player_id' )) {
+			$this->error = 'player_id_not_present';
+			return $this->response ();
+		} else {
+			$member_to_be_removed_id = $request->get ( 'player_id' );
+			if ($member_to_be_removed_id == Auth::user ()->id) {
+				$this->error = 'cannot_remove_yourself_from_favorites';
+				return $this->response ();
+			} else {
+				$member_to_be_removed = Member::find ( $member_to_be_removed_id );
+				if ($member_to_be_removed == null) {
+					$this->error = 'invalid_player_id';
+					return $this->response ();
+				}
+				$user = Member::find ( Auth::user ()->id );
+				$member_already_friended = $user->friends ()->where ( "id", "=", $member_to_be_removed_id )->get ()->toArray ();
+				if ($member_already_friended == null) {
+					$this->error = 'player_already_not_favorited';
+					return $this->response ();
+				}
+			}
+		}
+
+		$user->friends ()->detach ( $member_to_be_removed_id );
+		$this->response = "player_removed_from_favorites";
+		return $this->response ();
+	}
+	public function getFriends() {
+		$logged_in_member = Member::find ( Auth::user ()->id );
+		$friends = $logged_in_member->friends ()->select ( "id", "email", "firstName", "lastName", "phone", "profilePic" )->get ()->toArray ();
+		if ($friends == null) {
+			$this->error = "no_favorite_members";
+		} else {
+			for($x = 0; $x < count ( $friends ); $x ++) {
+				unset ( $friends [$x]["pivot"] );
+			}
+			$this->response = $friends;
+		}
+
+		return $this->response ();
+	}
+
+	public function addNewFriendsGroup(Request $request){
+		if (!$request->has('group_name')) {
+			$this->error = "group_name_not_received";
+			return $this->response();
+		}
+
+		if (!$request->has('members') || (is_array($request->get('members')) && empty ($request->get('members'))) || !is_array($request->get('members'))) {
+			$this->error = "no_members_received";
+			return $this->response();
+		}else{
+
+			$members = $request->get('members');
+			$members = array_filter($members, function ($val) {
+				if ($val == 0 || trim($val) == "") {
+					return false;
+				} else {
+					return true;
+				}
+			});
+			if(!count($members)){
+				$this->error = "no_members_received";
+				return $this->response();
+			}
+			$members = array_unique($members);
+		}
+
+		try{
+
+			DB::beginTransaction();
+			$memberModels = Member::whereIn("id",$members)->get();
+
+			if(!$memberModels->count()){
+				$this->error = "no_members_received";
+				return $this->response();
+			}
+
+			$parent_member = Auth::user();
+			$group = Group::create(['member_id'=>$parent_member->id, "name"=>$request->get('group_name')]);
+			$parent_member->load('friends');
+
+			foreach($memberModels as $member){
+				$memberAlreadyFriended = false;
+				$memberAlreadyInGroup = false;
+				foreach($parent_member->friends as $friend){
+					if($friend->id == $member->id){
+						$memberAlreadyFriended = true;
+						break;
+					}
+				}
+				//validate if any of the sent members is not a friend
+				if(!$memberAlreadyFriended){
+
+					$this->error = "one_or_more_members_not_friend";
+					return $this->response();
+				}
+
+
+				foreach($group->members as $groupMember){
+					if($groupMember->id == $member->id){
+						$memberAlreadyInGroup = true;
+						break;
+					}
+				}
+				//add member to friends first if not already in the list
+				if(!$memberAlreadyInGroup){
+
+					$group->members()->attach($member);
+
+				}
+
+			}
+
+			DB::commit();
+
+			$this->response = "group_added_successfuly";
+			return $this->response();
+
+
+
+		}catch (\Exception $e){
+
+			\DB::rollback ();
+			\Log::info ( __METHOD__, [
+				'error' => $e->getMessage ()
+			] );
+			$this->error = "exception";
+		}
+
+
+
+
+
+		return $this->response();
+
+	}
+
+	public function addMoreFriendsToAnExistingGroup(Request $request){
+
+		if (!$request->has('group_id')) {
+			$this->error = "group_id_not_received";
+			return $this->response();
+		}
+
+		if (!$request->has('members') || (is_array($request->get('members')) && empty ($request->get('members'))) || !is_array($request->get('members'))) {
+			$this->error = "no_members_received";
+			return $this->response();
+		}else{
+
+			$members = $request->get('members');
+			$members = array_filter($members, function ($val) {
+				if ($val == 0 || trim($val) == "") {
+					return false;
+				} else {
+					return true;
+				}
+			});
+			if(!count($members)){
+				$this->error = "no_members_received";
+				return $this->response();
+			}
+			$members = array_unique($members);
+		}
+
+		$group = Group::find($request->get('group_id'));
+		if(!$group){
+			$this->error = "invalid_group";
+			return $this->response();
+		}
+		$parent_member = Auth::user();
+		if($group->member_id != $parent_member->id){
+			$this->error = "user_not_parent_of_group";
+			return $this->response();
+		}
+
+		try{
+
+			DB::beginTransaction();
+			$memberModels = Member::whereIn("id",$members)->get();
+
+			if(!$memberModels->count()){
+				$this->error = "no_members_received";
+				return $this->response();
+			}
+
+			$parent_member->load('friends');
+
+
+			foreach($memberModels as $member){
+				$memberAlreadyFriended = false;
+				$memberAlreadyInGroup = false;
+				foreach($parent_member->friends as $friend){
+					if($friend->id == $member->id){
+						$memberAlreadyFriended = true;
+						break;
+					}
+				}
+				//validate if any of the sent members is not a friend
+				if(!$memberAlreadyFriended){
+
+					$this->error = "one_or_more_members_not_friend";
+					return $this->response();
+				}
+
+
+				foreach($group->members as $groupMember){
+					if($groupMember->id == $member->id){
+						$memberAlreadyInGroup = true;
+						break;
+					}
+				}
+				//add member to friends first if not already in the list
+				if(!$memberAlreadyInGroup){
+
+					$group->members()->attach($member);
+
+				}
+
+			}
+
+			DB::commit();
+
+			$this->response = "member_added_to_group_successfuly";
+			return $this->response();
+
+
+
+		}catch (\Exception $e){
+
+			\DB::rollback ();
+			\Log::info ( __METHOD__, [
+				'error' => $e->getMessage ()
+			] );
+			$this->error = "exception";
+		}
+
+
+
+
+
+		return $this->response();
+
+	}
+	public function removeFriendsFromGroup(Request $request){
+
+		if (!$request->has('group_id')) {
+			$this->error = "group_id_not_received";
+			return $this->response();
+		}
+
+		if (!$request->has('members') || (is_array($request->get('members')) && empty ($request->get('members'))) || !is_array($request->get('members'))) {
+			$this->error = "no_members_received";
+			return $this->response();
+		}else{
+
+			$members = $request->get('members');
+			$members = array_filter($members, function ($val) {
+				if ($val == 0 || trim($val) == "") {
+					return false;
+				} else {
+					return true;
+				}
+			});
+			if(!count($members)){
+				$this->error = "no_members_received";
+				return $this->response();
+			}
+			$members = array_unique($members);
+		}
+
+		$group = Group::find($request->get('group_id'));
+		if(!$group){
+			$this->error = "invalid_group";
+			return $this->response();
+		}
+		$parent_member = Auth::user();
+		if($group->member_id != $parent_member->id){
+			$this->error = "user_not_parent_of_group";
+			return $this->response();
+		}
+
+		try{
+
+			DB::beginTransaction();
+//			$memberModels = Member::whereIn("id",$members)->get();
+//
+//			if(!$memberModels->count()){
+//				$this->error = "no_members_received";
+//				return $this->response();
+//			}
+
+			$group->load('members');
+			foreach($members as $memberSentForRemoval){
+				foreach($group->members as $groupMember){
+					if($groupMember->id == $memberSentForRemoval){
+
+						$group->members()->detach($groupMember);
+
+					}
+				}
+			}
+
+			$group->load('members');
+			if($group->members->count() == 0){
+				$group->delete();
+			}
+
+			DB::commit();
+
+			$this->response = "member_removed_from_group_successfuly";
+			return $this->response();
+
+
+
+		}catch (\Exception $e){
+			dd($e);
+			\DB::rollback ();
+			\Log::info ( __METHOD__, [
+				'error' => $e->getMessage ()
+			] );
+			$this->error = "exception";
+		}
+
+
+
+
+
+		return $this->response();
+
+	}
+
+	public function listAllGroups(){
+		$user_logged_in = Auth::user();
+
+		$user_logged_in->load(['groups'=>function($query){
+			$query->with(['members'=>function($query){
+				$query->select('id','firstName','lastName','profilePic');
+			}]);
+		}]);
+
+		if($user_logged_in->groups->count() == 0){
+			$this->error = "no_groups_found";
+			return $this->response();
+		}
+		foreach($user_logged_in->groups as $group){
+			foreach ($group->members as $members){
+				unset($members->pivot);
+
+			}
+
+		}
+
+		$this->response = $user_logged_in->groups;
+
+		return $this->response();
+
+
+	}
+
+
        
 }

@@ -142,10 +142,11 @@ class MembersController extends Controller
         ]);
 
         $member = Member::findOrFail($memberId);
-        if($member->main_member){
-            $member->main_member->setHidden(['club_id','email','phone','profilePic','password','gender','dob','device_registeration_id','device_type','main_member_id','status','auth_token','created_at','updated_at','deleted_at']);
-
-        }
+//        if($member->main_member){
+//            $member->main_member->setHidden(['club_id','email','phone','profilePic','password','gender','dob','device_registeration_id','device_type','main_member_id','status','auth_token','created_at','updated_at','deleted_at']);
+//
+//        }
+        $member->main_member()->select("id","firstName","lastName")->get();
         if ($validator->fails()) {
             $this->error = $validator->errors();
             return \Redirect::back()->with('member',$member)->withErrors($this->error);
@@ -220,4 +221,8 @@ class MembersController extends Controller
             ]);
         }
     }
+
+   
+
+
 }

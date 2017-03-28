@@ -536,10 +536,65 @@ return [
         'message' => 'The group you were added to has been filled by other players. Do you want to reserve your place separate from the group?'
     ],
     'training_created_success' => [
-        'code' => '90',
+        'code' => '92',
         'httpCode' => '200',
         'message' => 'Training created successfully'
     ],
+    'no_members_received' => [
+        'code' => '93',
+        'httpCode' => '412',
+        'message' => 'No members received'
+    ],
+    'group_name_not_received' => [
+        'code' => '94',
+        'httpCode' => '412',
+        'message' => 'Group Name Not Received'
+    ],
+    'group_added_successfuly' => [
+        'code' => '95',
+        'httpCode' => '200',
+        'message' => 'Group Added Successfuly'
+    ],
+    'group_id_not_received' => [
+        'code' => '96',
+        'httpCode' => '412',
+        'message' => 'Group Id Not Received'
+    ],
+    'invalid_group' => [
+        'code' => '97',
+        'httpCode' => '404',
+        'message' => 'Invalid Group Id Provided'
+    ],
+    'user_not_parent_of_group' => [
+        'code' => '98',
+        'httpCode' => '412',
+        'message' => "This Group Doesn't Belong To You"
+    ],
+    'one_or_more_members_not_friend' => [
+        'code' => '99',
+        'httpCode' => '412',
+        'message' => "One or more members sent are not friends"
+    ],
+    'member_added_to_group_successfuly' => [
+        'code' => '100',
+        'httpCode' => '200',
+        'message' => "Members Added To Group Successfuly"
+    ],
+    'member_removed_from_group_successfuly' => [
+        'code' => '101',
+        'httpCode' => '200',
+        'message' => "Members Removed From The Group Successfuly"
+    ],
+    'no_groups_found' => [
+        'code' => '102',
+        'httpCode' => '404',
+        'message' => "No Groups Found"
+    ],
+
+
+
+
+
     'pushNotificationMessageBodies' => [
         'reservation_confirmation_prompt' => "%s has added you to a reservation at %s on %s for court %s. Are you available?",
         'reservation_confirmation_prompt_final' => "You have a reservation at %s on %s for court %s. Are you still available?",

@@ -9,6 +9,8 @@
                         <th>Lesson Name</th>
                         <th>Coach</th>
                         <th>Total Seats</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
                         <th>Seats Reserved</th>
                         <th>Actions</th>
                     </tr>
@@ -23,6 +25,14 @@
                         </td>
                         <td>
                             @{{ training.seats }}
+                        </td>
+
+                        <td>
+                            @{{ training.startDate }}
+                        </td>
+
+                        <td>
+                            @{{ training.endDate }}
                         </td>
                         <td>
                             @{{ training.seatsReserved }}

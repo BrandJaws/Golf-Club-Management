@@ -45,22 +45,22 @@
                                 @if($errors->has('numberOfSeats')) <span class="help-block errorProfilePic">{{$errors->first('numberOfSeats') }}</span> @endif
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-6 {{($errors->has('name'))?'has-error':''}}">
+                                <div class="form-group col-md-6 {{($errors->has('startDate'))?'has-error':''}}">
                                     <label class="form-control-label">Start Date</label>
-                                    <input type="date" class="form-control" data-date-inline-picker="false" data-date-open-on-focus="true" name="lessonDate" value="{{old('lessonDate')}}"/>
-                                    @if($errors->has('lessonDate')) <span class="help-block errorProfilePic">{{$errors->first('lessonDate') }}</span> @endif
+                                    <input type="date" class="form-control" data-date-inline-picker="false" data-date-open-on-focus="true" name="startDate" value="{{old('startDate')}}"/>
+                                    @if($errors->has('startDate')) <span class="help-block errorProfilePic">{{$errors->first('startDate') }}</span> @endif
                                 </div>
-                                <div class="form-group col-md-6 {{($errors->has('name'))?'has-error':''}}">
+                                <div class="form-group col-md-6 {{($errors->has('endDate'))?'has-error':''}}">
                                     <label class="form-control-label">End Date</label>
-                                    <input type="date" class="form-control" data-date-inline-picker="false" data-date-open-on-focus="true" name="lessonDate" value="{{old('lessonDate')}}"/>
-                                    @if($errors->has('lessonDate')) <span class="help-block errorProfilePic">{{$errors->first('lessonDate') }}</span> @endif
+                                    <input type="date" class="form-control" data-date-inline-picker="false" data-date-open-on-focus="true" name="endDate" value="{{old('endDate')}}"/>
+                                    @if($errors->has('endDate')) <span class="help-block errorProfilePic">{{$errors->first('endDate') }}</span> @endif
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-md-6 {{($errors->has('name'))?'has-error':''}}">
+                                <div class="form-group col-md-6 {{($errors->has('numberOfSessions'))?'has-error':''}}">
                                     <label class="form-control-label">Number of Sessions</label>
-                                    <input type="number" class="form-control" data-date-inline-picker="false" data-date-open-on-focus="true" name="lessonDate" value="{{old('lessonDate')}}"/>
-                                    @if($errors->has('lessonDate')) <span class="help-block errorProfilePic">{{$errors->first('lessonDate') }}</span> @endif
+                                    <input type="number" class="form-control" data-date-inline-picker="false" data-date-open-on-focus="true" name="numberOfSessions" value="{{old('lessonDate')}}"/>
+                                    @if($errors->has('numberOfSessions')) <span class="help-block errorProfilePic">{{$errors->first('numberOfSessions') }}</span> @endif
                                 </div>
                                 <div class="form-group col-md-6 {{($errors->has('name'))?'has-error':''}}">
                                     <label class="form-control-label">Price</label>

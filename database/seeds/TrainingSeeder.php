@@ -36,6 +36,7 @@ class TrainingSeeder extends Seeder
                 'startDate' => date('Y-m-d'),
                 'endDate' =>  date('Y-m-d', strtotime("+15 days")),
                 'seats' => $faker->randomDigitNotNull,
+                'price' => $faker->randomDigitNotNull,
                 'sessions' => $faker->randomDigitNotNull,
                 'promotionType' => \Config('global.contentType.video'),
                 'promotionContent' => 'https://youtu.be/6v2L2UGZJAM'

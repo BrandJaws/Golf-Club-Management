@@ -87,9 +87,9 @@ class MembersController extends Controller
             'email' => 'required|email',
             'phone' => 'numeric',
             'password' => 'required|min:4,max:15',
-            'profilePic' => 'sometimes|image|mimes:jpeg,bmp,png,jpg|max:1024'
+            'profilePic' => 'sometimes|image|mimes:jpeg,bmp,png,jpg|max:1024',
+            'parentMember' => 'required_if:relation,affiliate'
         ]);
-        
         if ($validator->fails()) {
             $this->error = $validator->errors();
             return \Redirect::back()->withInput()->withErrors($this->error);
@@ -116,7 +116,11 @@ class MembersController extends Controller
                 }
                 $member->profilePic = 'uploads/member/' . $fileName;
             }
-            
+            if ($request->has('relation') && $request->get('relation') == 'affiliate') {
+                $member->main_member_id = $request->get('parentMember');
+            } else {
+                $member->main_member_id = 0;
+            }
             $member->fill($data)->save();
             
             return \Redirect::route('admin.member.index')->with([

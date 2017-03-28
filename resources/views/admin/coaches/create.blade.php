@@ -72,7 +72,15 @@
 @section('page-specific-scripts')
 	<script>
         $("#coachSpecialities").tagsinput({
-            tagClass: 'label red'
+            tagClass: 'label red',
+            confirmKeys: [13, 44],
+            trimValue: true
+        });
+        $("#coachSpecialities").on('itemAdded', function(event) {
+            var $field = $(this).siblings('.bootstrap-tagsinput').find('input')
+            setTimeout(function(){
+                $field.val('');
+            }, 1);
         });
 	</script>
 

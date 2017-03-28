@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Models;
 
 use DB;
@@ -35,11 +34,12 @@ class Coach extends Model
         return $this->belongsTo('App\Http\Models\Club');
     }
 
-  /**
-   * @deprecated use fill instead of populate
-   * @param array $data
-   * @return \App\Http\Models\Coach
-   */
+    /**
+     *
+     * @deprecated use fill instead of populate
+     * @param array $data            
+     * @return \App\Http\Models\Coach
+     */
     public function populate($data = [])
     {
         if (array_key_exists('firstName', $data)) {
@@ -91,17 +91,16 @@ class Coach extends Model
         return self::where('club_id', '=', $clubId)->where(function ($query) use ($search) {
             if ($search !== false) {
                 $query->where('coaches.firstName', 'Like', '%' . $search . '%')
-                    ->orWhere('coaches.lastName', 'Like', '%' . $search . '%') ;
+                    ->orWhere('coaches.lastName', 'Like', '%' . $search . '%');
             }
         })
-        ->take(15)
+            ->take(15)
             ->get([
             'coaches.id',
             \DB::raw("CONCAT(firstName,' ', lastName) AS name")
         ]);
     }
 
-   
     /**
      * Get paginated list of coaches for logedin club
      * @usage Web
@@ -120,7 +119,7 @@ class Coach extends Model
                 $query->orWhere('coaches.email', 'like', "%$searchTerm%");
             }
         })
-            ->select('coaches.id as id', 'coaches.firstName', 'coaches.lastName', 'coaches.email','coaches.phone', 'coaches.specialities')
+            ->select('coaches.id as id', 'coaches.firstName', 'coaches.lastName', 'coaches.email', 'coaches.phone', 'coaches.specialities')
             ->orderby('coaches.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'
@@ -145,6 +144,11 @@ class Coach extends Model
         ])->save();
     }
 
-    
-   
+    public function getCoachDropDownList($club_id)
+    {
+        return $this->where('club_id', '=', $club_id)->get([
+           \DB::raw("CONCAT(firstName,' ', lastName) AS name"),
+            'id'
+        ]);
+    }
 }

@@ -7,7 +7,7 @@
             <!-- ############ PAGE START-->
             <div class="profile-main padding" id="selectionDepHidden">
                 <div class="row details-section">
-                    <form name="" action="" method="post" enctype="multipart/form-data">
+                    <form name="" action="{{route('admin.update.store',1)}}" method="post" enctype="multipart/form-data">
                         @if(Session::has('error'))
                             <div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
                         @endif

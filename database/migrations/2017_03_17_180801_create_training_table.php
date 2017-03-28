@@ -29,7 +29,10 @@ class CreateTrainingTable extends Migration
                 config('global.contentType.image'),
                 config('global.contentType.video')
             ])->default(config('global.contentType.image'));
-            $table->date('date')
+            $table->date('startDate')
+                ->nullable()
+                ->default(null);
+                $table->date('endDate')
                 ->nullable()
                 ->default(null);
             $table->timestamps();

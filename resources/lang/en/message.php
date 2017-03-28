@@ -590,6 +590,12 @@ return [
         'httpCode' => '404',
         'message' => "No Groups Found"
     ],
+    'no_trainings_found' => [
+        'code' => '103',
+        'httpCode' => '404',
+        'message' => "No Trainings Found"
+    ],
+
 
 
 

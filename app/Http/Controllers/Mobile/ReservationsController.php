@@ -21,6 +21,8 @@ class ReservationsController extends Controller
         $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
         $reservations = Course::getReservationsForACourseByIdForADateRange(1, $dayToday, $fourDaysFromNow);
         return json_decode(json_encode($reservations),true);
+//        $this->response = json_decode(json_encode($reservations),true);
+//        return $this->response();
     }
 
     public function getReservationByDate($date)

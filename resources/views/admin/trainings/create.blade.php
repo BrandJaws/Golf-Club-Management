@@ -76,15 +76,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group animated fadeInUp {{($errors->has('banner'))?'has-error':''}}" v-cloak v-if="showMediaImage">
+                            <div class="form-group animated fadeInUp {{($errors->has('promotionImage'))?'has-error':''}}" v-cloak v-if="showMediaImage">
                                 <label class="form-control-label">Select Image File</label>
-                                <input type="file" class="form-control" name="banner" value=""/>
-                                @if($errors->has('banner')) <span class="help-block errorProfilePic">{{$errors->first('banner') }}</span> @endif
+                                <input type="file" class="form-control" name="promotionImage" value=""/>
+                                @if($errors->has('promotionImage')) <span class="help-block errorProfilePic">{{$errors->first('promotionImage') }}</span> @endif
                             </div>
-                            <div class="form-group animated fadeInUp {{($errors->has('vidoeUrl'))?'has-error':''}}" v-cloak v-if="showMediaVideo">
+                            <div class="form-group animated fadeInUp {{($errors->has('videoUrl'))?'has-error':''}}" v-cloak v-if="showMediaVideo">
                                 <label class="form-control-label">Link to Youtube/Vimeo Video</label>
                                 <input type="url" class="form-control" name="videoUrl" value="{{old('videoUrl')}}" />
-                                @if($errors->has('vidoeUrl')) <span class="help-block errorProfilePic">{{$errors->first('vidoeUrl') }}</span> @endif
+                                @if($errors->has('videoUrl')) <span class="help-block errorProfilePic">{{$errors->first('videoUrl') }}</span> @endif
                             </div>
                             <div class="form-group">
                                 <button class="btn btn-def">

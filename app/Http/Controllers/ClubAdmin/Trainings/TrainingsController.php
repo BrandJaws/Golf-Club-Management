@@ -48,11 +48,11 @@ class TrainingsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:1,max:99',
+            'lessonDescription' => 'required|min:1,max:250',
             'coach' => 'required|numeric',
-            'lessonDescription' => 'required|email',
             'numberOfSeats' => 'required|numeric',
-            'promotionImage' => 'sometimes|image|mimes:jpeg,bmp,png,jpg|max:1024',
-            'promotionType' => 'required',
+            'promotionImage' => 'required_if:lessonMedia,image|image|mimes:jpeg,bmp,png,jpg|max:1024',
+            'videoUrl' => 'required_if:lessonMedia,videoUrl|active_url',
             'lessonDate' => 'required|date_format:Y-m-d'
         ]);
         
@@ -62,24 +62,28 @@ class TrainingsController extends Controller
         }
         try {
             $training = new Training();
-            $data = $request->only([
-                'name',
-                'description',
-                'seats'
-            ]);
+            
+            $data['name'] =$request->get('name');
+            $data['description'] = $request->get('lessonDescription');
+            $data['seats'] = $request->get('numberOfSeats');
+            $data['promotionType'] = $request->get('lessonMedia');;
+            $data['date'] = $request->get('lessonDate');
             $data['coach_id'] = $request->get('coach');
             $data['club_id'] = \Auth::user()->club_id;
-            if ($request->hasFile('promotionImage')) {
-                $image = $request->file('promotionImage');
+            if ($request->get('lessonMedia') == 'image' && $request->hasFile('image')) {
+                $image = $request->file('image');
                 $fileName = time() . '.' . $image->getClientOriginalExtension();
                 $image->move('uploads/training/', $fileName);
                 $training->promotionContent = 'uploads/training/' . $fileName;
                 $training->promotionType = config('global.contentType.image');
+            }else{
+                $training->promotionContent = $request->get('videoUrl');
+                $training->promotionType = config('global.contentType.video');
             }
             
             $training->fill($data)->save();
             
-            return \Redirect::route('admin.member.index')->with([
+            return \Redirect::route('admin.trainings.index')->with([
                 'success' => \trans('message.training_created_success.message')
             ]);
         } catch (\Exception $exp) {
@@ -124,8 +128,8 @@ class TrainingsController extends Controller
             'coach' => 'required|numeric',
             'lessonDescription' => 'required|email',
             'numberOfSeats' => 'required|numeric',
-            'promotionImage' => 'sometimes|image|mimes:jpeg,bmp,png,jpg|max:1024',
-            'lessonMedia' => 'required',
+            'promotionImage' => 'required_if:lessonMedia,image|image|mimes:jpeg,bmp,png,jpg|max:1024',
+            'videoUrl' => 'required_if:lessonMedia,videoUrl|active_url',
             'lessonDate' => 'required|date_format:Y-m-d'
         ]);
         

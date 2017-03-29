@@ -540,6 +540,11 @@ return [
         'httpCode' => '200',
         'message' => 'Training created successfully'
     ],
+    'training_updated_success' => [
+        'code' => '92',
+        'httpCode' => '200',
+        'message' => 'Training updated successfully'
+    ],
     'no_members_received' => [
         'code' => '93',
         'httpCode' => '412',

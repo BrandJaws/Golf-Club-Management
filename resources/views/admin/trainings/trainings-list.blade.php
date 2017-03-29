@@ -23,6 +23,12 @@
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
+                            @if(Session::has('error'))
+                            	<div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
+                            @endif
+                            @if(Session::has('success'))
+                            	<div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
+                            @endif
                             <!-- inner header -->
                             <trainings :trainings-list="trainingsList"> </trainings>
                         </div>

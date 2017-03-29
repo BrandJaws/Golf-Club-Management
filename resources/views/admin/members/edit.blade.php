@@ -81,7 +81,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="radio">
-                                                    <label class="ui-check"> <input v-model="memberType"  type="radio" name="relation" value="parent"  class="has-value" @change="affiliate()" /> <i class="dark-white"></i> Parent
+                                                    <label class="ui-check"> <input v-model="memberType"  type="radio" name="relation" value="parent"  class="has-value" /> <i class="dark-white"></i> Parent
                                                     </label>
                                                 </div>
                                             </div>
@@ -90,7 +90,7 @@
                                             <div class="form-group">
                                                 <div class="radio">
                                                     <label class="ui-check"> 
-                                                    <input v-model="memberType"  type="radio" name="relation" value="affiliate"  class="has-value" @change="affiliate()" /> <i
+                                                    <input v-model="memberType"  type="radio" name="relation" value="affiliate"  class="has-value"  /> <i
                                                                 class="dark-white"></i> Affiliate Member
                                                     </label>
                                                 </div>
@@ -179,23 +179,26 @@
         var vue = new Vue({
             el: "#selectionDepHidden",
             data: {
-                showParentSelector:parentSelectionError !== "" ||  main_member != '' ? true :false,
-                memberType:'{{($member['main_member_id'] == 0)?'parent':'affiliate'}}',
+
+                memberType:'{{($member['main_member_id'] != 0 || $errors->has('parentMember')  )?'affiliate':'parent'}}',
                 selectedId: main_member != '' ? main_member.id :false,
                 warnings:[],
                 latestPageLoaded:0,
                 ajaxRequestInProcess:false,
                 initialTextForParentInput: main_member != '' ? main_member.firstName+' '+main_member.lastName :'',
             },
-            methods: {
-                affiliate:function() {
+            computed:{
+                showParentSelector:function(){
                     if (this.memberType == 'affiliate') {
-                        this.showParentSelector = true;
+                        return true;
                     }
                     else {
-                        this.showParentSelector = false;
+                        return false;
                     }
-                },
+                }
+            },
+            methods: {
+
                 loadNextPage:function() {
                     //add sample data to array to check scroll functionality
                     if (this.latestPageLoaded == 0) {

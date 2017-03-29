@@ -150,23 +150,27 @@
 @section('page-specific-scripts')
 @include("admin.__vue_components.autocomplete.autocomplete")
 <script>
+	var parentSelectionError =  "{{$errors->has('parentMember')  ? $errors->first('parentMember'): '' }}" ;
+	var main_member = '';
+
         var vue = new Vue({
             el: "#selectionDepHidden",
             data: {
-                showParentSelector:false,
                 memberType:'{{(old('relation') == 'affiliate')?'affiliate':'parent'}}',
                 selectedId: '',
             },
+			computed:{
+				showParentSelector:function(){
+					if (this.memberType == 'affiliate') {
+						return true;
+					}
+					else {
+						return false;
+					}
+				}
+			},
             methods: {
-                affiliate:function() {
-                    console.log(this.memberType);
-                    if (this.memberType == 'affiliate') {
-                        this.showParentSelector = true;
-                    }
-                    else {
-                        this.showParentSelector = false;
-                    }
-                }
+
             }
         });
     </script>

@@ -135,6 +135,8 @@
 					<!-- row -->
 					<div id="reservations-vue-container" class="row">
 						<div class="col-md-12">
+
+                            
                                                     <reservations-container :reservations="reservationsParentComputed"
                                                                             for-reservations-page="false"
                                                                             @update-reservations="updateReservations">
@@ -179,6 +181,7 @@
                     minEmptySlots:5,
                     showDefaultDates:true,
                 },
+
                 
             
             

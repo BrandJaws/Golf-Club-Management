@@ -78,7 +78,7 @@
                                     <div class="col-md-3">
                                         <div class="radio">
                                             <label class="ui-check">
-                                                <input type="radio" name="lessonMedia" value="image" class="has-value" v-model="lessonMediaType" @change="lessonMedia()">
+                                                <input type="radio" name="lessonMedia" value="image" class="has-value" v-model="lessonMediaType" >
                                                 <i class="dark-white"></i>
                                                 Image
                                             </label>
@@ -87,7 +87,7 @@
                                     <div class="col-md-3">
                                         <div class="radio">
                                             <label class="ui-check">
-                                                <input type="radio" name="lessonMedia" value="video" class="has-value" v-model="lessonMediaType" @change="lessonMedia()">
+                                                <input type="radio" name="lessonMedia" value="video" class="has-value" v-model="lessonMediaType" >
                                                 <i class="dark-white"></i>
                                                 Video
                                             </label>
@@ -126,26 +126,29 @@
         var vue = new Vue({
             el: "#selectionDepHidden",
             data: {
-                showMediaImage:false,
-                showMediaVideo:false,
+                showMediaImage:{{$errors->has('videoUrl') ? 'false' : 'true'}},
+                showMediaVideo:{{$errors->has('videoUrl') ? 'true' : 'false'}},
                 lessonMediaType:'{{(old('lessonMedia') == 'video')?'video':'image'}}',
                 selectedId: '',
             },
-            methods: {
-                lessonMedia:function() {
-                    console.log(this.lessonMediaType);
-                    if (this.lessonMediaType == 'image') {
-                        this.showMediaImage = true;
-                        this.showMediaVideo = false;
+            computed:{
+                showMediaImage:function(){
+                    if(this.lessonMediaType == 'image'){
+                        return true;
+                    }else{
+                        return false;
                     }
-                    else if (this.lessonMediaType == 'video') {
-                        this.showMediaVideo = true;
-                        this.showMediaImage = false;
-                    }
-                    else {
-                        this.showMediaImage = true;
+                },
+                showMediaVideo:function(){
+                    if(this.lessonMediaType == 'video'){
+                        return true;
+                    }else{
+                        return false;
                     }
                 }
+            },
+            methods: {
+
             }
         });
     </script>

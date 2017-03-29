@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="training in trainingListData">
+                    <tr v-for="(training,memberIndex) in trainingListData">
                         <td>
                             @{{ training.name }}
                         </td>
@@ -76,7 +76,7 @@
                             success:function(msg){
 
                                       if(msg=="success"){
-                                          this.staffMembers.splice(memberIndex,1);
+                                          this.trainingListData.splice(memberIndex,1);
                                       }else{
 
                                       }

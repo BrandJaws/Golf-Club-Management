@@ -2,10 +2,12 @@
 @include("admin.__vue_components.reservations.reservation-tab-tables")
 @include("admin.__vue_components.reservations.reservation-tab-divs")
 @include("admin.__vue_components.reservations.reservation-popup")
+@include("admin.__vue_components.reservations.reservation-cancel-popup")
 <script>
 
 Vue.component('reservations-container', {
     template: `<div>
+                <reservation-cancel-popup @close-cancel-popup="closeCancelTriggered" v-if="showCancelPopup"></reservation-cancel-popup>
                 <reservation-popup v-if="showPopup"
                         :reservation="reservationToEdit" 
                         :reservation-type="reservationType" 
@@ -14,7 +16,7 @@ Vue.component('reservations-container', {
                         :popup-message="popupMessage"
                         @delete-reservation="deleteReservation"
                         @update-reservation="updateReservation"
-                        @reserve-slot="reserveSlot"></reservation-popup>
+                        @reserve-slot="reserveSlot" @max-num-reached="maxNumCalled"></reservation-popup>
                 <reservation-tabs v-if="forReservationsPageData"
                           :reservations-parent="reservations"
                           style-for-show-more-tab="true"> 
@@ -43,6 +45,7 @@ Vue.component('reservations-container', {
                                 @edit-reservation="editReservationEventTriggered" 
                                 @new-reservation="newReservationEventTriggered"
                                 @delete-reservation="deleteReservation"
+                                @display-cancel-popup="cancelPopupTriggered"
                         >
                         </reservation-tab-tables>
                 
@@ -63,12 +66,21 @@ Vue.component('reservations-container', {
           forReservationsPageData:this.forReservationsPage != null && this.forReservationsPage.toLowerCase()== 'true' ? true : false,
           reservationsParent: this.reservations,
           showPopup: false,
+          showCancelPopup: false,
           reservationToEdit: null,
           reservationType:null, //possible values new or edit
           popupMessage:"",
       }
     },
     methods: {
+        cancelPopupTriggered:function(){
+//            console.log('emit received');
+            this.showCancelPopup = true;
+        },
+        closeCancelTriggered:function(){
+//            console.log('emit received');
+            this.showCancelPopup = false;
+        },
         editReservationEventTriggered: function (reservation) {
 
             reservationTemp = JSON.parse(JSON.stringify(reservation));
@@ -101,6 +113,9 @@ Vue.component('reservations-container', {
         restoreDefaultDates:function(){
         
             this.$emit("restore-default-dates");
+        },
+        maxNumCalled:function(){
+            this.popupMessage = 'There are already 4 members in this slot!';
         },
         reserveSlot:function(reservation){
 

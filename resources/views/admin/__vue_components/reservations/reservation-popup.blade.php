@@ -66,7 +66,7 @@ Vue.component('reservation-popup', {
                 </div>
                 <div class="modal-backdrop fade in closePopup"></div>
         </div>
-                     
+
           
             `,
     props: [
@@ -79,7 +79,7 @@ Vue.component('reservation-popup', {
             
     ],
     data: function () {
-        
+
       return {
           reservationData:this.reservation,
           guestsCounter:0,
@@ -91,7 +91,6 @@ Vue.component('reservation-popup', {
         },
         deletePlayer:function(playerIndex){
             this.reservationData.players.splice(playerIndex,1);
-
         },
         closeModal:function(event){
            console.log(event.target);
@@ -103,6 +102,7 @@ Vue.component('reservation-popup', {
             //Dont create tag if selected 4 or player already in the list
             playersInSelectionList = this.reservationData.players.length;
             if(playersInSelectionList >= 4){
+                this.$emit('max-num-reached');
                 return;
             }
             for(x=0; x<playersInSelectionList; x++){

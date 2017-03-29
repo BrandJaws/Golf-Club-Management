@@ -11,11 +11,14 @@ use Illuminate\Support\Facades\Auth;
 
 class TrainingsController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
+
         $logged_in_user = Auth::user();
-        $trainings = Training::where("endDate",">",Carbon::now()->toDateString())
-                             ->where("club_id",$logged_in_user->club_id)
-                             ->get();
+        $search = $request->has('search') ? $request->get('search') : false;
+        $currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
+        $perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
+        $trainings = (new Training())->paginatedList($logged_in_user->club_id, $currentPage, $perPage, $search,true);
+
         if($trainings->count() == 0){
             $this->error  ="no_trainings_found";
             return $this->response();
@@ -44,5 +47,31 @@ class TrainingsController extends Controller
 
         $this->response = $training;
         return $this->response();
+    }
+
+    public function reservePlaceForATraining(Request $request){
+        if(!$request->has('training_id')){
+            $this->error  ="training_id_missing";
+            return $this->response();
+        }
+        $logged_in_user = Auth::user();
+
+        $training = Training::find($request->get('training_id'));
+        if(!$training){
+            $this->error  ="no_trainings_found";
+            return $this->response();
+
+        }
+
+        if($training->club_id != $logged_in_user->club_id){
+            $this->error  ="training_doesnt_belong_to_users_club";
+            return $this->response();
+        }
+
+        //validate if there are vacant places on reservation
+        if($training->seats ){
+        }
+
+
     }
 }

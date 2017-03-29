@@ -600,6 +600,12 @@ return [
         'httpCode' => '412',
         'message' => "Requested training doesn't belong to your club"
     ],
+    'training_id_missing' => [
+        'code' => '105',
+        'httpCode' => '412',
+        'message' => "Training ID Is Missing"
+    ],
+
 
 
 

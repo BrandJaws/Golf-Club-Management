@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\ClubAdmin\Trainings;
 
 use App\Http\Controllers\Controller;
+use App\Http\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Models\Training;
@@ -139,7 +140,7 @@ class TrainingsController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy($memberId)
     {
         try {
             trainings::find($memberId)->delete();
@@ -148,5 +149,97 @@ class TrainingsController extends Controller
             return $e->getMessage();
             return "failure";
         }
+    }
+
+    public function reservePlaceForATraining(Request $request){
+        if(!$request->has('training_id')){
+            $this->error  ="training_id_missing";
+            return $this->response();
+        }
+
+        if(!$request->has('member_id')){
+            $this->error  ="member_id_missing";
+            return $this->response();
+        }
+
+        $memberToBeAdded = Member::find($request->get('member_id'));
+        if(!$memberToBeAdded){
+            $this->error  ="member_not_exists";
+            return $this->response();
+
+        }
+        $training = Training::find($request->get('training_id'));
+        if(!$training){
+            $this->error  ="no_trainings_found";
+            return $this->response();
+
+        }
+
+        if($training->club_id != $memberToBeAdded->club_id){
+            $this->error  ="training_doesnt_belong_to_users_club";
+            return $this->response();
+        }
+        //validate if training is not in the past
+        if(Carbon::parse($training->endDate) <= Carbon::today()  ){
+            $this->error  ="training_is_not_available";
+            return $this->response();
+        }
+
+        //validate if there are vacant places on reservation
+        if($training->reservation_players->count() >= $training->seats  ){
+            $this->error  ="training_slots_full";
+            return $this->response();
+        }
+
+        foreach($training->reservation_players as $reservation_player){
+            if($reservation_player->member_id == $memberToBeAdded->id ){
+                $this->error  ="already_reserved_for_training";
+                return $this->response();
+            }
+
+        }
+
+        try{
+            DB::beginTransaction();
+            $training->attachPlayer($memberToBeAdded->id);
+            $this->response = "training_reservation_successful";
+
+            DB::commit();
+        }catch(\Exception $e){
+            dd($e);
+            \DB::rollback();
+
+            \Log::info(__METHOD__, [
+                'error' => $e->getMessage()
+            ]);
+            $this->error =  "exception";
+        }
+
+        return $this->response();
+
+    }
+
+    public function cancelPlaceForReservation(Request $request){
+        if(!$request->has('reservation_player_id')){
+            $this->error  ="reservation_player_id_missing";
+            return $this->response();
+        }
+
+        $reservationPlayer = ReservationPlayer::find($request->get('reservation_player_id'));
+        if(!$reservationPlayer){
+            $this->error  ="no_reservations_found_for_member";
+            return $this->response();
+
+        }
+        if($reservationPlayer->member_id != Auth::user()->id){
+            $this->error = "not_reserved_for_training";
+            return $this->response();
+        }
+
+        $reservationPlayer->delete();
+        $this->response = "cancel_reservation_success";
+        return $this->response();
+
+
     }
 }

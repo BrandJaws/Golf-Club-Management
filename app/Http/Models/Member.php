@@ -189,7 +189,7 @@ class Member extends Authenticatable
                 $query->orWhere('member.email', 'like', "%$searchTerm%");
             }
         })
-            ->select('member.id as id', 'member.firstName', 'member.lastName', 'member.email', 'member.phone', 'member.gender')
+            ->select('member.id as id', 'member.firstName', 'member.lastName', 'member.email', 'member.phone', 'member.gender','member.profilePic')
             ->orderby('member.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'

@@ -82,8 +82,10 @@ Route::group([
 	});
 
 	Route::group(['prefix' => 'trainings', 'as' => 'trainings.'], function() {
-		Route::get('/', ['as' => 'profile', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@index']);
-		Route::get('/{training_id}', ['as' => 'profile', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@show']);
+		Route::get('/', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@index']);
+		Route::get('/{training_id}', ['as' => 'show', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@show']);
+		Route::post('/', ['as' => 'reserve', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@reservePlaceForATraining']);
+		Route::delete('/', ['as' => 'reserve', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@cancelPlaceForReservation']);
 
 	});
 

@@ -28,8 +28,26 @@ class Training extends Model
         return $this->morphMany("App\Http\Models\ReservationPlayer", "reservation");
     }
 
+    public function attachPlayer($player)
+    {
+
+
+                $playerData = [];
+                $playerData["reservation_id"] =$this->id;
+                $playerData["reservation_type"] =self::class;
+                $playerData["member_id"] = $player == "guest" ? 0 : $player;
+                $playerData["parent_id"] = $player == "guest" ? null : $player;
+                $playerData["group_size"] = 1;
+                $playerData["response_status"] = \Config::get('global.reservation.confirmed');
+                $playerData["reservation_status"] = \Config::get('global.reservation.reserved');
+
+                ReservationPlayer::create($playerData);
+
+    }
+
     public function paginatedList($club_id, $perPage, $currentPage, $search, $onlyShowTrainingsNotYetComplete = false)
     {
+        
         return $this->where('training.club_id', '=', $club_id)
             ->leftJoin('coaches', function ($join) {
             $join->on('coaches.id', '=', 'training.coach_id');

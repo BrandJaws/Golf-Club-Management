@@ -605,6 +605,40 @@ return [
         'httpCode' => '412',
         'message' => "Training ID Is Missing"
     ],
+    'training_slots_full' => [
+        'code' => '106',
+        'httpCode' => '412',
+        'message' => "All Places For This Training Have Been Filled"
+    ],
+    'training_is_not_available' => [
+        'code' => '107',
+        'httpCode' => '412',
+        'message' => "The Training You Requested Is Not Available Anymore"
+    ],
+    'already_reserved_for_training' => [
+        'code' => '108',
+        'httpCode' => '412',
+        'message' => "You Already Have A Reservation For This Training"
+    ],
+    'training_reservation_successful' => [
+        'code' => '109',
+        'httpCode' => '200',
+        'message' => "Successfuly Reserved A Place For Training"
+    ],
+    'not_reserved_for_training' => [
+        'code' => '110',
+        'httpCode' => '404',
+        'message' => "You Aren't Reserved For This Reservation"
+    ],
+    'reservation_player_id_missing' => [
+        'code' => '111',
+        'httpCode' => '412',
+        'message' => "Reservation Player ID is Missing"
+    ],
+
+
+
+
 
 
 

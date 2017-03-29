@@ -150,7 +150,7 @@
     @include("admin.__vue_components.trainings.persons-list");
     <script>
 
-        var baseUrl = "{{url('')}}";
+        var baseUrl = "{{url('trainings/')}}";
         _persons = [{name:'John Wick',email:'someone@example.com',id:'BVUBFSJPQ'},
             {name:'Spider Man',email:'someone@example.com',id:'BVUBFSJPQ'},
             {name:'Iron Man',email:'someone@example.com',id:'BVUBFSJPQ'},
@@ -175,14 +175,55 @@
             },
             methods: {
                 loadNextPage:function() {
-                    //add sample data to array to check scroll functionality
-                    if (this.latestPageLoaded == 0) {
-                        for (x = 0; x < _persons.length; x++) {
-                            this.personsList.push(_persons[x]);
-                        }
 
+
+                    if(this.nextAvailablePage === null){
+                        return;
                     }
-                    return;
+                    
+                    _url = baseUrl+'?current_page='+(this.nextAvailablePage);
+
+                    if(!this.ajaxRequestInProcess){
+                        this.ajaxRequestInProcess = true;
+                        var request = $.ajax({
+
+                            url: _url,
+                            method: "GET",
+                            success:function(msg){
+
+                                this.ajaxRequestInProcess = false;
+
+                                pageDataReceived = msg;
+                                membersList = pageDataReceived.data ;
+
+                                //Success code to follow
+                                if(pageDataReceived.next_page_url !== null){
+                                    this.nextAvailablePage = pageDataReceived.current_page+1;
+                                }else{
+                                    this.nextAvailablePage = null;
+                                }
+
+                                if(isSearchQuery){
+
+                                    this.membersList=membersList;
+                                }else{
+
+                                    appendArray(this.membersList,membersList);
+                                }
+
+
+
+                            }.bind(this),
+
+                            error: function(jqXHR, textStatus ) {
+                                this.ajaxRequestInProcess = false;
+
+                                //Error code to follow
+
+
+                            }.bind(this)
+                        });
+                    }
                 },
                 lessonMedia:function() {
                     console.log(this.lessonMediaType);

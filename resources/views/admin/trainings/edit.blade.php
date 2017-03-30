@@ -27,7 +27,7 @@
                                         <div class="col-md-3">
                                             <div class="radio">
                                                 <label class="ui-check">
-                                                    <input type="radio" name="lessonMedia" value="image" class="has-value" v-model="lessonMediaType" @change="lessonMedia()">
+                                                    <input type="radio" name="lessonMedia" value="image" class="has-value" v-model="lessonMediaType" >
                                                     <i class="dark-white"></i>
                                                     Image
                                                 </label>
@@ -36,7 +36,7 @@
                                         <div class="col-md-3">
                                             <div class="radio">
                                                 <label class="ui-check">
-                                                    <input type="radio" name="lessonMedia" value="video" class="has-value" v-model="lessonMediaType" @change="lessonMedia()">
+                                                    <input type="radio" name="lessonMedia" value="video" class="has-value" v-model="lessonMediaType" >
                                                     <i class="dark-white"></i>
                                                     Video
                                                 </label>
@@ -181,8 +181,6 @@
                 personsList:[],
                 latestPageLoaded:0,
                 ajaxRequestInProcess:false,
-                showMediaImage:false,
-                showMediaVideo:true,
                 lessonMediaType:'{{(old('lessonMedia'))?old('lessonMedia'):strtolower($training->promotionType)}}',
             },
             methods: {
@@ -236,19 +234,23 @@
                             }.bind(this)
                         });
                     }
-                },
-                lessonMedia:function() {
-                    console.log(this.lessonMediaType);
+                }
+            },
+            computed:{
+                showMediaImage:function(){
                     if (this.lessonMediaType == 'image') {
-                        this.showMediaImage = true;
-                        this.showMediaVideo = false;
-                    }
-                    else if (this.lessonMediaType == 'video') {
-                        this.showMediaVideo = true;
-                        this.showMediaImage = false;
+                        return true;
                     }
                     else {
-                        this.showMediaImage = true;
+                        return false;
+                    }
+                },
+                showMediaVideo:function(){
+                    if (this.lessonMediaType == 'video') {
+                        return true;
+                    }
+                    else {
+                        return false;
                     }
                 }
             }

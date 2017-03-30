@@ -115,7 +115,7 @@
 										<div class="form-group {{($errors->has('parentMember'))?'has-error':''}}" id="membersPageAutoCom">
 											 <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
                                                                    filtered-from-source="true" include-id-in-list="true"
-                                                                   v-model="selectedId" initial-text-value="" search-query-key="search" field-name="parentMember">
+                                                                   v-model="selectedId" initial-text-value="" search-query-key="search" field-name="parentMember"></auto-complete-box>
 												@if($errors->has('parentMember')) <span class="help-block errorProfilePic">{{$errors->first('parentMember') }}</span> @endif
 										</div>
 									</div>

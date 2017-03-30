@@ -63,7 +63,7 @@
 			ajaxRequestInProcess:false,
                         searchQuery:"",
                         lastSearchTerm:"",
-                        nextAvailablePage:2,
+            nextAvailablePage:{!! (json_encode($coaches))!!}.next_page_url !== null ? 2 : null ,
                         searchRequestHeld:false,
                         
                         

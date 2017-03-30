@@ -38,7 +38,7 @@
             	courses:({!! $courses !!}).data,
                 searchQuery:"",
                 lastSearchTerm:"",
-                nextAvailablePage:2,
+                nextAvailablePage:{!! (json_encode($courses))!!}.next_page_url !== null ? 2 : null ,
                 searchRequestHeld:false,
             },
             methods: {

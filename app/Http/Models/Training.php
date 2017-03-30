@@ -41,7 +41,8 @@ class Training extends Model
                 $playerData["response_status"] = \Config::get('global.reservation.confirmed');
                 $playerData["reservation_status"] = \Config::get('global.reservation.reserved');
 
-                ReservationPlayer::create($playerData);
+                $reservationPlayer = ReservationPlayer::create($playerData);
+                return $reservationPlayer;
 
     }
 
@@ -67,5 +68,16 @@ class Training extends Model
             ->paginate($perPage, array(
             '*'
         ), 'current_page', $currentPage);
+    }
+
+    public function getPlayersForTrainingPaginated($perPage, $currentPage){
+        return ReservationPlayer:: where('reservation_id', '=', $this->id)
+                                 ->where('reservation_type', '=', self::class)
+                                 ->leftJoin('member', 'member.id', '=', 'reservation_players.member_id')
+                                 ->select('reservation_players.id', \DB::raw('CONCAT(member.firstName," ",member.lastName ) as name'), 'member.email', 'member.phone')
+                                 ->orderby('reservation_players.created_at', 'DESC')
+                                 ->paginate($perPage, array(
+                                     '*'
+                                 ), 'current_page', $currentPage);
     }
 }

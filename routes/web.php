@@ -348,6 +348,18 @@ Route::group([
                 'as' => 'destroy',
                 'uses' => 'ClubAdmin\Trainings\TrainingsController@destroy'
             ]);
+            Route::get('/{training}/players', [
+                'as' => 'players',
+                'uses' => 'ClubAdmin\Trainings\TrainingsController@playersForTrainingPaginated'
+            ]);
+            Route::delete('/{training_id}/players', [
+                'as' => 'deleteplayer',
+                'uses' => 'ClubAdmin\Trainings\TrainingsController@cancelPlaceForReservation'
+            ]);
+            Route::post('/{training_id}/players', [
+                'as' => 'addPlayer',
+                'uses' => 'ClubAdmin\Trainings\TrainingsController@reservePlaceForATraining'
+            ]);
         });
         /**
          * Routes related to courses

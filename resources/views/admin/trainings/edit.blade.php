@@ -120,38 +120,9 @@
                     </form>
                 </div>
                 <div class="padding-small"></div>
-                <div class="row bg-white">
-                    <div class="col-md-6">
-                        <div class="main-page-heading">
-                            <h3>
-                                <span>Person Taking this Lesson</span>
-                            </h3>
-                        </div>
-                    </div>
-                    <div class="col-md-6 text-right p-10">
-                        <button class="btn btn-def" type="button" data-toggle="modal" data-target="#addMembersToLesson">Add Member</button>
-                        <div class="modal fade" tabindex="-1" role="dialog" id="addMembersToLesson">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header text-left">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title">Select Member to Add</h4>
-                                    </div>
-                                    <div class="modal-body" id="membersPageAutoCom">
-                                        <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="id" property-for-name="name" filtered-from-source="true" include-id-in-list="true" v-model="selectedId" initial-text-value="" search-query-key="search" field-name="memberId"> </auto-complete-box>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-def"><i class="fa fa-floppy-o"></i> Add Member</button>
-                                        <button type="button" class="btn btn-outline b-primary text-primary" data-dismiss="modal"><i class="fa fa-ban"></i> Cancel</button>
-                                    </div>
-                                </div><!-- /.modal-content -->
-                            </div><!-- /.modal-dialog -->
-                        </div><!-- /.modal -->
-                    </div>
-                    <div class="col-md-12 padding-none">
-                        <person-list :persons-list="personsList"></person-list>
-                    </div>
-                </div>
+
+                        <person-list :training-id="trainingId" :persons-list="playersList" :url-for-crud="urlForDeletion"></person-list>
+
             </div>
         </div>
 
@@ -162,26 +133,20 @@
     @include("admin.__vue_components.trainings.persons-list");
     <script>
 
-        var baseUrl = "{{url('trainings/')}}";
-        _persons = [{name:'John Wick',email:'someone@example.com',id:'BVUBFSJPQ'},
-            {name:'Spider Man',email:'someone@example.com',id:'BVUBFSJPQ'},
-            {name:'Iron Man',email:'someone@example.com',id:'BVUBFSJPQ'},
-            {name:'Hulk',email:'someone@example.com',id:'BVUBFSJPQ'},
-            {name:'Captain America',email:'someone@example.com',id:'BVUBFSJPQ'},
-            {name:'Black Widow',email:'someone@example.com',id:'BVUBFSJPQ'},
-            {name:'Hansel , The Witch Hunter',email:'someone@example.com',id:'BVUBFSJPQ'},
-        ];
+        var baseUrl = "{{url('/admin/trainings/'.$training->id).'/players'}}";
 
         var vue = new Vue({
             el: "#selectionDepHidden",
             data: {
                 //showParentSelector:false,
                 //memberType:'',
-                selectedId: '',
-                personsList:[],
-                latestPageLoaded:0,
+                trainingId: {{$training->id}},
+                playersList:{!! (json_encode($players))!!}.data ,
+                nextAvailablePage:{!! (json_encode($players))!!}.next_page_url !== null ? 2 : null ,
                 ajaxRequestInProcess:false,
                 lessonMediaType:'{{(old('lessonMedia'))?old('lessonMedia'):strtolower($training->promotionType)}}',
+                urlForDeletion:baseUrl,
+
             },
             methods: {
                 loadNextPage:function() {
@@ -204,7 +169,7 @@
                                 this.ajaxRequestInProcess = false;
 
                                 pageDataReceived = msg;
-                                membersList = pageDataReceived.data ;
+                                playersList = pageDataReceived.data ;
 
                                 //Success code to follow
                                 if(pageDataReceived.next_page_url !== null){
@@ -213,15 +178,7 @@
                                     this.nextAvailablePage = null;
                                 }
 
-                                if(isSearchQuery){
-
-                                    this.membersList=membersList;
-                                }else{
-
-                                    appendArray(this.membersList,membersList);
-                                }
-
-
+                                 appendArray(this.playersList,playersList);
 
                             }.bind(this),
 

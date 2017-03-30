@@ -3,9 +3,12 @@ namespace App\Http\Controllers\ClubAdmin\Trainings;
 
 use App\Http\Controllers\Controller;
 use App\Http\Models\Member;
+use App\Http\Models\ReservationPlayer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Models\Training;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Models\Coach;
@@ -111,6 +114,7 @@ class TrainingsController extends Controller
         
         try {
             $training = Training::findOrFail($id);
+            $players = $training->getPlayersForTrainingPaginated(\Config::get('global.portal_items_per_page'),1);
             $coaches = (new Coach())->getCoachDropDownList(Auth::user()->club_id);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
             return Redirect::back()->with([
@@ -122,7 +126,7 @@ class TrainingsController extends Controller
             ]);
         }
         
-        return view('admin.trainings.edit', compact('training', 'coaches'));
+        return view('admin.trainings.edit', compact('training', 'coaches','players'));
     }
 
     public function update(Request $request, $id)
@@ -262,8 +266,12 @@ class TrainingsController extends Controller
 
         try{
             DB::beginTransaction();
-            $training->attachPlayer($memberToBeAdded->id);
-            $this->response = "training_reservation_successful";
+            $reservationPlayer = $training->attachPlayer($memberToBeAdded->id);
+            $reservationPlayer = ReservationPlayer:: where('reservation_players.id', '=', $reservationPlayer->id)
+                ->leftJoin('member', 'member.id', '=', 'reservation_players.member_id')
+                ->select('reservation_players.id', \DB::raw('CONCAT(member.firstName," ",member.lastName ) as name'), 'member.email', 'member.phone')
+                ->first();
+            $this->response = $reservationPlayer;
 
             DB::commit();
         }catch(\Exception $e){
@@ -292,15 +300,28 @@ class TrainingsController extends Controller
             return $this->response();
 
         }
-        if($reservationPlayer->member_id != Auth::user()->id){
-            $this->error = "not_reserved_for_training";
-            return $this->response();
+
+        try{
+            $reservationPlayer->delete();
+            return "success";
+        }catch(\Exception $e){
+            \Log::info(__METHOD__, [
+                'error' => $e->getMessage()
+            ]);
+            return "failure";
         }
 
-        $reservationPlayer->delete();
-        $this->response = "cancel_reservation_success";
-        return $this->response();
 
+
+
+    }
+
+    public function playersForTrainingPaginated(Training $training,Request $request){
+
+        $perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
+        $currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
+
+         return $training->getPlayersForTrainingPaginated($perPage,$currentPage);
 
     }
 }

@@ -203,7 +203,7 @@ class MembersController extends Controller
             Member::find($memberId)->delete();
             return "success";
         } catch (\Exception $e) {
-            return $e->getMessage();
+            
             return "failure";
         }
     }

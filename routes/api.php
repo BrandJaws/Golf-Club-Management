@@ -87,6 +87,7 @@ Route::group([
 		Route::post('/', ['as' => 'reserve', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@reservePlaceForATraining']);
 		Route::delete('/', ['as' => 'reserve', 'uses' => '\App\Http\Controllers\Mobile\TrainingsController@cancelPlaceForReservation']);
 
+
 	});
 
 });

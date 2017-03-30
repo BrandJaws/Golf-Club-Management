@@ -93,7 +93,6 @@ class TrainingsController extends Controller
             }
             
             $training->fill($data)->save();
-            dd($training->toArray());
             return \Redirect::route('admin.trainings.index')->with([
                 'success' => \trans('message.training_created_success.message')
             ]);

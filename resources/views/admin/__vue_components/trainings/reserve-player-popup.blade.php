@@ -12,9 +12,12 @@
                                     <span aria-hidden="true" class="closePopup">×</span>
                                 </button>
                                 <h4 class="modal-title">Select Member to Add</h4>
-                            </div>
-                            <div id="membersPageAutoCom" class="modal-body">
-                                <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
+                                <div class="alert alert-danger" v-if="popupMessage != '' ">
+                                    @{{ popupMessage }}
+                                </div>
+                </div>
+                <div id="membersPageAutoCom" class="modal-body">
+                    <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
                                                                    filtered-from-source="true" include-id-in-list="true"
                                                                    v-model="selectedPlayerId" initial-text-value="" search-query-key="search" field-name="memberId"></auto-complete-box>
                             </div>

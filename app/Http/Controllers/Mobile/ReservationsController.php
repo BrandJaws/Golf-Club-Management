@@ -134,12 +134,13 @@ class ReservationsController extends Controller
                 return $this->response();
             }
 
-            $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime, $players);
-            if ($playersWithOtherReservationsInBetween != null) {
-                $this->error = "players_already_have_booking";
-                $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
-                return $this->response();
-            }
+            //Disabled on request by IOS App developer. To be enabled when he is done with testing
+//            $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime, $players);
+//            if ($playersWithOtherReservationsInBetween != null) {
+//                $this->error = "players_already_have_booking";
+//                $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
+//                return $this->response();
+//            }
 
             $result = $this->addNewGroupToExistingReservation($request, $reservation, $course, $players, $parent_id, $startTime);
 

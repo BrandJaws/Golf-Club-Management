@@ -2,12 +2,12 @@
 @include("admin.__vue_components.reservations.reservation-tab-tables")
 @include("admin.__vue_components.reservations.reservation-tab-divs")
 @include("admin.__vue_components.reservations.reservation-popup")
-@include("admin.__vue_components.reservations.reservation-cancel-popup")
+@include("admin.__vue_components.popups.confirmation-popup")
 <script>
 
 Vue.component('reservations-container', {
     template: `<div>
-                <reservation-cancel-popup @close-cancel-popup="closeCancelTriggered" v-if="showCancelPopup"></reservation-cancel-popup>
+                <confirmation-popup @close-popup="closeConfirmationPopup" @yes-selected="yesSelectedInConfirmation" v-if="showCancelPopup" popupMessage="Do you really wish to cancel this reservation?"></confirmation-popup>
                 <reservation-popup v-if="showPopup"
                         :reservation="reservationToEdit" 
                         :reservation-type="reservationType" 
@@ -44,8 +44,7 @@ Vue.component('reservations-container', {
                                 :reservations-by-date="reservations.reservationsByDate"
                                 @edit-reservation="editReservationEventTriggered" 
                                 @new-reservation="newReservationEventTriggered"
-                                @delete-reservation="deleteReservation"
-                                @display-cancel-popup="cancelPopupTriggered"
+                                @delete-reservation="deleteReservation($event,false)"
                         >
                         </reservation-tab-tables>
                 
@@ -70,17 +69,11 @@ Vue.component('reservations-container', {
           reservationToEdit: null,
           reservationType:null, //possible values new or edit
           popupMessage:"",
+          tempReservationIdToBeDeleted:null,
       }
     },
     methods: {
-        cancelPopupTriggered:function(){
-//            console.log('emit received');
-            this.showCancelPopup = true;
-        },
-        closeCancelTriggered:function(){
-//            console.log('emit received');
-            this.showCancelPopup = false;
-        },
+
         editReservationEventTriggered: function (reservation) {
 
             reservationTemp = JSON.parse(JSON.stringify(reservation));
@@ -102,6 +95,7 @@ Vue.component('reservations-container', {
             this.showPopup = false;
             this.reservationToEdit = null;
             this.reservationType = null;
+            this.popupMessage = "";
         },
         updateReservations:function(newOrUpdatedReservation){
                     //console.log(newOrUpdatedReservation);
@@ -197,12 +191,17 @@ Vue.component('reservations-container', {
                 }.bind(this)
             });
         },
-        deleteReservation:function($reservationId){
+        deleteReservation:function(reservationId, confirmed){
 
+            if(!confirmed){
+                this.displayConfirmationPopup();
+                this.tempReservationIdToBeDeleted = reservationId;
+                return;
+            }
 
             var request = $.ajax({
 
-                url: "{{url('admin/reservations')}}"+"/"+$reservationId,
+                url: "{{url('admin/reservations')}}"+"/"+reservationId,
                 method: "POST",
                 headers: {
                     'X-CSRF-TOKEN': '{{csrf_token()}}',
@@ -216,6 +215,7 @@ Vue.component('reservations-container', {
 
                     this.updateReservations(msg.response);
                     this.closePopupTriggered();
+                    this.closeConfirmationPopup();
                 }.bind(this),
 
                 error: function(jqXHR, textStatus ) {
@@ -242,6 +242,20 @@ Vue.component('reservations-container', {
 
             }
             return playersAndGuests;
+        },
+        displayConfirmationPopup:function(){
+            //            console.log('emit received');
+            this.showCancelPopup = true;
+        },
+        closeConfirmationPopup:function(){
+            //            console.log('emit received');
+            this.showCancelPopup = false;
+            this.tempReservationIdToBeDeleted = null;
+        },
+        yesSelectedInConfirmation:function(){
+
+            this.deleteReservation(this.tempReservationIdToBeDeleted, true);
+
         },
     }
   

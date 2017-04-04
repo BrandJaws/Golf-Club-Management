@@ -533,7 +533,7 @@ return [
     'group_already_complete' => [
         'code' => '91',
         'httpCode' => '412',
-        'message' => 'The group you were added to has been filled by other players. Do you want to reserve your place separate from the group?'
+        'message' => 'The group you were added to has been filled by other players. Do you want us to try reserving your place separate from the group?'
     ],
     'training_created_success' => [
         'code' => '92',
@@ -570,73 +570,83 @@ return [
         'httpCode' => '404',
         'message' => 'Invalid Group Id Provided'
     ],
-    'user_not_parent_of_group' => [
+    'group_updated_successfuly' => [
         'code' => '98',
+        'httpCode' => '200',
+        'message' => 'Group Updated Successfuly'
+    ],
+    'user_not_parent_of_group' => [
+        'code' => '99',
         'httpCode' => '412',
         'message' => "This Group Doesn't Belong To You"
     ],
     'one_or_more_members_not_friend' => [
-        'code' => '99',
+        'code' => '100',
         'httpCode' => '412',
         'message' => "One or more members sent are not friends"
     ],
     'member_added_to_group_successfuly' => [
-        'code' => '100',
+        'code' => '101',
         'httpCode' => '200',
         'message' => "Members Added To Group Successfuly"
     ],
     'member_removed_from_group_successfuly' => [
-        'code' => '101',
+        'code' => '102',
         'httpCode' => '200',
         'message' => "Members Removed From The Group Successfuly"
     ],
     'no_groups_found' => [
-        'code' => '102',
+        'code' => '103',
         'httpCode' => '404',
         'message' => "No Groups Found"
     ],
+    'group_deleted_successfuly' => [
+        'code' => '104',
+        'httpCode' => '200',
+        'message' => "Group Deleted Successfuly"
+    ],
     'no_trainings_found' => [
-        'code' => '103',
+        'code' => '105',
         'httpCode' => '404',
         'message' => "No Trainings Found"
     ],
     'training_doesnt_belong_to_users_club' => [
-        'code' => '104',
+        'code' => '106',
         'httpCode' => '412',
         'message' => "Requested training doesn't belong to your club"
     ],
     'training_id_missing' => [
-        'code' => '105',
+        'code' => '107',
         'httpCode' => '412',
         'message' => "Training ID Is Missing"
     ],
     'training_slots_full' => [
-        'code' => '106',
+        'code' => '108',
         'httpCode' => '412',
         'message' => "All Places For This Training Have Been Filled"
     ],
     'training_is_not_available' => [
-        'code' => '107',
+        'code' => '109',
         'httpCode' => '412',
         'message' => "The Training You Requested Is Not Available Anymore"
     ],
     'already_reserved_for_training' => [
-        'code' => '108',
+        'code' => '110',
         'httpCode' => '412',
         'message' => "You Already Have A Reservation For This Training"
     ],
     'training_reservation_successful' => [
-        'code' => '109',
+        'code' => '111',
         'httpCode' => '200',
         'message' => "Successfuly Reserved A Place For Training"
     ],
     'not_reserved_for_training' => [
-        'code' => '110',
+        'code' => '112',
         'httpCode' => '404',
         'message' => "You Aren't Reserved For This Reservation"
     ],
     'reservation_player_id_missing' => [
-        'code' => '111',
+        'code' => '113',
         'httpCode' => '412',
         'message' => "Reservation Player ID is Missing"
     ],

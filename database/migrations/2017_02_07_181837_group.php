@@ -13,6 +13,9 @@ class Group extends Migration {
 			$table->bigIncrements('id');
 			$table->bigInteger('member_id')->unsigned();
 			$table->string ( 'name', 250 );
+			$table->string('groupPic', 250)
+				->nullable()
+				->default(NULL);
 			$table->foreign('member_id')->references('id')
 				->on('member')
 				->onDelete('cascade');

@@ -14,7 +14,7 @@ use Validator;
 use App\Http\Models\PushNotification;
 use Illuminate\Support\Facades\Hash;
 class MembersController extends Controller {
-	//use \ImageHandler;
+	use \ImageHandler;
 	//use \Notification;
 	public function login(Request $request) {
 		if (! $request->has ( 'email' )) {
@@ -391,6 +391,8 @@ class MembersController extends Controller {
 			}
 
 			$parent_member = Auth::user();
+
+
 			$group = Group::create(['member_id'=>$parent_member->id, "name"=>$request->get('group_name')]);
 			$parent_member->load('friends');
 
@@ -425,6 +427,14 @@ class MembersController extends Controller {
 				}
 
 			}
+			//handle image upload if present
+			if ($request->hasFile ( 'groupPic' )) {
+				$uploadPath = self::uploadImage ( $request->file ( 'groupPic' ), 'friend_groups_image_path', md5 ( Auth::user ()->id ), true, false, $group->id );
+				$group->groupPic = $uploadPath;
+				$group->save();
+
+			}
+
 
 			DB::commit();
 
@@ -445,6 +455,61 @@ class MembersController extends Controller {
 
 
 
+
+		return $this->response();
+
+	}
+
+	public function updateFriendsGroupInfo(Request $request){
+
+		if (!$request->has('group_id')) {
+			$this->error = "group_id_not_received";
+			return $this->response();
+		}
+
+		$group = Group::find($request->get('group_id'));
+		if(!$group){
+			$this->error = "invalid_group";
+			return $this->response();
+		}
+
+		$parent_member = Auth::user();
+		if($group->member_id != $parent_member->id){
+			$this->error = "user_not_parent_of_group";
+			return $this->response();
+		}
+
+
+		try{
+
+			DB::beginTransaction();
+
+
+			if ($request->has('group_name')) {
+				$group->name = $request->get('group_name');
+			}
+
+			//handle image upload if present
+			if ($request->hasFile ( 'groupPic' )) {
+				$uploadPath = self::uploadImage ( $request->file ( 'groupPic' ), 'friend_groups_image_path', md5 ( Auth::user ()->id ), true, false, $group->id );
+				$group->groupPic = $uploadPath;
+				$group->save();
+
+			}
+			DB::commit();
+
+			$this->response = "group_updated_successfuly";
+			return $this->response();
+
+
+		}catch (\Exception $e){
+
+			\DB::rollback ();
+			\Log::info ( __METHOD__, [
+				'error' => $e->getMessage ()
+			] );
+			$this->error = "exception";
+		}
 
 		return $this->response();
 
@@ -628,7 +693,7 @@ class MembersController extends Controller {
 
 
 		}catch (\Exception $e){
-			dd($e);
+
 			\DB::rollback ();
 			\Log::info ( __METHOD__, [
 				'error' => $e->getMessage ()
@@ -669,6 +734,51 @@ class MembersController extends Controller {
 
 		return $this->response();
 
+
+	}
+
+	public function deleteGroup(Request $request){
+
+		if (!$request->has('group_id')) {
+			$this->error = "group_id_not_received";
+			return $this->response();
+		}
+
+		$group = Group::find($request->get('group_id'));
+		if(!$group){
+			$this->error = "invalid_group";
+			return $this->response();
+		}
+		$parent_member = Auth::user();
+		if($group->member_id != $parent_member->id){
+			$this->error = "user_not_parent_of_group";
+			return $this->response();
+		}
+
+		try{
+
+			DB::beginTransaction();
+
+			$group->delete();
+
+			DB::commit();
+
+			$this->response = "group_deleted_successfuly";
+
+		}catch (\Exception $e){
+
+			\DB::rollback ();
+			\Log::info ( __METHOD__, [
+				'error' => $e->getMessage ()
+			] );
+			$this->error = "exception";
+		}
+
+
+
+
+
+		return $this->response();
 
 	}
 

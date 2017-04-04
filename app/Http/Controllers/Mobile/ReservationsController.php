@@ -103,7 +103,10 @@ class ReservationsController extends Controller
 
         }
 
-        if ($request->get('group_size') > 4 || $request->get('guests') > 3) {
+        //return with error if group size > 4 or guests are greater than group size -1 i-e Parent + Guests cannot
+        //exceed the group size since guests are confirmed by default. Guests + Parent total more than group size
+        //means we will end up with more confirmed players than the group size intended
+        if ($request->get('group_size') > 4 || $request->get('guests') > ($request->get('group_size')-1) ){
             $this->error = "mobile_players_are_not_enough";
             return $this->response();
         }
@@ -147,12 +150,13 @@ class ReservationsController extends Controller
 
         } else {
 
-            $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime, $players);
-            if ($playersWithOtherReservationsInBetween != null) {
-                $this->error = "players_already_have_booking";
-                $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
-                return $this->response();
-            }
+            //Disabled on request by IOS App developer. To be enabled when he is done with testing
+//            $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime, $players);
+//            if ($playersWithOtherReservationsInBetween != null) {
+//                $this->error = "players_already_have_booking";
+//                $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
+//                return $this->response();
+//            }
 
             $result = $this->createNewReservationAndGroup($request, $course, $players, $parent_id, $startTime);
 
@@ -451,7 +455,7 @@ class ReservationsController extends Controller
                 } else {
                     $reservation_player->response_status = \Config::get('global.reservation.dropped');
                     $reservation_player->save();
-
+                    $reservation_player->dispatchMakeReservationPlayerDecisionJob();
 
 
 
@@ -460,6 +464,15 @@ class ReservationsController extends Controller
                 }
 
             }else if($reservation_player->response_status == \Config::get('global.reservation.dropped')){
+                $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_player->reservation_id);
+                //return with error if sum of group sizes + 1 i-e the groups already reserved + the player here to accept
+                // and attempting for a reservation on his own is greater than 16
+                if (($reservation->sumOfGroupSizes('both') + 1) > 16) {
+                    $this->error = "mobile_slot_already_reserved";
+                    return $this->response();
+                }
+
+                //continue with his reservation otherwise
                 $reservation_player->parent_id = $member_id;
                 $reservation_player->response_status = \Config::get('global.reservation.confirmed');
                 $reservation_player->reservation_status = \Config::get('global.reservation.waiting');

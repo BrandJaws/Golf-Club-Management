@@ -70,10 +70,12 @@ Route::group([
 		Route::post('/friends/add', ['as' => 'addToFavorites', 'uses' => '\App\Http\Controllers\Mobile\MembersController@addMemberToFriends']);
 		Route::post('/friends/remove', ['as' => 'removeFromFavorites', 'uses' => '\App\Http\Controllers\Mobile\MembersController@removeMemberFromFriends']);
 		Route::get('/friends/', ['as' => 'getFavorites', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getFriends']);
-		Route::get('/friends/groups/', ['as' => 'addToFavorites', 'uses' => '\App\Http\Controllers\Mobile\MembersController@listAllGroups']);
-		Route::post('/friends/groups/add', ['as' => 'addToFavorites', 'uses' => '\App\Http\Controllers\Mobile\MembersController@addNewFriendsGroup']);
-		Route::post('/friends/groups/add-more-friends', ['as' => 'addToFavorites', 'uses' => '\App\Http\Controllers\Mobile\MembersController@addMoreFriendsToAnExistingGroup']);
-		Route::post('/friends/groups/remove-friends', ['as' => 'addToFavorites', 'uses' => '\App\Http\Controllers\Mobile\MembersController@removeFriendsFromGroup']);
+		Route::get('/friends/groups/', ['as' => 'listGroups', 'uses' => '\App\Http\Controllers\Mobile\MembersController@listAllGroups']);
+		Route::post('/friends/groups/add', ['as' => 'addGroup', 'uses' => '\App\Http\Controllers\Mobile\MembersController@addNewFriendsGroup']);
+		Route::post('/friends/groups/update', ['as' => 'updateGroup', 'uses' => '\App\Http\Controllers\Mobile\MembersController@updateFriendsGroupInfo']);
+		Route::post('/friends/groups/add-more-friends', ['as' => 'addFriendsToGroup', 'uses' => '\App\Http\Controllers\Mobile\MembersController@addMoreFriendsToAnExistingGroup']);
+		Route::post('/friends/groups/remove-friends', ['as' => 'removeFriendsFromGroup', 'uses' => '\App\Http\Controllers\Mobile\MembersController@removeFriendsFromGroup']);
+		Route::post('/friends/groups/delete', ['as' => 'deleteGroup', 'uses' => '\App\Http\Controllers\Mobile\MembersController@deleteGroup']);
 		//Route::get('/reservations', ['as' => 'getReservations', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getReservationsForMember']);
 		//Route::post('/test-notification', '\App\Http\Controllers\Mobile\MembersController@sendTestNotification');
 		//Route::get('/notifications', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getPushNotificationsForMemberById']);

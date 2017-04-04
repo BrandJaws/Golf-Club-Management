@@ -84,8 +84,8 @@ class CoursesController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:1,max:50',
-            'openTime' => 'required|date_format:H:i:s',
-            'closeTime' => 'required|date_format:H:i:s',
+            'openTime' => 'required|date_format:H:i',
+            'closeTime' => 'required|date_format:H:i',
             'bookingDuration' => 'required|numeric',
             'bookingInterval' => 'required|numeric',
             'numberOfHoles' => 'required|numeric'
@@ -127,8 +127,8 @@ class CoursesController extends Controller
         }
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:1,max:50',
-            'openTime' => 'required|date_format:H:i:s',
-            'closeTime' => 'required|date_format:H:i:s',
+            'openTime' => 'required|date_format:H:i',
+            'closeTime' => 'required|date_format:H:i',
             'bookingDuration' => 'required|numeric',
             'bookingInterval' => 'required|numeric',
             'numberOfHoles' => 'required|numeric'

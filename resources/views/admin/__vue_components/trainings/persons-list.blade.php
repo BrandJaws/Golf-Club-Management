@@ -7,7 +7,7 @@
         template: `
         <div>
          <confirmation-popup @close-popup="closeConfirmationPopup" @yes-selected="yesSelectedInConfirmation" v-if="showCancelPopup" popupMessage="Do you really wish to cancel this reservation?"></confirmation-popup>
-         <reserve-player-popup @close-popup="closeReservePlayerPopup" @add-member="addMemberRequested" v-if="showReservePlayerPopup" popupMessage="Do you really wish to cancel this reservation?"></reserve-player-popup>
+         <reserve-player-popup @close-popup="closeReservePlayerPopup" @add-member="addMemberRequested" v-if="showReservePlayerPopup" :popupMessage="reservePlayerPopupMessage"></reserve-player-popup>
          <div class="row bg-white">
                     <div class="col-md-6">
                         <div class="main-page-heading">
@@ -62,6 +62,7 @@
                 showCancelPopup:false,
                 tempPlayerToBeCancelled:null,
                 showReservePlayerPopup:false,
+                reservePlayerPopupMessage:"",
 
 
             }
@@ -141,7 +142,7 @@
                     error: function(jqXHR, textStatus ) {
 
                         if(jqXHR.hasOwnProperty("responseText")){
-                            //this.popupMessage = JSON.parse(jqXHR.responseText).response;
+                            this.reservePlayerPopupMessage = JSON.parse(jqXHR.responseText).response;
                         }
 
 
@@ -157,6 +158,7 @@
     //            console.log('emit received');
                 this.showCancelPopup = false;
                 this.tempPlayerToBeCancelled = null;
+                this.reservePlayerPopupMessage = "";
             },
             yesSelectedInConfirmation:function(){
                 this.cancelReservationOfPlayer(this.tempPlayerToBeCancelled.player,this.tempPlayerToBeCancelled.playerIndex,true);

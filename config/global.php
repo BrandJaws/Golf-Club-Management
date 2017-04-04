@@ -72,5 +72,10 @@ return [
     'contentType' => [
         'image' => 'IMAGE',
         'video' => 'VIDEO'
-    ]
+    ],
+    'image_path' => [
+        'user_profile_path' => 'uploads/profile/{member_id}/',
+        'employee_profile_path' => 'uploads/employee/{employee_id}/',
+        'friend_groups_image_path'=>'uploads/profile/{member_id}/groups/',
+    ],
 ];

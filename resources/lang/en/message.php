@@ -650,6 +650,33 @@ return [
         'httpCode' => '412',
         'message' => "Reservation Player ID is Missing"
     ],
+    'beacon_uuid_missing' => [
+        'code' => '114',
+        'httpCode' => '412',
+        'message' => "Beacon UUID Missing"
+    ],
+    'beacon_major_missing' => [
+        'code' => '115',
+        'httpCode' => '412',
+        'message' => "Beacon Major Missing"
+    ],
+    'beacon_minor_missing' => [
+        'code' => '116',
+        'httpCode' => '412',
+        'message' => "Beacon Minor Missing"
+    ],
+    'beacon_not_trusted' => [
+        'code' => '117',
+        'httpCode' => '404',
+        'message' => "Not A Trusted Beacon"
+    ],
+    'beacon_not_configured' => [
+        'code' => '117',
+        'httpCode' => '404',
+        'message' => "Beacon not configured yet"
+    ],
+
+
 
 
 

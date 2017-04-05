@@ -493,9 +493,11 @@ class MembersController extends Controller {
 			if ($request->hasFile ( 'groupPic' )) {
 				$uploadPath = self::uploadImage ( $request->file ( 'groupPic' ), 'friend_groups_image_path', md5 ( Auth::user ()->id ), true, false, $group->id );
 				$group->groupPic = $uploadPath;
-				$group->save();
+
 
 			}
+
+			$group->save();
 			DB::commit();
 
 			$this->response = "group_updated_successfuly";

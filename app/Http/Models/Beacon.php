@@ -28,4 +28,19 @@ class Beacon extends Model {
 				'course.name as courseName' 
 		], 'current_page', $currentPage );
 	}
+
+	/**
+	 * @param $uuid
+	 * @param $major
+	 * @param $minor
+	 * @return Beacon
+     */
+	public static function findBeacon($uuid, $major, $minor){
+
+		return Beacon::where("UUID",$uuid)
+					 ->where("major",$major)
+					 ->where("minor",$minor)
+					 ->first();
+
+	}
 }

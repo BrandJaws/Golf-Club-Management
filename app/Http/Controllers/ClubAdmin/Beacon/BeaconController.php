@@ -64,6 +64,7 @@ class BeaconController extends Controller
             $this->error = $validator->errors();
             return \Redirect::back()->withInput()->withErrors($this->error);
         }
+       
         try {
             $beaconConfig = (new BeaconConfiguration())->boot($request->all());
             $beacon = new Beacon();

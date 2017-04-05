@@ -35,8 +35,8 @@ class CreateViews extends Migration
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";
-        $query .= "     LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND STRCMP(reservation_time_slots.reservation_type,'".RoutineReservation::class."') ";
-        $query .= "     LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND STRCMP(reservation_players.reservation_type,'".RoutineReservation::class."') ";
+        $query .= "     LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND reservation_time_slots.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
+        $query .= "     LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND reservation_players.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
         $query .= "     LEFT JOIN member ON reservation_players.member_id = member.id ";
        
         //Add other reservation types as and when created here with a UNION ALL clause
@@ -67,14 +67,14 @@ class CreateViews extends Migration
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";
-        $query .= "     LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND STRCMP(reservation_time_slots.reservation_type,'".RoutineReservation::class."') ";
-        $query .= "     LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND STRCMP(reservation_players.reservation_type,'".RoutineReservation::class."') ";
+        $query .= "     LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND reservation_time_slots.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
+        $query .= "     LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND reservation_players.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
         $query .= "     LEFT JOIN member ON reservation_players.member_id = member.id ";
         $query .= "     WHERE ";
         $query .= "     ((reservation_players.reservation_status ='RESERVED' AND reservation_players.response_status ='CONFIRMED') OR  reservation_players.reservation_status ='PENDING RESERVED') ";
         $query .= "     GROUP BY course.id,course.club_id,course.name,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
         //Add other reservation types as and when created here with a UNION ALL clause
-        
+     
         DB::statement($query);
         //END: Create compound_reservations_aggregated view
         
@@ -93,7 +93,7 @@ class CreateViews extends Migration
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";
-        $query .= "     LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND STRCMP(reservation_time_slots.reservation_type,'".RoutineReservation::class."') ";
+        $query .= "     LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND reservation_time_slots.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
        
         //Add other reservation types as and when created here with a UNION ALL clause
         

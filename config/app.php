@@ -124,6 +124,14 @@ return [
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
     /*
+   |--------------------------------------------------------------------------
+   | Admin Email
+   |--------------------------------------------------------------------------
+   */
+
+    'admin_email' => env('ADMIN_EMAIL', 'dev@octaclient.com'),
+
+    /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
@@ -225,6 +233,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class
-    ]
+    ],
+
 ]
 ;

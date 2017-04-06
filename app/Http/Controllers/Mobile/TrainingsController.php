@@ -50,11 +50,13 @@ class TrainingsController extends Controller
         foreach($training->reservation_players as $reservation_player){
             if($reservation_player->member_id == $logged_in_user->id){
                 $training->isBookedByCurrentUser = true;
+                $training->reservation_player_id = $reservation_player->id;
                 break;
             }
         }
         if($training->isBookedByCurrentUser !== true){
             $training->isBookedByCurrentUser = false;
+            $training->reservation_player_id = 0;
         }
         unset($training->reservation_players);
         $this->response = $training;

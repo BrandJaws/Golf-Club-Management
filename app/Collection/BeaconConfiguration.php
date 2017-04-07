@@ -62,4 +62,18 @@ class BeaconConfiguration
     {
         return $this->configuration->toArray();
     }
+
+    public function callNamedAction($action){
+        if(method_exists($this, $action)){
+            return $this->$action();
+        }else{
+            return false;
+        }
+    }
+
+    private function welcome(){
+        dd("Welcome to Club");
+    }
+
+    
 }

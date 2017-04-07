@@ -30,11 +30,12 @@ class BeaconController extends Controller
         $beacon = Beacon::findBeacon($request->get('uuid'),$request->get('major'),$request->get('minor'));
 
         if($beacon && $beacon->club_id == Auth::user()->club_id){
-            $beaconConfiguration = unserialize($beacon->configuration);
-            if($beaconConfiguration == false){
+            $beacon->configuration = unserialize($beacon->configuration)->toArray();
+            if($beacon->configuration == false){
                 $this->error = "beacon_not_configured";
             }else{
-                $this->response = $beaconConfiguration;
+                $beacon->setHidden(['club_id','course_id','created_at','updated_at']);
+                $this->response = $beacon;
             }
 
         }else{
@@ -42,6 +43,34 @@ class BeaconController extends Controller
         }
 
         return $this->response();
+
+    }
+
+    public function performAppropriateAction(Request $request){
+        if(!$request->has('id')){
+            $this->error  ="beacon_id_missing";
+            return $this->response();
+        }
+
+        $beacon = Beacon::find($request->get('id'));
+        if(!$beacon || $beacon->club_id != Auth::user()->club_id){
+            $this->error = "beacon_not_trusted";
+            return $this->response();
+        }
+        
+        if(!$request->has('action')){
+            $this->error  ="beacon_action_missing";
+            return $this->response();
+        }
+
+        $beacon->configuration = unserialize($beacon->configuration);
+
+        $actionResult = $beacon->configuration->callNamedAction($request->get('action'));
+
+        if($actionResult === false){
+            $this->error  ="beacon_action_missing";
+            return $this->response();
+        }
 
     }
 }

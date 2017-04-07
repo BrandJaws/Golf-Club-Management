@@ -675,6 +675,17 @@ return [
         'httpCode' => '404',
         'message' => "Beacon not configured yet"
     ],
+    'beacon_id_missing' => [
+        'code' => '118',
+        'httpCode' => '412',
+        'message' => "Beacon ID Missing"
+    ],
+    'beacon_action_missing' => [
+        'code' => '119',
+        'httpCode' => '412',
+        'message' => "Beacon Action Missing"
+    ],
+
 
 
 

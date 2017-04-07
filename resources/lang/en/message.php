@@ -712,5 +712,9 @@ return [
         'reservation_confirmed' => 'Your reservation request at %s has been confirmed. ',
         'status_reserved' => 'Your status is Reserved.',
         'status_pending' => 'Your status is Pending.'
+    ],
+    'beacon_messages' => [
+        'welcome_without_reservation' => "Welcome to %s %s. ",
+        'welcome_with_reservation' => "Welcome to %s %s, You have a booking at course %s at %s. Would you like to check-in now? ",
     ]
 ];

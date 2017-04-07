@@ -1,6 +1,7 @@
 <?php
 namespace App\Collection;
 
+use App\Http\Models\Checkin;
 use Illuminate\Support\Collection;
 use PhpParser\Node\Stmt\Foreach_;
 
@@ -63,9 +64,9 @@ class BeaconConfiguration
         return $this->configuration->toArray();
     }
 
-    public function callNamedAction($action){
+    public function callNamedAction($action, $beacon_id, $member_id){
         if(method_exists($this, $action)){
-            return $this->$action();
+            return $this->$action($beacon_id,$member_id);
         }else{
             return false;
         }
@@ -75,5 +76,13 @@ class BeaconConfiguration
         dd("Welcome to Club");
     }
 
-    
+    private function clubEntry($beacon_id, $member_id){
+        if(Checkin::clubEntryCheckinIsAllowed($beacon_id, $member_id)){
+            dd("allowed");
+        }else{
+            dd("not allowed");
+        }
+    }
+
+
 }

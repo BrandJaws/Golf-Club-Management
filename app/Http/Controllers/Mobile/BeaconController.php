@@ -47,12 +47,12 @@ class BeaconController extends Controller
     }
 
     public function performAppropriateAction(Request $request){
-        if(!$request->has('id')){
+        if(!$request->has('beacon_id')){
             $this->error  ="beacon_id_missing";
             return $this->response();
         }
 
-        $beacon = Beacon::find($request->get('id'));
+        $beacon = Beacon::find($request->get('beacon_id'));
         if(!$beacon || $beacon->club_id != Auth::user()->club_id){
             $this->error = "beacon_not_trusted";
             return $this->response();
@@ -65,7 +65,7 @@ class BeaconController extends Controller
 
         $beacon->configuration = unserialize($beacon->configuration);
 
-        $actionResult = $beacon->configuration->callNamedAction($request->get('action'));
+        $actionResult = $beacon->configuration->callNamedAction($request->get('action'), $request->get('beacon_id'), Auth::user()->id);
 
         if($actionResult === false){
             $this->error  ="beacon_action_missing";

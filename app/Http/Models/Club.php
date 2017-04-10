@@ -2,6 +2,7 @@
 
 namespace App\Http\models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -126,4 +127,36 @@ class Club extends Model {
             
             
         }
+
+    public static function returnNextValidReservationForaMemberForCheckin($club_id, $member_id){
+
+        $date = Carbon::now()->toDateString();
+        $dateTime = Carbon::now()->addMinutes(10)->toDateTimeString();
+
+        // Needs to be modified to accomodate for other reservation types such as Training and leagues
+        $nextValidReservationForPlayerToday = RoutineReservation::select("routine_reservations.id as id", "reservation_players.reservation_type", "routine_reservations.course_id as course_id")
+            ->leftJoin('reservation_players', function ($join) {
+                $join->on('routine_reservations.id', '=','reservation_players.reservation_id')
+                    ->where('reservation_players.reservation_type', RoutineReservation::class);
+            })
+            ->leftJoin('reservation_time_slots', function ($join) {
+                $join->on('routine_reservations.id', '=', 'reservation_time_slots.reservation_id')
+                    ->where('reservation_time_slots.reservation_type', RoutineReservation::class);
+            })
+            ->where('routine_reservations.club_id',$club_id)
+            ->where('reservation_players.member_id',$member_id)
+            ->whereDate('reservation_time_slots.time_start','=',$date)
+            ->where('reservation_time_slots.time_start',">=",$dateTime)
+            ->orderBy('reservation_time_slots.time_start','ASC')
+            ->first();
+       
+
+        if(!$nextValidReservationForPlayerToday ){
+            return false;
+        }else{
+            return $nextValidReservationForPlayerToday;
+        }
+    }
+
+
 }

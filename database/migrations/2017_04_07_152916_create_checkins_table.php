@@ -17,12 +17,12 @@ class CreateCheckinsTable extends Migration
 
             $table->bigIncrements('id');
             $table->bigInteger('beacon_id',false,true);
-            $table->bigInteger('reservation_id',false,true);
+            $table->morphs('reservation');
             $table->bigInteger('course_id',false,true);
             $table->bigInteger('member_id',false,true);
             $table->dateTime('checkinTime')->nullable()->defualt(Null);
             $table->enum('action',['clubEntry','gameEntry','clubHouse','gameExit']);
-            $table->enum('recorded_by',['user','admin']);
+            $table->enum('recordedBy',['user','admin']);
             $table->boolean('onTime');
 
         });

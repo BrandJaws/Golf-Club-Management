@@ -685,6 +685,21 @@ return [
         'httpCode' => '412',
         'message' => "Beacon Action Missing"
     ],
+    'no_reservations_today' => [
+        'code' => '120',
+        'httpCode' => '404',
+        'message' => "No Reservations Found To Checkin For"
+    ],
+    'already_checked_in' => [
+        'code' => '121',
+        'httpCode' => '412',
+        'message' => "Already Checked In"
+    ],
+    'club_entry_checkin_successful' => [
+        'code' => '119',
+        'httpCode' => '412',
+        'message' => "Club Entry Checkin Successful"
+    ],
 
 
 

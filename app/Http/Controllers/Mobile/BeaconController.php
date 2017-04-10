@@ -65,12 +65,20 @@ class BeaconController extends Controller
 
         $beacon->configuration = unserialize($beacon->configuration);
 
-        $actionResult = $beacon->configuration->callNamedAction($request->get('action'), $request->get('beacon_id'), Auth::user()->id);
+        $actionResult = $beacon->configuration->callNamedAction($request->get('action'), $beacon, Auth::user());
 
         if($actionResult === false){
             $this->error  ="beacon_action_missing";
             return $this->response();
         }
+
+        if(isset($actionResult->response)){
+            $this->response = $actionResult->response;
+        }else if(isset($actionResult->error)){
+            $this->error = $actionResult->error;
+        }
+
+        return $this->response();
 
     }
 }

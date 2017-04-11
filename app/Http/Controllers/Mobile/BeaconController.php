@@ -64,6 +64,10 @@ class BeaconController extends Controller
         }
 
         $beacon->configuration = unserialize($beacon->configuration);
+        if($beacon->configuration == false){
+            $this->error = "beacon_not_configured";
+            return $this->response();
+        }
 
         $actionResult = $beacon->configuration->callNamedAction($request->get('action'), $beacon, Auth::user());
 

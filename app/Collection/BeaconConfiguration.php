@@ -81,20 +81,19 @@ class BeaconConfiguration
     private function clubEntry($beacon, $member){
         $response = new \stdClass();
 
-        $nextValidReservationToday = Club::returnNextValidReservationForaMemberForCheckin($beacon->club_id,$member->id);
+        $nextValidReservationToday = Club::returnNextValidReservationForAMemberForCheckin($beacon->club_id,$member->id);
         if(!$nextValidReservationToday){
             $response->error = "no_reservations_today";
             return $response;
         }
         
-        
+
         if(!Checkin::memberHasAlreadyRecordedClubEntryForAReservation($nextValidReservationToday->id,$nextValidReservationToday->reservation_type, $member)){
             try{
                 Checkin::create([
                     'beacon_id'=>$beacon->id,
                     'reservation_id'=>$nextValidReservationToday->id,
                     'reservation_type'=>$nextValidReservationToday->reservation_type,
-                    'course_id'=>$nextValidReservationToday->course_id,
                     'member_id'=>$member->id,
                     'checkinTime'=>Carbon::now()->toDateTimeString(),
                     'action'=>"clubEntry",
@@ -103,7 +102,7 @@ class BeaconConfiguration
                 ]);
 
 
-                $response->error = "club_checkin_entry_successful";
+                $response->response = "club_entry_checkin_successful";
                 return $response;
 
             }catch(\Exception $e){

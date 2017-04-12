@@ -675,6 +675,32 @@ return [
         'httpCode' => '404',
         'message' => "Beacon not configured yet"
     ],
+    'beacon_id_missing' => [
+        'code' => '118',
+        'httpCode' => '412',
+        'message' => "Beacon ID Missing"
+    ],
+    'beacon_action_missing' => [
+        'code' => '119',
+        'httpCode' => '412',
+        'message' => "Beacon Action Missing"
+    ],
+    'no_reservations_today' => [
+        'code' => '120',
+        'httpCode' => '404',
+        'message' => "No Reservations Found To Checkin For"
+    ],
+    'already_checked_in' => [
+        'code' => '121',
+        'httpCode' => '412',
+        'message' => "Already Checked In"
+    ],
+    'club_entry_checkin_successful' => [
+        'code' => '119',
+        'httpCode' => '412',
+        'message' => "Club Entry Checkin Successful"
+    ],
+
 
 
 
@@ -701,5 +727,9 @@ return [
         'reservation_confirmed' => 'Your reservation request at %s has been confirmed. ',
         'status_reserved' => 'Your status is Reserved.',
         'status_pending' => 'Your status is Pending.'
+    ],
+    'beacon_messages' => [
+        'welcome_without_reservation' => "Welcome to %s %s. ",
+        'welcome_with_reservation' => "Welcome to %s %s, You have a booking at course %s at %s. Would you like to check-in now? ",
     ]
 ];

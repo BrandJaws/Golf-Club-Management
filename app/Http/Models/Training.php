@@ -63,7 +63,7 @@ class Training extends Model
                     $query->where('training.name', 'like', "%$search%");
                 }
             })
-            ->select('training.id as id', 'training.name', 'training.seats', 'training.startDate', 'training.endDate',\DB::raw('CONCAT(coaches.firstName," ",coaches.lastName) as coach'), \DB::raw("(SELECT COUNT(*)  FROM reservation_players WHERE  reservation_id = training.id AND STRCMP(reservation_type, 'App\Http\Models\Training')  ) as seatsReserved"))
+            ->select('training.id as id', 'training.name', 'training.seats', 'training.startDate', 'training.endDate',\DB::raw('CONCAT(coaches.firstName," ",coaches.lastName) as coach'), \DB::raw("(SELECT COUNT(*)  FROM reservation_players WHERE  reservation_id = training.id AND reservation_type = '".addslashes(Training::class)."'  ) as seatsReserved"))
             ->orderby('training.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'

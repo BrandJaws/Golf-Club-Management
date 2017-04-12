@@ -2,6 +2,7 @@
 
 namespace App\Http\models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -126,4 +127,49 @@ class Club extends Model {
             
             
         }
+
+    public static function returnNextValidReservationForAMemberForCheckin($club_id, $member_id){
+
+        $date = Carbon::now()->toDateString();
+        $todayAsDateTime = Carbon::today()->toDateTimeString();
+        $dateTime = Carbon::now()->addMinutes(10)->toDateTimeString();
+
+        $nextValidTrainingForPlayerToday = Training::select("training.id as id", "reservation_players.reservation_type", DB::raw("'$todayAsDateTime' as dateTime"))
+            ->leftJoin('reservation_players', function ($join) {
+                $join->on('training.id', '=','reservation_players.reservation_id')
+                    ->where('reservation_players.reservation_type', Training::class);
+            })
+            ->where('training.club_id',$club_id)
+            ->where('reservation_players.member_id',$member_id)
+            ->whereDate('training.startDate','<=',$date)
+            ->whereDate('training.endDate','>=',$date)
+            ->orderBy('dateTime','DESC');
+
+        // Needs to be modified to accomodate for other reservation types such as Training and leagues
+        $nextValidRoutineReservationForPlayerToday = RoutineReservation::select("routine_reservations.id as id", "reservation_players.reservation_type", "reservation_time_slots.time_start as dateTime")
+            ->leftJoin('reservation_players', function ($join) {
+                $join->on('routine_reservations.id', '=','reservation_players.reservation_id')
+                    ->where('reservation_players.reservation_type', RoutineReservation::class);
+            })
+            ->leftJoin('reservation_time_slots', function ($join) {
+                $join->on('routine_reservations.id', '=', 'reservation_time_slots.reservation_id')
+                    ->where('reservation_time_slots.reservation_type', RoutineReservation::class);
+            })
+            ->where('routine_reservations.club_id',$club_id)
+            ->where('reservation_players.member_id',$member_id)
+            ->whereDate('reservation_time_slots.time_start','=',$date)
+            ->where('reservation_time_slots.time_start',">=",$dateTime)
+            ->unionAll($nextValidTrainingForPlayerToday)
+
+            ->first();
+
+
+        if(!$nextValidRoutineReservationForPlayerToday ){
+            return false;
+        }else{
+            return $nextValidRoutineReservationForPlayerToday;
+        }
+    }
+
+
 }

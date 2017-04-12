@@ -94,8 +94,8 @@ Route::group([
 
 	Route::group(['prefix' => 'beacon', 'as' => 'beacon.'], function() {
 
-		Route::post('/validate', ['as' => 'reserve', 'uses' => '\App\Http\Controllers\Mobile\BeaconController@validateTrustedbeacon']);
-
+		Route::post('/validate', ['as' => 'validate', 'uses' => '\App\Http\Controllers\Mobile\BeaconController@validateTrustedbeacon']);
+		Route::post('/perform-action', ['as' => 'perform_action', 'uses' => '\App\Http\Controllers\Mobile\BeaconController@performAppropriateAction']);
 
 	});
 

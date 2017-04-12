@@ -35,6 +35,7 @@ class TrainingsController extends Controller
         $logged_in_user = Auth::user();
 
         $training = Training::find($training_id);
+
         if(!$training){
             $this->error  ="no_trainings_found";
             return $this->response();
@@ -46,7 +47,18 @@ class TrainingsController extends Controller
             return $this->response();
         }
 
-
+        foreach($training->reservation_players as $reservation_player){
+            if($reservation_player->member_id == $logged_in_user->id){
+                $training->isBookedByCurrentUser = true;
+                $training->reservation_player_id = $reservation_player->id;
+                break;
+            }
+        }
+        if($training->isBookedByCurrentUser !== true){
+            $training->isBookedByCurrentUser = false;
+            $training->reservation_player_id = 0;
+        }
+        unset($training->reservation_players);
         $this->response = $training;
         return $this->response();
     }

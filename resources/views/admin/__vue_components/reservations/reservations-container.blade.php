@@ -14,7 +14,7 @@ Vue.component('reservations-container', {
                         @close-popup="closePopupTriggered"
                         @update-reservations="updateReservations"
                         :popup-message="popupMessage"
-                        @delete-reservation="deleteReservation"
+                        @delete-reservation="deleteReservation($event,true)"
                         @update-reservation="updateReservation"
                         @reserve-slot="reserveSlot" @max-num-reached="maxNumCalled"></reservation-popup>
                 <reservation-tabs v-if="forReservationsPageData"
@@ -45,6 +45,7 @@ Vue.component('reservations-container', {
                                 @edit-reservation="editReservationEventTriggered" 
                                 @new-reservation="newReservationEventTriggered"
                                 @delete-reservation="deleteReservation($event,false)"
+                                @drag-drop-operation="dragDropOperationPerformed"
                         >
                         </reservation-tab-tables>
                 
@@ -256,6 +257,10 @@ Vue.component('reservations-container', {
 
             this.deleteReservation(this.tempReservationIdToBeDeleted, true);
 
+        },
+        dragDropOperationPerformed:function (dragDropIndicesDataObject) {
+
+            this.$emit("drag-drop-operation",dragDropIndicesDataObject);
         },
     }
   

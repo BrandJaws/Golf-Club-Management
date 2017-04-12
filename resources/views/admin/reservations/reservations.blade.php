@@ -46,7 +46,8 @@
 						<reservations-container :reservations="reservationsParentComputed"
                                                                         for-reservations-page="true"
                                                                         @restore-default-dates="restoreDefaultDates"
-                                                                        @update-reservations="updateReservations">
+                                                                        @update-reservations="updateReservations"
+                                                                        >
                                                         
                                                     </reservations-container>
 
@@ -132,6 +133,8 @@
             }
         },
         methods:{
+
+
             getReservationsForSelectedDate:function(selectedDate){
                                 
                                 if(moment(selectedDate).format('MMMM Do YYYY, h:mm:ss a')==moment(this.currentSelectedDate).format('MMMM Do YYYY, h:mm:ss a') ){

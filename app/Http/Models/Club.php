@@ -134,16 +134,16 @@ class Club extends Model {
         $todayAsDateTime = Carbon::today()->toDateTimeString();
         $dateTime = Carbon::now()->addMinutes(10)->toDateTimeString();
 
-        $nextValidTrainingForPlayerToday = Training::select("training.id as id", "reservation_players.reservation_type", DB::raw("'$todayAsDateTime' as dateTime"))
-            ->leftJoin('reservation_players', function ($join) {
-                $join->on('training.id', '=','reservation_players.reservation_id')
-                    ->where('reservation_players.reservation_type', Training::class);
-            })
-            ->where('training.club_id',$club_id)
-            ->where('reservation_players.member_id',$member_id)
-            ->whereDate('training.startDate','<=',$date)
-            ->whereDate('training.endDate','>=',$date)
-            ->orderBy('dateTime','DESC');
+//        $nextValidTrainingForPlayerToday = Training::select("training.id as id", "reservation_players.reservation_type", DB::raw("'$todayAsDateTime' as dateTime"))
+//            ->leftJoin('reservation_players', function ($join) {
+//                $join->on('training.id', '=','reservation_players.reservation_id')
+//                    ->where('reservation_players.reservation_type', Training::class);
+//            })
+//            ->where('training.club_id',$club_id)
+//            ->where('reservation_players.member_id',$member_id)
+//            ->whereDate('training.startDate','<=',$date)
+//            ->whereDate('training.endDate','>=',$date)
+//            ->orderBy('dateTime','DESC');
 
         // Needs to be modified to accomodate for other reservation types such as Training and leagues
         $nextValidRoutineReservationForPlayerToday = RoutineReservation::select("routine_reservations.id as id", "reservation_players.reservation_type", "reservation_time_slots.time_start as dateTime")
@@ -159,7 +159,7 @@ class Club extends Model {
             ->where('reservation_players.member_id',$member_id)
             ->whereDate('reservation_time_slots.time_start','=',$date)
             ->where('reservation_time_slots.time_start',">=",$dateTime)
-            ->unionAll($nextValidTrainingForPlayerToday)
+            //->unionAll($nextValidTrainingForPlayerToday)
 
             ->first();
 

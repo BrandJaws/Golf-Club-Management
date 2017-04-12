@@ -5,6 +5,7 @@ use App\Http\Models\Checkin;
 use App\Http\models\Club;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\Foreach_;
 
 class BeaconConfiguration
@@ -90,23 +91,24 @@ class BeaconConfiguration
 
         if(!Checkin::memberHasAlreadyRecordedClubEntryForAReservation($nextValidReservationToday->id,$nextValidReservationToday->reservation_type, $member)){
             try{
+                DB::beginTransaction();
                 Checkin::create([
                     'beacon_id'=>$beacon->id,
                     'reservation_id'=>$nextValidReservationToday->id,
                     'reservation_type'=>$nextValidReservationToday->reservation_type,
                     'member_id'=>$member->id,
                     'checkinTime'=>Carbon::now()->toDateTimeString(),
-                    'action'=>"clubEntry",
+                    'action'=>\Config::get ( 'global.beacon_actions.clubEntry' ),
                     'recordedBy'=>"user",
                     'onTime'=>1
                 ]);
 
-
-                $response->response = "club_entry_checkin_successful";
+                DB::commit();
+                $response->response = "checkin_successful";
                 return $response;
 
             }catch(\Exception $e){
-                
+                DB::rollBack();
             }
 
         }else{
@@ -114,6 +116,81 @@ class BeaconConfiguration
             return $response;
           
         }
+    }
+
+    private function gameEntry($beacon, $member){
+
+        $response = new \stdClass();
+        $minimumTimeBeforeGameEntryInMinutes = 10;
+
+        $mostRelevantReservation = $beacon->course->returnMostRelevantReservationForAMemberForCurrentTime($member->id);
+        if(!$mostRelevantReservation){
+            //return with error no reservation
+            $response->error = "no_reservations_today";
+            return $response;
+
+        }
+
+        $gameEntryAgainstMostRelevantReservation = Checkin::where("reservation_id",$mostRelevantReservation->id)
+                                                          ->where("reservation_type",$mostRelevantReservation->reservation_type)
+                                                          ->where("action",\Config::get ( 'global.beacon_actions.gameEntry' ))
+                                                          ->first();
+        if($gameEntryAgainstMostRelevantReservation){
+            //return with error already checked in
+            $response->error = "already_checked_in";
+            return $response;
+        }
+
+        $clubEntryAgainstRelevantReservation = Checkin::where("reservation_id",$mostRelevantReservation->id)
+                                                      ->where("reservation_type",$mostRelevantReservation->reservation_type)
+                                                      ->where("action",\Config::get ( 'global.beacon_actions.clubEntry' ))
+                                                      ->first();
+
+        if(!$clubEntryAgainstRelevantReservation){
+            //respond with error that go back and get the club checkin done first
+            $response->error = "checkin_club_entry_missing";
+            return $response;
+        }
+
+        if(Carbon::now() < Carbon::parse($mostRelevantReservation->time_start)->subMinutes($minimumTimeBeforeGameEntryInMinutes) ){
+            //respond with error if reservation start time is further than a minimum time required before user can check in
+            $response->error = "not_yet_eligible_for_checkin";
+            return $response;
+        }
+
+
+        if($clubEntryAgainstRelevantReservation->onTime == 1){
+            //proceed with checkin
+            try{
+                DB::beginTransaction();
+                Checkin::create([
+                    'beacon_id'=>$beacon->id,
+                    'reservation_id'=>$mostRelevantReservation->id,
+                    'reservation_type'=>$mostRelevantReservation->reservation_type,
+                    'member_id'=>$member->id,
+                    'checkinTime'=>Carbon::now()->toDateTimeString(),
+                    'action'=>\Config::get ( 'global.beacon_actions.gameEntry' ),
+                    'recordedBy'=>"user",
+                    'onTime'=>1
+                ]);
+
+
+                DB::commit();
+                $response->response = "checkin_successful";
+                return $response;
+
+            }catch(\Exception $e){
+                DB::rollBack();
+            }
+
+        }else{
+            //return with error that cant checkin because late
+            $response->error = "checkin_failed_due_to_late";
+            return $response;
+
+        }
+
+
     }
 
 

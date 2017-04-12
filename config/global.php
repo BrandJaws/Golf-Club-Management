@@ -78,4 +78,10 @@ return [
         'employee_profile_path' => 'uploads/employee/{employee_id}/',
         'friend_groups_image_path'=>'uploads/profile/{member_id}/groups/',
     ],
+    'beacon_actions' => [
+        'clubEntry' => 'clubEntry',
+        'gameEntry' => 'gameEntry',
+        'clubHouse' => 'clubHouse',
+        'gameExit' => 'gameExit',
+    ],
 ];

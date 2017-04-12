@@ -20,6 +20,12 @@ class Beacon extends Model {
 			'created_at',
 			'updated_at'
 	];
+
+	public function course()
+	{
+		return $this->belongsTo('App\Http\Models\Course');
+	}
+
 	public function paginatedList($club_id, $perPage, $currentPage) {
 		return self::where ( 'beacon.club_id', '=', $club_id )->leftJoin ( 'course', function ($join) {
 			$join->on ( 'course.id', '=', 'beacon.course_id' );

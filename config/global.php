@@ -79,9 +79,12 @@ return [
         'friend_groups_image_path'=>'uploads/profile/{member_id}/groups/',
     ],
     'beacon_actions' => [
-        'clubEntry' => 'clubEntry',
-        'gameEntry' => 'gameEntry',
-        'clubHouse' => 'clubHouse',
-        'gameExit' => 'gameExit',
+        'welcomeMessage' => 'Welcome Message',
+        'clubEntry' => 'Club Entry',
+        'gameEntry' => 'Game Entry',
+        'clubHouse' => 'Club House',
+        'gameExit' => 'Game Exit',
+        'customMessage'=>'Custom Message',
     ],
+
 ];

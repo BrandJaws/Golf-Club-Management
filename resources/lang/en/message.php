@@ -748,7 +748,11 @@ return [
         'status_pending' => 'Your status is Pending.'
     ],
     'beacon_messages' => [
-        'welcome_without_reservation' => "Welcome to %s %s. ",
-        'welcome_with_reservation' => "Welcome to %s %s, You have a booking at course %s at %s. Would you like to check-in now? ",
-    ]
+        'welcome_without_reservation' => "Welcome to :clubName :memberName.",
+        'welcome_with_reservation' =>"Welcome to :clubName :memberName. You have a reservation at course :courseName at :startTime. Would you like to check-in now? ",
+        'welcome_with_training' =>"Welcome to :clubName :memberName. You have a training session with :coach_name today. ",
+    ],
+
+
+
 ];

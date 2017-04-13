@@ -46,7 +46,7 @@ trait ResponseProvider {
                     $response['response'] = $this->response;
                     break;
                 case 'string';
-                    $response['response'] = trans('message.' . $this->response . '.message');
+                    $response['response'] = trans('message.' . $this->response . '.message',$this->responseParameters);
                     break;
             }
             $response['code'] = 200;

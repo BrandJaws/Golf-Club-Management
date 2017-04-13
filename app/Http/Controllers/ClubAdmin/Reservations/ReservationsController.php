@@ -23,6 +23,13 @@ class ReservationsController extends Controller
         return view('admin.reservations.reservations', ["reservations" => json_encode($reservations)]);
     }
 
+    public function starter(){
+        $dayToday = Carbon::today()->toDateString();
+        $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
+        $reservations = Course::getReservationsForACourseByIdForADateRange(1, $dayToday, $dayToday);
+        return view('admin.reservations.starter', ['reservations' => json_encode($reservations)]);
+    }
+
     public function getReservationByDate($date)
     {
 

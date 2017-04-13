@@ -109,6 +109,16 @@
 							</div>
 							<!-- col-6 -->
 							<div class="col-md-8 text-right">
+                                <div class="form-group col-md-7">
+                                    <select class="form-control">
+                                        <option selected>Select Course</option>
+                                        <option>Course 1</option>
+                                        <option>Course 2</option>
+                                        <option>Course 3</option>
+                                        <option>Course 4</option>
+                                        <option>Course 5</option>
+                                    </select>
+                                </div>
 								<button class="btn btn-def" id="filterResults"><i class="fa fa-filter"></i> &nbsp;Filter Results</button>
 								<button id = "reset-filters" class="btn btn-outline b-primary text-primary"><i class="fa fa-mail-reply"></i> &nbsp;Reset Filters</button>
 								<!-- /input-group -->

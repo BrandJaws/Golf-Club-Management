@@ -13,7 +13,7 @@ class CreateCheckinsTable extends Migration
      */
     public function up()
     {
-        Schema::create('checkins', function (Blueprint $table) {
+        Schema::create('starter', function (Blueprint $table) {
 
             $table->bigIncrements('id');
             $table->bigInteger('beacon_id',false,true);
@@ -35,6 +35,6 @@ class CreateCheckinsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('checkins');
+        Schema::drop('starter');
     }
 }

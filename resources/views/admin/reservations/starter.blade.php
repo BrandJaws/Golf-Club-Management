@@ -138,7 +138,7 @@
                                 tempReservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotCount].isVisibleUnderFilter = false;
                             }
 
-                            tempReservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotCount].gameStarted = true;
+                            tempReservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotCount].gameStarted = false;
                             //console.log(tempReservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotCount]);
                         }
                     }

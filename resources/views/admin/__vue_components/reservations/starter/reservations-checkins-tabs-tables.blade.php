@@ -23,7 +23,7 @@
                                     <td>
                                       <div class="ts-action-btn">
                                           {{--<a href="#." class="cancel-btn" @click="deleteReservationClicked(timeSlot.reservations[0].reservation_id)"><i class="fa fa-ban"></i></a>--}}
-            <a class="btn btn-def" title="Start Game" @click="startGameClicked(timeSlot, timeSlot.gameStarted)"><i class="fa fa-check"></i></a>
+            <a class="btn btn-def" title="Start Game" @click="startGameClicked(timeSlot)"><i class="fa fa-check"></i></a>
               </div>
             </td>
 
@@ -46,7 +46,7 @@
 
             return {
                 //reservationsByDateData:this.reservationsByDate
-                startGame:'',
+//                startTheGame:false,
             }
         },
         computed:{
@@ -75,8 +75,15 @@
                 this.$emit('delete-reservation',reservation_id);
 
             },
-            startGameClicked(index, gameStarter){
-                console.log(index.gameStarted);
+            startGameClicked(timeSlot){
+                console.log("logged");
+                if(timeSlot.gameStarted) {
+                    timeSlot.gameStarted = false;
+                    console.log(timeSlot.gameStarted);
+                }
+                else {
+                    timeSlot.gameStarted = true;
+                }
             },
             dragDroppedPlayer:function (event, dateIndexDroppedInto,timeIndexDroppedInto) {
                 indicesObjectOfDraggedPlayer = JSON.parse(event.dataTransfer.getData("indicesObjectOfDraggedPlayer"));

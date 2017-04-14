@@ -29,9 +29,9 @@ class Checkin extends Model
         $checkinForNextValidReservation = self::where("member_id",$member->id)
                        ->where("reservation_id",$reservation_id)
                        ->where("reservation_type",$reservation_type)
-                       ->where("action","=","clubEntry")
+                       ->where("action","=",\Config::get ( 'global.beacon_actions.clubEntry' ))
                        ->first();
-
+       
         if($checkinForNextValidReservation){
 
             return true;

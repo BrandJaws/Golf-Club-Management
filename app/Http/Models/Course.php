@@ -501,7 +501,7 @@ class Course extends Model
             ->whereDate('reservation_time_slots.time_start','=',$date)
             ->orderBy('reservation_time_slots.time_start')
             ->get();
-
+       
         //scan for a reservation surrounding current time
         foreach($reservationsForPlayerToday as $reservation){
             if($dateTime >= $reservation->start_time || $dateTime < $reservation->end_time){

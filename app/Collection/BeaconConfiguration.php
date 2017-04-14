@@ -171,8 +171,8 @@ class BeaconConfiguration
 
         $response = new \stdClass();
         $minimumTimeBeforeGameEntryInMinutes = 10;
-
         $mostRelevantReservation = $beacon->course->returnMostRelevantReservationForAMemberForCurrentTime($member->id);
+
         if(!$mostRelevantReservation){
             //return with error no reservation
             $response->error = "no_reservations_today";
@@ -329,11 +329,11 @@ class BeaconConfiguration
 
         }
 
-        $clubHouseEntryAgainstMostRelevantReservation = Checkin::where("reservation_id",$mostRelevantReservation->id)
+        $gameExitEntryAgainstMostRelevantReservation = Checkin::where("reservation_id",$mostRelevantReservation->id)
             ->where("reservation_type",$mostRelevantReservation->reservation_type)
-            ->where("action",\Config::get ( 'global.beacon_actions.clubHouse' ))
+            ->where("action",\Config::get ( 'global.beacon_actions.gameExit' ))
             ->first();
-        if($clubHouseEntryAgainstMostRelevantReservation){
+        if($gameExitEntryAgainstMostRelevantReservation){
             //return with error already checked in
             $response->error = "already_checked_in";
             return $response;

@@ -14,26 +14,52 @@ use Carbon\Carbon;
 
 class ReservationsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        
+        if($request->has('course_id')){
+            $course_id = $request->get('course_id');
+        }else{
+            $course_id = 1;
+        }
         $dayToday = Carbon::today()->toDateString();
         $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
-        $reservations = Course::getReservationsForACourseByIdForADateRange(1, $dayToday, $fourDaysFromNow);
-        return view('admin.reservations.reservations', ["reservations" => json_encode($reservations)]);
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $dayToday, $fourDaysFromNow);
+        $coursesList = Course::where("club_id",Auth::user()->club_id)->select("id","name")->get();
+
+        if ($request->ajax()) {
+            return json_encode($reservations);
+        } else {
+            return view('admin.reservations.reservations', ["reservations" => json_encode($reservations),"courses"=>$coursesList]);
+        }
+
     }
 
-    public function starter(){
+    public function starter(Request $request){
+        if($request->has('course_id')){
+            $course_id = $request->get('course_id');
+        }else{
+            $course_id = 1;
+        }
         $dayToday = Carbon::today()->toDateString();
-        $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
-        $reservations = Course::getReservationsForACourseByIdForADateRange(1, $dayToday, $dayToday);
-        return view('admin.reservations.starter', ['reservations' => json_encode($reservations)]);
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $dayToday, $dayToday);
+        $coursesList = Course::where("club_id",Auth::user()->club_id)->select("id","name")->get();
+        if ($request->ajax()) {
+            return json_encode($reservations);
+        } else {
+            return view('admin.reservations.starter', ['reservations' => json_encode($reservations),"courses"=>$coursesList]);
+        }
+
     }
 
-    public function getReservationByDate($date)
+    public function getReservationByDate(Request $request, $date)
     {
 
-        $reservations = Course::getReservationsForACourseByIdForADateRange(1, $date, $date);
+        if($request->has('course_id')){
+            $course_id = $request->get('course_id');
+        }else{
+            $course_id = 1;
+        }
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $date, $date);
         return json_encode($reservations);
     }
 

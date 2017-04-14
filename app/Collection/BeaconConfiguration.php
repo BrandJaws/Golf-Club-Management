@@ -92,7 +92,7 @@ class BeaconConfiguration
                 "startTime"=>$nextValidReservationToday->time_start
             ];
             $response->response = [ "message"=>trans('message.beacon_messages.welcome_with_reservation',$responseParameters),
-                "call_for_action"=>\Config::get ( 'global.beacon_actions.clubEntry' ),
+                "call_for_action"=>"clubEntry",
             ];
 
             return $response;
@@ -127,8 +127,8 @@ class BeaconConfiguration
 
     private function clubEntry($beacon, $member){
         $response = new \stdClass();
-
-        $nextValidReservationToday = Club::returnNextValidReservationForAMemberForCheckin($beacon->club_id,$member->id);
+        $club = $member->club;
+        $nextValidReservationToday = $club->returnNextValidReservationForAMemberForCheckin($member->id);
         if(!$nextValidReservationToday){
             $response->error = "no_reservations_today";
             return $response;
@@ -150,14 +150,17 @@ class BeaconConfiguration
                 ]);
 
                 DB::commit();
+
                 $response->response = "checkin_successful";
                 return $response;
 
             }catch(\Exception $e){
+                dd( $e);
                 DB::rollBack();
             }
 
         }else{
+
             $response->error = "already_checked_in";
             return $response;
           

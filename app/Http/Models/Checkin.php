@@ -8,12 +8,11 @@ use Carbon\Carbon;
 
 class Checkin extends Model
 {
-    protected $table = 'starter';
+    protected $table = 'checkins';
     protected $fillable = [
         'beacon_id',
         'reservation_id',
         'reservation_type',
-        'course_id',
         'member_id',
         'checkinTime',
         'action',

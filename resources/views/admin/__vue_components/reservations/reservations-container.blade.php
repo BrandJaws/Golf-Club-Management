@@ -64,7 +64,6 @@ Vue.component('reservations-container', {
        
       return {
           forReservationsPageData:this.forReservationsPage != null && this.forReservationsPage.toLowerCase()== 'true' ? true : false,
-          reservationsParent: this.reservations,
           showPopup: false,
           showCancelPopup: false,
           reservationToEdit: null,
@@ -85,8 +84,8 @@ Vue.component('reservations-container', {
         newReservationEventTriggered:function(reservation){
 
              reservationTemp = reservation;
-             reservationTemp.clubId = this.reservationsParent.club_id;
-             reservationTemp.courseId = this.reservationsParent.course_id;
+             reservationTemp.clubId = this.reservations.club_id;
+             reservationTemp.courseId = this.reservations.course_id;
              this.reservationToEdit = reservationTemp;
              this.reservationType = "new";
              this.showPopup = true;
@@ -117,7 +116,7 @@ Vue.component('reservations-container', {
             guestsAndPlayers = this.returnGuestsAndPlayerIdsListFromPlayersList(reservation.players);
             _players = guestsAndPlayers.players;
             _guests = guestsAndPlayers.guests;
-
+           
             var request = $.ajax({
 
                 url: "{{url('admin/reservations')}}",

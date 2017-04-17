@@ -116,7 +116,7 @@ Vue.component('reservations-container', {
             guestsAndPlayers = this.returnGuestsAndPlayerIdsListFromPlayersList(reservation.players);
             _players = guestsAndPlayers.players;
             _guests = guestsAndPlayers.guests;
-           
+
             var request = $.ajax({
 
                 url: "{{url('admin/reservations')}}",

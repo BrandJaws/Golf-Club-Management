@@ -24,6 +24,7 @@ class ReservationsController extends Controller
         $dayToday = Carbon::today()->toDateString();
         $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
         $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $dayToday, $fourDaysFromNow);
+        
         $coursesList = Course::where("club_id",Auth::user()->club_id)->select("id","name")->get();
 
         if ($request->ajax()) {

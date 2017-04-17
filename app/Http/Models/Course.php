@@ -180,7 +180,7 @@ class Course extends Model
             $query .= " AND DATE(date_time_start) >= DATE(?) ";
             $query .= " AND DATE(date_time_start) <= DATE(?) ";
         }
-        $query .= " AND course_id = ? ";
+        $query .= " AND club_id = ? ";
         $query .= "ORDER BY time_start ASC, reservation_id ASC   ";
 
         if($dateStart == $dateEnd){
@@ -195,7 +195,7 @@ class Course extends Model
                                                                    Auth::user ()->club_id]); 
         }
 
-        
+       
 
         $reservationsByDate = Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
         return $reservationsByDate;

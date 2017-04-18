@@ -715,6 +715,11 @@ return [
         'httpCode' => '412',
         'message' => "Can't Checkin Now. Game Checkin Facility Will Open 10 Minutes Before The Game Starts."
     ],
+    'already_accepted' => [
+        'code' => '126',
+        'httpCode' => '200',
+        'message' => "Already Accepted Reservation Request"
+    ],
 
 
 

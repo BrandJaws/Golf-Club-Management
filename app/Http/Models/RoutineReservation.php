@@ -161,7 +161,7 @@ class RoutineReservation extends Model
                             }
 
                          //When group's status has already been changed to confirmed or waiting, change the status of
-                         //requesting player only. The only option that remains in this case is dropped
+                         //any other confirmed players to dropped. 
 
                         } else if ($group->reservation_status == \Config::get('global.reservation.reserved') ||
                                    $group->reservation_status == \Config::get('global.reservation.waiting')) {

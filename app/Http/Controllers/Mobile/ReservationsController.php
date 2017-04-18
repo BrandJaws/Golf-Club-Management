@@ -476,7 +476,7 @@ class ReservationsController extends Controller
 
 
 
-                $this->response = "success_accept";
+                $this->response = "mobile_reservation_successfull";
             }else{
                 $this->response = "already_accepted";
             }

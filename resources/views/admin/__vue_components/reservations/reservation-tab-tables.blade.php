@@ -13,10 +13,10 @@ Vue.component('reservation-tab-tables', {
                         <div class="table-responsive">
                             <table class="table table-hover b-t">
                                 <tbody>
-                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter"> 
+                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter" @dragover.prevent @drop.prevent="dragDroppedPlayer($event,timeSlot,reservationByDateIndex, timeSlotIndex)">
                                     <td >@{{timeSlot.timeSlot}}</td>
                                     <td width="80%">
-                                      <ul class="members-add" @dragover.prevent @drop.prevent="dragDroppedPlayer($event,reservationByDateIndex, timeSlotIndex)">
+                                      <ul class="members-add" >
                                           <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer" :reservation-indices="{dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex}" draggable="true" @dragstart="dragStarted($event,{dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex})" ></reservation-player-tag>
                                           <li class="add-btn" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])"><a href="#."><i class="fa fa-plus"></i></a></li>
                                       </ul>
@@ -75,7 +75,11 @@ Vue.component('reservation-tab-tables', {
             this.$emit('delete-reservation',reservation_id);
 
         },
-        dragDroppedPlayer:function (event, dateIndexDroppedInto,timeIndexDroppedInto) {
+        dragDroppedPlayer:function (event, timeSlot,dateIndexDroppedInto,timeIndexDroppedInto) {
+            if(timeSlot.reservations[0].players.length >= 4){
+                console.log("Time Slot Fully Booked");
+                return;
+            }
             indicesObjectOfDraggedPlayer = JSON.parse(event.dataTransfer.getData("indicesObjectOfDraggedPlayer"));
             dragDropIndicesData = {};
             dragDropIndicesData.dateIndexDraggedFrom = indicesObjectOfDraggedPlayer.dateIndexDraggedFrom;

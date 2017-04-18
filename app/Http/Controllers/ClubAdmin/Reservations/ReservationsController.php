@@ -350,6 +350,10 @@ class ReservationsController extends Controller
                 $reservation->attachPlayers($new_players_received_including_guests, 0, true, 1, \Config::get('global.reservation.reserved'));
             }
 
+            // To update groupsizes possibly changed due to updation
+
+            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($request->get('reservation_id'));
+            $reservation->updateReservationStatusesForAReservation();
 
 //            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($request->get('reservation_id'));
 //            if($reservation->reservation_players->count() > 0){
@@ -432,6 +436,67 @@ class ReservationsController extends Controller
             }
         }
         return $this->response();
+    }
+
+    public function movePlayer(Request $request){
+
+        return ($request->all());
+
+
+        if (!$request->has('reservationPlayerIdToBeMoved')) {
+
+            $this->error = "player_missing";
+            return $this->response();
+        }
+
+
+
+        //If we have the reservation id, we can find the reservation and proceed with the process
+        if ($request->has('reservationIdToMoveTo')) {
+
+
+            $reservationToMoveTo = RoutineReservation::find($request->has('reservationIdToMoveTo'));
+            if(!$reservationToMoveTo){
+                $this->error = "invalid_reservation";
+                return $this->response();
+            }
+
+
+
+
+
+        //Else we need to create a new reservation at that timeslot
+        }else{
+            if (!$request->has('club_id')) {
+                $this->error = "mobile_invalid_club_identifire";
+                return $this->response();
+            }
+
+            $club = Club::find($request->get('club_id'));
+
+            if (is_null($club) && count($club) < 1) {
+                $this->error = "mobile_invalid_club";
+                return $this->response();
+            }
+
+            if (!$request->has('course_id')) {
+                $this->error = "mobile_invalid_course_identifire";
+                return $this->response();
+            }
+
+            $course = Course::getCourseByClubId($request->get('course_id'), $club->id);
+
+            if (is_null($course) && count($course) < 1) {
+                $this->error = "mobile_invalid_court";
+                return $this->response();
+            }
+
+            if (!$request->has('reservationTimeSlotToMoveTo')) {
+
+                $this->error = "tennis_reservation_id_missing";
+                return $this->response();
+            }
+        }
     }
 
 

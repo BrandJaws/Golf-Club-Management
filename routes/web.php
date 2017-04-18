@@ -67,6 +67,12 @@ Route::group([
                    'as' => 'starter',
                     'uses' => 'ClubAdmin\Reservations\ReservationsController@starter'
                 ]);
+                Route::post('/move-player', [
+                    'as' => 'store',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@movePlayer'
+                ]);
+
+
                  
         });
         /**

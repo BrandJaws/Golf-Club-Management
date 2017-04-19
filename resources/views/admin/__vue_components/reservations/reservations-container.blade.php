@@ -7,7 +7,7 @@
 
 Vue.component('reservations-container', {
     template: `<div>
-                <confirmation-popup @close-popup="closeConfirmationPopup" @yes-selected="yesSelectedInConfirmation" v-if="showCancelPopup" popupMessage="Do you really wish to cancel this reservation?"></confirmation-popup>
+                <confirmation-popup @close-popup="closeConfirmationPopup" @yes-selected="yesSelectedInConfirmation" v-if="showConfirmationPopup" :popupMessage="dataHeldForConfirmation.confirmationMessage"></confirmation-popup>
                 <reservation-popup v-if="showPopup"
                         :reservation="reservationToEdit" 
                         :reservation-type="reservationType" 
@@ -64,13 +64,19 @@ Vue.component('reservations-container', {
        
       return {
           forReservationsPageData:this.forReservationsPage != null && this.forReservationsPage.toLowerCase()== 'true' ? true : false,
-          reservationsParent: this.reservations,
           showPopup: false,
-          showCancelPopup: false,
+          showConfirmationPopup: false,
           reservationToEdit: null,
           reservationType:null, //possible values new or edit
           popupMessage:"",
-          tempReservationIdToBeDeleted:null,
+          dataHeldForConfirmation:{
+                                    confirmationMessage:null,
+                                    methodToFollow:null,
+                                    reservationIdToBeDeleted:null,
+                                    dragDropIndicesDataObject:null,
+
+
+          },
       }
     },
     methods: {
@@ -85,8 +91,8 @@ Vue.component('reservations-container', {
         newReservationEventTriggered:function(reservation){
 
              reservationTemp = reservation;
-             reservationTemp.clubId = this.reservationsParent.club_id;
-             reservationTemp.courseId = this.reservationsParent.course_id;
+             reservationTemp.clubId = this.reservations.club_id;
+             reservationTemp.courseId = this.reservations.course_id;
              this.reservationToEdit = reservationTemp;
              this.reservationType = "new";
              this.showPopup = true;
@@ -196,7 +202,9 @@ Vue.component('reservations-container', {
 
             if(!confirmed){
                 this.displayConfirmationPopup();
-                this.tempReservationIdToBeDeleted = reservationId;
+                this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to cancel this reservation?";
+                this.dataHeldForConfirmation.methodToFollow = "deleteReservation";
+                this.dataHeldForConfirmation.reservationIdToBeDeleted = reservationId;
                 return;
             }
 
@@ -246,21 +254,75 @@ Vue.component('reservations-container', {
         },
         displayConfirmationPopup:function(){
             //            console.log('emit received');
-            this.showCancelPopup = true;
+            this.showConfirmationPopup = true;
         },
         closeConfirmationPopup:function(){
             //            console.log('emit received');
-            this.showCancelPopup = false;
-            this.tempReservationIdToBeDeleted = null;
+            this.showConfirmationPopup = false;
+            this.dataHeldForConfirmation.confirmationMessage = null;
+            this.dataHeldForConfirmation.methodToFollow = null;
+            this.dataHeldForConfirmation.reservationIdToBeDeleted = null;
+            this.dataHeldForConfirmation.dragDropIndicesDataObject = null;
         },
         yesSelectedInConfirmation:function(){
 
-            this.deleteReservation(this.tempReservationIdToBeDeleted, true);
+            switch(this.dataHeldForConfirmation.methodToFollow){
+                case "deleteReservation":
+                    this[this.dataHeldForConfirmation.methodToFollow](this.dataHeldForConfirmation.reservationIdToBeDeleted, true);
+                    break;
+                case "dragDropOperationPerformed":
+                    this[this.dataHeldForConfirmation.methodToFollow](this.dataHeldForConfirmation.dragDropIndicesDataObject, true);
+                    break;
+
+            }
+
 
         },
-        dragDropOperationPerformed:function (dragDropIndicesDataObject) {
+        dragDropOperationPerformed:function (dragDropIndicesDataObject,confirmed) {
 
+            if(!confirmed){
+                this.displayConfirmationPopup();
+                this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to move this player to another time slot?";
+                this.dataHeldForConfirmation.methodToFollow = "dragDropOperationPerformed";
+                this.dataHeldForConfirmation.dragDropIndicesDataObject = dragDropIndicesDataObject;
+
+                return;
+            }
+
+            {{--var request = $.ajax({--}}
+
+                {{--url: "{{url('admin/reservations/move-player')}}",--}}
+                {{--method: "POST",--}}
+                {{--headers: {--}}
+                    {{--'X-CSRF-TOKEN': '{{csrf_token()}}',--}}
+                {{--},--}}
+                {{--data:{--}}
+                    {{--_method:"POST",--}}
+                    {{--_token: "{{ csrf_token() }}",--}}
+                    {{--reservationIdToMoveTo--}}
+
+                {{--},--}}
+                {{--success:function(msg){--}}
+                    {{--console.log(msg);--}}
+                    {{--//this.updateReservations(msg.response);--}}
+                    {{--this.closePopupTriggered();--}}
+                    {{--this.closeConfirmationPopup();--}}
+                {{--}.bind(this),--}}
+
+                {{--error: function(jqXHR, textStatus ) {--}}
+                    {{--this.ajaxRequestInProcess = false;--}}
+                    {{--console.log(jqXHR);--}}
+                    {{--//Error code to follow--}}
+                    {{--if(jqXHR.hasOwnProperty("responseText")){--}}
+                        {{--this.popupMessage = JSON.parse(jqXHR.responseText).response;--}}
+                    {{--}--}}
+
+                {{--}.bind(this)--}}
+            {{--});--}}
+
+            //Perform actual move logic for server and if successful emit event and close popup;
             this.$emit("drag-drop-operation",dragDropIndicesDataObject);
+            this.closeConfirmationPopup();
         },
     }
   

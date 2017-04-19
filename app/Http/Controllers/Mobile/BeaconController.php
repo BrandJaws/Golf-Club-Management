@@ -82,6 +82,10 @@ class BeaconController extends Controller
             $this->error = $actionResult->error;
         }
 
+//        if(isset($actionResult->responseParameters)){
+//            $this->responseParameters = $actionResult->responseParameters;
+//        }
+
         return $this->response();
 
     }

@@ -63,6 +63,16 @@ Route::group([
                     'as' => 'date',
                     'uses' => 'ClubAdmin\Reservations\ReservationsController@getReservationByDate'
                 ]);
+                Route::get('/starter', [
+                   'as' => 'starter',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@starter'
+                ]);
+                Route::post('/move-player', [
+                    'as' => 'store',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@movePlayer'
+                ]);
+
+
                  
         });
         /**

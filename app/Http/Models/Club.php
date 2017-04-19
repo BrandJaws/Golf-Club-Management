@@ -128,25 +128,25 @@ class Club extends Model {
             
         }
 
-    public static function returnNextValidReservationForAMemberForCheckin($club_id, $member_id){
+    public function returnNextValidReservationForAMemberForCheckin($member_id){
 
         $date = Carbon::now()->toDateString();
         $todayAsDateTime = Carbon::today()->toDateTimeString();
         $dateTime = Carbon::now()->addMinutes(10)->toDateTimeString();
 
-        $nextValidTrainingForPlayerToday = Training::select("training.id as id", "reservation_players.reservation_type", DB::raw("'$todayAsDateTime' as dateTime"))
-            ->leftJoin('reservation_players', function ($join) {
-                $join->on('training.id', '=','reservation_players.reservation_id')
-                    ->where('reservation_players.reservation_type', Training::class);
-            })
-            ->where('training.club_id',$club_id)
-            ->where('reservation_players.member_id',$member_id)
-            ->whereDate('training.startDate','<=',$date)
-            ->whereDate('training.endDate','>=',$date)
-            ->orderBy('dateTime','DESC');
+//        $nextValidTrainingForPlayerToday = Training::select("training.id as id", "reservation_players.reservation_type", DB::raw("'$todayAsDateTime' as dateTime"))
+//            ->leftJoin('reservation_players', function ($join) {
+//                $join->on('training.id', '=','reservation_players.reservation_id')
+//                    ->where('reservation_players.reservation_type', Training::class);
+//            })
+//            ->where('training.club_id',$club_id)
+//            ->where('reservation_players.member_id',$member_id)
+//            ->whereDate('training.startDate','<=',$date)
+//            ->whereDate('training.endDate','>=',$date)
+//            ->orderBy('dateTime','DESC');
 
         // Needs to be modified to accomodate for other reservation types such as Training and leagues
-        $nextValidRoutineReservationForPlayerToday = RoutineReservation::select("routine_reservations.id as id", "reservation_players.reservation_type", "reservation_time_slots.time_start as dateTime")
+        $nextValidRoutineReservationForPlayerToday = RoutineReservation::select("routine_reservations.id as id", "reservation_players.reservation_type", "reservation_time_slots.time_start","course.name as course_name")
             ->leftJoin('reservation_players', function ($join) {
                 $join->on('routine_reservations.id', '=','reservation_players.reservation_id')
                     ->where('reservation_players.reservation_type', RoutineReservation::class);
@@ -155,11 +155,12 @@ class Club extends Model {
                 $join->on('routine_reservations.id', '=', 'reservation_time_slots.reservation_id')
                     ->where('reservation_time_slots.reservation_type', RoutineReservation::class);
             })
-            ->where('routine_reservations.club_id',$club_id)
+            ->leftJoin('course','routine_reservations.course_id','=','course.id')
+            ->where('routine_reservations.club_id',$this->id)
             ->where('reservation_players.member_id',$member_id)
             ->whereDate('reservation_time_slots.time_start','=',$date)
             ->where('reservation_time_slots.time_start',">=",$dateTime)
-            ->unionAll($nextValidTrainingForPlayerToday)
+            //->unionAll($nextValidTrainingForPlayerToday)
 
             ->first();
 
@@ -168,6 +169,30 @@ class Club extends Model {
             return false;
         }else{
             return $nextValidRoutineReservationForPlayerToday;
+        }
+    }
+
+    public function returnTrainingsForAMemberAtClubToday($member_id){
+
+        $date = Carbon::now()->toDateString();
+        $todayAsDateTime = Carbon::today()->toDateTimeString();
+
+        $nextValidTrainingForPlayerToday = Training::select("training.id as id", "reservation_players.reservation_type", DB::raw("'$todayAsDateTime' as date"), DB::raw("CONCAT_WS(' ',coaches.firstName,coaches.lastName) as coach_name"))
+            ->leftJoin('reservation_players', function ($join) {
+                $join->on('training.id', '=','reservation_players.reservation_id')
+                    ->where('reservation_players.reservation_type', Training::class);
+            })
+            ->leftJoin('coaches','training.coach_id','=','coaches.id')
+            ->where('training.club_id',$this->id)
+            ->where('reservation_players.member_id',$member_id)
+            ->whereDate('training.startDate','<=',$date)
+            ->whereDate('training.endDate','>=',$date)
+            ->first();
+
+        if(!$nextValidTrainingForPlayerToday ){
+            return false;
+        }else{
+            return $nextValidTrainingForPlayerToday;
         }
     }
 

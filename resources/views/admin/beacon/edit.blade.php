@@ -10,7 +10,7 @@
 		<div class="profile-main padding">
 			<div class="row">
 				<div class="col-xs-12 col-md-12">
-					<div class="beacon-configure">
+					<div class="beacon-configure" id="vue-config-container">
 						<form action="{{route('admin.beacon.update', $beacon->id)}}" method="post" enctype="multipart/form-data">
     						@if(Session::has('error'))
                             	<div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
@@ -65,21 +65,22 @@
 									</div>
 								</div>
 							</div>
+
 							<div class="row">
 								<div class="col-md-12">
 									<div class="form-group {{($errors->has('Near.action'))?'has-error':''}}">
 										<label>Near</label> 
-										<select name="Near[action]" class="form-control" id="near">
-											<option value="welcome" {{(old('Near.action') == 'welcome')?'selected="selected"':($configuration->hasAction('Near','welcome'))?'selected="selected"':''}}>Wellcome Message</option>
-											<option value="checkin" {{(old('Near.action') == 'checkin')?'selected="selected"':($configuration->hasAction('Near','checkin'))?'selected="selected"':''}}>Checkin</option>
-											<option value="checkout" {{(old('Near.action') == 'checkout')?'selected="selected"':($configuration->hasAction('Near','checkout'))?'selected="selected"':''}}>Checkout</option>
-											<option value="custom" {{(old('Near.action') == 'custom')?'selected="selected"':($configuration->hasAction('Near','custom'))?'selected="selected"':''}}>Custom Message</option>
+										<select name="Near[action]" class="form-control" id="near" v-model="nearSelectedValue" >
+											@foreach(\Config::get ( 'global.beacon_actions') as $action=>$value)
+												<option value="{{$action}}" >{{$value}}</option>
+											@endforeach
+
 										</select>
 										 @if($errors->has('Near.action')) <span class="help-block errorProfilePic">{{$errors->first('Near.action') }}</span> @endif
 									</div>
 								</div>
 							</div>
-							<div id="custom-message-near" style="{{(old('Near.action') == 'custom')?'':($configuration->hasAction('Near','custom'))?'':'display:none'}}">
+							<div id="custom-message-near" v-if="nearCustomMessageVisibility">
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group {{($errors->has('Near.custom'))?'has-error':''}}">
@@ -94,17 +95,16 @@
 								<div class="col-md-12">
 									<div class="form-group {{($errors->has('Immediate.action'))?'has-error':''}}">
 										<label>Immediate</label> 
-										<select name="Immediate[action]" class="form-control" id="immediate">
-											<option value="welcome" {{(old('Immediate.action') == 'welcome')?'selected="selected"':($configuration->hasAction('Immediate','welcome'))?'selected="selected"':''}}>Wellcome Message</option>
-											<option value="checkin" {{(old('Immediate.action') == 'checkin')?'selected="selected"':($configuration->hasAction('Immediate','checkin'))?'selected="selected"':''}}>Checkin</option>
-											<option value="checkout" {{(old('Immediate.action') == 'checkout')?'selected="selected"':($configuration->hasAction('Immediate','checkout'))?'selected="selected"':''}}>Checkout</option>
-											<option value="custom" {{(old('Immediate.action') == 'custom')?'selected="selected"':($configuration->hasAction('Immediate','custom'))?'selected="selected"':''}}>Custom Message</option>
+										<select name="Immediate[action]" class="form-control" id="immediate"  v-model="immediateSelectedValue" >
+											@foreach(\Config::get ( 'global.beacon_actions') as $action=>$value)
+												<option value="{{$action}}" >{{$value}}</option>
+											@endforeach
 										</select>
 										 @if($errors->has('Immediate.action')) <span class="help-block errorProfilePic">{{$errors->first('Immediate.action') }}</span> @endif
 									</div>
 								</div>
 							</div>
-							<div id="custom-message-immediate" style="{{(old('Immediate.action') == 'custom')?'':($configuration->hasAction('Immediate','custom'))?'':'display:none'}}">
+							<div id="custom-message-immediate" v-if="immediateCustomMessageVisibility">
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group {{($errors->has('Immediate.message'))?'has-error':''}}">
@@ -119,17 +119,16 @@
 								<div class="col-md-12">
 									<div class="form-group {{($errors->has('Far.action'))?'has-error':''}}">
 										<label>Far</label> 
-										<select name="Far[action]" class="form-control" id="far">
-											<option value="welcome" {{(old('Far.action') == 'welcome')?'selected="selected"':($configuration->hasAction('Far','welcome'))?'selected="selected"':''}}>Wellcome Message</option>
-											<option value="checkin" {{(old('Far.action') == 'checkin')?'selected="selected"':($configuration->hasAction('Far','checkin'))?'selected="selected"':''}}>Checkin</option>
-											<option value="checkout" {{(old('Far.action') == 'checkout')?'selected="selected"':($configuration->hasAction('Far','checkout'))?'selected="selected"':''}}>Checkout</option>
-											<option value="custom" {{(old('Far.action') == 'custom')?'selected="selected"':($configuration->hasAction('Far','custom'))?'selected="selected"':''}}>Custom Message</option>
+										<select name="Far[action]" class="form-control" id="far"  v-model="farSelectedValue" >
+											@foreach(\Config::get ( 'global.beacon_actions') as $action=>$value)
+												<option value="{{$action}}" >{{$value}}</option>
+											@endforeach
 										</select>
 										 @if($errors->has('Far.action')) <span class="help-block errorProfilePic">{{$errors->first('Far.action') }}</span> @endif
 									</div>
 								</div>
 							</div>
-							<div id="custom-message-far" style="{{(old('Far.action') == 'custom')?'':($configuration->hasAction('Far','custom'))?'':'display:none'}}">
+							<div id="custom-message-far" v-if="farCustomMessageVisibility">
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group {{($errors->has('Far.custom'))?'has-error':''}}">
@@ -168,3 +167,44 @@
 	</div>
 
 @endSection
+
+@section('page-specific-scripts')
+
+	<script>
+
+		var vue = new Vue({
+			el: "#vue-config-container",
+			data: {
+				nearSelectedValue:"{{old('Near.action')  ? old('Near.action') :(($configuration->getActionOnZone('Near')) != null ? $configuration->getActionOnZone('Near'):'') }}",
+				immediateSelectedValue:"{{old('Immediate.action')  ? old('Immediate.action') :(($configuration->getActionOnZone('Immediate')) != null ? $configuration->getActionOnZone('Immediate'):'') }}",
+				farSelectedValue:"{{old('Far.action')  ? old('Far.action') :(($configuration->getActionOnZone('Far')) != null ? $configuration->getActionOnZone('Far'):'') }}",
+
+			},
+			computed:{
+				nearCustomMessageVisibility:function(){
+
+													return this.nearSelectedValue == "customMessage" ? true : false;
+				},
+				immediateCustomMessageVisibility:function(){
+
+													return this.immediateSelectedValue == "customMessage" ? true : false;
+				},
+
+				farCustomMessageVisibility:function(){
+
+													return this.farSelectedValue == "customMessage" ? true : false;
+				},
+
+			},
+			methods:{
+
+			}
+
+		});
+
+
+
+
+	</script>
+
+	@endSection

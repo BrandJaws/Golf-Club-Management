@@ -695,11 +695,35 @@ return [
         'httpCode' => '412',
         'message' => "Already Checked In"
     ],
-    'club_entry_checkin_successful' => [
-        'code' => '119',
-        'httpCode' => '412',
-        'message' => "Club Entry Checkin Successful"
+    'checkin_successful' => [
+        'code' => '122',
+        'httpCode' => '200',
+        'message' => "Checkin Successful"
     ],
+    'checkin_club_entry_missing' => [
+        'code' => '123',
+        'httpCode' => '412',
+        'message' => "Please Make A Club Entry Checkin First."
+    ],
+    'checkin_failed_due_to_late' => [
+        'code' => '124',
+        'httpCode' => '412',
+        'message' => "Cant Checkin Because You Were Late For The Reservation."
+    ],
+    'not_yet_eligible_for_checkin' => [
+        'code' => '125',
+        'httpCode' => '412',
+        'message' => "Can't Checkin Now. Game Checkin Facility Will Open 10 Minutes Before The Game Starts."
+    ],
+    'already_accepted' => [
+        'code' => '126',
+        'httpCode' => '200',
+        'message' => "Already Accepted Reservation Request"
+    ],
+
+
+
+
 
 
 
@@ -729,7 +753,11 @@ return [
         'status_pending' => 'Your status is Pending.'
     ],
     'beacon_messages' => [
-        'welcome_without_reservation' => "Welcome to %s %s. ",
-        'welcome_with_reservation' => "Welcome to %s %s, You have a booking at course %s at %s. Would you like to check-in now? ",
-    ]
+        'welcome_without_reservation' => "Welcome to :clubName :memberName.",
+        'welcome_with_reservation' =>"Welcome to :clubName :memberName. You have a reservation at course :courseName at :startTime. Would you like to check-in now? ",
+        'welcome_with_training' =>"Welcome to :clubName :memberName. You have a training session with :coach_name today. ",
+    ],
+
+
+
 ];

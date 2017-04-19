@@ -20,7 +20,7 @@ class CreateCheckinsTable extends Migration
             $table->morphs('reservation');
             $table->bigInteger('member_id',false,true);
             $table->dateTime('checkinTime')->nullable()->defualt(Null);
-            $table->enum('action',['clubEntry','gameEntry','clubHouse','gameExit']);
+            $table->enum('action',['Club Entry','Game Entry','Club House','Game Exit']);
             $table->enum('recordedBy',['user','admin']);
             $table->boolean('onTime');
 
@@ -35,6 +35,6 @@ class CreateCheckinsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('checkins');
+        Schema::drop('starter');
     }
 }

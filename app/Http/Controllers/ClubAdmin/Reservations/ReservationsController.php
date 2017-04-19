@@ -14,19 +14,53 @@ use Carbon\Carbon;
 
 class ReservationsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        
+        if($request->has('course_id')){
+            $course_id = $request->get('course_id');
+        }else{
+            $course_id = 1;
+        }
         $dayToday = Carbon::today()->toDateString();
         $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
-        $reservations = Course::getReservationsForACourseByIdForADateRange(1, $dayToday, $fourDaysFromNow);
-        return view('admin.reservations.reservations', ["reservations" => json_encode($reservations)]);
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $dayToday, $fourDaysFromNow);
+        
+        $coursesList = Course::where("club_id",Auth::user()->club_id)->select("id","name")->get();
+
+        if ($request->ajax()) {
+            return json_encode($reservations);
+        } else {
+            return view('admin.reservations.reservations', ["reservations" => json_encode($reservations),"courses"=>$coursesList]);
+        }
+
     }
 
-    public function getReservationByDate($date)
+    public function starter(Request $request){
+        if($request->has('course_id')){
+            $course_id = $request->get('course_id');
+        }else{
+            $course_id = 1;
+        }
+        $dayToday = Carbon::today()->toDateString();
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $dayToday, $dayToday);
+        $coursesList = Course::where("club_id",Auth::user()->club_id)->select("id","name")->get();
+        if ($request->ajax()) {
+            return json_encode($reservations);
+        } else {
+            return view('admin.reservations.starter', ['reservations' => json_encode($reservations),"courses"=>$coursesList]);
+        }
+
+    }
+
+    public function getReservationByDate(Request $request, $date)
     {
 
-        $reservations = Course::getReservationsForACourseByIdForADateRange(1, $date, $date);
+        if($request->has('course_id')){
+            $course_id = $request->get('course_id');
+        }else{
+            $course_id = 1;
+        }
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $date, $date);
         return json_encode($reservations);
     }
 
@@ -316,6 +350,10 @@ class ReservationsController extends Controller
                 $reservation->attachPlayers($new_players_received_including_guests, 0, true, 1, \Config::get('global.reservation.reserved'));
             }
 
+            // To update groupsizes possibly changed due to updation
+
+            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($request->get('reservation_id'));
+            $reservation->updateReservationStatusesForAReservation();
 
 //            $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($request->get('reservation_id'));
 //            if($reservation->reservation_players->count() > 0){
@@ -398,6 +436,67 @@ class ReservationsController extends Controller
             }
         }
         return $this->response();
+    }
+
+    public function movePlayer(Request $request){
+
+        return ($request->all());
+
+
+        if (!$request->has('reservationPlayerIdToBeMoved')) {
+
+            $this->error = "player_missing";
+            return $this->response();
+        }
+
+
+
+        //If we have the reservation id, we can find the reservation and proceed with the process
+        if ($request->has('reservationIdToMoveTo')) {
+
+
+            $reservationToMoveTo = RoutineReservation::find($request->has('reservationIdToMoveTo'));
+            if(!$reservationToMoveTo){
+                $this->error = "invalid_reservation";
+                return $this->response();
+            }
+
+
+
+
+
+        //Else we need to create a new reservation at that timeslot
+        }else{
+            if (!$request->has('club_id')) {
+                $this->error = "mobile_invalid_club_identifire";
+                return $this->response();
+            }
+
+            $club = Club::find($request->get('club_id'));
+
+            if (is_null($club) && count($club) < 1) {
+                $this->error = "mobile_invalid_club";
+                return $this->response();
+            }
+
+            if (!$request->has('course_id')) {
+                $this->error = "mobile_invalid_course_identifire";
+                return $this->response();
+            }
+
+            $course = Course::getCourseByClubId($request->get('course_id'), $club->id);
+
+            if (is_null($course) && count($course) < 1) {
+                $this->error = "mobile_invalid_court";
+                return $this->response();
+            }
+
+            if (!$request->has('reservationTimeSlotToMoveTo')) {
+
+                $this->error = "tennis_reservation_id_missing";
+                return $this->response();
+            }
+        }
     }
 
 

@@ -32,6 +32,12 @@
 						</span> <span class="nav-text">Reservations</span>
 					</a></li>
 					@endif
+					<li>
+						<a href="{{route('admin.reservations.starter')}}">
+							<span class="nav-icon"> <i class="fa fa-check-circle"></i></span>
+							<span class="nav-text">Checkins</span>
+						</a>
+					</li>
 					@can('courses', 'App\Model')
 					<li><a href="{{route('admin.courses.index')}}"> <span class="nav-icon"><i class="fa fa-map-marker"></i>
 							</span> <span class="nav-text">Courses</span>

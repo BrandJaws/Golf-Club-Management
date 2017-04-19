@@ -9,7 +9,7 @@
 
 
 		<div class="padding">
-			<div class="dashboard-tsheet">
+			<div class="dashboard-tsheet" id="reservations-vue-container">
 				<div class="row">
 					<div class="tsheet-header padd-15">
 						<div class="col-md-4">
@@ -17,6 +17,13 @@
 						</div>
 						<!-- col-6 -->
 						<div class="col-md-8 text-right">
+                            <div class="form-group col-md-7">
+                                <select class="form-control" v-model="coursesSelectedValue" @change="courseSelectionChanged">
+                                    @foreach($courses as $course)
+                                        <option value="{{$course->id}}" >{{$course->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
 							<button class="btn btn-def" id="filterResults"><i class="fa fa-filter"></i> &nbsp;Filter Results</button>
 							<button id = "reset-filters" class="btn btn-outline b-primary text-primary"><i class="fa fa-mail-reply"></i> &nbsp;Reset Filters</button>
 							<!-- /input-group -->
@@ -41,7 +48,7 @@
                     </div>
                 </div>
 				<!-- row -->
-				<div id="reservations-vue-container" class="row">
+				<div  class="row">
 					<div class="col-md-12">
 						<reservations-container :reservations="reservationsParentComputed"
                                                                         for-reservations-page="true"
@@ -71,14 +78,15 @@
 @include("admin.__vue_components.reservations.reservations-container")
 <script>
     var _reservationsParent = {!!$reservations!!};
-    
 
     $courseOpenTime = moment(_reservationsParent.courseOpenTime,"HH:mm:ss").hour();
     $courseCloseTime = moment(_reservationsParent.courseCloseTime,"HH:mm:ss").hour();
     var vue = new Vue({
         el: "#reservations-vue-container",
         data: {
+
                 reservationsParent: _reservationsParent,
+                coursesSelectedValue: _reservationsParent.course_id,
                 currentSelectedDate:null,
                 filters:{
                     timeStart:$courseOpenTime,
@@ -92,7 +100,7 @@
         },
         computed:{
             reservationsParentComputed:function(){
-             
+
                 var tempReservations = JSON.parse(JSON.stringify(this.reservationsParent));
                
                 for(dateCount=0; dateCount<tempReservations.reservationsByDate.length; dateCount++){
@@ -162,6 +170,7 @@
                                         },
                                         data:{
                                             _token: "{{ csrf_token() }}",
+                                            course_id:this.coursesSelectedValue,
 
                                         },
                                         success:function(msg){
@@ -226,12 +235,44 @@
                     
                     
                     
-        },
+            },
             restoreDefaultDates:function(){
                 
                 this.filters.showDefaultDates = true;
                 
-            }
+            },
+            courseSelectionChanged:function(){
+
+                var request = $.ajax({
+
+                    url: "{{url('admin/reservations')}}",
+                    method: "GET",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{csrf_token()}}',
+                    },
+                    data:{
+                        _token: "{{ csrf_token() }}",
+                        course_id:this.coursesSelectedValue,
+
+                    },
+                    success:function(msg){
+
+                        msg = JSON.parse(msg);
+                        this.reservationsParent = msg;
+                        this.filters.showDefaultDates = true;
+
+
+                    }.bind(this),
+
+                    error: function(jqXHR, textStatus ) {
+
+
+                        //Error code to follow
+                        console.log(jqXHR);
+
+                    }.bind(this)
+                });
+            },
             
         }
         

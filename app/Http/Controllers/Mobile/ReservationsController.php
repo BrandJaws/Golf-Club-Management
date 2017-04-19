@@ -442,26 +442,19 @@ class ReservationsController extends Controller
             //Simply confirm the reservation
             if($reservation_player->response_status == \Config::get('global.reservation.pending')) {
 
-                if (
-                    $reservation_player->reservation_status == \Config::get('global.reservation.pending_waiting') ||
-                    $reservation_player->reservation_status == \Config::get('global.reservation.pending_reserved')
-                ) {
                     $reservation_player->response_status = \Config::get('global.reservation.confirmed');
                     $reservation_player->save();
                     $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_player->reservation_id);
                     $reservation->updateReservationStatusesForAReservation();
+                    $reservationPlayerInGroup = $reservation->getReservationPlayerEntryForAMemberByIdFromReservationGroups($reservation_player->member_id);
 
-                    $this->response = "success_accept";
-                } else {
-                    $reservation_player->response_status = \Config::get('global.reservation.dropped');
-                    $reservation_player->save();
-                    $reservation_player->dispatchMakeReservationPlayerDecisionJob();
+                    if($reservationPlayerInGroup->response_status == \Config::get('global.reservation.confirmed')){
+                        $this->response = "success_accept";
+                    }else if($reservationPlayerInGroup->response_status == \Config::get('global.reservation.dropped')){
+                        $this->error = "group_already_complete";
+                    }
 
 
-
-                    $this->error = "group_already_complete";
-
-                }
 
             }else if($reservation_player->response_status == \Config::get('global.reservation.dropped')){
                 $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_player->reservation_id);
@@ -483,7 +476,9 @@ class ReservationsController extends Controller
 
 
 
-                $this->response = "success_accept";
+                $this->response = "mobile_reservation_successfull";
+            }else{
+                $this->response = "already_accepted";
             }
 
             \DB::commit();

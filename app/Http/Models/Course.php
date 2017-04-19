@@ -6,11 +6,13 @@ use App\Http\Models\Club;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
+use Illuminate\Support\Facades\DB;
+
 // use \App\CustomModels\CoursesAndReservations\CourseForReservations;
 // use \App\CustomModels\CoursesAndReservations\ReservationWrapper;
 // use \App\CustomModels\CoursesAndReservations\ReservationInfo;
 // use \App\CustomModels\CoursesAndReservations\ReservationPlayer;
-use DB;
+
 
 class Course extends Model
 {
@@ -178,7 +180,7 @@ class Course extends Model
             $query .= " AND DATE(date_time_start) >= DATE(?) ";
             $query .= " AND DATE(date_time_start) <= DATE(?) ";
         }
-        $query .= " AND course_id = ? ";
+        $query .= " AND club_id = ? ";
         $query .= "ORDER BY time_start ASC, reservation_id ASC   ";
 
         if($dateStart == $dateEnd){
@@ -193,7 +195,7 @@ class Course extends Model
                                                                    Auth::user ()->club_id]); 
         }
 
-        
+       
 
         $reservationsByDate = Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
         return $reservationsByDate;
@@ -465,5 +467,56 @@ class Course extends Model
             ->paginate($perPage, array(
             '*'
         ), 'current_page', $currentPage);
+    }
+
+    /**
+     * @param $club_id
+     * @param $member_id
+     *
+     *
+     * returns most relevant reservation for a member for current time
+     * If the current time falls between a users reservation that reservation will be the most relevant one
+     * else the next closest reservation will be the most relevant one
+     * useful for gameCheckin event where we need to find the reservation to checkin for based on current time
+     *
+     * returns the most relevant reservation if found and boolean false if not
+     */
+    public function returnMostRelevantReservationForAMemberForCurrentTime($member_id){
+
+        $date = Carbon::today()->toDateString();
+        $dateTime = Carbon::now();
+
+        // Needs to be modified to accomodate for other reservation types such as Leagues
+        $reservationsForPlayerToday = RoutineReservation::select("routine_reservations.id as id", "reservation_players.reservation_type", "reservation_time_slots.time_start",DB::raw("DATE_ADD(reservation_time_slots.time_start, INTERVAL $this->bookingDuration MINUTE) as time_end"))
+            ->leftJoin('reservation_players', function ($join) {
+                $join->on('routine_reservations.id', '=','reservation_players.reservation_id')
+                    ->where('reservation_players.reservation_type', RoutineReservation::class);
+            })
+            ->leftJoin('reservation_time_slots', function ($join) {
+                $join->on('routine_reservations.id', '=', 'reservation_time_slots.reservation_id')
+                    ->where('reservation_time_slots.reservation_type', RoutineReservation::class);
+            })
+            ->where('routine_reservations.course_id',$this->id)
+            ->where('reservation_players.member_id',$member_id)
+            ->whereDate('reservation_time_slots.time_start','=',$date)
+            ->orderBy('reservation_time_slots.time_start')
+            ->get();
+       
+        //scan for a reservation surrounding current time
+        foreach($reservationsForPlayerToday as $reservation){
+            if($dateTime >= $reservation->start_time || $dateTime < $reservation->end_time){
+                return $reservation;
+            }
+        }
+
+        //else return first reservation with start time greater than curren time i-e next on time reservation
+        foreach($reservationsForPlayerToday as $reservation){
+            if($dateTime < $reservation->start_time){
+                return $reservation;
+            }
+        }
+
+        return false;
+
     }
 }

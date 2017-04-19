@@ -5,6 +5,7 @@ use DB;
 use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Auth;
 
 class Member extends Authenticatable
 {
@@ -181,6 +182,7 @@ class Member extends Authenticatable
      */
     public function listClubMembersPaginated($clubId, $currentPage, $perPage, $searchTerm = false)
     {
+        $user = Auth::user()->id;
         return $this->where('club_id', '=', $clubId)
             ->where(function ($query) use ($searchTerm) {
             if ($searchTerm) {
@@ -189,7 +191,7 @@ class Member extends Authenticatable
                 $query->orWhere('member.email', 'like', "%$searchTerm%");
             }
         })
-            ->select('member.id as id', 'member.firstName', 'member.lastName', 'member.email', 'member.phone', 'member.gender','member.profilePic')
+            ->select('member.id as id', 'member.firstName', 'member.lastName', 'member.email', 'member.phone', 'member.gender','member.profilePic',DB::raw("IF((SELECT COUNT(*) FROM friends_member_member WHERE member_id = $user AND friend_member_id = member.id)>0,1,0)  AS isFriend"))
             ->orderby('member.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'

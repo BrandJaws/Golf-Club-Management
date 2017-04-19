@@ -124,33 +124,63 @@ class RoutineReservation extends Model
                 //change status to reserved or waiting from pending based on the number of members who have accepted
                 if ($this->playersInAGroupWithResponseStatusConfirmed($group) >= $group->group_size) {
 
-                        if ($group->reservation_status == \Config::get('global.reservation.pending_reserved')) {
-                            $group->reservation_status = \Config::get('global.reservation.reserved');
+                        //On group's status change upadte statuses for all the players which will be reflected as
+                        //group reservation status
+                        if ($group->reservation_status == \Config::get('global.reservation.pending_reserved') ||
+                            $group->reservation_status == \Config::get('global.reservation.pending_waiting')) {
 
-                        } else if ($group->reservation_status == \Config::get('global.reservation.pending_waiting')) {
-                            $group->reservation_status = \Config::get('global.reservation.waiting');
+                            if($group->reservation_status == \Config::get('global.reservation.pending_reserved')){
+                                $group->reservation_status = \Config::get('global.reservation.reserved');
+                            }else{
+                                $group->reservation_status = \Config::get('global.reservation.waiting');
+                            }
 
-                        }
+                            foreach ($group->players as $index => $player) {
 
-                        foreach ($group->players as $player) {
-                            if ($player->reservation_status == \Config::get('global.reservation.pending_reserved')) {
-                                $player->reservation_status = \Config::get('global.reservation.reserved');
-                                $player->save();
-
-                                //Dispatch Final Cycle Job When the status is reserved
-                                if($player->response_status ==  \Config::get('global.reservation.confirmed')){
-                                    $player->dispatchMakeReservationDecisionJobForFinalCycle();
+                                //change status from confirmed to dropped if the player index is greater than or equal to
+                                //the group size
+                                if($index >= $group->group_size && $player->response_status == \Config::get('global.reservation.confirmed')){
+                                    $player->response_status = \Config::get('global.reservation.dropped');
+                                    $player->save();
+                                    $player->dispatchMakeReservationPlayerDecisionJob();
                                 }
 
+                                if ($player->reservation_status == \Config::get('global.reservation.pending_reserved')) {
+                                    $player->reservation_status = \Config::get('global.reservation.reserved');
+                                    $player->save();
 
+                                    //Dispatch Final Cycle Job When the status is reserved
+                                    if($player->response_status ==  \Config::get('global.reservation.confirmed')){
+                                        $player->dispatchMakeReservationDecisionJobForFinalCycle();
+                                    }
 
-                            } else if ($player->reservation_status == \Config::get('global.reservation.pending_waiting')) {
-                                $player->reservation_status = \Config::get('global.reservation.waiting');
-                                $player->save();
+                                } else if ($player->reservation_status == \Config::get('global.reservation.pending_waiting')) {
+                                    $player->reservation_status = \Config::get('global.reservation.waiting');
+                                    $player->save();
+                                }
                             }
+
+                         //When group's status has already been changed to confirmed or waiting, change the status of
+                         //any other confirmed players to dropped. 
+
+                        } else if ($group->reservation_status == \Config::get('global.reservation.reserved') ||
+                                   $group->reservation_status == \Config::get('global.reservation.waiting')) {
+
+                            foreach ($group->players as $index => $player) {
+
+                                    //change status from confirmed to dropped if the player index is greater than or equal to
+                                    //the group size
+                                    if($index >= $group->group_size && $player->response_status == \Config::get('global.reservation.confirmed')){
+
+                                        $player->response_status = \Config::get('global.reservation.dropped');
+                                        $player->save();
+                                        $player->dispatchMakeReservationPlayerDecisionJob();
+
+                                    }
+
+                            }
+
                         }
-
-
 
                 }
 
@@ -244,6 +274,31 @@ class RoutineReservation extends Model
 
             }
             return $groupFound;
+        } else {
+            return null;
+        }
+    }
+
+
+    /**
+     * @param $member_id
+     * @return ReservationPlayer
+     */
+    public function getReservationPlayerEntryForAMemberByIdFromReservationGroups($member_id)
+    {
+
+        if ($this->reservation_groups) {
+
+            foreach ($this->reservation_groups as $group) {
+                foreach($group->players as $player){
+                    if($player->member_id == $member_id){
+
+                        return $player;
+                    }
+                }
+
+            }
+            return null;
         } else {
             return null;
         }

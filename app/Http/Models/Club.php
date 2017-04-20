@@ -47,14 +47,22 @@ class Club extends Model {
          * 
          * @param int $clubId
          * @param array $players
-         * 
+         * @param array $reservationIdsToExcludeTest
+         *
+         *
          * checks and returns an array of players who already have bookings between requested reservation
          * timeslot and a normal reservation's duration
+         * reservationIdsToExcludeTest argument takes an array of reservation ids which will be excluded from the test
+         * In most cases we wont need it. A special case where it might be used is such as moving a player to another
+         * reservation. In that case before moving the player will be present in the previous reservation and will
+         * therefor fail the test if the reservation to which the player is being moved to is less than a game's duration
+         * away. In this case we need to perform the check on every reservation but the one in which the player currently is
+         *
          */
-        public function getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($courseRequested,$startDateTime,$players){
+        public function getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($courseRequested,$startDateTime,$players,$reservationIdsToExcludeTest = []){
             $playersWithReservations = [];
             $playersNamesWithReservations = "";
-            $endDateTime = \Carbon\Carbon::parse($startDateTime)->addMinutes($courseRequested->bookingDuration)->toDateTimeString(); 
+            $endDateTime = Carbon::parse($startDateTime)->addMinutes($courseRequested->bookingDuration)->toDateTimeString();
             //What actually needs to be checked is the intersection of times i-e 4 cases: 
             //  - The requested start time falls between the duration of another reservation for the same player
             //  - Or The requested end time falls between the duration of another reservation for the same player
@@ -101,6 +109,12 @@ class Club extends Model {
 
                         })
                         ->whereIn('member_id',$players)
+                        ->where(function($query) use($reservationIdsToExcludeTest){
+                            if($reservationIdsToExcludeTest){
+                                $query->whereNotIn('reservation_id',$reservationIdsToExcludeTest);
+                            }
+
+                        })
                         ->get();
             foreach($playersFound as $index=>$playerFound){
                 if(strpos($playersNamesWithReservations,$playerFound->member_name) === false){

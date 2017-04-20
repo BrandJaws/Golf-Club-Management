@@ -10,8 +10,11 @@
                           <button type="button" class="close closePopup" aria-label="Close"><span aria-hidden="true" class="closePopup">×</span></button>
                             <h5 class="modal-title">Cancel Reservation</h5>
                       </div>
-                      <div class="modal-body text-center p-lg">
-                        <p class="text-center">@{{ popupMessage }}</p>
+                      <div class="alert alert-danger" v-if="errorMessage != '' ">
+                                    @{{ errorMessage }}
+                     </div>
+      <div class="modal-body text-center p-lg">
+        <p class="text-center">@{{ popupMessage }}</p>
                       </div>
                       <div class="modal-footer text-center">
                         <button type="button" class="btn btn-fw primary" @click="yesSelected">Yes</button>
@@ -25,7 +28,8 @@
             `,
     props: [
 
-            'popupMessage'
+            'popupMessage',
+            'errorMessage'
     ],
     methods:{
         emitClosePopup:function(){

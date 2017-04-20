@@ -74,7 +74,7 @@ class Course extends Model
 
     public function club()
     {
-        return $this->belongsTo('\App\Http\Models\Club', 'club_id');
+        return $this->belongsTo(Club::class, 'club_id');
     }
 
     public static function getById($id)

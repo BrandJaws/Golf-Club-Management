@@ -147,7 +147,8 @@
                                                     <reservations-container :reservations="reservationsParentComputed"
                                                                             for-reservations-page="false"
                                                                             @update-reservations="updateReservations"
-                                                                            @drag-drop-operation="dragDropOperationPerformed">
+                                                                            {{--@drag-drop-operation="dragDropOperationPerformed"--}}
+                                                                                    >
                                                         
                                                     </reservations-container>
 
@@ -335,11 +336,11 @@
                 this.filters.showDefaultDates = true;
                 
             },
-            dragDropOperationPerformed:function (dragDropIndicesDataObject) {
-                var reservationPlayerToBeMoved = this.reservationsParent.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players[dragDropIndicesDataObject.playerIndexDragged];
-                this.reservationsParent.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players.splice(dragDropIndicesDataObject.playerIndexDragged,1);
-                this.reservationsParent.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].players.push(reservationPlayerToBeMoved);
-            },
+//            dragDropOperationPerformed:function (dragDropIndicesDataObject) {
+//                var reservationPlayerToBeMoved = this.reservationsParent.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players[dragDropIndicesDataObject.playerIndexDragged];
+//                this.reservationsParent.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players.splice(dragDropIndicesDataObject.playerIndexDragged,1);
+//                this.reservationsParent.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].players.push(reservationPlayerToBeMoved);
+//            },
             courseSelectionChanged:function(){
                 console.log("course selection changed"+this.coursesSelectedValue);
                 var request = $.ajax({

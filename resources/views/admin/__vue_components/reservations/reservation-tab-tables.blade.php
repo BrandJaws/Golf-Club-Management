@@ -13,7 +13,7 @@ Vue.component('reservation-tab-tables', {
                         <div class="table-responsive">
                             <table class="table table-hover b-t">
                                 <tbody>
-                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter" @dragover.prevent @drop.prevent="dragDroppedPlayer($event,timeSlot,reservationByDateIndex, timeSlotIndex)">
+                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter" @dragover="dragOver($event,timeSlot)" @drop.prevent="dragDroppedPlayer($event,timeSlot,reservationByDateIndex, timeSlotIndex)">
                                     <td >@{{timeSlot.timeSlot}}</td>
                                     <td width="80%">
                                       <ul class="members-add" >
@@ -75,12 +75,24 @@ Vue.component('reservation-tab-tables', {
             this.$emit('delete-reservation',reservation_id);
 
         },
-        dragDroppedPlayer:function (event, timeSlot,dateIndexDroppedInto,timeIndexDroppedInto) {
-            if(timeSlot.reservations[0].players.length >= 4){
+        dragOver:function(event, timeSlot){
+            if(timeSlot.reservations[0].players.length >= 4 ){
                 console.log("Time Slot Fully Booked");
                 return;
             }
+            event.preventDefault();
+        },
+        dragDroppedPlayer:function (event, timeSlot,dateIndexDroppedInto,timeIndexDroppedInto) {
             indicesObjectOfDraggedPlayer = JSON.parse(event.dataTransfer.getData("indicesObjectOfDraggedPlayer"));
+            if(timeSlot.reservations[0].players.length >= 4 ){
+                //console.log("Time Slot Fully Booked");
+                return false;
+            }
+            if( timeIndexDroppedInto == indicesObjectOfDraggedPlayer.timeIndexDraggedFrom){
+
+                return;
+            }
+
             dragDropIndicesData = {};
             dragDropIndicesData.dateIndexDraggedFrom = indicesObjectOfDraggedPlayer.dateIndexDraggedFrom;
             dragDropIndicesData.timeIndexDraggedFrom = indicesObjectOfDraggedPlayer.timeIndexDraggedFrom;

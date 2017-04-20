@@ -453,7 +453,7 @@ return [
     'date_time_not_found' => [
         'code' => '80',
         'httpCode' => '412',
-        'message' => 'Date time not found'
+        'message' => 'Date not found'
     ],
     'reservation_status_not_final' => [
         'code' => '81',
@@ -720,6 +720,12 @@ return [
         'httpCode' => '200',
         'message' => "Already Accepted Reservation Request"
     ],
+    'cant_move_to_different_type_of_reservation' => [
+        'code' => '127',
+        'httpCode' => '412',
+        'message' => "Can't Move To A Different Type Of Reservation."
+    ],
+
 
 
 

@@ -43,7 +43,7 @@ trait PushNotification
 			$pushManager->add ( $push );
 			$pushManager->push ();
                         
-			App\Http\Models\PushNotification::savePushNotification($memberId, $options,$reservation_player_id);
+			//App\Http\Models\PushNotification::savePushNotification($memberId, $options,$reservation_player_id);
                         
 		} catch ( \Exception $exp ) {
 			

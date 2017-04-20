@@ -362,6 +362,7 @@
                         this.filters.showDefaultDates = true;
 
 
+
                     }.bind(this),
 
                     error: function(jqXHR, textStatus ) {

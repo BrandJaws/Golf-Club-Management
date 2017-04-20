@@ -150,13 +150,15 @@
                                         if(this.reservationsParent.reservationsByDate.length == 5){
                                             this.filters.showDefaultDates = false;
                                             this.$nextTick(function(){
-                                                    $('.nav-tabs a[data-target="#tab5"]').tab('show');  
+                                                    $('.nav-tabs a[data-target="#tab5"]').tab('show');
                                             });
-                                            
+                                            return;
+
+
                                         }
                                     }
                                     
-                                    return;  
+
                                     
                                     
                                 }
@@ -260,7 +262,7 @@
                         msg = JSON.parse(msg);
                         this.reservationsParent = msg;
                         this.filters.showDefaultDates = true;
-
+                        $( "#date-reserv" ).datepicker('update','');
 
                     }.bind(this),
 

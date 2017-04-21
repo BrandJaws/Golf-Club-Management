@@ -68,6 +68,9 @@ class Member extends Authenticatable
         return $this->hasMany ( "App\Http\Models\Group");
 
     }
+    public function push_notifications() {
+        return $this->hasMany ( "App\Http\Models\PushNotification" );
+    }
 
     public function populate($data = [])
     {
@@ -180,18 +183,23 @@ class Member extends Authenticatable
      * @param unknown $currentPage            
      * @param unknown $perPage            
      */
-    public function listClubMembersPaginated($clubId, $currentPage, $perPage, $searchTerm = false)
+    public function listClubMembersPaginated($clubId, $currentPage, $perPage, $searchTerm = false, $memberId = false)
     {
-        $user = Auth::user()->id;
+
         return $this->where('club_id', '=', $clubId)
+            ->where(function($query) use($memberId){
+                if($memberId){
+                    $query->where('member.id','<>',$memberId);
+                }
+            })
             ->where(function ($query) use ($searchTerm) {
             if ($searchTerm) {
-                $query->orWhere('member.firstName', 'like', "%$searchTerm%");
+                $query->where('member.firstName', 'like', "%$searchTerm%");
                 $query->orWhere('member.lastName', 'like', "%$searchTerm%");
                 $query->orWhere('member.email', 'like', "%$searchTerm%");
             }
         })
-            ->select('member.id as id', 'member.firstName', 'member.lastName', 'member.email', 'member.phone', 'member.gender','member.profilePic',DB::raw("IF((SELECT COUNT(*) FROM friends_member_member WHERE member_id = $user AND friend_member_id = member.id)>0,1,0)  AS isFriend"))
+            ->select('member.id as id', 'member.firstName', 'member.lastName', 'member.email', 'member.phone', 'member.gender','member.profilePic', $memberId !== false ? DB::raw("IF((SELECT COUNT(*) FROM friends_member_member WHERE member_id = $memberId AND friend_member_id = member.id)>0,1,0)  AS isFriend") : DB::raw("0  AS isFriend"))
             ->orderby('member.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'
@@ -297,5 +305,19 @@ class Member extends Authenticatable
         }
         
         return $reservations;
+    }
+
+    public function getPushNotificationsForMember($currentPage, $perPage) {
+        $notifications = $this->push_notifications ()->orderBy("id","desc")->paginate ( $perPage, [
+            'id',
+            'messageBody'
+        ], 'page', $currentPage );
+
+        foreach ( $notifications as $index => $notification ) {
+
+            $notifications [$index] ["messageBody"] = json_decode ( $notification ["messageBody"] );
+        }
+
+        return $notifications;
     }
 }

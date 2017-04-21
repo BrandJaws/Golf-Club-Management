@@ -83,7 +83,7 @@ class ReservationPlayer extends Model
     public function sendNotificationToPlayerForReservationConfirmation($timeStart, $parent,$courseName){
         //Skip process if player_id equals zero i-e player is a guest
         //Or the player has already confirmed
-        if($this->member_id == 0 || $this->response_status == \Config::get ( 'global.reservation.confirm' )){
+        if($this->member_id == 0 || $this->response_status == \Config::get ( 'global.reservation.confirmed' )){
             return;
         }
 
@@ -111,7 +111,7 @@ class ReservationPlayer extends Model
                     [ 'reservation_player_id'=> $this->id ]
                 ),
                 $this->member->id,
-                $this->id);
+                $this);
         }
         //Android logic to follow
 
@@ -145,7 +145,7 @@ class ReservationPlayer extends Model
                     ]
                 ),
                 $parent->id,
-                $this->id);
+                $this);
         }
         //Android logic to follow
 

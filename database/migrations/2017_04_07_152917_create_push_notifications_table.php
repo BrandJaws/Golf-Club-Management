@@ -16,11 +16,12 @@ class CreatePushNotificationsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('member_id')->unsigned();
             $table->text('messageBody');
+            $table->morphs('message_owner');
             $table->timestamps();
             $table->foreign('member_id')->references('id')
                   ->on('member')
                   ->onDelete('cascade');
-            
+
             
         });
     }

@@ -119,7 +119,7 @@ class MembersController extends Controller {
 		$search = $request->has ( 'search' ) ? $request->get ( 'search' ) : false;
 
                 
-                $members = (new Member ())->listClubMembersPaginated ( $club->id, $currentPage, $perPage,$search );
+                $members = (new Member ())->listClubMembersPaginated ( $club->id, $currentPage, $perPage,$search,Auth::user()->id );
 		if (count ( $members ) < 1) {
 			$this->error = 'no_members_could_be_found';
 			return $this->response ();
@@ -200,86 +200,6 @@ class MembersController extends Controller {
 		
 		return $this->response ();
 	}
-	public function sendTestNotification(Request $request) {
-		$deviceToken = Auth::user ()->device_registeration_id;
-		$deviceType = Auth::user ()->device_type;
-		if (! $request->has ( 'message' )) {
-			$this->error = "notification_message_missing";
-			return $this->response ();
-		}
-                 $useCase = \Config::get ( 'global.pushNotificationsUseCases.add_more_players_prompt_on_decline' );
-                $title = "Please Add More Players";
-                $body = trans('message.pushNotificationMessageBodies.add_more_players_prompt');
-                
-                 $this->sendNotification($body, 
-                                            "435383529a169b09ed1fbfbcdfee0d938b0bbffec999020e2a265eac40b8c939", 
-                                            "Iphone",
-                                            self::getIOSOptionsObject(
-                                                $useCase,
-                                                $title,
-                                                $body,
-                                                ['tennis_reservation_id'=> 1 ,
-                                                 'last_player_declined_id'=> 1 ,
-                                                 'last_player_declined_name'=>"Player Name",
-                                                 'aggregate_declined_player_ids'=>json_encode([1,2,3])
-                                                ]
-                                            ),
-                                            Auth::user()->id,
-                                            41);
-                return "ABC";
-		$title = "Title of message";
-                $options = [];
-                $options['alert']['use_case'] = "test_use_case";
-                $options['alert']['title'] = $title;
-                $options['alert']['body'] = "Body of Message";
-              
-		$this->sendNotification ( $title, $deviceToken, $deviceType,$options,Auth::user()->id,41 );
-	}
-        
-        public function getPushNotificationsForMemberById(Request $request) {
-		
-		$member = Auth::user();
-		
-		$currentPage = $request->has ( 'page' ) ? $request->get ( 'page' ) : 0;
-		$perPage = $request->has ( 'perPage' ) ? $request->get ( 'perPage' ) : \Config::get ( 'global.mobile_items_per_page' );
-		
-                $notifications = $member->getPushNotificationsForMember ($currentPage, $perPage );
-		if (count($notifications) < 1) {
-			$this->error = 'no_notifications_found';
-			return $this->response ();
-		}
-		$this->response = $notifications;
-		return $this->response ();
-	}
-        
-        public function deletePushNotificationForMemberById($notification_id) {
-		
-		$notification = PushNotification::find($notification_id);
-                if(!$notification){
-                    $this->error = 'no_notifications_found';
-                    return $this->response ();
-                }
-                $notification->delete();
-                $this->response = "notification_deleted_successfuly";
-		return $this->response ();
-		
-	}
-        
-        public function deleteAllPushNotificationForMember(){
-            $memberId = Auth::user()->id;
-            try{
-                 PushNotification::where('member_id',$memberId)->delete();
-                 $this->response = "notification_deleted_successfuly";
-                 return $this->response();
-            }catch(\Exception $e){
-                //$this->error = "notification_deleted_successfuly";
-              
-            }
-            
-            
-           
-            
-        }
 
 	public function addMemberToFriends(Request $request) {
 		if (! $request->has ( 'player_id' )) {
@@ -784,6 +704,54 @@ class MembersController extends Controller {
 
 	}
 
+	public function getPushNotificationsForMemberById(Request $request) {
 
+		$member = Auth::user();
+
+		$currentPage = $request->has ( 'page' ) ? $request->get ( 'page' ) : 0;
+		$perPage = $request->has ( 'perPage' ) ? $request->get ( 'perPage' ) : \Config::get ( 'global.mobile_items_per_page' );
+
+		$notifications = $member->getPushNotificationsForMember ($currentPage, $perPage );
+		if (count($notifications) < 1) {
+			$this->error = 'no_notifications_found';
+			return $this->response ();
+		}
+		$this->response = $notifications;
+		return $this->response ();
+	}
+
+	public function deletePushNotificationForMemberById($notification_id) {
+
+		$notification = PushNotification::find($notification_id);
+		if(!$notification){
+			$this->error = 'no_notifications_found';
+			return $this->response ();
+		}
+		if($notification->member_id != Auth::user()->id){
+			$this->error = 'notification_not_owned_by_user';
+			return $this->response ();
+		}
+
+		$notification->delete();
+		$this->response = "notification_deleted_successfuly";
+		return $this->response ();
+
+	}
+
+	public function deleteAllPushNotificationForMember(){
+		$memberId = Auth::user()->id;
+		try{
+			PushNotification::where('member_id',$memberId)->delete();
+			$this->response = "notification_deleted_successfuly";
+			return $this->response();
+		}catch(\Exception $e){
+			//$this->error = "notification_deleted_successfuly";
+
+		}
+
+
+
+
+	}
        
 }

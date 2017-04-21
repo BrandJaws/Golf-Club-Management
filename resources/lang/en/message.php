@@ -725,6 +725,11 @@ return [
         'httpCode' => '412',
         'message' => "Can't Move To A Different Type Of Reservation."
     ],
+    'notification_not_owned_by_user'=>[
+        'code'=>'128',
+        'httpCode' => '412',
+        'message'=>'The requested notification is not owned by the user'
+    ],
 
 
 

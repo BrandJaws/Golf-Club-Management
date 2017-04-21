@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Models\PushNotification;
+use App\Http\Models\ReservationPlayer;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider {
@@ -11,7 +13,11 @@ class AppServiceProvider extends ServiceProvider {
 	 * @return void
 	 */
 	public function boot() {
-		//
+		ReservationPlayer::deleted(function ($reservationPlayer) {
+			PushNotification::where("message_owner_id",$reservationPlayer->id)
+							->where("message_owner_type",ReservationPlayer::class)
+							->delete();
+		});
 	}
 	
 	/**

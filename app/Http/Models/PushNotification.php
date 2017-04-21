@@ -6,12 +6,17 @@ use Illuminate\Database\Eloquent\Models;
 use Illuminate\Database\Eloquent\Model;
 class PushNotification extends Model
 {
-    public static function savePushNotification($memberId,$messageBody,$tennis_reservation_id=null){
+    public function message_owner(){
+        return $this->morphTo();
+    }
+
+    public static function savePushNotification($memberId,$messageBody,$message_owner=null){
         $notification = new PushNotification();
         $notification->member_id = $memberId;
         $notification->messageBody = json_encode($messageBody);
-        $notification->tennis_reservation_id = $tennis_reservation_id;
-      
+        $notification->message_owner_id = $message_owner->id;
+        $notification->message_owner_type = get_class($message_owner);
+        
         try{
             $notification->save();
         }catch(\Exception $e){

@@ -76,11 +76,11 @@ Route::group([
 		Route::post('/friends/groups/add-more-friends', ['as' => 'addFriendsToGroup', 'uses' => '\App\Http\Controllers\Mobile\MembersController@addMoreFriendsToAnExistingGroup']);
 		Route::post('/friends/groups/remove-friends', ['as' => 'removeFriendsFromGroup', 'uses' => '\App\Http\Controllers\Mobile\MembersController@removeFriendsFromGroup']);
 		Route::post('/friends/groups/delete', ['as' => 'deleteGroup', 'uses' => '\App\Http\Controllers\Mobile\MembersController@deleteGroup']);
+		Route::get('/notifications', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getPushNotificationsForMemberById']);
+		Route::get('/notifications/delete/{notification_id}', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\MembersController@deletePushNotificationForMemberById']);
+		Route::get('/notifications/delete-all', ['as' => 'deleteAllNotificatoions', 'uses' => '\App\Http\Controllers\Mobile\MembersController@deleteAllPushNotificationForMember']);
+
 		//Route::get('/reservations', ['as' => 'getReservations', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getReservationsForMember']);
-		//Route::post('/test-notification', '\App\Http\Controllers\Mobile\MembersController@sendTestNotification');
-		//Route::get('/notifications', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getPushNotificationsForMemberById']);
-		//Route::get('/notifications/delete/{notification_id}', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\MembersController@deletePushNotificationForMemberById']);
-		//Route::get('/notifications/delete-all', ['as' => 'deleteAllNotificatoions', 'uses' => '\App\Http\Controllers\Mobile\MembersController@deleteAllPushNotificationForMember']);
 	});
 
 	Route::group(['prefix' => 'trainings', 'as' => 'trainings.'], function() {

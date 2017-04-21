@@ -35,6 +35,6 @@ class CreateCheckinsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('starter');
+        Schema::drop('checkins');
     }
 }

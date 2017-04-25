@@ -202,7 +202,7 @@ class ReservationsController extends Controller
             return "success";
         } catch (\Exception $e) {
             \DB::rollback();
-
+            dd($e);
             \Log::info(__METHOD__, [
                 'error' => $e->getMessage()
             ]);
@@ -422,7 +422,7 @@ class ReservationsController extends Controller
         return $this->response();
     }
 
-    public function acceptReservationRequest($reservation_player_id){
+    public function acceptReservationRequest(Request $request,$reservation_player_id){
 
         $reservation_player = ReservationPlayer::find($reservation_player_id);
         $member_id = Auth::user()->id;
@@ -435,6 +435,17 @@ class ReservationsController extends Controller
             return $this->response();
         }
 
+        if($reservation_player->process_type == \Config::get('global.reservationsProcessTypes.final') ){
+            if(!$request->has('comingOnTime') ){
+                $this->error = 'must_notify_if_on_time';
+                return $this->response();
+            }else if( $request->get('comingOnTime') != "yes" && $request->get('comingOnTime') != "no"){
+                $this->error = 'must_notify_if_on_time';
+                return $this->response();
+            }
+        }
+
+
 
         try {
             \DB::beginTransaction();
@@ -443,6 +454,17 @@ class ReservationsController extends Controller
             if($reservation_player->response_status == \Config::get('global.reservation.pending')) {
 
                     $reservation_player->response_status = \Config::get('global.reservation.confirmed');
+
+                    //Must set the comingOnTime flag if the process is final
+                    if($reservation_player->process_type == \Config::get('global.reservationsProcessTypes.final') ){
+                        if($request->get('comingOnTime') == "yes"){
+                            $reservation_player->comingOnTime = \Config::get('global.comingOnTime.yes');
+                        }else if($request->get('comingOnTime') == "no"){
+                            $reservation_player->comingOnTime = \Config::get('global.comingOnTime.no');
+                        }
+
+                    }
+
                     $reservation_player->save();
                     $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation_player->reservation_id);
                     $reservation->updateReservationStatusesForAReservation();

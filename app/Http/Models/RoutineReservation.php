@@ -13,7 +13,8 @@ class RoutineReservation extends Model
     protected $fillable = [
         'id',
         'club_id',
-        'course_id'
+        'course_id',
+        'gameStatus'
     ];
 
     public function reservation_time_slots()
@@ -27,7 +28,7 @@ class RoutineReservation extends Model
         return $this->morphMany("App\Http\Models\ReservationPlayer", "reservation");
     }
 
-    public function attachPlayers($players, $parent, $confirmAll, $group_size, $reservation_status)
+    public function attachPlayers($players, $parent, $confirmAll, $group_size, $reservation_status, $comingOnTime = false)
     {
         if (is_array($players) && !empty ($players)) {
             foreach ($players as $player) {
@@ -56,6 +57,9 @@ class RoutineReservation extends Model
                 $playerData["group_size"] = $group_size;
                 $playerData["response_status"] = $response_status;
                 $playerData["reservation_status"] =$reservation_status;
+                if($comingOnTime){
+                    $playerData["comingOnTime"] =$comingOnTime;
+                }
 
                 ReservationPlayer::create($playerData);
 

@@ -278,7 +278,7 @@ class Course extends Model
         $allReservationsWithCourses = [];
         foreach($reservation_time_slots as $time_slot){
             $reservation = DB::table('compound_reservations_aggregated')->where("course_id",$course_id)->where("date_time_start",$time_slot->time_start)->first();
-            
+
             if($reservation){
                 $allReservationsWithCourses[] = $reservation;
             }else{
@@ -290,18 +290,21 @@ class Course extends Model
                 $blankReservation->time_start = $time->toTimeString() ;
                 $blankReservation->reservation_id = "";
                 $blankReservation->reservation_type = "";
+                $blankReservation->game_status = "";
                 $blankReservation->status = "";
                 $blankReservation->reservation_player_ids = "";
                 $blankReservation->member_profile_pics = "";
                 $blankReservation->response_statuses = "";
                 $blankReservation->member_ids = "";
                 $blankReservation->member_names = "";
+                $blankReservation->processTypes = "";
+                $blankReservation->comingOnTime_responses = "";
                 $blankReservation->parent_id = "";
                 $allReservationsWithCourses[] = $blankReservation;
                 
             }
         }
-       
+
         return Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
         
     }
@@ -369,6 +372,7 @@ class Course extends Model
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex] = new \stdClass();
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_id = $reservation->reservation_id;
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_type = $reservation->reservation_type;
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->game_status = $reservation->game_status;
                 //$reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_status = $reservation->reservation_status;
                 
                 $reservation_player_ids = $reservation->reservation_player_ids !== "" ? explode("||-separation-player-||",$reservation->reservation_player_ids) : [];
@@ -376,7 +380,8 @@ class Course extends Model
                 $member_names = $reservation->member_names !== "" ? explode("||-separation-player-||",$reservation->member_names) : [];
                 $member_profile_pics = $reservation->member_profile_pics !== "" ? explode("||-separation-player-||",$reservation->member_profile_pics) : [];
                 $response_statuses = $reservation->response_statuses !== "" ? explode("||-separation-player-||",$reservation->response_statuses) : [];
-                
+                $comingOnTime_responses = $reservation->comingOnTime_responses !== "" ? explode("||-separation-player-||",$reservation->comingOnTime_responses) : [];
+                $processTypes = $reservation->processTypes !== "" ? explode("||-separation-player-||",$reservation->processTypes) : [];
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players =collect([]);
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->guests = 0;
                 foreach($reservation_player_ids as $playerIndex=>$reservation_player_id){
@@ -391,7 +396,8 @@ class Course extends Model
                         $reservationPlayerObject->member_name = trim($member_names[$playerIndex]);
                         $reservationPlayerObject->profilePic = trim($member_profile_pics[$playerIndex]);
                         $reservationPlayerObject->response_status = trim($response_statuses[$playerIndex]);
-
+                        $reservationPlayerObject->comingOnTime = trim($comingOnTime_responses[$playerIndex]);
+                        $reservationPlayerObject->process_type = trim($processTypes[$playerIndex]);
                         $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players->push($reservationPlayerObject);
 
               
@@ -498,6 +504,7 @@ class Course extends Model
             })
             ->where('routine_reservations.course_id',$this->id)
             ->where('reservation_players.member_id',$member_id)
+            ->where('reservation_players.reservation_status',\Config::get('global.reservation.reserved'))
             ->whereDate('reservation_time_slots.time_start','=',$date)
             ->orderBy('reservation_time_slots.time_start')
             ->get();

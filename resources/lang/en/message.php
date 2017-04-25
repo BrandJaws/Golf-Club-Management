@@ -730,6 +730,20 @@ return [
         'httpCode' => '412',
         'message'=>'The requested notification is not owned by the user'
     ],
+    'must_notify_if_on_time'=>[
+        'code'=>'129',
+        'httpCode' => '412',
+        'message'=>'You must notify if you are coming on time'
+    ],
+    'game_already_started'=>[
+        'code'=>'130',
+        'httpCode' => '412',
+        'message'=>'Game has already been started'
+    ],
+
+
+
+
 
 
 

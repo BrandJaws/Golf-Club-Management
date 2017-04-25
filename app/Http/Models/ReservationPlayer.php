@@ -18,7 +18,8 @@ class ReservationPlayer extends Model
         'group_size',
         'response_status',
         'reservation_status',
-        'nextJobToProcess'
+        'nextJobToProcess',
+        'comingOnTime'
     ];
     
     public function reservation(){
@@ -34,19 +35,22 @@ class ReservationPlayer extends Model
      */
     public function initiateFinalProcessForReservation(){
 
-        $this->process_type =  \Config::get ( 'global.reservationsProcessTypes.final' );
-        $this->response_status =  \Config::get ( 'global.reservation.pending' );
-        $this->save();
-        $parent = Member::find($this->parent_id );
-        $reservation = $this->reservation;
-        $timeStart = $reservation->reservation_time_slots->first()->time_start;
-        $course = Course::find($reservation->course_id);
+        if($this->response_status =  \Config::get ( 'global.reservation.confirmed' )){
+            $this->process_type =  \Config::get ( 'global.reservationsProcessTypes.final' );
+            $this->response_status =  \Config::get ( 'global.reservation.pending' );
+            $this->save();
+            $parent = Member::find($this->parent_id );
+            $reservation = $this->reservation;
+            $timeStart = $reservation->reservation_time_slots->first()->time_start;
+            $course = Course::find($reservation->course_id);
 
-        //Send Notification to player
-        $this->sendNotificationToPlayerForReservationConfirmation($timeStart,$parent,$course->name);
+            //Send Notification to player
+            $this->sendNotificationToPlayerForReservationConfirmation($timeStart,$parent,$course->name);
 
-        //dispatch jobs
-        $this->dispatchMakeReservationPlayerDecisionJob();
+            //dispatch jobs
+            $this->dispatchMakeReservationPlayerDecisionJob();
+        }
+
 
     }
 

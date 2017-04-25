@@ -151,7 +151,7 @@ Vue.component('reservations-container', {
 
                 error: function(jqXHR, textStatus ) {
                     this.ajaxRequestInProcess = false;
-
+                    console.log(jqXHR);
                     //Error code to follow
                     if(jqXHR.hasOwnProperty("responseText")){
                         this.popupMessage = JSON.parse(jqXHR.responseText).response;

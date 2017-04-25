@@ -45,6 +45,7 @@ class ReservationsController extends Controller
         $dayToday = Carbon::today()->toDateString();
         $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $dayToday, $dayToday);
         $coursesList = Course::where("club_id",Auth::user()->club_id)->select("id","name")->get();
+       
         if ($request->ajax()) {
             return json_encode($reservations);
         } else {
@@ -618,6 +619,36 @@ class ReservationsController extends Controller
         $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($course->id, $timeSlotsForBothReservations);
         $this->response = $firstReservationsOnTimeSlots;
         return $this->response();
+    }
+
+    public function markGameStatusAsStarted(Request $request){
+        if (!$request->has('reservation_id')) {
+
+            $this->error = "tennis_reservation_id_missing";
+            return $this->response();
+        }
+        $reservation = RoutineReservation::find($request->get('reservation_id'));
+
+
+        if (!$reservation) {
+
+            $this->error = "invalid_reservation";
+            return $this->response();
+        }
+
+        if($reservation->game_status != \Config::get('global.gameStatuses.not_started')){
+            $this->error = "game_already_started";
+            return $this->response();
+        }
+
+
+        $reservation->game_status = \Config::get('global.gameStatuses.started');
+        $reservation->save();
+
+        $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
+        $this->response = $firstReservationsOnTimeSlots;
+        return $this->response();
+
     }
 
 

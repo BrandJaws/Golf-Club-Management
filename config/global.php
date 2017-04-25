@@ -50,11 +50,20 @@ return [
         'initial' => 'INITIAL',
         'final' => 'FINAL'
     ],
+    'gameStatuses' => [
+        'not_started' => 'NOT STARTED',
+        'started' => 'STARTED',
+        'ended' => 'ENDED',
+    ],
+    'comingOnTime' => [
+        'not_responded' => 'NOT RESPONDED',
+        'yes' => 'YES',
+        'no' => 'NO',
+    ],
     'status'=>[
         'active'=>'ACTIVE',
         'inactive'=>'INACTIVE',
-        'closed'=>'CLOSED',
-        'open'=>'OPEN'
+        'closed'=>'CLOSED'
         
     ],
     'pushNotificationsUseCases' => [

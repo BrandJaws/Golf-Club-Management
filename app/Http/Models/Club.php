@@ -171,6 +171,7 @@ class Club extends Model {
             })
             ->leftJoin('course','routine_reservations.course_id','=','course.id')
             ->where('routine_reservations.club_id',$this->id)
+            ->where('reservation_players.reservation_status',\Config::get('global.reservation.reserved'))
             ->where('reservation_players.member_id',$member_id)
             ->whereDate('reservation_time_slots.time_start','=',$date)
             ->where('reservation_time_slots.time_start',">=",$dateTime)

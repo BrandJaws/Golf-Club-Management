@@ -21,7 +21,7 @@ class BeaconSeeder extends Seeder
         $clubList = Course::select('id')->orderBy("id", 'ASC')
             ->get()
             ->toArray();
-        for ($i = 0; $i < 20; $i ++) {
+        for ($i = 0; $i < 5; $i ++) {
             $status = $faker->randomElement(['INACTIVE','ACTIVE']);
             $randomCourse = $faker->randomElement($clubList);
             DB::table('beacon')->insert([
@@ -34,5 +34,14 @@ class BeaconSeeder extends Seeder
                 'status' => $status
             ]);
         }
+        DB::table('beacon')->insert([
+            'club_id' => 1,
+            'course_id' => 1,
+            'name' => 'Original Beacon',
+            'UUID' => 'b9407f30-f5f8-466e-aff9-25556b57fe6d',
+            'major' => '25492',
+            'minor' => '63993',
+            'status' => 'ACTIVE',
+        ]);
     }
 }

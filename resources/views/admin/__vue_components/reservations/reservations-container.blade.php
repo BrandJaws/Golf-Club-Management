@@ -291,11 +291,11 @@ Vue.component('reservations-container', {
 
                 return;
             }
-            console.log(this.reservations);
-            console.log(dragDropIndicesDataObject);
+
+            _reservationPlayerIdsToBeMoved = [this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players[dragDropIndicesDataObject.playerIndexDragged].reservation_player_id];
             var request = $.ajax({
 
-                url: "{{url('admin/reservations/move-player')}}",
+                url: "{{url('admin/reservations/move-players')}}",
                 method: "POST",
                 headers: {
                     'X-CSRF-TOKEN': '{{csrf_token()}}',
@@ -303,7 +303,7 @@ Vue.component('reservations-container', {
                 data:{
                     _method:"POST",
                     _token: "{{ csrf_token() }}",
-                    reservationPlayerIdToBeMoved:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players[dragDropIndicesDataObject.playerIndexDragged].reservation_player_id,
+                    reservationPlayerIdsToBeMoved:_reservationPlayerIdsToBeMoved,
                     reservationIdToMoveTo:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].reservation_id,
                     club_id:this.reservations.club_id,
                     course_id:this.reservations.course_id,

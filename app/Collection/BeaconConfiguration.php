@@ -3,6 +3,8 @@ namespace App\Collection;
 
 use App\Http\Models\Checkin;
 use App\Http\models\Club;
+use App\Http\Models\ReservationPlayer;
+use App\Http\Models\RoutineReservation;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -84,8 +86,15 @@ class BeaconConfiguration
         $response = new \stdClass();
         $club = $member->club;
         $nextValidReservationToday = $club->returnNextValidReservationForAMemberForCheckin($member->id);
-        if($nextValidReservationToday){
 
+
+        if($nextValidReservationToday){
+            $playersForNextValidReservation = ReservationPlayer::where("reservation_id",$nextValidReservationToday->id)
+                                                               ->where("reservation_type",RoutineReservation::class)
+                                                               ->where("reservation_status",\Config::get('global.reservation.reserved'))
+                                                               ->leftJoin("member", "reservation_players.member_id","=","member.id")
+                                                               ->select(DB::raw("CONCAT_WS(' ', member.firstName, member.lastName) as name"),"profilePic")
+                                                               ->get();
             $responseParameters = [ "clubName"=>$club->name,
                 "memberName"=>$member->firstName.' '.$member->lastName,
                 "courseName"=>$nextValidReservationToday->course_name,
@@ -93,6 +102,7 @@ class BeaconConfiguration
             ];
             $response->response = [ "message"=>trans('message.beacon_messages.welcome_with_reservation',$responseParameters),
                 "call_for_action"=>"clubEntry",
+                "members"=>$playersForNextValidReservation,
             ];
 
             return $response;
@@ -118,6 +128,7 @@ class BeaconConfiguration
         ];
         $response->response = [ "message"=>trans('message.beacon_messages.welcome_without_reservation',$responseParameters),
             "call_for_action"=>"",
+            "members"=>[]
         ];
         return $response;
 

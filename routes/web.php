@@ -67,9 +67,9 @@ Route::group([
                    'as' => 'starter',
                     'uses' => 'ClubAdmin\Reservations\ReservationsController@starter'
                 ]);
-                Route::post('/move-player', [
-                    'as' => 'movePlayer',
-                    'uses' => 'ClubAdmin\Reservations\ReservationsController@movePlayer'
+                Route::post('/move-players', [
+                    'as' => 'movePlayers',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@movePlayers'
                 ]);
             Route::post('/mark-as-started', [
                 'as' => 'markAsStarted',

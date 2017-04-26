@@ -440,29 +440,41 @@ class ReservationsController extends Controller
         return $this->response();
     }
 
-    public function movePlayer(Request $request){
+    public function movePlayers(Request $request){
 
         //return ($request->all());
+        if (
 
+            !$request->has('reservationPlayerIdsToBeMoved') ||
+            !is_array($request->get('reservationPlayerIdsToBeMoved')) ||
+            (is_array($request->get('reservationPlayerIdsToBeMoved')) && empty ($request->get('reservationPlayerIdsToBeMoved')))
 
-        if (!$request->has('reservationPlayerIdToBeMoved')) {
+        )
+        {
 
+                $this->error = "player_missing";
+                return $this->response();
+
+        }
+
+        $reservationPlayers = ReservationPlayer::whereIn('id',$request->get('reservationPlayerIdsToBeMoved'))->get();
+
+        if($reservationPlayers->count() == 0 ){
             $this->error = "player_missing";
             return $this->response();
         }
-        $reservationPlayer = ReservationPlayer::find($request->get('reservationPlayerIdToBeMoved'));
-
-        if(!$reservationPlayer){
-            $this->error = "player_missing";
-            return $this->response();
+        $memberIdsForPlayers = [];
+        foreach($reservationPlayers as $reservationPlayer){
+            $memberIdsForPlayers[] = $reservationPlayer->member_id;
         }
 
         //Following Variables Will be used at the end of the process when we would have possibly changes the reservation_id
         //for the player. We will then have no other way to refer to the reservation from which the player has been moved
-        $reservationIdFromWhichPlayerHasToBeMoved = $reservationPlayer->reservation_id;
-        $timeSlotsForReservationFromWhichPlayerHasToBeMoved = ReservationTimeSlot::where('reservation_id',$reservationIdFromWhichPlayerHasToBeMoved)
-                                                                                  ->where("reservation_type",RoutineReservation::class)
-                                                                                  ->get();
+
+        $reservationIdFromWhichPlayersHaveToBeMoved = $reservationPlayers[0]->reservation_id;
+        $timeSlotsForReservationFromWhichPlayersHaveToBeMoved = ReservationTimeSlot::where('reservation_id',$reservationIdFromWhichPlayersHaveToBeMoved)
+            ->where("reservation_type",RoutineReservation::class)
+            ->get();
         if (!$request->has('course_id')) {
             $this->error = "mobile_invalid_course_identifire";
             return $this->response();
@@ -486,7 +498,7 @@ class ReservationsController extends Controller
             }
             $course = Course::where("id",$reservationToMoveTo->course_id)->with("club")->first();
 
-            $playersWithOtherReservationsInBetween = $course->club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $reservationToMoveTo->reservation_time_slots[0]->time_start, [$reservationPlayer->member_id],[$reservationPlayer->reservation_id]);
+            $playersWithOtherReservationsInBetween = $course->club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $reservationToMoveTo->reservation_time_slots[0]->time_start, $memberIdsForPlayers,[$reservationPlayers[0]->reservation_id]);
 
             if ($playersWithOtherReservationsInBetween != null) {
                 $this->error = "players_already_have_booking";
@@ -502,21 +514,24 @@ class ReservationsController extends Controller
 
                 })
                 ->count('group_size');
-            if($reservedOrPendingReservedCountForReservation >= 4){
+            if($reservedOrPendingReservedCountForReservation + $reservationPlayers->count() > 4){
                 $this->error = "mobile_slot_already_reserved";
                 return $this->response();
             }
 
-            //Proceed to move player
-            $reservationPlayer->reservation_id = $reservationToMoveTo->id;
-            $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
-            $reservationPlayer->save();
+            //Proceed to move players
+            foreach($reservationPlayers as $reservationPlayer){
+                $reservationPlayer->reservation_id = $reservationToMoveTo->id;
+                $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
+                $reservationPlayer->save();
+            }
 
-            $timeSlotsForBothReservations = $reservationToMoveTo->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayerHasToBeMoved);
+
+            $timeSlotsForBothReservations = $reservationToMoveTo->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayersHaveToBeMoved);
 
 
 
-        //Else we need to find a reservation for the timeslot or create a new reservation at that timeslot if none found
+            //Else we need to find a reservation for the timeslot or create a new reservation at that timeslot if none found
         }else{
 
             if (!$request->has('reservationTimeSlotToMoveTo')) {
@@ -546,24 +561,28 @@ class ReservationsController extends Controller
                 }
 
                 $reservedOrPendingReservedCountForReservation = ReservationPlayer::where("reservation_id",$reservationsOnTimeSlot[0]->reservation_id)
-                                                                                 ->where("reservation_type",RoutineReservation::class)
-                                                                                 ->where(function($query){
-                                                                                     $query->where("reservation_status",\Config::get('global.reservation.reserved'))
-                                                                                           ->orWhere("reservation_status",\Config::get('global.reservation.pending_reserved'));
+                    ->where("reservation_type",RoutineReservation::class)
+                    ->where(function($query){
+                        $query->where("reservation_status",\Config::get('global.reservation.reserved'))
+                            ->orWhere("reservation_status",\Config::get('global.reservation.pending_reserved'));
 
-                                                                                 })
-                                                                                 ->count('group_size');
-                if($reservedOrPendingReservedCountForReservation >= 4){
+                    })
+                    ->count('group_size');
+
+
+                if($reservedOrPendingReservedCountForReservation + $reservationPlayers->count() > 4){
                     $this->error = "mobile_slot_already_reserved";
                     return $this->response();
                 }
 
-                //Proceed to move player
-                $reservationPlayer->reservation_id = $reservationsOnTimeSlot[0]->reservation_id;
-                $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
-                $reservationPlayer->save();
+                //Proceed to move players
+                foreach($reservationPlayers as $reservationPlayer){
+                    $reservationPlayer->reservation_id = $reservation->id;
+                    $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
+                    $reservationPlayer->save();
+                }
 
-                $timeSlotsForBothReservations = $reservation->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayerHasToBeMoved);
+                $timeSlotsForBothReservations = $reservation->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayersHaveToBeMoved);
 
             }else{
                 if (!$request->has('club_id')) {
@@ -580,7 +599,7 @@ class ReservationsController extends Controller
 
 
 
-                $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startDateTime, [$reservationPlayer->member_id],[$reservationPlayer->reservation_id]);
+                $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startDateTime, $memberIdsForPlayers,[$reservationPlayers[0]->reservation_id]);
                 if ($playersWithOtherReservationsInBetween != null) {
                     $this->error = "players_already_have_booking";
                     $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
@@ -589,21 +608,259 @@ class ReservationsController extends Controller
                 $reservationData ['club_id'] = $course->club_id;
                 $reservationData ['course_id'] = $course->id;
 
-
                 $reservation = RoutineReservation::create($reservationData);
                 $reservation->attachTimeSlot($startDateTime);
-                //Proceed to move player
-                $reservationPlayer->reservation_id = $reservation->id;
-                $reservationPlayer->save();
 
-                $timeSlotsForBothReservations = $reservation->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayerHasToBeMoved);
+                //Proceed to move players
+                foreach($reservationPlayers as $reservationPlayer){
+                    $reservationPlayer->reservation_id = $reservation->id;
+                    $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
+                    $reservationPlayer->save();
+                }
+
+
+
+                $timeSlotsForBothReservations = $reservation->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayersHaveToBeMoved);
 
 
             }
 
         }
 
-        $reservationFromWhichPlayerWasMoved = RoutineReservation::findAndGroupReservationForReservationProcess($reservationIdFromWhichPlayerHasToBeMoved);
+        $reservationFromWhichPlayerWasMoved = RoutineReservation::findAndGroupReservationForReservationProcess($reservationIdFromWhichPlayersHaveToBeMoved);
+        if($reservationFromWhichPlayerWasMoved->reservation_players->count() > 0){
+
+            $reservationFromWhichPlayerWasMoved->updateReservationStatusesForAReservation();
+
+        }else{
+            foreach ($reservationFromWhichPlayerWasMoved->reservation_time_slots as $timeSlot) {
+                $timeSlot->delete();
+            }
+
+            $reservationFromWhichPlayerWasMoved->delete();
+        }
+
+        $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($course->id, $timeSlotsForBothReservations);
+        $this->response = $firstReservationsOnTimeSlots;
+        return $this->response();
+    }
+
+    public function swapSlots(Request $request){
+
+
+        if (!$request->has('reservationIdFirst'))
+        {
+
+            $this->error = "player_missing";
+            return $this->response();
+
+        }
+        if (!$request->has('reservationTypeFirst'))
+        {
+
+            $this->error = "player_missing";
+            return $this->response();
+
+        }
+        if (!$request->has('reservationIdSecond'))
+        {
+
+            $this->error = "player_missing";
+            return $this->response();
+
+        }
+        if (!$request->has('reservationTypeSecond'))
+        {
+
+            $this->error = "player_missing";
+            return $this->response();
+
+        }
+        if($request->get('reservationTypeFirst')!= $request->get('reservationTypeSecond')){
+            $this->error = "player_missing";
+            return $this->response();
+        }
+
+        $reservationFirst = RoutineReservation::where('id',$request->get('reservationIdFirst'))->with('reservation_players','reservation_time_slots')->first();
+        if(!$reservationFirst){
+            $this->error = "invalid_reservation";
+            return $this->response();
+
+        }
+        $reservationSecond = RoutineReservation::where('id',$request->get('reservationIdSecond'))->with('reservation_players','reservation_time_slots')->first();
+
+
+        $reservationPlayers = ReservationPlayer::whereIn('id',$request->get('reservationIdFirst'))->get();
+
+        if($reservationPlayers->count() == 0 ){
+            $this->error = "player_missing";
+            return $this->response();
+        }
+        $memberIdsForPlayers = [];
+        foreach($reservationPlayers as $reservationPlayer){
+            $memberIdsForPlayers[] = $reservationPlayer->member_id;
+        }
+
+        //Following Variables Will be used at the end of the process when we would have possibly changes the reservation_id
+        //for the player. We will then have no other way to refer to the reservation from which the player has been moved
+
+        $reservationIdFromWhichPlayersHaveToBeMoved = $reservationPlayers[0]->reservation_id;
+        $timeSlotsForReservationFromWhichPlayersHaveToBeMoved = ReservationTimeSlot::where('reservation_id',$reservationIdFromWhichPlayersHaveToBeMoved)
+            ->where("reservation_type",RoutineReservation::class)
+            ->get();
+        if (!$request->has('course_id')) {
+            $this->error = "mobile_invalid_course_identifire";
+            return $this->response();
+        }
+
+        $course = Course::find($request->get('course_id'));
+
+        if (!$course) {
+            $this->error = "mobile_invalid_court";
+            return $this->response();
+        }
+
+        //If we have the reservation id, we can find the reservation and proceed with the process
+        if ($request->has('reservationIdToMoveTo')) {
+
+
+            $reservationToMoveTo = RoutineReservation::where("id",$request->get('reservationIdToMoveTo'))->with('reservation_time_slots')->first();
+            if(!$reservationToMoveTo){
+                $this->error = "invalid_reservation";
+                return $this->response();
+            }
+            $course = Course::where("id",$reservationToMoveTo->course_id)->with("club")->first();
+
+            $playersWithOtherReservationsInBetween = $course->club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $reservationToMoveTo->reservation_time_slots[0]->time_start, $memberIdsForPlayers,[$reservationPlayers[0]->reservation_id]);
+
+            if ($playersWithOtherReservationsInBetween != null) {
+                $this->error = "players_already_have_booking";
+                $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
+                return $this->response();
+            }
+
+            $reservedOrPendingReservedCountForReservation = ReservationPlayer::where("reservation_id",$reservationToMoveTo->id)
+                ->where("reservation_type",RoutineReservation::class)
+                ->where(function($query){
+                    $query->where("reservation_status",\Config::get('global.reservation.reserved'))
+                        ->orWhere("reservation_status",\Config::get('global.reservation.pending_reserved'));
+
+                })
+                ->count('group_size');
+            if($reservedOrPendingReservedCountForReservation + $reservationPlayers->count() > 4){
+                $this->error = "mobile_slot_already_reserved";
+                return $this->response();
+            }
+
+            //Proceed to move players
+            foreach($reservationPlayers as $reservationPlayer){
+                $reservationPlayer->reservation_id = $reservationToMoveTo->id;
+                $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
+                $reservationPlayer->save();
+            }
+
+
+            $timeSlotsForBothReservations = $reservationToMoveTo->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayersHaveToBeMoved);
+
+
+
+            //Else we need to find a reservation for the timeslot or create a new reservation at that timeslot if none found
+        }else{
+
+            if (!$request->has('reservationTimeSlotToMoveTo')) {
+
+                $this->error = "mobile_reservation_time_missing";
+                return $this->response();
+            }
+
+            if (!$request->has('reservationDateToMoveTo')) {
+
+                $this->error = "date_time_not_found";
+                return $this->response();
+            }
+
+            $startDateTime = Carbon::parse(Carbon::parse($request->get('reservationDateToMoveTo'))->format('Y-m-d') . " " . Carbon::parse($request->get('reservationTimeSlotToMoveTo'))->toTimeString());
+            $reservationsOnTimeSlot = $course->getResevationsAtCourseForATimeSlot($startDateTime);
+
+            if ($reservationsOnTimeSlot->count() >= 1) {
+                if($reservationsOnTimeSlot[0]->reservation_type != RoutineReservation::class){
+                    $this->error = "cant_move_to_different_type_of_reservation";
+                    return $this->response();
+                }else{
+                    $reservation = new RoutineReservation();
+                    $reservation->id = $reservationsOnTimeSlot[0]->reservation_id;
+                    $reservation->course_id = $reservationsOnTimeSlot[0]->course_id;
+
+                }
+
+                $reservedOrPendingReservedCountForReservation = ReservationPlayer::where("reservation_id",$reservationsOnTimeSlot[0]->reservation_id)
+                    ->where("reservation_type",RoutineReservation::class)
+                    ->where(function($query){
+                        $query->where("reservation_status",\Config::get('global.reservation.reserved'))
+                            ->orWhere("reservation_status",\Config::get('global.reservation.pending_reserved'));
+
+                    })
+                    ->count('group_size');
+
+
+                if($reservedOrPendingReservedCountForReservation + $reservationPlayers->count() > 4){
+                    $this->error = "mobile_slot_already_reserved";
+                    return $this->response();
+                }
+
+                //Proceed to move players
+                foreach($reservationPlayers as $reservationPlayer){
+                    $reservationPlayer->reservation_id = $reservation->id;
+                    $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
+                    $reservationPlayer->save();
+                }
+
+                $timeSlotsForBothReservations = $reservation->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayersHaveToBeMoved);
+
+            }else{
+                if (!$request->has('club_id')) {
+                    $this->error = "mobile_invalid_club_identifire";
+                    return $this->response();
+                }
+
+                $club = Club::find($request->get('club_id'));
+
+                if (is_null($club) && count($club) < 1) {
+                    $this->error = "mobile_invalid_club";
+                    return $this->response();
+                }
+
+
+
+                $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startDateTime, $memberIdsForPlayers,[$reservationPlayers[0]->reservation_id]);
+                if ($playersWithOtherReservationsInBetween != null) {
+                    $this->error = "players_already_have_booking";
+                    $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
+                    return $this->response();
+                }
+                $reservationData ['club_id'] = $course->club_id;
+                $reservationData ['course_id'] = $course->id;
+
+                $reservation = RoutineReservation::create($reservationData);
+                $reservation->attachTimeSlot($startDateTime);
+
+                //Proceed to move players
+                foreach($reservationPlayers as $reservationPlayer){
+                    $reservationPlayer->reservation_id = $reservation->id;
+                    $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
+                    $reservationPlayer->save();
+                }
+
+
+
+                $timeSlotsForBothReservations = $reservation->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayersHaveToBeMoved);
+
+
+            }
+
+        }
+
+        $reservationFromWhichPlayerWasMoved = RoutineReservation::findAndGroupReservationForReservationProcess($reservationIdFromWhichPlayersHaveToBeMoved);
         if($reservationFromWhichPlayerWasMoved->reservation_players->count() > 0){
 
             $reservationFromWhichPlayerWasMoved->updateReservationStatusesForAReservation();

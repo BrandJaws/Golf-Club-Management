@@ -34,8 +34,8 @@ class BeaconController extends Controller
         $search = $request->has('search') ? $request->get('search') : false;
         $currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
         $perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
-        $beacon = (new Beacon())->paginatedList(Auth::user()->club_id, $currentPage, $perPage, $search);
-        
+        $beacon = (new Beacon())->paginatedList(Auth::user()->club_id, $perPage,$currentPage,  $search);
+
         if ($request->ajax()) {
             return $beacon;
         }

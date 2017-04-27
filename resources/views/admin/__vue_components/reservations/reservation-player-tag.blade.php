@@ -6,13 +6,12 @@ var _onDeleteTagStyle = {
 Vue.component('reservation-player-tag', {
     template: `
 
-                  <li :style ="[applyDeleteTagBg ? onDeleteTagStyle : null]" :draggable="draggable" @dragstart="dragStarted($event,reservationIndices)" >@{{reservationPlayer.member_name}}<a href="#." v-if="deletableData" @click.prevent="deletePlayerClicked"><i class="fa fa-times"></i></a></li>
+                  <li :style ="[applyDeleteTagBg ? onDeleteTagStyle : null]" :draggable="draggable" @dragstart="dragStarted($event)" class="reservation-player-tag">@{{reservationPlayer.member_name}}<a href="#." v-if="deletableData" @click.prevent="deletePlayerClicked"><i class="fa fa-times"></i></a></li>
 
             `,
     props: [
             "reservationPlayer",
             "deletable",
-            "reservationIndices",
             "draggable"
             
             
@@ -38,7 +37,7 @@ Vue.component('reservation-player-tag', {
             this.$emit('deletePlayer');
             
         },
-        dragStarted:function(event,reservationIndices){
+        dragStarted:function(event){
             this.$emit("dragstart",event);
 
 

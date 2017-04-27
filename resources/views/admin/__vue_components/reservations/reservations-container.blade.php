@@ -291,7 +291,7 @@ Vue.component('reservations-container', {
 
                 return;
             }
-
+            console.log(dragDropIndicesDataObject);
             _reservationPlayerIdsToBeMoved = [this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players[dragDropIndicesDataObject.playerIndexDragged].reservation_player_id];
             var request = $.ajax({
 

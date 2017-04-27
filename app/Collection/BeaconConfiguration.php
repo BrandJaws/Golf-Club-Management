@@ -93,7 +93,7 @@ class BeaconConfiguration
                                                                ->where("reservation_type",RoutineReservation::class)
                                                                ->where("reservation_status",\Config::get('global.reservation.reserved'))
                                                                ->leftJoin("member", "reservation_players.member_id","=","member.id")
-                                                               ->select(DB::raw("CONCAT_WS(' ', member.firstName, member.lastName) as name"),"profilePic")
+                                                               ->select(DB::raw("IF(CONCAT_WS(' ', member.firstName, member.lastName) <> '',CONCAT_WS(' ', member.firstName, member.lastName),'Guest') as name"),"profilePic")
                                                                ->get();
             $responseParameters = [ "clubName"=>$club->name,
                 "memberName"=>$member->firstName.' '.$member->lastName,

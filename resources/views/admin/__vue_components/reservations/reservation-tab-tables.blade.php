@@ -13,11 +13,11 @@ Vue.component('reservation-tab-tables', {
                         <div class="table-responsive">
                             <table class="table table-hover b-t">
                                 <tbody>
-                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter" @dragover="dragOver($event,timeSlot)" @drop.prevent="dragDroppedPlayer($event,timeSlot,reservationByDateIndex, timeSlotIndex)">
+                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter" @dragover="dragOver($event,timeSlot)" @drop.prevent="dragDroppedPlayer($event,timeSlot,reservationByDateIndex, timeSlotIndex)" draggable="true" @dragstart="dragStarted($event,{dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex})">
                                     <td >@{{timeSlot.timeSlot}}</td>
                                     <td width="80%">
                                       <ul class="members-add" >
-                                          <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer" :reservation-indices="{dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex}" draggable="true" @dragstart="dragStarted($event,{dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex})" ></reservation-player-tag>
+                                          <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer"  draggable="true" @dragstart="dragStarted($event,{dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex})" ></reservation-player-tag>
                                           <li class="add-btn" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])"><a href="#."><i class="fa fa-plus"></i></a></li>
                                       </ul>
                                     </td>
@@ -103,8 +103,21 @@ Vue.component('reservation-tab-tables', {
             this.$emit("drag-drop-operation",dragDropIndicesData);
         },
         dragStarted:function(event,reservationIndices){
+            console.log(reservationIndices.playerIndexDragged);
+            console.log(event.target);
+            if(event.target.className.search("reservation-player-tag") !== -1 && reservationIndices.playerIndexDragged !== -1 ){
+                event.dataTransfer.setData("indicesObjectOfDraggedPlayer", JSON.stringify(reservationIndices));
+            }
 
-            event.dataTransfer.setData("indicesObjectOfDraggedPlayer", JSON.stringify(reservationIndices));
+
+        },
+        dragStarted:function(event,reservationIndices){
+            console.log(reservationIndices.playerIndexDragged);
+            console.log(event.target);
+            if(event.target.className.search("reservation-player-tag") !== -1 && reservationIndices.playerIndexDragged !== -1 ){
+                event.dataTransfer.setData("indicesObjectOfDraggedPlayer", JSON.stringify(reservationIndices));
+            }
+
 
         }
     },

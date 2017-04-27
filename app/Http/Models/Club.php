@@ -173,8 +173,10 @@ class Club extends Model {
             ->where('routine_reservations.club_id',$this->id)
             ->where('reservation_players.reservation_status',\Config::get('global.reservation.reserved'))
             ->where('reservation_players.member_id',$member_id)
+
             ->whereDate('reservation_time_slots.time_start','=',$date)
-            ->where('reservation_time_slots.time_start',">=",$dateTime)
+            //            //Disabled On request from IOS Guy
+//            ->where('reservation_time_slots.time_start',">=",$dateTime)
             //->unionAll($nextValidTrainingForPlayerToday)
 
             ->first();

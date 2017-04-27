@@ -13,11 +13,11 @@ Vue.component('reservation-tab-tables', {
                         <div class="table-responsive">
                             <table class="table table-hover b-t">
                                 <tbody>
-                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter" @dragover="dragOver($event,timeSlot)" @drop.prevent="dragDroppedPlayer($event,timeSlot,reservationByDateIndex, timeSlotIndex)" draggable="true" @dragstart="dragStarted($event,{dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex})">
+                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter" @dragover="dragOver($event,timeSlot)" @drop.prevent="dragDropped($event,timeSlot,reservationByDateIndex, timeSlotIndex)" draggable="true" @dragstart="dragTimeSlotStarted($event,{objectType:'timeSlot',dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex})">
                                     <td >@{{timeSlot.timeSlot}}</td>
                                     <td width="80%">
                                       <ul class="members-add" >
-                                          <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer"  draggable="true" @dragstart="dragStarted($event,{dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex})" ></reservation-player-tag>
+                                          <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer"  draggable="true" @dragstart="dragPlayerStarted($event,{objectType:'player',dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex})" ></reservation-player-tag>
                                           <li class="add-btn" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])"><a href="#."><i class="fa fa-plus"></i></a></li>
                                       </ul>
                                     </td>
@@ -82,38 +82,43 @@ Vue.component('reservation-tab-tables', {
             }
             event.preventDefault();
         },
-        dragDroppedPlayer:function (event, timeSlot,dateIndexDroppedInto,timeIndexDroppedInto) {
-            indicesObjectOfDraggedPlayer = JSON.parse(event.dataTransfer.getData("indicesObjectOfDraggedPlayer"));
+        dragDropped:function (event, timeSlot,dateIndexDroppedInto,timeIndexDroppedInto) {
+            indicesObjectOfDraggedObject = JSON.parse(event.dataTransfer.getData("indicesObjectOfDraggedPlayer"));
             if(timeSlot.reservations[0].players.length >= 4 ){
                 //console.log("Time Slot Fully Booked");
                 return false;
             }
-            if( timeIndexDroppedInto == indicesObjectOfDraggedPlayer.timeIndexDraggedFrom){
+            if( timeIndexDroppedInto == indicesObjectOfDraggedObject.timeIndexDraggedFrom){
 
                 return;
             }
 
             dragDropIndicesData = {};
-            dragDropIndicesData.dateIndexDraggedFrom = indicesObjectOfDraggedPlayer.dateIndexDraggedFrom;
-            dragDropIndicesData.timeIndexDraggedFrom = indicesObjectOfDraggedPlayer.timeIndexDraggedFrom;
-            dragDropIndicesData.playerIndexDragged = indicesObjectOfDraggedPlayer.playerIndexDragged;
+            dragDropIndicesData.dateIndexDraggedFrom = indicesObjectOfDraggedObject.dateIndexDraggedFrom;
+            dragDropIndicesData.timeIndexDraggedFrom = indicesObjectOfDraggedObject.timeIndexDraggedFrom;
+            dragDropIndicesData.playerIndexDragged = indicesObjectOfDraggedObject.playerIndexDragged;
             dragDropIndicesData.dateIndexDroppedInto = dateIndexDroppedInto;
             dragDropIndicesData.timeIndexDroppedInto = timeIndexDroppedInto;
 
-            this.$emit("drag-drop-operation",dragDropIndicesData);
-        },
-        dragStarted:function(event,reservationIndices){
-            console.log(reservationIndices.playerIndexDragged);
-            console.log(event.target);
-            if(event.target.className.search("reservation-player-tag") !== -1 && reservationIndices.playerIndexDragged !== -1 ){
-                event.dataTransfer.setData("indicesObjectOfDraggedPlayer", JSON.stringify(reservationIndices));
+            if(indicesObjectOfDraggedObject.objectType === "player"){
+                this.$emit("drag-drop-player",dragDropIndicesData);
+            }else if(indicesObjectOfDraggedObject.objectType === "timeSlot"){
+                this.$emit("drag-drop-timeslot",dragDropIndicesData);
             }
 
+        },
+        dragPlayerStarted:function(event,reservationIndices){
+
+            event.stopPropagation();
+            event.dataTransfer.setData("indicesObjectOfDraggedPlayer", JSON.stringify(reservationIndices));
+
+
 
         },
-        dragStarted:function(event,reservationIndices){
-            console.log(reservationIndices.playerIndexDragged);
-            console.log(event.target);
+        dragTimeSlotStarted:function(event,reservationIndices){
+
+            console.log("drag TimeSlot Started");
+            console.log(reservationIndices);
             if(event.target.className.search("reservation-player-tag") !== -1 && reservationIndices.playerIndexDragged !== -1 ){
                 event.dataTransfer.setData("indicesObjectOfDraggedPlayer", JSON.stringify(reservationIndices));
             }

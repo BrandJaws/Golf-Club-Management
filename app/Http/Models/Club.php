@@ -175,8 +175,11 @@ class Club extends Model {
             ->where('reservation_players.member_id',$member_id)
 
             ->whereDate('reservation_time_slots.time_start','=',$date)
-            //            //Disabled On request from IOS Guy
+            
+//            Disabled On request from IOS Guy
 //            ->where('reservation_time_slots.time_start',">=",$dateTime)
+
+
             //->unionAll($nextValidTrainingForPlayerToday)
 
             ->first();

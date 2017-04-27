@@ -45,7 +45,8 @@ Vue.component('reservations-container', {
                                 @edit-reservation="editReservationEventTriggered" 
                                 @new-reservation="newReservationEventTriggered"
                                 @delete-reservation="deleteReservation($event,false)"
-                                @drag-drop-operation="dragDropOperationPerformed"
+                                @drag-drop-player="dragDropPlayerPerformed"
+                                @drag-drop-timeslot="dragDropTimeSlotPerformed"
                         >
                         </reservation-tab-tables>
                 
@@ -273,7 +274,7 @@ Vue.component('reservations-container', {
                 case "deleteReservation":
                     this[this.dataHeldForConfirmation.methodToFollow](this.dataHeldForConfirmation.reservationIdToBeDeleted, true);
                     break;
-                case "dragDropOperationPerformed":
+                case "dragDropPlayerPerformed":
                     this[this.dataHeldForConfirmation.methodToFollow](this.dataHeldForConfirmation.dragDropIndicesDataObject, true);
                     break;
 
@@ -281,12 +282,12 @@ Vue.component('reservations-container', {
 
 
         },
-        dragDropOperationPerformed:function (dragDropIndicesDataObject,confirmed) {
+        dragDropPlayerPerformed:function (dragDropIndicesDataObject,confirmed) {
 
             if(!confirmed){
                 this.displayConfirmationPopup();
                 this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to move this player to another time slot?";
-                this.dataHeldForConfirmation.methodToFollow = "dragDropOperationPerformed";
+                this.dataHeldForConfirmation.methodToFollow = "dragDropPlayerPerformed";
                 this.dataHeldForConfirmation.dragDropIndicesDataObject = dragDropIndicesDataObject;
 
                 return;
@@ -332,6 +333,57 @@ Vue.component('reservations-container', {
 
 
         },
+        dragDropTimeSlotPerformed:function (dragDropIndicesDataObject,confirmed) {
+
+            if(!confirmed){
+                this.displayConfirmationPopup();
+                this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to swap these time slots?";
+                this.dataHeldForConfirmation.methodToFollow = "dragDropTimeSlotPerformed";
+                this.dataHeldForConfirmation.dragDropIndicesDataObject = dragDropIndicesDataObject;
+
+                return;
+            }
+
+            var request = $.ajax({
+
+                url: "{{url('admin/reservations/move-players')}}",
+                method: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}',
+                },
+                data:{
+                    _method:"POST",
+                    _token: "{{ csrf_token() }}",
+                    reservationPlayerIdsToBeMoved:_reservationPlayerIdsToBeMoved,
+                    reservationIdToMoveTo:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].reservation_id,
+                    club_id:this.reservations.club_id,
+                    course_id:this.reservations.course_id,
+                    reservationTimeSlotToMoveTo:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].timeSlot,
+                    reservationDateToMoveTo:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reserved_at,
+
+                },
+                success:function(msg){
+                    console.log(msg);
+                    this.updateReservations(msg.response);
+                    //Perform actual move logic for server and if successful emit event and close popup;
+                    // this.$emit("drag-drop-operation",dragDropIndicesDataObject);
+                    this.closeConfirmationPopup();
+                }.bind(this),
+
+                error: function(jqXHR, textStatus ) {
+                    this.ajaxRequestInProcess = false;
+                    console.log(jqXHR);
+                    //Error code to follow
+                    if(jqXHR.hasOwnProperty("responseText")){
+                        this.confirmationPopupErrorMessage = JSON.parse(jqXHR.responseText).response;
+                    }
+
+                }.bind(this)
+            });
+
+
+        },
+
     }
   
 });

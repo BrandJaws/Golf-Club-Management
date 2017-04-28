@@ -274,37 +274,52 @@ class Member extends Authenticatable
     public static function getAllReservationsForAMemberById($memberId)
     {
         $querySetMemberId = "SET @memberId = :memberId ";
-        
-        $query = " SELECT ";
-        $query .= " tennis_reservation.id as tennis_reservation_id, ";
-        $query .= " court.name as court_name, ";
-        $query .= " tennis_reservation.time_start, ";
-        $query .= " tennis_reservation.time_end, ";
-        $query .= " GROUP_CONCAT(CONCAT_WS(' ', firstName, lastName)) as players ";
-        $query .= " FROM ";
-        $query .= " member ";
-        $query .= " LEFT JOIN tennis_reservation_player ON tennis_reservation_player.player_id = member.id ";
-        $query .= " LEFT JOIN tennis_reservation ON tennis_reservation_player.tennis_reservation_id = tennis_reservation.id ";
-        $query .= " LEFT JOIN court ON court.id = tennis_reservation.court_id ";
-        $query .= " WHERE tennis_reservation_id in ( ";
-        $query .= "      SELECT DISTINCT(tennis_reservation_id) FROM tennis_reservation_player  ";
-        $query .= "      WHERE player_id = @memberId ";
-        $query .= " ) AND tennis_reservation_player.player_id <> @memberId GROUP BY tennis_reservation.id ORDER BY tennis_reservation.id ";
-        $query .= " ";
-        
+
+        $query  = "     SELECT ";
+        $query .= "     course.club_id as club_id, ";
+        $query .= "     course.id as course_id, ";
+        $query .= "     course.name as course_name, ";
+        $query .= "     routine_reservations.id as reservation_id, ";
+        $query .= "     reservation_time_slots.reservation_type as reservation_type, ";
+        $query .= "     GROUP_CONCAT(IFNULL(reservation_players.parent_id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as parent_ids, ";
+        $query .= "     reservation_time_slots.time_start as date_time_start, ";
+        $query .= "     TIME(reservation_time_slots.time_start) as time_start, ";
+        $query .= "     DATE(reservation_time_slots.time_start) as reserved_at, ";
+        $query .= "     GROUP_CONCAT(IFNULL(reservation_players.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_player_ids, ";
+        $query .= "     GROUP_CONCAT(IFNULL(member.id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as member_ids, ";
+        $query .= "     GROUP_CONCAT(IF(CONCAT_WS(' ', member.firstName, member.lastName) <> ' ',CONCAT_WS(' ', member.firstName, member.lastName),'Guest') ORDER BY reservation_players.id ASC SEPARATOR '||-separation-player-||' ) as member_names, ";
+        $query .= "     GROUP_CONCAT(IFNULL( member.profilePic,' ') ORDER BY reservation_players.id ASC SEPARATOR '||-separation-player-||' ) as member_profile_pics, ";
+        $query .= "     GROUP_CONCAT(IFNULL(reservation_players.reservation_status,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as reservation_statuses, ";
+        $query .= "     GROUP_CONCAT(IFNULL(reservation_players.response_status,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as response_statuses, ";
+        $query .= "     GROUP_CONCAT(IFNULL(reservation_players.comingOnTime,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as comingOnTime_responses, ";
+        $query .= "     GROUP_CONCAT(IFNULL(reservation_players.process_type,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as processTypes, ";
+        $query .= "     routine_reservations.game_status, ";
+        $query .= "     GROUP_CONCAT(IF(checkins_for_clubEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as club_entries, ";
+        $query .= "     GROUP_CONCAT(IF(checkins_for_gameEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as game_entries ";
+        $query .= "     FROM ";
+        $query .= "     routine_reservations ";
+        $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";
+        $query .= "     LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND reservation_time_slots.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
+        $query .= "     LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND reservation_players.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
+        $query .= "     LEFT JOIN member ON reservation_players.member_id = member.id ";
+        $query .= "     LEFT JOIN checkins as checkins_for_clubEntry ON checkins_for_clubEntry.action = 'CLUB ENTRY' AND checkins_for_clubEntry.member_id = member.id AND checkins_for_clubEntry.reservation_id = routine_reservations.id AND checkins_for_clubEntry.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
+        $query .= "     LEFT JOIN checkins as checkins_for_gameEntry ON checkins_for_gameEntry.action = 'GAME ENTRY' AND checkins_for_gameEntry.member_id = member.id AND checkins_for_gameEntry.reservation_id = routine_reservations.id AND checkins_for_gameEntry.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
+        $query .= "     WHERE ";
+        $query .= "     routine_reservations.id IN ( ";
+        $query .= "      SELECT DISTINCT(reservation_id) FROM reservation_players  ";
+        $query .= "      WHERE member_id = @memberId AND reservation_type='".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
+        $query .= "     )";
+        $query .= "     AND reservation_time_slots.time_start >= '".Carbon::today()->toDateString()."'";
+        $query .= "     GROUP BY course.id,course.club_id,course.name,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type";
+
+
+
         DB::statement(DB::raw($querySetMemberId), [
             "memberId" => $memberId
         ]);
         $reservations = DB::select(DB::raw($query));
         
-        foreach ($reservations as $index => $reservation) {
-            $reservations[$index]->date = Carbon::Parse($reservation->time_start)->toDateString();
-            $reservations[$index]->time_start = Carbon::Parse($reservation->time_start)->format('h:i A');
-            $reservations[$index]->time_end = Carbon::Parse($reservation->time_end)->format('h:i A');
-            $reservations[$index]->players = explode(",", $reservations[$index]->players);
-        }
-        
-        return $reservations;
+        return Course::returnReseravtionObjectsArrayFromReservationArray($reservations);
     }
 
     public function getPushNotificationsForMember($currentPage, $perPage) {

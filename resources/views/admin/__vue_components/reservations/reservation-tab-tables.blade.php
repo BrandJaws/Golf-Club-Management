@@ -84,7 +84,7 @@ Vue.component('reservation-tab-tables', {
         },
         dragDropped:function (event, timeSlot,dateIndexDroppedInto,timeIndexDroppedInto) {
             indicesObjectOfDraggedObject = JSON.parse(event.dataTransfer.getData("indicesObjectOfDraggedPlayer"));
-            if(timeSlot.reservations[0].players.length >= 4 ){
+            if(timeSlot.reservations[0].players.length >= 4 && indicesObjectOfDraggedObject.objectType === "player"){
                 //console.log("Time Slot Fully Booked");
                 return false;
             }
@@ -117,11 +117,9 @@ Vue.component('reservation-tab-tables', {
         },
         dragTimeSlotStarted:function(event,reservationIndices){
 
-            console.log("drag TimeSlot Started");
-            console.log(reservationIndices);
-            if(event.target.className.search("reservation-player-tag") !== -1 && reservationIndices.playerIndexDragged !== -1 ){
-                event.dataTransfer.setData("indicesObjectOfDraggedPlayer", JSON.stringify(reservationIndices));
-            }
+
+            event.dataTransfer.setData("indicesObjectOfDraggedPlayer", JSON.stringify(reservationIndices));
+
 
 
         }

@@ -79,8 +79,7 @@ Route::group([
 		Route::get('/notifications', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getPushNotificationsForMemberById']);
 		Route::get('/notifications/delete/{notification_id}', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\MembersController@deletePushNotificationForMemberById']);
 		Route::get('/notifications/delete-all', ['as' => 'deleteAllNotificatoions', 'uses' => '\App\Http\Controllers\Mobile\MembersController@deleteAllPushNotificationForMember']);
-
-		//Route::get('/reservations', ['as' => 'getReservations', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getReservationsForMember']);
+		Route::get('/reservations', ['as' => 'getReservations', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getReservationsForMember']);
 	});
 
 	Route::group(['prefix' => 'trainings', 'as' => 'trainings.'], function() {

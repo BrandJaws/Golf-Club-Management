@@ -277,6 +277,9 @@ Vue.component('reservations-container', {
                 case "dragDropPlayerPerformed":
                     this[this.dataHeldForConfirmation.methodToFollow](this.dataHeldForConfirmation.dragDropIndicesDataObject, true);
                     break;
+                case "dragDropTimeSlotPerformed":
+                    this[this.dataHeldForConfirmation.methodToFollow](this.dataHeldForConfirmation.dragDropIndicesDataObject, true);
+                    break;
 
             }
 
@@ -293,7 +296,7 @@ Vue.component('reservations-container', {
                 return;
             }
             console.log(dragDropIndicesDataObject);
-            _reservationPlayerIdsToBeMoved = [this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players[dragDropIndicesDataObject.playerIndexDragged].reservation_player_id];
+
             var request = $.ajax({
 
                 url: "{{url('admin/reservations/move-players')}}",
@@ -304,7 +307,7 @@ Vue.component('reservations-container', {
                 data:{
                     _method:"POST",
                     _token: "{{ csrf_token() }}",
-                    reservationPlayerIdsToBeMoved:_reservationPlayerIdsToBeMoved,
+                    reservationPlayerIdsToBeMoved:[this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players[dragDropIndicesDataObject.playerIndexDragged].reservation_player_id],
                     reservationIdToMoveTo:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].reservation_id,
                     club_id:this.reservations.club_id,
                     course_id:this.reservations.course_id,
@@ -346,7 +349,7 @@ Vue.component('reservations-container', {
 
             var request = $.ajax({
 
-                url: "{{url('admin/reservations/move-players')}}",
+                url: "{{url('admin/reservations/swap-timeslots')}}",
                 method: "POST",
                 headers: {
                     'X-CSRF-TOKEN': '{{csrf_token()}}',
@@ -354,12 +357,12 @@ Vue.component('reservations-container', {
                 data:{
                     _method:"POST",
                     _token: "{{ csrf_token() }}",
-                    reservationPlayerIdsToBeMoved:_reservationPlayerIdsToBeMoved,
-                    reservationIdToMoveTo:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].reservation_id,
+                    reservationIdFirst:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].reservation_id,
+                    reservationIdSecond:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].reservation_id,
                     club_id:this.reservations.club_id,
                     course_id:this.reservations.course_id,
-                    reservationTimeSlotToMoveTo:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].timeSlot,
-                    reservationDateToMoveTo:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reserved_at,
+                    reservationTimeSlotSecond:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].timeSlot,
+                    reservationDateSecond:this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reserved_at,
 
                 },
                 success:function(msg){

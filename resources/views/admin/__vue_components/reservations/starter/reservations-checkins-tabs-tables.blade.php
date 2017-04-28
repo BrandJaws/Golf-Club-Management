@@ -17,7 +17,7 @@
                                     <td >@{{timeSlot.timeSlot}}</td>
                                     <td width="80%">
                                       <ul class="members-add">
-                                          <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer" :reservation-indices="{dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex}"  ></reservation-player-tag>
+                                          <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer" :reservation-indices="{dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex}" :coming-on-time="reservationPlayer.comingOnTime" :club-entry="reservationPlayer.club_entry" :game-entry="reservationPlayer.game_entry" ></reservation-player-tag>
                                       </ul>
                                     </td>
                                     <td>

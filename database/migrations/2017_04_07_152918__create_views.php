@@ -70,16 +70,20 @@ class CreateViews extends Migration
         $query .= "     GROUP_CONCAT(IFNULL(reservation_players.response_status,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as response_statuses, ";
         $query .= "     GROUP_CONCAT(IFNULL(reservation_players.comingOnTime,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as comingOnTime_responses, ";
         $query .= "     GROUP_CONCAT(IFNULL(reservation_players.process_type,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as processTypes, ";
-        $query .= "     routine_reservations.game_status ";
+        $query .= "     routine_reservations.game_status, ";
+        $query .= "     GROUP_CONCAT(IF(checkins_for_clubEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as club_entries, ";
+        $query .= "     GROUP_CONCAT(IF(checkins_for_gameEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as game_entries ";
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";
         $query .= "     LEFT JOIN reservation_time_slots ON reservation_time_slots.reservation_id = routine_reservations.id AND reservation_time_slots.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
         $query .= "     LEFT JOIN reservation_players ON reservation_players.reservation_id = routine_reservations.id AND reservation_players.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
         $query .= "     LEFT JOIN member ON reservation_players.member_id = member.id ";
+        $query .= "     LEFT JOIN checkins as checkins_for_clubEntry ON checkins_for_clubEntry.action = 'CLUB ENTRY' AND checkins_for_clubEntry.member_id = member.id AND checkins_for_clubEntry.reservation_id = routine_reservations.id AND checkins_for_clubEntry.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
+        $query .= "     LEFT JOIN checkins as checkins_for_gameEntry ON checkins_for_gameEntry.action = 'GAME ENTRY' AND checkins_for_gameEntry.member_id = member.id AND checkins_for_gameEntry.reservation_id = routine_reservations.id AND checkins_for_gameEntry.reservation_type = '".addslashes("App\\Http\\Models\\RoutineReservation")."' ";
         $query .= "     WHERE ";
         $query .= "     ((reservation_players.reservation_status ='RESERVED' AND reservation_players.response_status ='CONFIRMED') OR  reservation_players.reservation_status ='PENDING RESERVED') ";
-        $query .= "     GROUP BY course.id,course.club_id,course.name,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type ";
+        $query .= "     GROUP BY course.id,course.club_id,course.name,routine_reservations.id,reservation_time_slots.time_start,reservation_time_slots.reservation_type";
         //Add other reservation types as and when created here with a UNION ALL clause
      
         DB::statement($query);

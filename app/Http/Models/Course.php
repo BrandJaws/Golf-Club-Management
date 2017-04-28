@@ -300,6 +300,8 @@ class Course extends Model
                 $blankReservation->processTypes = "";
                 $blankReservation->comingOnTime_responses = "";
                 $blankReservation->parent_id = "";
+                $blankReservation->club_entries = "";
+                $blankReservation->game_entries= "";
                 $allReservationsWithCourses[] = $blankReservation;
                 
             }
@@ -382,6 +384,8 @@ class Course extends Model
                 $response_statuses = $reservation->response_statuses !== "" ? explode("||-separation-player-||",$reservation->response_statuses) : [];
                 $comingOnTime_responses = $reservation->comingOnTime_responses !== "" ? explode("||-separation-player-||",$reservation->comingOnTime_responses) : [];
                 $processTypes = $reservation->processTypes !== "" ? explode("||-separation-player-||",$reservation->processTypes) : [];
+                $clubEntries = $reservation->club_entries !== "" ? explode("||-separation-player-||",$reservation->club_entries) : [];
+                $gameEntries = $reservation->game_entries !== "" ? explode("||-separation-player-||",$reservation->game_entries) : [];
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players =collect([]);
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->guests = 0;
                 foreach($reservation_player_ids as $playerIndex=>$reservation_player_id){
@@ -398,6 +402,8 @@ class Course extends Model
                         $reservationPlayerObject->response_status = trim($response_statuses[$playerIndex]);
                         $reservationPlayerObject->comingOnTime = trim($comingOnTime_responses[$playerIndex]);
                         $reservationPlayerObject->process_type = trim($processTypes[$playerIndex]);
+                        $reservationPlayerObject->club_entry = trim($clubEntries[$playerIndex]);
+                        $reservationPlayerObject->game_entry = trim($gameEntries[$playerIndex]);
                         $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->players->push($reservationPlayerObject);
 
               

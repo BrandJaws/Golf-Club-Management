@@ -53,7 +53,7 @@ class ReservationsController extends Controller
         $dayToday = Carbon::today()->toDateString();
         $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $dayToday, $dayToday);
         $coursesList = Course::where("club_id", Auth::user()->club_id)->select("id", "name")->get();
-
+        
         if ($request->ajax())
         {
             return json_encode($reservations);

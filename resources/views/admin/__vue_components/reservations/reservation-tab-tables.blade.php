@@ -76,10 +76,12 @@ Vue.component('reservation-tab-tables', {
 
         },
         dragOver:function(event, timeSlot){
-            if(timeSlot.reservations[0].players.length >= 4 ){
-                console.log("Time Slot Fully Booked");
-                return;
-            }
+            //indicesObjectOfDraggedObject = JSON.parse(event.dataTransfer.getData("indicesObjectOfDraggedPlayer"));
+//            console.log(event);
+//            if(timeSlot.reservations[0].players.length >= 4 && indicesObjectOfDraggedObject.objectType === "player"){
+//
+//                return;
+//            }
             event.preventDefault();
         },
         dragDropped:function (event, timeSlot,dateIndexDroppedInto,timeIndexDroppedInto) {

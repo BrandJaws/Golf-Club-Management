@@ -1,18 +1,34 @@
+<style>
 
+    li.gameEntry{
+        background-color:#299a0b;
+    }
+    li.clubEntry{
+        background-color:#b6e026;
+    }
+    li.notComingOnTime{
+        background-color:#febf04;
+    }
+    li.defaultPlayerTag{
+        background-color:#ccc;
+    }
+
+</style>
 <script>
-var _onDeleteTagStyle = {
-                           background: '#D30000'
-                       };
+
 Vue.component('reservation-player-tag', {
     template: `
 
-                  <li :style ="[applyDeleteTagBg ? onDeleteTagStyle : null]" :draggable="draggable" @dragstart="dragStarted($event)" class="reservation-player-tag">@{{reservationPlayer.member_name}}<a href="#." v-if="deletableData" @click.prevent="deletePlayerClicked"><i class="fa fa-times"></i></a></li>
+                  <li :class ="[computedStyleOfTag]" :draggable="draggable" @dragstart="dragStarted($event)" class="reservation-player-tag">@{{reservationPlayer.member_name}}<a href="#." v-if="deletableData" @click.prevent="deletePlayerClicked"><i class="fa fa-times"></i></a></li>
 
             `,
     props: [
             "reservationPlayer",
             "deletable",
-            "draggable"
+            "draggable",
+            "gameEntry",
+            "clubEntry",
+            "comingOnTime",
             
             
     ],
@@ -21,10 +37,35 @@ Vue.component('reservation-player-tag', {
       return {
          
           applyDeleteTagBg:false,
-          onDeleteTagStyle:_onDeleteTagStyle,
           deletableData:this.deletable == "true"? true : false,
           
       }
+    },
+    computed: {
+        computedStyleOfTag: function(){
+
+
+            if(this.gameEntry == 1){
+
+                return 'gameEntry';
+
+            }else if(this.clubEntry == 1){
+
+                return 'clubEntry';
+
+            }else if(this.comingOnTime == 'NO'){
+
+                return 'notComingOnTime';
+
+            }else{
+
+                return null;
+
+            }
+
+            return overRideTagStyle;
+        }
+
     },
     methods: {
         deletePlayerClicked: function(reservationPlayerId){

@@ -1,14 +1,14 @@
-@include("admin.__vue_components.reservations.starter.reservations-checkins-tabs")
+
 @include("admin.__vue_components.reservations.starter.reservations-checkins-tabs-tables")
 <script>
 
-    Vue.component('reservations-container', {
+    Vue.component('reservations-checkins-container', {
         template: `
-                        <reservation-tab-tables
+                        <reservation-checkins-tab-tables
                                 :reservations-by-date="reservations.reservationsByDate"
                                 @start-game-clicked="startGameClicked">
 
-                        </reservation-tab-tables>
+                        </reservation-checkins-tab-tables>
 
 
             `,

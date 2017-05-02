@@ -13,11 +13,11 @@ Vue.component('reservation-tab-tables', {
                         <div class="table-responsive">
                             <table class="table table-hover b-t">
                                 <tbody>
-                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter" @dragover="dragOver($event,timeSlot)" @drop.prevent="dragDropped($event,timeSlot,reservationByDateIndex, timeSlotIndex)" draggable="true" @dragstart="dragTimeSlotStarted($event,{objectType:'timeSlot',dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex})">
+                                  <tr v-for="(timeSlot,timeSlotIndex) in reservationByDate.reservationsByTimeSlot" :key="timeSlotIndex" v-if="timeSlot.isVisibleUnderFilter" @dragover="dragOver($event,timeSlot)" @drop.prevent="dragDropped($event,timeSlot,reservationByDateIndex, timeSlotIndex)" draggable="true" @dragstart="dragTimeSlotStarted($event,{objectType:'timeSlot',dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex}) " :class="(timeSlot.reservations[0].game_status == 'STARTED') ? 'success' : ''"  >
                                     <td >@{{timeSlot.timeSlot}}</td>
                                     <td width="80%">
                                       <ul class="members-add" >
-                                          <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer"  draggable="true" @dragstart="dragPlayerStarted($event,{objectType:'player',dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex})" ></reservation-player-tag>
+                                          <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer"  draggable="true" @dragstart="dragPlayerStarted($event,{objectType:'player',dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex})" :coming-on-time="reservationPlayer.comingOnTime" :club-entry="reservationPlayer.club_entry" :game-entry="reservationPlayer.game_entry" ></reservation-player-tag>
                                           <li class="add-btn" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])"><a href="#."><i class="fa fa-plus"></i></a></li>
                                       </ul>
                                     </td>

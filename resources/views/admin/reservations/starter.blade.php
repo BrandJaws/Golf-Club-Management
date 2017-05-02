@@ -51,10 +51,10 @@
                         <div class="col-md-12">
 
 
-                            <reservations-container :reservations="reservationsParentComputed"
+                            <reservations-checkins-container :reservations="reservationsParentComputed"
                                                     @update-reservations="updateReservations">
 
-                            </reservations-container>
+                            </reservations-checkins-container>
 
                         </div>
                     </div>

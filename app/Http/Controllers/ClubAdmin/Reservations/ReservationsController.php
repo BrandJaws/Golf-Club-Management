@@ -20,14 +20,19 @@ class ReservationsController extends Controller
     {
         if ($request->has('course_id'))
         {
-            $course_id = $request->get('course_id');
+            $course = Course::find($request->get('course_id'));
         } else
         {
-            $course_id = 1;
+            $course = Course::where("club_id",Auth::user()->club_id) ->first();
+
+        }
+
+        if(!$course){
+            //probably return with an error
         }
         $dayToday = Carbon::today()->toDateString();
         $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
-        $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $dayToday, $fourDaysFromNow);
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course, $dayToday, $fourDaysFromNow);
 
         $coursesList = Course::where("club_id", Auth::user()->club_id)->select("id", "name")->get();
 
@@ -45,13 +50,18 @@ class ReservationsController extends Controller
     {
         if ($request->has('course_id'))
         {
-            $course_id = $request->get('course_id');
+            $course = Course::find($request->get('course_id'));
         } else
         {
-            $course_id = 1;
+            $course = Course::where("club_id",Auth::user()->club_id) ->first();
+
+        }
+
+        if(!$course){
+            //probably return with an error
         }
         $dayToday = Carbon::today()->toDateString();
-        $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $dayToday, $dayToday);
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course, $dayToday, $dayToday);
         $coursesList = Course::where("club_id", Auth::user()->club_id)->select("id", "name")->get();
 
         if ($request->ajax())
@@ -69,12 +79,17 @@ class ReservationsController extends Controller
 
         if ($request->has('course_id'))
         {
-            $course_id = $request->get('course_id');
+            $course = Course::find($request->get('course_id'));
         } else
         {
-            $course_id = 1;
+            $course = Course::where("club_id",Auth::user()->club_id) ->first();
+
         }
-        $reservations = Course::getReservationsForACourseByIdForADateRange($course_id, $date, $date);
+
+        if(!$course){
+            //probably return with an error
+        }
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course, $date, $date);
         return json_encode($reservations);
     }
 

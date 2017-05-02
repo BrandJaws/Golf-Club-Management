@@ -111,12 +111,12 @@ class Course extends Model
 	 * To get reservations for all course with players and other details: detailed = true
          * To get reservations for all course with booking indicators for mobile service: detailed = false
 	 */
-     public static function getReservationsForACourseByIdForADateRange($courseId,$dateStart,$dateEnd, $detailed = true) {
+     public static function getReservationsForACourseByIdForADateRange($course,$dateStart,$dateEnd, $detailed = true) {
                 //$date = !$date ? Carbon::today()->toDateString() : $date;
                 
-		$course = Course::find($courseId);
+
                 
-                $allCurrentReservationsInDateRange = Course::getAllReservationsAtACourseForADateRange($courseId,Carbon::parse($dateStart)->toDateString(),Carbon::parse($dateEnd)->toDateString());
+                $allCurrentReservationsInDateRange = Course::getAllReservationsAtACourseForADateRange($course->id,Carbon::parse($dateStart)->toDateString(),Carbon::parse($dateEnd)->toDateString());
 
                 $dates = [];
                 Carbon::parse($dateStart)->diffInDaysFiltered(function (Carbon $date) use (&$dates) {

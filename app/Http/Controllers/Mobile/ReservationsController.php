@@ -19,7 +19,12 @@ class ReservationsController extends Controller
     {
         $dayToday = Carbon::today()->toDateString();
         $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
-        $reservations = Course::getReservationsForACourseByIdForADateRange(1, $dayToday, $fourDaysFromNow);
+        $course = Course::where("club_id",Auth::user()->club_id) ->first();
+        if(!$course){
+            //probably return with an error
+        }
+
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course, $dayToday, $fourDaysFromNow);
         return json_decode(json_encode($reservations),true);
 //        $this->response = json_decode(json_encode($reservations),true);
 //        return $this->response();
@@ -27,8 +32,11 @@ class ReservationsController extends Controller
 
     public function getReservationByDate($date)
     {
-
-        $reservations = Course::getReservationsForACourseByIdForADateRange(1, $date, $date);
+        $course = Course::where("club_id",Auth::user()->club_id) ->first();
+        if(!$course){
+            //probably return with an error
+        }
+        $reservations = Course::getReservationsForACourseByIdForADateRange($course, $date, $date);
         return json_encode($reservations);
     }
 

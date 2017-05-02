@@ -158,7 +158,12 @@ class AdminController extends Controller {
 	public function dashboard() {
                 $dayToday = Carbon::today()->toDateString();
                 $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
-                $reservations = \App\Http\Models\Course::getReservationsForACourseByIdForADateRange(1,$dayToday,$fourDaysFromNow);
+				$course = Course::where("club_id",Auth::user()->club_id)->first();
+
+				if(!$course){
+					//probably return with an error
+				}
+                $reservations = \App\Http\Models\Course::getReservationsForACourseByIdForADateRange($course,$dayToday,$fourDaysFromNow);
 				$coursesList = Course::where("club_id",Auth::user()->club_id)->select("id","name")->get();
                 return view ( 'admin.auth.dashboard',["reservations"=>json_encode($reservations),"courses"=>$coursesList] );
 	}

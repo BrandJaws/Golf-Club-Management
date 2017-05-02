@@ -762,7 +762,6 @@ class ReservationsController extends Controller
     public function swapTimeSlots(Request $request)
     {
 
-
         if (!$request->has('reservationIdFirst'))
         {
 
@@ -807,6 +806,19 @@ class ReservationsController extends Controller
             $this->error = "mobile_invalid_court";
             return $this->response();
         }
+        if (!$request->has('club_id'))
+        {
+            $this->error = "mobile_invalid_club_identifire";
+            return $this->response();
+        }
+
+        $club = Club::find($request->get('club_id'));
+
+        if (!$club)
+        {
+            $this->error = "mobile_invalid_club";
+            return $this->response();
+        }
 
         try
         {
@@ -819,7 +831,7 @@ class ReservationsController extends Controller
             {
 
 
-                $reservationSecond = RoutineReservation::where("id", $request->get('reservationIdToSecond'))->with('reservation_time_slots')->first();
+                $reservationSecond = RoutineReservation::where("id", $request->get('reservationIdSecond'))->with('reservation_time_slots')->first();
                 if (!$reservationSecond)
                 {
                     $this->error = "invalid_reservation";
@@ -838,6 +850,12 @@ class ReservationsController extends Controller
                 foreach ($reservationPlayersSecond as $reservationPlayer)
                 {
                     $memberIdsSecond[] = $reservationPlayer->member_id;
+                }
+                $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $reservationFirst->reservation_time_slots[0]->time_start, $memberIdsFirst,[$reservationFirst->id]);
+                if ($playersWithOtherReservationsInBetween != null) {
+                    $this->error = "players_already_have_booking";
+                    $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
+                    return $this->response();
                 }
 
                 //Proceed to swap
@@ -902,6 +920,12 @@ class ReservationsController extends Controller
                     {
                         $memberIdsSecond[] = $reservationPlayer->member_id;
                     }
+                    $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startDateTime, $memberIdsFirst,[$reservationFirst->id]);
+                    if ($playersWithOtherReservationsInBetween != null) {
+                        $this->error = "players_already_have_booking";
+                        $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
+                        return $this->response();
+                    }
 
                     //Proceed to swap
                     foreach ($reservationPlayersFirst as $reservationPlayer)
@@ -918,27 +942,13 @@ class ReservationsController extends Controller
 
                 } else
                 {
-                    if (!$request->has('club_id'))
-                    {
-                        $this->error = "mobile_invalid_club_identifire";
+
+                    $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startDateTime, $memberIdsFirst,[$reservationFirst->id]);
+                    if ($playersWithOtherReservationsInBetween != null) {
+                        $this->error = "players_already_have_booking";
+                        $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
                         return $this->response();
                     }
-
-                    $club = Club::find($request->get('club_id'));
-
-                    if (!$club)
-                    {
-                        $this->error = "mobile_invalid_club";
-                        return $this->response();
-                    }
-
-
-//                $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startDateTime, $memberIdsForPlayers,[$reservationPlayers[0]->reservation_id]);
-//                if ($playersWithOtherReservationsInBetween != null) {
-//                    $this->error = "players_already_have_booking";
-//                    $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
-//                    return $this->response();
-//                }
                     $reservationData ['club_id'] = $course->club_id;
                     $reservationData ['course_id'] = $course->id;
 

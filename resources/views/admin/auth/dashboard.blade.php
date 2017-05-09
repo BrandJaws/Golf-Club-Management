@@ -105,7 +105,7 @@
 					<div class="row">
 						<div class="tsheet-header padd-15">
 							<div class="col-md-4">
-								<h2>Tee Sheet</h2>
+								<h2 @click="getAdminNotificationsForReservationUpdationEvent">Tee Sheet</h2>
 							</div>
 							<!-- col-6 -->
 							<div class="col-md-8 text-right">
@@ -192,6 +192,8 @@
                     showDefaultDates:true,
                 },
 
+                entityBasedNotificationIdForReservationUpdation:{{ $entity_based_notification_id }},
+
                 
             
             
@@ -201,35 +203,35 @@
              
                 var tempReservations = JSON.parse(JSON.stringify(this.reservationsParent));
                
-                for(dateCount=0; dateCount<tempReservations.reservationsByDate.length; dateCount++){
+                for(dateCountOld=0; dateCountOld<tempReservations.reservationsByDate.length; dateCountOld++){
                     
                     if(this.filters.showDefaultDates){
-                        if(dateCount < 4  ){
-                            tempReservations.reservationsByDate[dateCount].dateIsVisible = true;
+                        if(dateCountOld < 4  ){
+                            tempReservations.reservationsByDate[dateCountOld].dateIsVisible = true;
                             
                         }else{
-                            tempReservations.reservationsByDate[dateCount].dateIsVisible = false;
+                            tempReservations.reservationsByDate[dateCountOld].dateIsVisible = false;
                         }
                         
                     }else{
-                        if(dateCount < 4 ){
-                            tempReservations.reservationsByDate[dateCount].dateIsVisible = false;
+                        if(dateCountOld < 4 ){
+                            tempReservations.reservationsByDate[dateCountOld].dateIsVisible = false;
                         }else{
-                            tempReservations.reservationsByDate[dateCount].dateIsVisible = true;
+                            tempReservations.reservationsByDate[dateCountOld].dateIsVisible = true;
                         }
                     }
                     
-                    for(timeSlotCount=0; timeSlotCount<tempReservations.reservationsByDate[dateCount].reservationsByTimeSlot.length; timeSlotCount++ ){
-                        $timeSlotAsHourNumber = moment(tempReservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotCount].timeSlot,"h:mm A");
+                    for(timeSlotCount=0; timeSlotCount<tempReservations.reservationsByDate[dateCountOld].reservationsByTimeSlot.length; timeSlotCount++ ){
+                        $timeSlotAsHourNumber = moment(tempReservations.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotCount].timeSlot,"h:mm A");
                       
                         if( $timeSlotAsHourNumber >= moment(this.filters.timeStart,'HH') && 
                             $timeSlotAsHourNumber <= moment(this.filters.timeEnd,'HH') &&
-                            (4-(tempReservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotCount].reservations[0].players.length) >= this.filters.minEmptySlots || this.filters.minEmptySlots == 5)){
+                            (4-(tempReservations.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotCount].reservations[0].players.length) >= this.filters.minEmptySlots || this.filters.minEmptySlots == 5)){
                         
-                            tempReservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotCount].isVisibleUnderFilter = true;
+                            tempReservations.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotCount].isVisibleUnderFilter = true;
                             
                         }else{
-                            tempReservations.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotCount].isVisibleUnderFilter = false;
+                            tempReservations.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotCount].isVisibleUnderFilter = false;
                         }
                         
                     }
@@ -296,29 +298,30 @@
                                    
             },
              updateReservations:function(newOrUpdatedReservation){
-                    
-                    if(newOrUpdatedReservation[0].course_id == this.reservationsParent.course_id){
 
-                         for(dateCount=0;dateCount<this.reservationsParent.reservationsByDate.length;dateCount++){
-                             if(this.reservationsParent.reservationsByDate[dateCount].reserved_at == newOrUpdatedReservation[0].reserved_at){
+                 for($dateCountNew = 0; $dateCountNew < newOrUpdatedReservation.length; $dateCountNew++){
+                    if(newOrUpdatedReservation[$dateCountNew].course_id == this.reservationsParent.course_id){
 
-                                 for(timeSlotOriginalReservationsCount=0;timeSlotOriginalReservationsCount<this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot.length;timeSlotOriginalReservationsCount++ ){
+                         for(dateCountOld=0; dateCountOld<this.reservationsParent.reservationsByDate.length; dateCountOld++){
+                             if(this.reservationsParent.reservationsByDate[dateCountOld].reserved_at == newOrUpdatedReservation[$dateCountNew].reserved_at){
 
-                                     for(timeSlotsReceivedCount=0;timeSlotsReceivedCount<newOrUpdatedReservation[0].reservationsByTimeSlot.length;timeSlotsReceivedCount++){
+                                 for(timeSlotOriginalReservationsCount=0; timeSlotOriginalReservationsCount<this.reservationsParent.reservationsByDate[dateCountOld].reservationsByTimeSlot.length; timeSlotOriginalReservationsCount++ ){
+
+                                     for(timeSlotsReceivedCount=0;timeSlotsReceivedCount<newOrUpdatedReservation[$dateCountNew].reservationsByTimeSlot.length;timeSlotsReceivedCount++){
                                         
-                                         if(newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].timeSlot == this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].timeSlot 
+                                         if(newOrUpdatedReservation[$dateCountNew].reservationsByTimeSlot[timeSlotsReceivedCount].timeSlot == this.reservationsParent.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotOriginalReservationsCount].timeSlot
                                             &&
-                                            (this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == "App\\Http\\Models\\RoutineReservation" || 
-                                             this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == ""
+                                            (this.reservationsParent.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == "App\\Http\\Models\\RoutineReservation" ||
+                                             this.reservationsParent.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type == ""
                                              )
                                           ){
                                             
                                              
-                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_id = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].reservation_id;
-                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].reservation_type;
-                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].players = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].players;
-                                              this.reservationsParent.reservationsByDate[dateCount].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].status = newOrUpdatedReservation[0].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].status;
-
+                                              this.reservationsParent.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_id = newOrUpdatedReservation[$dateCountNew].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].reservation_id;
+                                              this.reservationsParent.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].reservation_type = newOrUpdatedReservation[$dateCountNew].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].reservation_type;
+                                              this.reservationsParent.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].players = newOrUpdatedReservation[$dateCountNew].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].players;
+                                              this.reservationsParent.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].status = newOrUpdatedReservation[$dateCountNew].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].status;
+                                              this.reservationsParent.reservationsByDate[dateCountOld].reservationsByTimeSlot[timeSlotOriginalReservationsCount].reservations[0].game_status = newOrUpdatedReservation[$dateCountNew].reservationsByTimeSlot[timeSlotsReceivedCount].reservations[0].game_status;
                                               
                                          }
                                      }
@@ -327,10 +330,11 @@
                              }
                          }
                     }
+                 }
                     
                     
                     
-        },
+            },
             restoreDefaultDates:function(){
                 
                 this.filters.showDefaultDates = true;
@@ -342,7 +346,7 @@
 //                this.reservationsParent.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].players.push(reservationPlayerToBeMoved);
 //            },
             courseSelectionChanged:function(){
-                console.log("course selection changed"+this.coursesSelectedValue);
+
                 var request = $.ajax({
 
                     url: "{{url('admin/reservations')}}",
@@ -373,6 +377,41 @@
 
                     }.bind(this)
                 });
+            },
+            getAdminNotificationsForReservationUpdationEvent:function(){
+
+
+                var request = $.ajax({
+
+                    url: "{{url('admin/live-notifications/reservation-updation')}}",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{csrf_token()}}',
+                    },
+                    data:{
+                        _token: "{{ csrf_token() }}",
+                        entity_based_notification_id:this.entityBasedNotificationIdForReservationUpdation,
+                        course_id:this.coursesSelectedValue,
+
+                    },
+                    success:function(msg){
+                        console.log(msg);
+                        this.updateReservations(msg.response);
+                        this.entityBasedNotificationIdForReservationUpdation = msg.response[0].entity_based_notification_id;
+
+                    }.bind(this),
+
+                    error: function(jqXHR, textStatus ) {
+                        this.ajaxRequestInProcess = false;
+
+                        //Error code to follow
+                        console.log(jqXHR);
+
+                    }.bind(this)
+                });
+
+
+
             },
             
         }
@@ -460,6 +499,23 @@
        
             
     } );
+
+
+    var socketUrl = "{{env("SOCKET_URL")}}";
+    var socket = io(socketUrl);
+    socket.on('reconnect', function(){
+
+        vue.getAdminNotificationsForReservationUpdationEvent();
+    });
+    socket.on('admin-notifications:ReservationUpdation',function(data){
+
+        if(data){
+            vue.getAdminNotificationsForReservationUpdationEvent();
+        }
+
+
+    });
    
 </script>
+
 @endSection

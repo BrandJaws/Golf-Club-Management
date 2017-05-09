@@ -160,7 +160,7 @@ class Club extends Model {
 //            ->orderBy('dateTime','DESC');
 
         // Needs to be modified to accomodate for other reservation types such as Training and leagues
-        $nextValidRoutineReservationForPlayerToday = RoutineReservation::select("routine_reservations.id as id", "reservation_players.reservation_type", "reservation_time_slots.time_start","course.name as course_name")
+        $nextValidRoutineReservationForPlayerToday = RoutineReservation::select("routine_reservations.id as id", "reservation_players.reservation_type", "reservation_time_slots.time_start","course.name as course_name","routine_reservations.club_id")
             ->leftJoin('reservation_players', function ($join) {
                 $join->on('routine_reservations.id', '=','reservation_players.reservation_id')
                     ->where('reservation_players.reservation_type', RoutineReservation::class);

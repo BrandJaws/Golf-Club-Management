@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Mobile;
 
+use App\Collection\AdminNotificationEventsManager;
 use App\Http\Controllers\Controller;
+use App\Http\Models\EntityBasedNotification;
 use App\Http\Models\ReservationPlayer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -170,7 +172,17 @@ class ReservationsController extends Controller
 
 
         }
-        if ($result == "success") {
+        if ($result > 0) {
+
+            //Make entry to the entity based notifications and fire event for admin notification
+
+            EntityBasedNotification::create([
+                "club_id"=>$course->club_id,
+                "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                "entity_id"=>$result,
+                "entity_type"=>RoutineReservation::class
+            ]);
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
 
             $this->response = "mobile_reservation_successfull";
         } else {
@@ -207,7 +219,7 @@ class ReservationsController extends Controller
 
 
             \DB::commit();
-            return "success";
+            return $reservation->id;
         } catch (\Exception $e) {
             \DB::rollback();
             dd($e);
@@ -240,7 +252,7 @@ class ReservationsController extends Controller
             }
 
             \DB::commit();
-            return true;
+            return $reservation->id;
         } catch (\Exception $e) {
             \DB::rollback();
 
@@ -349,13 +361,24 @@ class ReservationsController extends Controller
             // Dispatch job to assess reservation status after given time delay
             foreach($reservation->reservation_players as $reservation_player){
                 if(in_array($reservation_player->member_id,$players)){
-                    $reservation_player->sendNotificationToPlayerForReservationConfirmation($startTime, Auth::user(),$course->name);
+                    $reservation_player->sendNotificationToPlayerForReservationConfirmation(Carbon::parse($startTime), Auth::user(),$course->name);
                     $reservation_player->dispatchMakeReservationPlayerDecisionJob();
                 }
 
             }
 
             $this->response = "mobile_reservation_successfull";
+
+            //Make entry to the entity based notifications and fire event for admin notification
+
+            EntityBasedNotification::create([
+                "club_id"=>$course->club_id,
+                "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                "entity_id"=>$reservation->id,
+                "entity_type"=>RoutineReservation::class
+            ]);
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+
 
             \DB::commit();
         } catch (\Exception $e) {
@@ -406,14 +429,31 @@ class ReservationsController extends Controller
             if($reservation->reservation_players->count() > 0){
 
                 $reservation->updateReservationStatusesForAReservation();
+                //Make entry to the entity based notifications and fire event for admin notification
+
+                EntityBasedNotification::create([
+                    "club_id"=>$reservation->club_id,
+                    "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                    "entity_id"=>$reservation->id,
+                    "entity_type"=>get_class($reservation)
+                ]);
 
             }else{
                 foreach ($reservation->reservation_time_slots as $timeSlot) {
                     $timeSlot->delete();
+                    EntityBasedNotification::create([
+                        "club_id"=>$reservation->club_id,
+                        "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                        "entity_id"=>$reservation->id,
+                        "entity_type"=>get_class($reservation),
+                        "deleted_entity"=>json_encode(Course::generateBlankReservationForATimeSlot($timeSlot->time_start,$reservation->course_id))
+                    ]);
                 }
 
                 $reservation->delete();
             }
+
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
 
             $this->response = "cancel_reservation_success";
             \DB::commit();
@@ -471,6 +511,7 @@ class ReservationsController extends Controller
                             $reservation_player->comingOnTime = \Config::get('global.comingOnTime.no');
                         }
 
+
                     }
 
                     $reservation_player->save();
@@ -510,6 +551,16 @@ class ReservationsController extends Controller
             }else{
                 $this->response = "already_accepted";
             }
+
+            //Make entry to the entity based notifications and fire event for admin notification
+
+            EntityBasedNotification::create([
+                "club_id"=>$reservation->club_id,
+                "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                "entity_id"=>$reservation->id,
+                "entity_type"=>get_class($reservation)
+            ]);
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
 
             \DB::commit();
             return $this->response();
@@ -566,9 +617,26 @@ class ReservationsController extends Controller
 
                 $reservation->updateReservationStatusesForAReservation();
 
+                //Create Entity based notification entry for the reservation from which players were moved and still has some players left
+                EntityBasedNotification::create([
+                    "club_id"=>$reservation->club_id,
+                    "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                    "entity_id"=>$reservation->id,
+                    "entity_type"=>get_class($reservation)
+                ]);
+
             }else{
                 foreach ($reservation->reservation_time_slots as $timeSlot) {
                     $timeSlot->delete();
+                    //Create Entity based notification entry for the reservation from which players were moved and has to be
+                    //deleted since no players are left in the reservation
+                    EntityBasedNotification::create([
+                        "club_id"=>$reservation->club_id,
+                        "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                        "entity_id"=>$reservation->id,
+                        "entity_type"=>get_class($reservation),
+                        "deleted_entity"=>json_encode(Course::generateBlankReservationForATimeSlot($timeSlot->time_start,$reservation->course_id))
+                    ]);
                 }
 
                 $reservation->delete();
@@ -576,6 +644,9 @@ class ReservationsController extends Controller
 
 
             $this->response = "success_decline";
+
+
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
             \DB::commit();
             //Send message to parent
             $reservation_player->sendNotificationToParentOnRequestDeclinedByPlayer();
@@ -587,6 +658,7 @@ class ReservationsController extends Controller
             ]);
             $this->error = "exception";
         }
+
 
         return $this->response();
     }

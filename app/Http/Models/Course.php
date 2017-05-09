@@ -282,26 +282,8 @@ class Course extends Model
             if($reservation){
                 $allReservationsWithCourses[] = $reservation;
             }else{
-                $time = Carbon::parse($time_slot->time_start);
-                $blankReservation = new \stdClass();
-                $blankReservation->club_id = "";
-                $blankReservation->course_id = $course_id;
-                $blankReservation->reserved_at = $time->toDateString() ;
-                $blankReservation->time_start = $time->toTimeString() ;
-                $blankReservation->reservation_id = "";
-                $blankReservation->reservation_type = "";
-                $blankReservation->game_status = "";
-                $blankReservation->status = "";
-                $blankReservation->reservation_player_ids = "";
-                $blankReservation->member_profile_pics = "";
-                $blankReservation->response_statuses = "";
-                $blankReservation->member_ids = "";
-                $blankReservation->member_names = "";
-                $blankReservation->processTypes = "";
-                $blankReservation->comingOnTime_responses = "";
-                $blankReservation->parent_id = "";
-                $blankReservation->club_entries = "";
-                $blankReservation->game_entries= "";
+
+                $blankReservation = Course::generateBlankReservationForATimeSlot($time_slot->time_start,$course_id);
                 $allReservationsWithCourses[] = $blankReservation;
                 
             }
@@ -309,6 +291,36 @@ class Course extends Model
 
         return Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
         
+    }
+
+    /**
+     * To generate a blank reservation object for a timeslot to be sent along with database records to be converted to
+     * reservation objects that can be sent back to clients for display
+     * To be user where a reservation is not found at a timeslot i-e deleted
+     */
+    public static function generateBlankReservationForATimeSlot($timeStart,$courseId){
+        $time = Carbon::parse($timeStart);
+        $blankReservation = new \stdClass();
+        $blankReservation->club_id = "";
+        $blankReservation->course_id = $courseId;
+        $blankReservation->reserved_at = $time->toDateString() ;
+        $blankReservation->time_start = $time->toTimeString() ;
+        $blankReservation->reservation_id = "";
+        $blankReservation->reservation_type = "";
+        $blankReservation->game_status = "";
+        $blankReservation->status = "";
+        $blankReservation->reservation_player_ids = "";
+        $blankReservation->member_profile_pics = "";
+        $blankReservation->response_statuses = "";
+        $blankReservation->member_ids = "";
+        $blankReservation->member_names = "";
+        $blankReservation->processTypes = "";
+        $blankReservation->comingOnTime_responses = "";
+        $blankReservation->parent_id = "";
+        $blankReservation->club_entries = "";
+        $blankReservation->game_entries= "";
+
+        return $blankReservation;
     }
     
     public static function getCourseByClubId($course_id, $club_id) {
@@ -499,7 +511,7 @@ class Course extends Model
         $dateTime = Carbon::now();
 
         // Needs to be modified to accomodate for other reservation types such as Leagues
-        $reservationsForPlayerToday = RoutineReservation::select("routine_reservations.id as id", "reservation_players.reservation_type", "reservation_time_slots.time_start",DB::raw("DATE_ADD(reservation_time_slots.time_start, INTERVAL $this->bookingDuration MINUTE) as time_end"))
+        $reservationsForPlayerToday = RoutineReservation::select("routine_reservations.id as id", "reservation_players.reservation_type", "routine_reservations.club_id","reservation_time_slots.time_start",DB::raw("DATE_ADD(reservation_time_slots.time_start, INTERVAL $this->bookingDuration MINUTE) as time_end"))
             ->leftJoin('reservation_players', function ($join) {
                 $join->on('routine_reservations.id', '=','reservation_players.reservation_id')
                     ->where('reservation_players.reservation_type', RoutineReservation::class);

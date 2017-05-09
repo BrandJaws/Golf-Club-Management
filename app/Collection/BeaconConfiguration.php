@@ -3,6 +3,7 @@ namespace App\Collection;
 
 use App\Http\Models\Checkin;
 use App\Http\models\Club;
+use App\Http\Models\EntityBasedNotification;
 use App\Http\Models\ReservationPlayer;
 use App\Http\Models\RoutineReservation;
 use Carbon\Carbon;
@@ -159,6 +160,15 @@ class BeaconConfiguration
                     'recordedBy'=>"user",
                     'onTime'=>1
                 ]);
+                //Create Entity based notification entry for the reservation from which players were moved and still has some players left
+                EntityBasedNotification::create([
+                    "club_id"=>$nextValidReservationToday->club_id,
+                    "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                    "entity_id"=>$nextValidReservationToday->id,
+                    "entity_type"=>get_class($nextValidReservationToday)
+                ]);
+                AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+                
 
                 DB::commit();
 
@@ -223,6 +233,7 @@ class BeaconConfiguration
             //proceed with checkin
             try{
                 DB::beginTransaction();
+
                 Checkin::create([
                     'beacon_id'=>$beacon->id,
                     'reservation_id'=>$mostRelevantReservation->id,
@@ -233,13 +244,23 @@ class BeaconConfiguration
                     'recordedBy'=>"user",
                     'onTime'=>1
                 ]);
+                //Create Entity based notification entry for the reservation from which players were moved and still has some players left
+                EntityBasedNotification::create([
+                    "club_id"=>$mostRelevantReservation->club_id,
+                    "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                    "entity_id"=>$mostRelevantReservation->id,
+                    "entity_type"=>get_class($mostRelevantReservation)
+                ]);
+                AdminNotificationEventsManager::broadcastReservationUpdationEvent();
 
 
                 DB::commit();
                 $response->response = "checkin_successful";
+
                 return $response;
 
             }catch(\Exception $e){
+                dd($e);
                 DB::rollBack();
             }
 
@@ -308,6 +329,14 @@ class BeaconConfiguration
                     'recordedBy'=>"user",
                     'onTime'=>1
                 ]);
+                //Create Entity based notification entry for the reservation from which players were moved and still has some players left
+                EntityBasedNotification::create([
+                    "club_id"=>$mostRelevantReservation->club_id,
+                    "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                    "entity_id"=>$mostRelevantReservation->id,
+                    "entity_type"=>get_class($mostRelevantReservation)
+                ]);
+                AdminNotificationEventsManager::broadcastReservationUpdationEvent();
 
 
                 DB::commit();
@@ -382,6 +411,14 @@ class BeaconConfiguration
                     'recordedBy'=>"user",
                     'onTime'=>1
                 ]);
+                //Create Entity based notification entry for the reservation from which players were moved and still has some players left
+                EntityBasedNotification::create([
+                    "club_id"=>$mostRelevantReservation->club_id,
+                    "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                    "entity_id"=>$mostRelevantReservation->id,
+                    "entity_type"=>get_class($mostRelevantReservation)
+                ]);
+                AdminNotificationEventsManager::broadcastReservationUpdationEvent();
 
 
                 DB::commit();

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\ClubAdmin\Admin;
 
+use App\Collection\AdminNotificationEventsManager;
+use App\Events\AdminNotificationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Course;
+use App\Http\Models\EntityBasedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Redis;
 
 class AdminController extends Controller {
 	
@@ -156,6 +160,8 @@ class AdminController extends Controller {
 		return Auth::guard ();
 	}
 	public function dashboard() {
+
+				
                 $dayToday = Carbon::today()->toDateString();
                 $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
 				$course = Course::where("club_id",Auth::user()->club_id)->first();
@@ -165,6 +171,12 @@ class AdminController extends Controller {
 				}
                 $reservations = \App\Http\Models\Course::getReservationsForACourseByIdForADateRange($course,$dayToday,$fourDaysFromNow);
 				$coursesList = Course::where("club_id",Auth::user()->club_id)->select("id","name")->get();
-                return view ( 'admin.auth.dashboard',["reservations"=>json_encode($reservations),"courses"=>$coursesList] );
+
+				$maxEntityBasedNotificationId = EntityBasedNotification::max('id');
+				$entity_based_notification_id = $maxEntityBasedNotificationId ? $maxEntityBasedNotificationId : 0;
+                return view ( 'admin.auth.dashboard',["reservations"=>json_encode($reservations),
+													  "courses"=>$coursesList,
+													  "entity_based_notification_id"=>$entity_based_notification_id] );
+
 	}
 }

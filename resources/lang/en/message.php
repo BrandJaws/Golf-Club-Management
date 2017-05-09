@@ -307,7 +307,7 @@ return [
     ],
     'no_reservations_found_for_member' => [
         'code' => '52',
-        'httpCode' => '412',
+        'httpCode' => '404',
         'message' => 'No reservations found'
     ],
     'invalid_date_format' => [
@@ -739,6 +739,11 @@ return [
         'code'=>'130',
         'httpCode' => '412',
         'message'=>'Game has already been started'
+    ],
+    'entity_based_notification_id_missing'=>[
+        'code'=>'131',
+        'httpCode' => '412',
+        'message'=>'Entity Based Notification Id Is Missing'
     ],
 
 

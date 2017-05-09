@@ -411,6 +411,19 @@ Route::group([
                 'uses' => 'ClubAdmin\Courses\CoursesController@destroy'
             ]);
         });
+        /**
+         * Routes related to notifications to client
+         */
+        Route::group([
+            'prefix' => 'live-notifications',
+            'as' => 'live-notifications.'
+        ], function() {
+            Route::post('/reservation-updation', [
+                'as' => 'reservation-updation',
+                'uses' => 'ClubAdmin\AdminNotifications\AdminNotificationsController@reservationUpdation'
+            ]);
+
+        });
     });
 });
 Route::get('/home', 'HomeController@index');

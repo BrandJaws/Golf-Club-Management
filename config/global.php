@@ -95,5 +95,9 @@ return [
         'gameExit' => 'Game Exit',
         'customMessage'=>'Custom Message',
     ],
+    'entityBasedNotificationsEvents' => [
+        "ReservationUpdation"=>"ReservationUpdation",
+        
+    ],
 
 ];

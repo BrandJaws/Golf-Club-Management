@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\ClubAdmin\Reservations;
 
+use App\Collection\AdminNotificationEventsManager;
 use App\Http\Controllers\Controller;
+use App\Http\Models\EntityBasedNotification;
 use App\Http\Models\ReservationPlayer;
 use App\Http\Models\ReservationTimeSlot;
 use Illuminate\Http\Request;
@@ -18,6 +20,7 @@ class ReservationsController extends Controller
 {
     public function index(Request $request)
     {
+        AdminNotificationEventsManager::broadcastReservationUpdationEvent();
         if ($request->has('course_id'))
         {
             $course = Course::find($request->get('course_id'));
@@ -34,14 +37,19 @@ class ReservationsController extends Controller
         $fourDaysFromNow = Carbon::today()->addDays(3)->toDateString();
         $reservations = Course::getReservationsForACourseByIdForADateRange($course, $dayToday, $fourDaysFromNow);
 
-        $coursesList = Course::where("club_id", Auth::user()->club_id)->select("id", "name")->get();
+
 
         if ($request->ajax())
         {
             return json_encode($reservations);
         } else
         {
-            return view('admin.reservations.reservations', ["reservations" => json_encode($reservations), "courses" => $coursesList]);
+            $coursesList = Course::where("club_id", Auth::user()->club_id)->select("id", "name")->get();
+            $maxEntityBasedNotificationId = EntityBasedNotification::max('id');
+            $entity_based_notification_id = $maxEntityBasedNotificationId ? $maxEntityBasedNotificationId : 0;
+            return view('admin.reservations.reservations', ["reservations" => json_encode($reservations),
+                                                            "courses" => $coursesList,
+                                                            "entity_based_notification_id"=>$entity_based_notification_id]);
         }
 
     }
@@ -62,14 +70,19 @@ class ReservationsController extends Controller
         }
         $dayToday = Carbon::today()->toDateString();
         $reservations = Course::getReservationsForACourseByIdForADateRange($course, $dayToday, $dayToday);
-        $coursesList = Course::where("club_id", Auth::user()->club_id)->select("id", "name")->get();
+
 
         if ($request->ajax())
         {
             return json_encode($reservations);
         } else
         {
-            return view('admin.reservations.starter', ['reservations' => json_encode($reservations), "courses" => $coursesList]);
+            $coursesList = Course::where("club_id", Auth::user()->club_id)->select("id", "name")->get();
+            $maxEntityBasedNotificationId = EntityBasedNotification::max('id');
+            $entity_based_notification_id = $maxEntityBasedNotificationId ? $maxEntityBasedNotificationId : 0;
+            return view('admin.reservations.starter', ['reservations' => json_encode($reservations),
+                                                       "courses" => $coursesList,
+                                                       "entity_based_notification_id"=>$entity_based_notification_id]);
         }
 
     }
@@ -220,6 +233,15 @@ class ReservationsController extends Controller
             $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
             $this->response = $firstReservationsOnTimeSlots;
 
+            //Make entry to the entity based notifications and fire event for admin notification
+
+            EntityBasedNotification::create([
+                "club_id"=>$course->club_id,
+                "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                "entity_id"=>$reservation->id,
+                "entity_type"=>get_class($reservation)
+            ]);
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
 
             \DB::commit();
         } catch (\Exception $e)
@@ -450,6 +472,18 @@ class ReservationsController extends Controller
 
             $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
             $this->response = $firstReservationsOnTimeSlots;
+
+            //Make entry to the entity based notifications and fire event for admin notification
+
+            EntityBasedNotification::create([
+                "club_id"=>$course->club_id,
+                "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                "entity_id"=>$reservation->id,
+                "entity_type"=>get_class($reservation)
+            ]);
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+
+
             \DB::commit();
         } catch (\Exception $e)
         {
@@ -502,16 +536,36 @@ class ReservationsController extends Controller
 
                     $reservation->updateReservationStatusesForAReservation();
 
+                    //Make entry to the entity based notifications and fire event for admin notification
+
+                    EntityBasedNotification::create([
+                        "club_id"=>$reservation->club_id,
+                        "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                        "entity_id"=>$reservation->id,
+                        "entity_type"=>get_class($reservation)
+                    ]);
+
+
                 } else
                 {
                     foreach ($reservation->reservation_time_slots as $timeSlot)
                     {
                         $timeSlot->delete();
+                        EntityBasedNotification::create([
+                            "club_id"=>$reservation->club_id,
+                            "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                            "entity_id"=>$reservation->id,
+                            "entity_type"=>get_class($reservation),
+                            "deleted_entity"=>json_encode(Course::generateBlankReservationForATimeSlot($timeSlot->time_start,$reservation->course_id))
+                        ]);
                     }
 
                     $reservation->delete();
+
+
                 }
 
+                AdminNotificationEventsManager::broadcastReservationUpdationEvent();
                 //dd($reservationResponseIfSucceeds);
                 $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
                 $this->response = $firstReservationsOnTimeSlots;
@@ -580,6 +634,8 @@ class ReservationsController extends Controller
             $this->error = "mobile_invalid_court";
             return $this->response();
         }
+
+        DB::beginTransaction();
 
         //If we have the reservation id, we can find the reservation and proceed with the process
         if ($request->has('reservationIdToMoveTo'))
@@ -659,9 +715,10 @@ class ReservationsController extends Controller
                     return $this->response();
                 } else
                 {
-                    $reservation = new RoutineReservation();
-                    $reservation->id = $reservationsOnTimeSlot[0]->reservation_id;
-                    $reservation->course_id = $reservationsOnTimeSlot[0]->course_id;
+                    $reservationToMoveTo = new RoutineReservation();
+                    $reservationToMoveTo->id = $reservationsOnTimeSlot[0]->reservation_id;
+                    $reservationToMoveTo->course_id = $reservationsOnTimeSlot[0]->course_id;
+                    $reservationToMoveTo->club_id = $reservationsOnTimeSlot[0]->club_id;
 
                 }
 
@@ -685,12 +742,12 @@ class ReservationsController extends Controller
                 //Proceed to move players
                 foreach ($reservationPlayers as $reservationPlayer)
                 {
-                    $reservationPlayer->reservation_id = $reservation->id;
+                    $reservationPlayer->reservation_id = $reservationToMoveTo->id;
                     $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
                     $reservationPlayer->save();
                 }
 
-                $timeSlotsForBothReservations = $reservation->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayersHaveToBeMoved);
+                $timeSlotsForBothReservations = $reservationToMoveTo->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayersHaveToBeMoved);
 
             } else
             {
@@ -719,43 +776,72 @@ class ReservationsController extends Controller
                 $reservationData ['club_id'] = $course->club_id;
                 $reservationData ['course_id'] = $course->id;
 
-                $reservation = RoutineReservation::create($reservationData);
-                $reservation->attachTimeSlot($startDateTime);
+                $reservationToMoveTo = RoutineReservation::create($reservationData);
+                $reservationToMoveTo->attachTimeSlot($startDateTime);
 
                 //Proceed to move players
                 foreach ($reservationPlayers as $reservationPlayer)
                 {
-                    $reservationPlayer->reservation_id = $reservation->id;
+                    $reservationPlayer->reservation_id = $reservationToMoveTo->id;
                     $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
                     $reservationPlayer->save();
                 }
 
 
-                $timeSlotsForBothReservations = $reservation->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayersHaveToBeMoved);
+                $timeSlotsForBothReservations = $reservationToMoveTo->reservation_time_slots->merge($timeSlotsForReservationFromWhichPlayersHaveToBeMoved);
 
 
             }
 
         }
+        //Create Entity based notification entry for the reservation to which players were moved
+        EntityBasedNotification::create([
+            "club_id"=>$reservationToMoveTo->club_id,
+            "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+            "entity_id"=>$reservationToMoveTo->id,
+            "entity_type"=>get_class($reservationToMoveTo)
+        ]);
 
         $reservationFromWhichPlayerWasMoved = RoutineReservation::findAndGroupReservationForReservationProcess($reservationIdFromWhichPlayersHaveToBeMoved);
         if ($reservationFromWhichPlayerWasMoved->reservation_players->count() > 0)
         {
 
             $reservationFromWhichPlayerWasMoved->updateReservationStatusesForAReservation();
+            //Create Entity based notification entry for the reservation from which players were moved and still has some players left
+            EntityBasedNotification::create([
+                "club_id"=>$reservationFromWhichPlayerWasMoved->club_id,
+                "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                "entity_id"=>$reservationFromWhichPlayerWasMoved->id,
+                "entity_type"=>get_class($reservationFromWhichPlayerWasMoved)
+            ]);
+
 
         } else
         {
             foreach ($reservationFromWhichPlayerWasMoved->reservation_time_slots as $timeSlot)
             {
                 $timeSlot->delete();
+                //Create Entity based notification entry for the reservation from which players were moved and has to be
+                //deleted since no players are left in the reservation
+                EntityBasedNotification::create([
+                    "club_id"=>$reservationFromWhichPlayerWasMoved->club_id,
+                    "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                    "entity_id"=>$reservationFromWhichPlayerWasMoved->id,
+                    "entity_type"=>get_class($reservationFromWhichPlayerWasMoved),
+                    "deleted_entity"=>json_encode(Course::generateBlankReservationForATimeSlot($timeSlot->time_start,$reservationFromWhichPlayerWasMoved->course_id))
+                ]);
             }
 
             $reservationFromWhichPlayerWasMoved->delete();
         }
 
+        DB::commit();
+
         $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($course->id, $timeSlotsForBothReservations);
         $this->response = $firstReservationsOnTimeSlots;
+
+        AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+
         return $this->response();
     }
 
@@ -974,12 +1060,27 @@ class ReservationsController extends Controller
             {
 
                 $reservationFirst->updateReservationStatusesForAReservation();
+                //Create Entity based notification entry for the reservation from which players were moved and still has some players left
+                EntityBasedNotification::create([
+                    "club_id"=>$reservationFirst->club_id,
+                    "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                    "entity_id"=>$reservationFirst->id,
+                    "entity_type"=>get_class($reservationFirst)
+                ]);
 
             } else
             {
                 foreach ($reservationFirst->reservation_time_slots as $timeSlot)
                 {
                     $timeSlot->delete();
+                    //Create Entity based notification entry for the first reservation if no players are left
+                    EntityBasedNotification::create([
+                        "club_id"=>$reservationFirst->club_id,
+                        "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                        "entity_id"=>$reservationFirst->id,
+                        "entity_type"=>get_class($reservationFirst),
+                        "deleted_entity"=>json_encode(Course::generateBlankReservationForATimeSlot($timeSlot->time_start,$reservationFirst->course_id))
+                    ]);
                 }
 
                 $reservationFirst->delete();
@@ -993,6 +1094,15 @@ class ReservationsController extends Controller
                 $reservationSecond->updateReservationStatusesForAReservation();
 
             }
+
+            //Create Entity based notification entry for the second reservation
+            EntityBasedNotification::create([
+                "club_id"=>$reservationSecond->club_id,
+                "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                "entity_id"=>$reservationSecond->id,
+                "entity_type"=>get_class($reservationSecond)
+            ]);
+
             DB::commit();
         } catch (\Exception $e)
         {
@@ -1005,6 +1115,9 @@ class ReservationsController extends Controller
 
         $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($course->id, $timeSlotsForBothReservations);
         $this->response = $firstReservationsOnTimeSlots;
+
+        AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+
         return $this->response();
     }
 
@@ -1032,12 +1145,24 @@ class ReservationsController extends Controller
             return $this->response();
         }
 
+        DB::beginTransaction();
 
         $reservation->game_status = \Config::get('global.gameStatuses.started');
         $reservation->save();
 
+        //Create Entity based notification entry for the reservation
+        EntityBasedNotification::create([
+            "club_id"=>$reservation->club_id,
+            "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+            "entity_id"=>$reservation->id,
+            "entity_type"=>get_class($reservation)
+        ]);
+
+        DB::commit();
+
         $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
         $this->response = $firstReservationsOnTimeSlots;
+        AdminNotificationEventsManager::broadcastReservationUpdationEvent();
         return $this->response();
 
     }

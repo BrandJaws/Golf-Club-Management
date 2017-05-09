@@ -9,6 +9,8 @@
 <!-- VueJS -->
 <script src="{{asset('/libs/vuejs/vue.js')}}"></script>
 
+<!-- Socket.IO -->
+<script src="{{asset('/libs/socketio/socket.io.min.js')}}"></script>
 
 <!-- Bootstrap -->
 <script src="{{asset('/libs/jquery/tether/dist/js/tether.min.js')}}"></script>

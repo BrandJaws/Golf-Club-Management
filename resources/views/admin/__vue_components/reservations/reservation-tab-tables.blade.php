@@ -17,7 +17,7 @@ Vue.component('reservation-tab-tables', {
                                     <td >@{{timeSlot.timeSlot}}</td>
                                     <td width="80%">
                                       <ul class="members-add" >
-                                          <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer"  draggable="true" @dragstart="dragPlayerStarted($event,{objectType:'player',dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex})" :coming-on-time="reservationPlayer.comingOnTime" :club-entry="reservationPlayer.club_entry" :game-entry="reservationPlayer.game_entry" ></reservation-player-tag>
+                                          <reservation-player-tag  v-for="(reservationPlayer,reservationPlayerIndex) in timeSlot.reservations[0].players " :reservationPlayer="reservationPlayer"  draggable="true" @dragstart="dragPlayerStarted($event,{objectType:'player',dateIndexDraggedFrom:reservationByDateIndex,timeIndexDraggedFrom:timeSlotIndex,playerIndexDragged:reservationPlayerIndex})" :coming-on-time="reservationPlayer.comingOnTime" :club-entry="reservationPlayer.club_entry" :game-entry="reservationPlayer.game_entry" allow-checkin="true" @checkin-player="checkinPlayer"></reservation-player-tag>
                                           <li class="add-btn" @click="editReservationClicked(reservationByDate.reserved_at,timeSlot.timeSlot,timeSlot.reservations[0])"><a href="#."><i class="fa fa-plus"></i></a></li>
                                       </ul>
                                     </td>
@@ -124,6 +124,9 @@ Vue.component('reservation-tab-tables', {
 
 
 
+        },
+        checkinPlayer:function(reservationPlayerId){
+            this.$emit('checkin-player',reservationPlayerId);
         }
     },
 

@@ -19,7 +19,7 @@
 Vue.component('reservation-player-tag', {
     template: `
 
-                  <li :class ="[computedStyleOfTag]" :draggable="draggable" @dragstart="dragStarted($event)" class="reservation-player-tag">@{{reservationPlayer.member_name}}<a href="#." v-if="deletableData" @click.prevent="deletePlayerClicked"><i class="fa fa-times"></i></a></li>
+                  <li @click="tagClicked(reservationPlayer)" :class ="[computedStyleOfTag]" :draggable="draggable" @dragstart="dragStarted($event)" class="reservation-player-tag">@{{reservationPlayer.member_name}}<a href="#." v-if="deletableData" @click.prevent="deletePlayerClicked"><i class="fa fa-times"></i></a></li>
 
             `,
     props: [
@@ -29,6 +29,7 @@ Vue.component('reservation-player-tag', {
             "gameEntry",
             "clubEntry",
             "comingOnTime",
+            "allowCheckin"
             
             
     ],
@@ -38,6 +39,8 @@ Vue.component('reservation-player-tag', {
          
           applyDeleteTagBg:false,
           deletableData:this.deletable == "true"? true : false,
+          allowCheckinData: this.allowCheckin != null && this.allowCheckin.toLowerCase() == "true" ? true : false,
+
           
       }
     },
@@ -68,19 +71,23 @@ Vue.component('reservation-player-tag', {
 
     },
     methods: {
-        deletePlayerClicked: function(reservationPlayerId){
+        deletePlayerClicked: function(e){
             
-//            if(this.applyDeleteTagBg){
-//                this.applyDeleteTagBg = false;
-//            }else{
-//                this.applyDeleteTagBg = true;
-//            }
+            e.stopPropagation();
             this.$emit('deletePlayer');
             
         },
         dragStarted:function(event){
             this.$emit("dragstart",event);
 
+
+        },
+        tagClicked:function(reservationPlayer){
+
+            if(this.allowCheckinData){
+                this.$emit('checkin-player',reservationPlayer.reservation_player_id);
+
+            }
 
         }
 

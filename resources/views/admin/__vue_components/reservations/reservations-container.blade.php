@@ -12,8 +12,9 @@
         <div>
                 <confirmation-popup @close-popup="closeConfirmationPopup" @yes-selected="yesSelectedInConfirmation" v-if="showConfirmationPopup" :popupMessage="dataHeldForConfirmation.confirmationMessage" :errorMessage="confirmationPopupErrorMessage"></confirmation-popup>
                 <reservation-player-checkin-popup v-if="showReservationPlayerCheckinPopup"
-                        :reservation-player="reservationPlayerToCheckin"
+                        :reservation-player-id="reservationPlayerIdToCheckin"
                         @close-popup="closeReservationPlayerCheckinPopupTriggered"
+                        @checkin-player="checkinPlayer"
                         :error-message="reservationPlayerCheckinPopupErrorMessage"></reservation-player-checkin-popup>
                 <reservation-popup v-if="showReservationPopup"
                         :reservation="reservationToEdit"
@@ -54,6 +55,7 @@
                                 @delete-reservation="deleteReservation($event,false)"
                                 @drag-drop-player="dragDropPlayerPerformed"
                                 @drag-drop-timeslot="dragDropTimeSlotPerformed"
+                                @checkin-player="checkinPlayerEventTriggered"
                         >
                         </reservation-tab-tables>
 
@@ -73,14 +75,14 @@
             return {
                 forReservationsPageData: this.forReservationsPage != null && this.forReservationsPage.toLowerCase() == 'true' ? true : false,
                 showReservationPopup: false,
-                showReservationPlayerCheckinPopup: true,
+                showReservationPlayerCheckinPopup: false,
                 showConfirmationPopup: false,
                 reservationToEdit: null,
                 reservationType: null, //possible values new or edit
                 popupMessage: "",
                 confirmationPopupErrorMessage: "",
                 reservationPlayerCheckinPopupErrorMessage:"",
-                reservationPlayerToCheckin:null,
+                reservationPlayerIdToCheckin:null,
                 dataHeldForConfirmation: {
                     confirmationMessage: null,
                     methodToFollow: null,
@@ -294,10 +296,15 @@
 
 
             },
-            closeReservationPlayerCheckinPopupTriggered:function () {
+            displayReservationPlayerCheckinPopupTriggered: function (reservationPlayerId) {
+
+                this.reservationPlayerIdToCheckin = reservationPlayerId;
+                this.showReservationPlayerCheckinPopup = true;
+            },
+            closeReservationPlayerCheckinPopupTriggered: function () {
 
                 this.showReservationPlayerCheckinPopup = false;
-                this.reservationPlayerToCheckin = null;
+                this.reservationPlayerIdToCheckin = null;
                 this.reservationPlayerCheckinPopupErrorMessage = "";
             },
             dragDropPlayerPerformed: function (dragDropIndicesDataObject, confirmed) {
@@ -310,7 +317,7 @@
 
                     return;
                 }
-                console.log(dragDropIndicesDataObject);
+
 
                 var request = $.ajax({
 
@@ -401,7 +408,48 @@
 
 
             },
+            checkinPlayerEventTriggered: function (reservationPlayerId) {
 
+                this.displayReservationPlayerCheckinPopupTriggered(reservationPlayerId);
+
+
+            },
+            checkinPlayer: function (reservationPlayerInfo) {
+
+                var request = $.ajax({
+
+                    url: "{{url('admin/reservations/checkin-player')}}",
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{csrf_token()}}',
+                    },
+                    data: {
+                        _method: "POST",
+                        _token: "{{ csrf_token() }}",
+                        reservationPlayerId: reservationPlayerInfo.reservationPlayerId,
+                        onTime: reservationPlayerInfo.onTime,
+
+                    },
+                    success: function (msg) {
+                        console.log(msg);
+                        this.updateReservations(msg.response);
+                        //Perform actual move logic for server and if successful emit event and close popup;
+                        // this.$emit("drag-drop-operation",dragDropIndicesDataObject);
+                        this.closeReservationPlayerCheckinPopupTriggered();
+                    }.bind(this),
+
+                    error: function (jqXHR, textStatus) {
+                        this.ajaxRequestInProcess = false;
+                        console.log(jqXHR);
+                        //Error code to follow
+                        if (jqXHR.hasOwnProperty("responseText")) {
+                            this.reservationPlayerCheckinPopupErrorMessage = JSON.parse(jqXHR.responseText).response;
+                        }
+
+                    }.bind(this)
+                });
+
+            },
         }
 
     });

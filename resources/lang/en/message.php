@@ -745,6 +745,11 @@ return [
         'httpCode' => '412',
         'message'=>'Entity Based Notification Id Is Missing'
     ],
+    'guests_cant_checkin'=>[
+        'code'=>'132',
+        'httpCode' => '412',
+        'message'=>"Guests Can't Check In"
+    ],
 
 
 

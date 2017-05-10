@@ -16,7 +16,15 @@ Vue.component('reservation-player-checkin-popup', {
                             </div>
                       </div>
                       <div class="modal-body text-center p-lg borderBottom">
-
+                            <div class="row">
+                                <div class="col-md-2">
+                                  On Time:
+                                </div>
+                                <div class="col-md-10 text-left">
+                                    <input type="radio" name="onTime" value="1" v-model="onTimeRadioSelection"> Yes <br/>
+                                    <input type="radio" name="onTime" value="0" v-model="onTimeRadioSelection" > No
+                                </div>
+                            </div>
 
                       </div>
 
@@ -35,7 +43,7 @@ Vue.component('reservation-player-checkin-popup', {
 
             `,
     props: [
-            "reservationPlayer",
+            "reservationPlayerId",
             "errorMessage"
 
 
@@ -44,15 +52,12 @@ Vue.component('reservation-player-checkin-popup', {
     data: function () {
 
       return {
-
+            onTimeRadioSelection:"1",
       }
     },
     methods:{
         emitClosePopup:function(){
             this.$emit('close-popup');
-        },
-        deletePlayer:function(playerIndex){
-            this.reservationData.players.splice(playerIndex,1);
         },
         closeModal:function(event){
 
@@ -63,6 +68,9 @@ Vue.component('reservation-player-checkin-popup', {
         saveReservationClicked:function(){
             
 
+            this.$emit('checkin-player',{reservationPlayerId:this.reservationPlayerId,
+                                         onTime:this.onTimeRadioSelection
+            });
         }
     }
   

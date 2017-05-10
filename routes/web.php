@@ -71,15 +71,18 @@ Route::group([
                     'as' => 'movePlayers',
                     'uses' => 'ClubAdmin\Reservations\ReservationsController@movePlayers'
                 ]);
-            Route::post('/swap-timeslots', [
-                'as' => 'swapTimeSlots',
-                'uses' => 'ClubAdmin\Reservations\ReservationsController@swapTimeSlots'
-            ]);
-            Route::post('/mark-as-started', [
-                'as' => 'markAsStarted',
-                'uses' => 'ClubAdmin\Reservations\ReservationsController@markGameStatusAsStarted'
-            ]);
-
+                Route::post('/swap-timeslots', [
+                    'as' => 'swapTimeSlots',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@swapTimeSlots'
+                ]);
+                Route::post('/mark-as-started', [
+                    'as' => 'markAsStarted',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@markGameStatusAsStarted'
+                ]);
+                Route::post('/checkin-player', [
+                    'as' => 'checkinPlayer',
+                    'uses' => 'ClubAdmin\Reservations\ReservationsController@checkinPlayer'
+                ]);
 
                  
         });

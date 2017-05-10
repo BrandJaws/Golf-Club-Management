@@ -147,7 +147,7 @@ class BeaconConfiguration
         }
         
 
-        if(!Checkin::memberHasAlreadyRecordedClubEntryForAReservation($nextValidReservationToday->id,$nextValidReservationToday->reservation_type, $member)){
+        if(!Checkin::memberHasAlreadyRecordedClubEntryForAReservation($nextValidReservationToday->id,$nextValidReservationToday->reservation_type, $member->id)){
             try{
                 DB::beginTransaction();
                 Checkin::create([

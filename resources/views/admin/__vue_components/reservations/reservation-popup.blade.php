@@ -93,7 +93,7 @@ Vue.component('reservation-popup', {
             this.reservationData.players.splice(playerIndex,1);
         },
         closeModal:function(event){
-           console.log(event.target);
+
             if(event.target.className.search("closePopup") !== -1) {
                 this.emitClosePopup();
             }
@@ -111,7 +111,7 @@ Vue.component('reservation-popup', {
                 }
             }
             this.reservationData.players.push(dataItemSelected);
-            console.log(dataItemSelected);
+
         },
         addGuestsClicked:function(){
             //Dont create tag if selected 4 or player already in the list

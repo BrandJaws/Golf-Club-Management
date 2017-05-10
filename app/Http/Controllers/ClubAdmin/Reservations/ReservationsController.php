@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ClubAdmin\Reservations;
 
 use App\Collection\AdminNotificationEventsManager;
 use App\Http\Controllers\Controller;
+use App\Http\Models\Checkin;
 use App\Http\Models\EntityBasedNotification;
 use App\Http\Models\ReservationPlayer;
 use App\Http\Models\ReservationTimeSlot;
@@ -1167,5 +1168,77 @@ class ReservationsController extends Controller
 
     }
 
+    public function checkinPlayer(Request $request){
+
+        if (!$request->has('reservationPlayerId')) {
+
+            $this->error = "tennis_reservation_id_missing";
+            return $this->response();
+        }
+
+        $reservation_player = ReservationPlayer::find($request->get('reservationPlayerId'));
+
+        if(!$reservation_player){
+            $this->error = "tennis_reservation_id_missing";
+            return $this->response();
+        }
+        if($reservation_player->member_id == 0){
+            $this->error = "guests_cant_checkin";
+            return $this->response();
+        }
+
+        if(!$request->has('onTime') ){
+            $this->error = 'must_notify_if_on_time';
+            return $this->response();
+        }else if( $request->get('onTime') != "1" && $request->get('onTime') != "0"){
+            $this->error = 'must_notify_if_on_time';
+            return $this->response();
+        }
+
+
+        if(!Checkin::memberHasAlreadyRecordedClubEntryForAReservation($reservation_player->reservation_id,$reservation_player->reservation_type, $reservation_player->member_id)){
+            try{
+                DB::beginTransaction();
+                Checkin::create([
+                    'beacon_id'=>0,
+                    'reservation_id'=>$reservation_player->reservation_id,
+                    'reservation_type'=>$reservation_player->reservation_type,
+                    'member_id'=>$reservation_player->member_id,
+                    'checkinTime'=>Carbon::now()->toDateTimeString(),
+                    'action'=>\Config::get ( 'global.beacon_actions.clubEntry' ),
+                    'recordedBy'=>"admin",
+                    'onTime'=>(int)$request->get('onTime'),
+                ]);
+                //Create Entity based notification entry for the reservation from which players were moved and still has some players left
+                EntityBasedNotification::create([
+                    "club_id"=>$reservation_player->reservation->club_id,
+                    "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
+                    "entity_id"=>$reservation_player->reservation_id,
+                    "entity_type"=>$reservation_player->reservation_type,
+                ]);
+                AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+
+
+                DB::commit();
+
+                $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation_player->reservation->course_id, $reservation_player->reservation->reservation_time_slots);
+                $this->response = $firstReservationsOnTimeSlots;
+
+
+
+            }catch(\Exception $e){
+                dd( $e);
+                DB::rollBack();
+            }
+
+        }else{
+
+            $this->error = "already_checked_in";
+
+
+        }
+
+        return $this->response();
+    }
 
 }

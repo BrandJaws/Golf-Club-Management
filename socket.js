@@ -10,7 +10,7 @@ redis.on('message',function(channel,message){
     parsedMessage = JSON.parse(message)
     if(channel == "admin-notifications"){
         if(parsedMessage.event == "ReservationUpdation"){
-            console.log(message);
+            
             io.emit('admin-notifications:ReservationUpdation',true);
         }
     }

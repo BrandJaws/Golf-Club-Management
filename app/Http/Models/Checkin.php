@@ -24,9 +24,9 @@ class Checkin extends Model
     public static $checkinTimeCeilingInSeconds = 900;
 
     
-    public static function memberHasAlreadyRecordedClubEntryForAReservation($reservation_id, $reservation_type, $member){
+    public static function memberHasAlreadyRecordedClubEntryForAReservation($reservation_id, $reservation_type, $member_id){
 
-        $checkinForNextValidReservation = self::where("member_id",$member->id)
+        $checkinForNextValidReservation = self::where("member_id",$member_id)
                        ->where("reservation_id",$reservation_id)
                        ->where("reservation_type",$reservation_type)
                        ->where("action","=",\Config::get ( 'global.beacon_actions.clubEntry' ))

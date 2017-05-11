@@ -160,7 +160,7 @@ class BeaconConfiguration
                     'recordedBy'=>"user",
                     'onTime'=>1
                 ]);
-                //Create Entity based notification entry for the reservation from which players were moved and still has some players left
+                //Create Entity based notification entry for the reservation 
                 EntityBasedNotification::create([
                     "club_id"=>$nextValidReservationToday->club_id,
                     "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,

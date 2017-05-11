@@ -46,7 +46,7 @@ class Training extends Model
 
     }
 
-    public function paginatedList($club_id, $perPage, $currentPage, $search, $onlyShowTrainingsNotYetComplete = false)
+    public function paginatedList($club_id, $currentPage,$perPage, $search, $onlyShowTrainingsNotYetComplete = false)
     {
         
         return $this->where('training.club_id', '=', $club_id)

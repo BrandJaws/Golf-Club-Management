@@ -272,6 +272,7 @@ class Course extends Model
      * @return reservation objects array 
      * Gets reseravtion objects array for a datetimes array i-e start times. Returns an array of reservation
      * objects in the same format as of the all reservations list for court
+     * **Replaced By the similar function getResevationsWithPlayersAtCourseForMultipleIds in actual usage. Kept just in case it might be useful in the future**
      * 
      */
     public static function getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($course_id,$reservation_time_slots){
@@ -292,6 +293,44 @@ class Course extends Model
         return Course::returnReseravtionObjectsArrayFromReservationArray($allReservationsWithCourses);
         
     }
+
+    /**
+     *
+     * @param int $course_id
+     * @param array $timeSlotsForDeletedReservations
+     * @return reservation objects array
+     * Gets reseravtion objects array for an ids array. Returns an array of reservation
+     * objects in the same format as of the all reservations list for court
+     * Uses course_id,  timeSlots to create blank reservations for the deleted reservations
+     *
+     */
+    public static function getResevationsWithPlayersAtCourseForMultipleIds($course_id,$timeSlots,$reservation_ids){
+
+            $allReservations = [];
+            $reservations = DB::table('compound_reservations_aggregated')->whereIn("reservation_id",$reservation_ids)->get();
+
+            foreach($timeSlots as $timeslot){
+                $foundReservationAgainstTimeSlot = false;
+                foreach ($reservations as $reservation){
+                    if($reservation->date_time_start == $timeslot->time_start ){
+                        $foundReservationAgainstTimeSlot = true;
+                        $allReservations[] = $reservation;
+                        break;
+                    }
+                }
+
+                if(!$foundReservationAgainstTimeSlot){
+                    $blankReservation = Course::generateBlankReservationForATimeSlot($timeslot->time_start,$course_id);
+                    $allReservations[] = $blankReservation;
+                }
+            }
+
+
+
+        return Course::returnReseravtionObjectsArrayFromReservationArray($allReservations);
+
+    }
+
 
     /**
      * To generate a blank reservation object for a timeslot to be sent along with database records to be converted to

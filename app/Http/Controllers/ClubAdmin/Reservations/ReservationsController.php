@@ -21,7 +21,7 @@ class ReservationsController extends Controller
 {
     public function index(Request $request)
     {
-        AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+
         if ($request->has('course_id'))
         {
             $course = Course::find($request->get('course_id'));
@@ -231,7 +231,7 @@ class ReservationsController extends Controller
             $reservation->attachTimeSlot($startTime);
 
 
-            $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
+            $firstReservationsOnTimeSlots = Course::getResevationsWithPlayersAtCourseForMultipleIds($reservation->course_id, $reservation->reservation_time_slots, [$reservation->id]);
             $this->response = $firstReservationsOnTimeSlots;
 
             //Make entry to the entity based notifications and fire event for admin notification
@@ -471,7 +471,7 @@ class ReservationsController extends Controller
 //                $reservation->delete();
 //            }
 
-            $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
+            $firstReservationsOnTimeSlots = Course::getResevationsWithPlayersAtCourseForMultipleIds($reservation->course_id, $reservation->reservation_time_slots, [$reservation->id]);
             $this->response = $firstReservationsOnTimeSlots;
 
             //Make entry to the entity based notifications and fire event for admin notification
@@ -568,7 +568,8 @@ class ReservationsController extends Controller
 
                 AdminNotificationEventsManager::broadcastReservationUpdationEvent();
                 //dd($reservationResponseIfSucceeds);
-                $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
+                $firstReservationsOnTimeSlots = Course::getResevationsWithPlayersAtCourseForMultipleIds($reservation->course_id, $reservation->reservation_time_slots, [$reservation->id]);
+
                 $this->response = $firstReservationsOnTimeSlots;
                 \DB::commit();
 
@@ -838,7 +839,9 @@ class ReservationsController extends Controller
 
         DB::commit();
 
-        $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($course->id, $timeSlotsForBothReservations);
+
+        $firstReservationsOnTimeSlots = Course::getResevationsWithPlayersAtCourseForMultipleIds($course->id, $timeSlotsForBothReservations, [$reservationIdFromWhichPlayersHaveToBeMoved,$reservationToMoveTo->id]);
+
         $this->response = $firstReservationsOnTimeSlots;
 
         AdminNotificationEventsManager::broadcastReservationUpdationEvent();
@@ -1114,7 +1117,8 @@ class ReservationsController extends Controller
             $this->error = "exception";
         }
 
-        $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($course->id, $timeSlotsForBothReservations);
+
+        $firstReservationsOnTimeSlots = Course::getResevationsWithPlayersAtCourseForMultipleIds($course->id, $timeSlotsForBothReservations, [$reservationFirst->id,$reservationSecond->id]);
         $this->response = $firstReservationsOnTimeSlots;
 
         AdminNotificationEventsManager::broadcastReservationUpdationEvent();
@@ -1161,7 +1165,8 @@ class ReservationsController extends Controller
 
         DB::commit();
 
-        $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation->course_id, $reservation->reservation_time_slots);
+
+        $firstReservationsOnTimeSlots = Course::getResevationsWithPlayersAtCourseForMultipleIds($reservation->course_id, $reservation->reservation_time_slots,[$reservation->id]);
         $this->response = $firstReservationsOnTimeSlots;
         AdminNotificationEventsManager::broadcastReservationUpdationEvent();
         return $this->response();
@@ -1221,7 +1226,7 @@ class ReservationsController extends Controller
 
                 DB::commit();
 
-                $firstReservationsOnTimeSlots = Course::getFirstResevationsWithPlayersAtCourseForMultipleTimeSlots($reservation_player->reservation->course_id, $reservation_player->reservation->reservation_time_slots);
+                $firstReservationsOnTimeSlots = Course::getResevationsWithPlayersAtCourseForMultipleIds($reservation_player->reservation->course_id, $reservation_player->reservation->reservation_time_slots,[$reservation_player->reservation->id]);
                 $this->response = $firstReservationsOnTimeSlots;
 
 

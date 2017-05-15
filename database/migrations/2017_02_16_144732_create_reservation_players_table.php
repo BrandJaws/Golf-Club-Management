@@ -26,8 +26,7 @@ class CreateReservationPlayersTable extends Migration
             $table->enum('comingOnTime',array("NOT RESPONDED","YES","NO"))->default('NOT RESPONDED');
             $table->timestamps();
             $table->foreign('parent_id')->references('id')
-                ->on('member')
-                ->onDelete('cascade');
+                ->on('member');
            
         });
     }

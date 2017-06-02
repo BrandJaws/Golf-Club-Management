@@ -135,7 +135,7 @@ class TrainingsController extends Controller
             $training = Training::findOrFail($id);
             if (strtolower($training->promotionType) != $request->get('lessonMedia')) {
                 if ($request->get('lessonMedia') == 'image') {
-                    $conditonalRules = ['promotionImage' => 'required_if:lessonMedia,image|image|mimes:jpeg,bmp,png,jpg|max:1024'];
+                    $conditonalRules = ['promotionImage' => 'required_if:lessonMedia,image|image|max:1024'];
                 } else {
                     $conditonalRules = [
                         'videoUrl' => 'required_if:lessonMedia,videoUrl|active_url'

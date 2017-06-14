@@ -6,7 +6,8 @@
 
         template: `
         <div>
-         <confirmation-popup @close-popup="closeConfirmationPopup" @yes-selected="yesSelectedInConfirmation" v-if="showCancelPopup" popupMessage="Do you really wish to cancel this reservation?"></confirmation-popup>
+         <confirmation-popup @close-popup="closeConfirmationPopup"  v-if="showConfirmationPopup" :popupMessage="dataHeldForConfirmation.confirmationMessage" :errorMessage="confirmationPopupErrorMessage" :confirm-callback="dataHeldForConfirmation.confirmCallback"></confirmation-popup>
+
          <reserve-player-popup @close-popup="closeReservePlayerPopup" @add-member="addMemberRequested" v-if="showReservePlayerPopup" :popupMessage="reservePlayerPopupMessage"></reserve-player-popup>
          <div class="row bg-white">
                     <div class="col-md-6">
@@ -60,9 +61,16 @@
             return {
                 personsListData:this.personsList,
                 showCancelPopup:false,
-                tempPlayerToBeCancelled:null,
                 showReservePlayerPopup:false,
+                showConfirmationPopup:false,
                 reservePlayerPopupMessage:"",
+                confirmationPopupErrorMessage: "",
+                dataHeldForConfirmation: {
+                    confirmationMessage: null,
+                    confirmCallback:null
+
+                },
+
 
 
             }
@@ -70,50 +78,56 @@
         methods:{
             //method will be called twice first when the delete button is clicked and second when confirmed by the user
             cancelReservationOfPlayer:function(player,playerIndex,confirmed){
-            //if not confirmed open confirmation popup
-                 if(!confirmed){
+                this.dataHeldForConfirmation.confirmCallback = function(){
+                    var request = $.ajax({
+
+                        url: this.urlForCrud,
+                        method: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': '{{csrf_token()}}',
+                        },
+                        data:{
+
+                            _method:"DELETE",
+                            _token: "{{ csrf_token() }}",
+                            reservation_player_id:player.id,
+
+                        },
+                        success:function(msg){
+
+                            if(msg=="success"){
+                                this.personsListData.splice(playerIndex,1);
+                                this.closeConfirmationPopup();
+                            }else{
+
+                            }
+
+                        }.bind(this),
+
+                        error: function(jqXHR, textStatus ) {
+                            this.ajaxRequestInProcess = false;
+                            if(jqXHR.hasOwnProperty("responseText")){
+                                this.confirmationPopupErrorMessage = JSON.parse(jqXHR.responseText).response;
+                            }
+
+
+
+                        }.bind(this)
+                    });
+                }.bind(this);
+
+
+
+
+
+                if(!confirmed){
+                    this.dataHeldForConfirmation.confirmationMessage = "Do you really wish to cancel this reservation?";
                     this.displayConfirmationPopup();
-                    this.tempPlayerToBeCancelled = {};
-                    this.tempPlayerToBeCancelled.playerIndex = playerIndex;
-                    this.tempPlayerToBeCancelled.player = player;
-                    return;
-                 }
 
-                 //if confirmed send delete request
-
-                            var request = $.ajax({
-
-                                        url: this.urlForCrud,
-                                        method: "POST",
-                                        headers: {
-                                            'X-CSRF-TOKEN': '{{csrf_token()}}',
-                                        },
-                                        data:{
-
-                                            _method:"DELETE",
-                                            _token: "{{ csrf_token() }}",
-                                            reservation_player_id:this.tempPlayerToBeCancelled.player.id,
-
-                                        },
-                                        success:function(msg){
-
-                                                  if(msg=="success"){
-                                                      this.personsListData.splice(playerIndex,1);
-                                                      this.closeConfirmationPopup();
-                                                  }else{
-
-                                                  }
-
-                                                }.bind(this),
-
-                                        error: function(jqXHR, textStatus ) {
-                                                    this.ajaxRequestInProcess = false;
-
-                                                    //Error code to follow
-
-
-                                               }.bind(this)
-                                    });
+                }else{
+                    this.dataHeldForConfirmation.confirmCallback();
+                    this.dataHeldForConfirmation.confirmCallback = null;
+                }
             },
             addMemberRequested:function(memberId){
 
@@ -151,24 +165,22 @@
             },
 
             displayConfirmationPopup:function(){
-    //            console.log('emit received');
-                this.showCancelPopup = true;
+
+                this.showConfirmationPopup = true;
             },
             closeConfirmationPopup:function(){
-    //            console.log('emit received');
-                this.showCancelPopup = false;
-                this.tempPlayerToBeCancelled = null;
-                this.reservePlayerPopupMessage = "";
-            },
-            yesSelectedInConfirmation:function(){
-                this.cancelReservationOfPlayer(this.tempPlayerToBeCancelled.player,this.tempPlayerToBeCancelled.playerIndex,true);
+
+                this.showConfirmationPopup = false;
+                this.confirmationPopupErrorMessage = "";
+                this.dataHeldForConfirmation.confirmationMessage = null;
+                this.dataHeldForConfirmation.confirmCallback = null;
             },
             addPlayerClicked:function(){
-                //            console.log('emit received');
+
                 this.showReservePlayerPopup = true;
             },
             closeReservePlayerPopup:function(){
-                //            console.log('emit received');
+
                 this.showReservePlayerPopup = false;
             },
 

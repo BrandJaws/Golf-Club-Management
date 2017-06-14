@@ -29,7 +29,8 @@
     props: [
 
             'popupMessage',
-            'errorMessage'
+            'errorMessage',
+            'confirmCallback'
     ],
     methods:{
         emitClosePopup:function(){
@@ -42,7 +43,9 @@
             }
         },
         yesSelected:function(){
-            this.$emit('yes-selected');
+            //this.$emit('yes-selected');
+            this.confirmCallback();
+
         },
     }
 

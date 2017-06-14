@@ -10,7 +10,7 @@
     Vue.component('reservations-container', {
         template: `
         <div>
-                <confirmation-popup @close-popup="closeConfirmationPopup" @yes-selected="yesSelectedInConfirmation" v-if="showConfirmationPopup" :popupMessage="dataHeldForConfirmation.confirmationMessage" :errorMessage="confirmationPopupErrorMessage"></confirmation-popup>
+                <confirmation-popup @close-popup="closeConfirmationPopup"  v-if="showConfirmationPopup" :popupMessage="dataHeldForConfirmation.confirmationMessage" :errorMessage="confirmationPopupErrorMessage" :confirm-callback="dataHeldForConfirmation.confirmCallback"></confirmation-popup>
                 <reservation-player-checkin-popup v-if="showReservationPlayerCheckinPopup"
                         :reservation-player-id="reservationPlayerIdToCheckin"
                         @close-popup="closeReservationPlayerCheckinPopupTriggered"
@@ -85,9 +85,7 @@
                 reservationPlayerIdToCheckin:null,
                 dataHeldForConfirmation: {
                     confirmationMessage: null,
-                    methodToFollow: null,
-                    reservationIdToBeDeleted: null,
-                    dragDropIndicesDataObject: null,
+                    confirmCallback:null
 
                 },
             }
@@ -213,43 +211,55 @@
             },
             deleteReservation: function (reservationId, confirmed) {
 
-                if (!confirmed) {
-                    this.displayConfirmationPopup();
+
+
+
+
+                    this.dataHeldForConfirmation.confirmCallback = function(){
+                        var request = $.ajax({
+
+                            url: "{{url('admin/reservations')}}" + "/" + reservationId,
+                            method: "POST",
+                            headers: {
+                                'X-CSRF-TOKEN': '{{csrf_token()}}',
+                            },
+                            data: {
+                                _method: "DELETE",
+                                _token: "{{ csrf_token() }}",
+
+                            },
+                            success: function (msg) {
+
+                                this.updateReservations(msg.response);
+                                this.closePopupTriggered();
+                                this.closeConfirmationPopup();
+                            }.bind(this),
+
+                            error: function (jqXHR, textStatus) {
+                                this.ajaxRequestInProcess = false;
+
+                                //Error code to follow
+                                if (jqXHR.hasOwnProperty("responseText")) {
+                                    this.popupMessage = JSON.parse(jqXHR.responseText).response;
+                                }
+
+                            }.bind(this)
+                        });
+                    }.bind(this);
+
+                if(!confirmed){
                     this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to cancel this reservation?";
-                    this.dataHeldForConfirmation.methodToFollow = "deleteReservation";
-                    this.dataHeldForConfirmation.reservationIdToBeDeleted = reservationId;
-                    return;
+                    this.displayConfirmationPopup();
+
+                }else{
+                    this.dataHeldForConfirmation.confirmCallback();
+                    this.dataHeldForConfirmation.confirmCallback = null;
                 }
 
-                var request = $.ajax({
 
-                    url: "{{url('admin/reservations')}}" + "/" + reservationId,
-                    method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': '{{csrf_token()}}',
-                    },
-                    data: {
-                        _method: "DELETE",
-                        _token: "{{ csrf_token() }}",
 
-                    },
-                    success: function (msg) {
 
-                        this.updateReservations(msg.response);
-                        this.closePopupTriggered();
-                        this.closeConfirmationPopup();
-                    }.bind(this),
 
-                    error: function (jqXHR, textStatus) {
-                        this.ajaxRequestInProcess = false;
-
-                        //Error code to follow
-                        if (jqXHR.hasOwnProperty("responseText")) {
-                            this.popupMessage = JSON.parse(jqXHR.responseText).response;
-                        }
-
-                    }.bind(this)
-                });
             },
             returnGuestsAndPlayerIdsListFromPlayersList: function (players) {
                 playersAndGuests = {};
@@ -274,28 +284,10 @@
                 this.showConfirmationPopup = false;
                 this.confirmationPopupErrorMessage = "";
                 this.dataHeldForConfirmation.confirmationMessage = null;
-                this.dataHeldForConfirmation.methodToFollow = null;
-                this.dataHeldForConfirmation.reservationIdToBeDeleted = null;
-                this.dataHeldForConfirmation.dragDropIndicesDataObject = null;
+                this.dataHeldForConfirmation.confirmCallback = null;
 
             },
-            yesSelectedInConfirmation: function () {
 
-                switch (this.dataHeldForConfirmation.methodToFollow) {
-                    case "deleteReservation":
-                        this[this.dataHeldForConfirmation.methodToFollow](this.dataHeldForConfirmation.reservationIdToBeDeleted, true);
-                        break;
-                    case "dragDropPlayerPerformed":
-                        this[this.dataHeldForConfirmation.methodToFollow](this.dataHeldForConfirmation.dragDropIndicesDataObject, true);
-                        break;
-                    case "dragDropTimeSlotPerformed":
-                        this[this.dataHeldForConfirmation.methodToFollow](this.dataHeldForConfirmation.dragDropIndicesDataObject, true);
-                        break;
-
-                }
-
-
-            },
             displayReservationPlayerCheckinPopupTriggered: function (reservationPlayerId) {
 
                 this.reservationPlayerIdToCheckin = reservationPlayerId;
@@ -309,102 +301,118 @@
             },
             dragDropPlayerPerformed: function (dragDropIndicesDataObject, confirmed) {
 
-                if (!confirmed) {
-                    this.displayConfirmationPopup();
-                    this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to move this player to another time slot?";
-                    this.dataHeldForConfirmation.methodToFollow = "dragDropPlayerPerformed";
-                    this.dataHeldForConfirmation.dragDropIndicesDataObject = dragDropIndicesDataObject;
 
-                    return;
+
+
+                this.dataHeldForConfirmation.confirmCallback = function(){
+                    var request = $.ajax({
+
+                        url: "{{url('admin/reservations/move-players')}}",
+                        method: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': '{{csrf_token()}}',
+                        },
+                        data: {
+                            _method: "POST",
+                            _token: "{{ csrf_token() }}",
+                            reservationPlayerIdsToBeMoved: [this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players[dragDropIndicesDataObject.playerIndexDragged].reservation_player_id],
+                            reservationIdToMoveTo: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].reservation_id,
+                            club_id: this.reservations.club_id,
+                            course_id: this.reservations.course_id,
+                            reservationTimeSlotToMoveTo: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].timeSlot,
+                            reservationDateToMoveTo: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reserved_at,
+
+                        },
+                        success: function (msg) {
+                            console.log(msg);
+                            this.updateReservations(msg.response);
+                            //Perform actual move logic for server and if successful emit event and close popup;
+                            // this.$emit("drag-drop-operation",dragDropIndicesDataObject);
+                            this.closeConfirmationPopup();
+                        }.bind(this),
+
+                        error: function (jqXHR, textStatus) {
+                            this.ajaxRequestInProcess = false;
+                            console.log(jqXHR);
+                            //Error code to follow
+                            if (jqXHR.hasOwnProperty("responseText")) {
+                                this.confirmationPopupErrorMessage = JSON.parse(jqXHR.responseText).response;
+                            }
+
+                        }.bind(this)
+                    });
+                }.bind(this);
+
+                if(!confirmed){
+                    this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to move this player to another time slot?";
+                    this.displayConfirmationPopup();
+
+                }else{
+                    this.dataHeldForConfirmation.confirmCallback();
+                    this.dataHeldForConfirmation.confirmCallback = null;
                 }
 
 
-                var request = $.ajax({
 
-                    url: "{{url('admin/reservations/move-players')}}",
-                    method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': '{{csrf_token()}}',
-                    },
-                    data: {
-                        _method: "POST",
-                        _token: "{{ csrf_token() }}",
-                        reservationPlayerIdsToBeMoved: [this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].players[dragDropIndicesDataObject.playerIndexDragged].reservation_player_id],
-                        reservationIdToMoveTo: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].reservation_id,
-                        club_id: this.reservations.club_id,
-                        course_id: this.reservations.course_id,
-                        reservationTimeSlotToMoveTo: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].timeSlot,
-                        reservationDateToMoveTo: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reserved_at,
 
-                    },
-                    success: function (msg) {
-                        console.log(msg);
-                        this.updateReservations(msg.response);
-                        //Perform actual move logic for server and if successful emit event and close popup;
-                        // this.$emit("drag-drop-operation",dragDropIndicesDataObject);
-                        this.closeConfirmationPopup();
-                    }.bind(this),
 
-                    error: function (jqXHR, textStatus) {
-                        this.ajaxRequestInProcess = false;
-                        console.log(jqXHR);
-                        //Error code to follow
-                        if (jqXHR.hasOwnProperty("responseText")) {
-                            this.confirmationPopupErrorMessage = JSON.parse(jqXHR.responseText).response;
-                        }
 
-                    }.bind(this)
-                });
+
 
 
             },
             dragDropTimeSlotPerformed: function (dragDropIndicesDataObject, confirmed) {
 
-                if (!confirmed) {
-                    this.displayConfirmationPopup();
-                    this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to swap these time slots?";
-                    this.dataHeldForConfirmation.methodToFollow = "dragDropTimeSlotPerformed";
-                    this.dataHeldForConfirmation.dragDropIndicesDataObject = dragDropIndicesDataObject;
+                this.dataHeldForConfirmation.confirmCallback = function(){
+                    var request = $.ajax({
 
-                    return;
+                        url: "{{url('admin/reservations/swap-timeslots')}}",
+                        method: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': '{{csrf_token()}}',
+                        },
+                        data: {
+                            _method: "POST",
+                            _token: "{{ csrf_token() }}",
+                            reservationIdFirst: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].reservation_id,
+                            reservationIdSecond: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].reservation_id,
+                            club_id: this.reservations.club_id,
+                            course_id: this.reservations.course_id,
+                            reservationTimeSlotSecond: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].timeSlot,
+                            reservationDateSecond: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reserved_at,
+
+                        },
+                        success: function (msg) {
+                            console.log(msg);
+                            this.updateReservations(msg.response);
+                            //Perform actual move logic for server and if successful emit event and close popup;
+                            // this.$emit("drag-drop-operation",dragDropIndicesDataObject);
+                            this.closeConfirmationPopup();
+                        }.bind(this),
+
+                        error: function (jqXHR, textStatus) {
+                            this.ajaxRequestInProcess = false;
+                            console.log(jqXHR);
+                            //Error code to follow
+                            if (jqXHR.hasOwnProperty("responseText")) {
+                                this.confirmationPopupErrorMessage = JSON.parse(jqXHR.responseText).response;
+                            }
+
+                        }.bind(this)
+                    });
+                }.bind(this);
+
+                if(!confirmed){
+                    this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to swap these time slots?";
+                    this.displayConfirmationPopup();
+
+                }else{
+                    this.dataHeldForConfirmation.confirmCallback();
+                    this.dataHeldForConfirmation.confirmCallback = null;
                 }
 
-                var request = $.ajax({
 
-                    url: "{{url('admin/reservations/swap-timeslots')}}",
-                    method: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': '{{csrf_token()}}',
-                    },
-                    data: {
-                        _method: "POST",
-                        _token: "{{ csrf_token() }}",
-                        reservationIdFirst: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDraggedFrom].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDraggedFrom].reservations[0].reservation_id,
-                        reservationIdSecond: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].reservations[0].reservation_id,
-                        club_id: this.reservations.club_id,
-                        course_id: this.reservations.course_id,
-                        reservationTimeSlotSecond: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reservationsByTimeSlot[dragDropIndicesDataObject.timeIndexDroppedInto].timeSlot,
-                        reservationDateSecond: this.reservations.reservationsByDate[dragDropIndicesDataObject.dateIndexDroppedInto].reserved_at,
 
-                    },
-                    success: function (msg) {
-                        console.log(msg);
-                        this.updateReservations(msg.response);
-                        //Perform actual move logic for server and if successful emit event and close popup;
-                        // this.$emit("drag-drop-operation",dragDropIndicesDataObject);
-                        this.closeConfirmationPopup();
-                    }.bind(this),
-
-                    error: function (jqXHR, textStatus) {
-                        this.ajaxRequestInProcess = false;
-                        console.log(jqXHR);
-                        //Error code to follow
-                        if (jqXHR.hasOwnProperty("responseText")) {
-                            this.confirmationPopupErrorMessage = JSON.parse(jqXHR.responseText).response;
-                        }
-
-                    }.bind(this)
-                });
 
 
             },

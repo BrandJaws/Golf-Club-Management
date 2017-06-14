@@ -187,23 +187,23 @@ class Member extends Authenticatable
     {
 
         return $this->where('club_id', '=', $clubId)
-            ->where(function($query) use($memberId){
-                if($memberId){
-                    $query->where('member.id','<>',$memberId);
-                }
-            })
-            ->where(function ($query) use ($searchTerm) {
-            if ($searchTerm) {
-                $query->where('member.firstName', 'like', "%$searchTerm%");
-                $query->orWhere('member.lastName', 'like', "%$searchTerm%");
-                $query->orWhere('member.email', 'like', "%$searchTerm%");
-            }
-        })
-            ->select('member.id as id', 'member.firstName', 'member.lastName', 'member.email', 'member.phone', 'member.gender','member.profilePic', $memberId !== false ? DB::raw("IF((SELECT COUNT(*) FROM friends_member_member WHERE member_id = $memberId AND friend_member_id = member.id)>0,1,0)  AS isFriend") : DB::raw("0  AS isFriend"))
-            ->orderby('member.created_at', 'DESC')
-            ->paginate($perPage, array(
-            '*'
-        ), 'current_page', $currentPage);
+      ->where(function($query) use($memberId){
+          if($memberId){
+              $query->where('member.id','<>',$memberId);
+          }
+      })
+      ->where(function ($query) use ($searchTerm) {
+          if ($searchTerm) {
+              $query->where('member.firstName', 'like', "%$searchTerm%");
+              $query->orWhere('member.lastName', 'like', "%$searchTerm%");
+              $query->orWhere('member.email', 'like', "%$searchTerm%");
+          }
+      })
+      ->select('member.id as id', 'member.firstName', 'member.lastName', 'member.email', 'member.phone', 'member.gender','member.profilePic', $memberId !== false ? DB::raw("IF((SELECT COUNT(*) FROM friends_member_member WHERE member_id = $memberId AND friend_member_id = member.id)>0,1,0)  AS isFriend") : DB::raw("0  AS isFriend"))
+      ->orderby('member.created_at', 'DESC')
+      ->paginate($perPage, array(
+        '*'
+      ), 'current_page', $currentPage);
     }
 
     /**

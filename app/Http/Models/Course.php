@@ -28,6 +28,7 @@ class Course extends Model
         'bookingDuration',
         'bookingInterval',
         'numberOfHoles',
+        'tees',
         'status'
     ];
 
@@ -75,6 +76,11 @@ class Course extends Model
     public function club()
     {
         return $this->belongsTo(Club::class, 'club_id');
+    }
+
+    public function holes()
+    {
+        return $this->hasMany("App\Http\Models\CourseHole");
     }
 
     public static function getById($id)

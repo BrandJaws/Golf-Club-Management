@@ -28,7 +28,8 @@ class CourseSeeder extends Seeder
                 'closeTime' => '23:00:00',
                 'bookingInterval' => 15,
                 'bookingDuration'=>240,
-                'status' => 'OPEN'
+                'status' => 'OPEN',
+                'tees' => '["Pink","Black", "Gold"]'
             ]);
         }
     }

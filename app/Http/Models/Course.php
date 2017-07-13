@@ -8,10 +8,7 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\DB;
 
-// use \App\CustomModels\CoursesAndReservations\CourseForReservations;
-// use \App\CustomModels\CoursesAndReservations\ReservationWrapper;
-// use \App\CustomModels\CoursesAndReservations\ReservationInfo;
-// use \App\CustomModels\CoursesAndReservations\ReservationPlayer;
+
 
 
 class Course extends Model

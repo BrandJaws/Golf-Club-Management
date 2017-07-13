@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\ClubAdmin\Courses;
 
+use App\Http\Models\CourseHole;
 use Illuminate\Http\Request;
 use App\Http\Models\Course;
 use App\Http\Controllers\Controller;
@@ -77,6 +78,8 @@ class CoursesController extends Controller
 
     public function store(Request $request)
     {
+
+
         if (Auth()->user()->canNot('course', 'App\Model')) {
             return Redirect::route('admin.dashboard')->with([
                 'error' => \trans('message.unauthorized_access')
@@ -88,13 +91,40 @@ class CoursesController extends Controller
             'closeTime' => 'required|date_format:H:i',
             'bookingDuration' => 'required|numeric',
             'bookingInterval' => 'required|numeric',
-            'numberOfHoles' => 'required|numeric'
+            'numberOfHoles' => 'required|numeric',
+            'teesDataJson'=> 'required',
+            'holesDataJson'=> 'required',
         ]);
         
         if ($validator->fails()) {
             $this->error = $validator->errors();
             return \Redirect::back()->withInput()->withErrors($this->error);
         }
+
+        $teesData = json_decode($request->get('teesDataJson'));
+        if(!$teesData || !is_array($teesData) || !count($teesData)){
+            return \Redirect::back()->withInput()->with([
+              'error' => \trans('message.tees_fields_required.message')
+            ]);
+        }
+
+        $holesData = json_decode($request->get('holesDataJson'));
+        if(!$holesData || !is_array($holesData) || !count($holesData)){
+            return \Redirect::back()->withInput()->with([
+              'error' => \trans('message.holes_fields_required.message')
+            ]);
+        }
+
+        foreach($holesData as $holeData){
+            if(!CourseHole::validateDataAgainstModel($holeData)){
+                return \Redirect::back()->withInput()->with([
+                  'error' => \trans('message.holes_fields_required.message')
+                ]);
+            }
+        }
+
+
+
         try {
             $data = $request->only([
                 'name',
@@ -102,8 +132,11 @@ class CoursesController extends Controller
                 'closeTime',
                 'bookingDuration',
                 'bookingInterval',
-                'numberOfHoles'
+                'numberOfHoles',
             ]);
+
+            $data['tees'] = $request->get('teesDataJson');
+
             $course = new Course();
             $course->status = ($request->has('status')) ? config('global.status.open') : config('global.status.closed');
             $course->club_id = \Auth::user()->club_id;

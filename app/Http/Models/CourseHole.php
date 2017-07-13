@@ -20,4 +20,26 @@ class CourseHole extends Model
   {
     return $this->belongsTo("App\Http\Models\Course");
   }
+
+  public static function  validateDataAgainstModel($data){
+    $validator = Validator::make($data, [
+      'mens_handicap' => 'required|min:1,max:50',
+      'mens_par' => 'required|date_format:H:i',
+      'womens_handicap' => 'required|date_format:H:i',
+      'womens_par' => 'required|numeric',
+      'tee_values' => 'required',
+    ]);
+
+    if ($validator->fails()) {
+      return false;
+    }
+
+    $teesData = json_decode($data('tee_values'));
+    if(!$teesData || !is_array($teesData) || !count($teesData)){
+      return false;
+    }
+
+    return true;
+
+  }
 }

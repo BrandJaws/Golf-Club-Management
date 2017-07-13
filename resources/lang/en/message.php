@@ -750,6 +750,16 @@ return [
         'httpCode' => '412',
         'message'=>"Guests Can't Check In"
     ],
+      'tees_fields_required'=>[
+        'code'=>'133',
+        'httpCode' => '412',
+        'message'=>"Tees Fields Are Required"
+      ],
+      'holes_fields_required'=>[
+        'code'=>'134',
+        'httpCode' => '412',
+        'message'=>"Hole Details Are Required"
+      ],
 
 
 

@@ -23,10 +23,10 @@ class CourseHole extends Model
 
   public static function  validateDataAgainstModel($data){
     $validator = Validator::make($data, [
-      'mens_handicap' => 'required|min:1,max:50',
-      'mens_par' => 'required|date_format:H:i',
-      'womens_handicap' => 'required|date_format:H:i',
-      'womens_par' => 'required|numeric',
+      'mens_handicap' => 'required|integer',
+      'mens_par' => 'required|integer',
+      'womens_handicap' => 'required|integer',
+      'womens_par' => 'required|integer',
       'tee_values' => 'required',
     ]);
 

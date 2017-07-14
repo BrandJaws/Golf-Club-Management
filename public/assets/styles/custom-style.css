@@ -212,8 +212,8 @@ label { display: block; margin: 3px 0; }
 .tees-colors .white { background: #ffffff; color: #000000; }
 .tees-colors .purple { background: #6734ff; color: #ffffff; }
 .tees-colors .orange { background: #ff6600; color: #ffffff; }
-.list-tees { padding: 0px; margin-bottom: 20px; display: inline-block; }
-.list-tees li { display: inline-block; list-style: none; width: 100%; float: left; padding: 3px 0px; }
+.list-tees { padding: 0px; margin-bottom: 0px; display: inline-block; width:100%; }
+.list-tees li { display: inline-block; list-style: none; width: 50%; float: left; padding: 3px 0px;  }
 .list-tees .hole { background: rgba(48, 155, 0, 0.5); color: #ffffff; }
 .list-tees .pink { background: rgba(255, 204, 203, 0.5); color: #000000; }
 .list-tees .black { background: rgba(0, 0, 0, 0.5); color: #ffffff; }
@@ -230,6 +230,7 @@ label { display: block; margin: 3px 0; }
 .list-tees .orange { background: rgba(255, 102, 0, 0.5); color: #ffffff; }
 .list-tees .orange label { color: #000; }
 
+.label-tees { padding-top:45px;}
 .panel-tees.panel { padding:20px; display:inline-block; background:#f5f5f5; margin-bottom:20px;}
 .panel-tees .inner-header{ background:transparent; padding:0px;}
 

@@ -74,23 +74,6 @@
                         </div>
                         <div class="col-md-6"></div>
                         <div class="">
-                            <div class="col-md-12">
-                                <div class="form-group clearfix">
-                                    <div class="checkbox">
-                                        <label class="ui-check">
-                                            <input type="checkbox" value="open" name="status">
-                                            <i class="dark-white"></i>
-                                            Is Open?
-                                        </label>
-                                    </div>
-                                    <div class="checkbox-inline">
-											<span class="pull-left"><label>
-
-											</span>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!--Tees HTML-->
                             <div class="col-md-6">
                                 <div class="form-group {{($errors->has('numberOfTees'))?'has-error':''}}">
@@ -103,13 +86,13 @@
                             </div>
                             <div class="col-md-6"></div>
                             <div class="col-md-12">
-                                <div class="form-group {{($errors->has('configureTees'))?'has-error':''}}">
+                                <!--<div class="form-group {{($errors->has('configureTees'))?'has-error':''}}">
                                     <label class="form-control-label">Configure Tees</label>
                                     <input type="number" class="form-control" name="configureTees"
                                            value="{{Request::old('configureTees')}}"/>
                                     @if($errors->has('configureTees')) <span
                                             class="help-block errorProfilePic">{{$errors->first('configureTees') }}</span> @endif
-                                </div>
+                                </div>-->
                                 <div class="row">
                                     <div class="col-sm-12"><label class="form-control-label">Select Tees Color</label>
                                     </div>
@@ -135,31 +118,31 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-8">
-                                                <div class="search-form text-right">
-                                                    <form action="#." method="post">
-                                                        <div class="search-field"><span class="search-box">
-                                                <input type="text" name="search" class="search-bar">
-                                                <button type="submit" class="search-btn"><i class="fa fa-search"></i>
-                                                </button>
-                                                </span></div>
-                                                    </form>
-                                                </div>
+                                                <select name="tees" id="" class="form-control tees-colors">
+                                                <option value="">Search Tess By ID</option>
+                                                
+                                                </select>
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>
                                     </div>
 
-                                    <label class="form-control-label">Hole 1</label>
                                     <ul class="list-tees">
+                                        <div class="row">
                                         <li v-for="tee in hole.tee_values" :class="tee.cssClass">
                                             <div :class="[tee.cssClass , 'form-group', {{($errors->has('hole1'))?'has-error':''}} ]">
-                                                <div class="col-sm-10"><label class="form-control-label" v-text="tee.selectedValue"></label>
+                                                <div class="col-sm-8">
+                                               <!-- <label class="form-control-label label-tees" v-text="tee.selectedValue">Tees Color</label>-->
+                                                <label class="form-control-label label-tees" >Tees Color</label>
                                                 </div>
-                                                <div class="col-sm-2"><input type="text" class="form-control"
+                                                <div class="col-sm-4">
+                                                <label class="form-control-label">Yard</label>
+                                                <input type="text" class="form-control"
                                                                              name="hole1"
-                                                                             v-model="tee.distance"/></div>
-                                            </div>
+                                                                             v-model="tee.distance"/></div></div>
+                                            
                                         </li>
+                                        </div>
                                     </ul>
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -199,15 +182,29 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group text-right">
-                                        <a href="#." class="btn btn-def disabled">
-                                            <i class="fa fa-arrow-left"></i> &nbsp;Prev
-                                        </a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a href="#." class="btn btn-def">
-                                            Next &nbsp; <i class="fa fa-arrow-right"></i>
-                                        </a>
+                                </div>
+                                <div class="form-group text-right">
+                                    <a href="#." class="btn btn-def disabled">
+                                        <i class="fa fa-arrow-left"></i> &nbsp;Prev
+                                    </a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="#." class="btn btn-def">
+                                        Next &nbsp; <i class="fa fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group clearfix">
+                                    <div class="checkbox">
+                                        <label class="ui-check">
+                                            <input type="checkbox" value="open" name="status">
+                                            <i class="dark-white"></i>
+                                            Is Open?
+                                        </label>
+                                    </div>
+                                    <div class="checkbox-inline">
+                                        <span class="pull-left">
 
-
+                                        </span>
                                     </div>
                                 </div>
                             </div>

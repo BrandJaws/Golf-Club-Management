@@ -134,7 +134,7 @@
                                             <div :class="[tee.cssClass , 'form-group', {{($errors->has('hole1'))?'has-error':''}} ]">
                                                 <div class="col-sm-8">
                                                	<!-- <label class="form-control-label label-tees" v-text="tee.selectedValue">Tees Color</label>-->
-                                                <label class="form-control-label label-tees" >Tees Color</label>
+                                                <label class="form-control-label label-tees" v-text="tee.color != ''? tee.color : 'No Color Selected'"></label>
                                                 </div>
                                                 <div class="col-sm-4">
                                                 <label class="form-control-label">Yard</label>
@@ -406,13 +406,13 @@
                                              womens_par: 0,
                                          };
                                          for(teeIndex in this.colorSelectionFieldsForTees){
-                                            if(this.colorSelectionFieldsForTees[teeIndex].selectedValue != ''){
+                                           // if(this.colorSelectionFieldsForTees[teeIndex].selectedValue != ''){
                                                 holeData.tee_values.push({
                                                     color:this.colorSelectionFieldsForTees[teeIndex].selectedValue,
                                                     cssClass:this.colorSelectionFieldsForTees[teeIndex].cssClass,
                                                     distance:0,
                                                 });
-                                            }
+                                           // }
                                          }
                                          this.holes.push(holeData);
                                      }

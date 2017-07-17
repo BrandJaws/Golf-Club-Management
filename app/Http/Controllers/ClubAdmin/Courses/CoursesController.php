@@ -7,6 +7,7 @@ use App\Http\Models\Course;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 
 /**
  * Description of CourseController
@@ -95,14 +96,20 @@ class CoursesController extends Controller
             'teesDataJson'=> 'required',
             'holesDataJson'=> 'required',
         ]);
-        
+
+      
         if ($validator->fails()) {
+
             $this->error = $validator->errors();
             return \Redirect::back()->withInput()->withErrors($this->error);
         }
 
+        $errorBag = json_decode(json_encode($validator->errors()));
+        $errorBag->messages[] = "A new Message";
+
         $teesData = json_decode($request->get('teesDataJson'));
         if(!$teesData || !is_array($teesData) || !count($teesData)){
+
             return \Redirect::back()->withInput()->with([
               'error' => \trans('message.tees_fields_required.message')
             ]);
@@ -110,6 +117,7 @@ class CoursesController extends Controller
 
         $holesData = json_decode($request->get('holesDataJson'));
         if(!$holesData || !is_array($holesData) || !count($holesData)){
+
             return \Redirect::back()->withInput()->with([
               'error' => \trans('message.holes_fields_required.message')
             ]);

@@ -109,12 +109,11 @@
                                     </div>
 
                                 </div>
-                                <div class="panel panel-tees" v-for="hole in holes">
-                                    <div class="inner-header row">
+                                <div class="col-sm-12"><div class="inner-header row">
                                         <div>
                                             <div class="col-md-4">
                                                 <div class="inner-page-heading text-left">
-                                                    <h3>Configure Tees</h3>
+                                                    <h3>Configure Holes</h3>
                                                 </div>
                                             </div>
                                             <div class="col-md-8">
@@ -125,19 +124,27 @@
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>
-                                    </div>
+                                    </div></div>
+                                <div class="panel panel-tees" v-for="hole in holes">
+                                    
 
                                     <ul class="list-tees">
                                         <div class="row">
-                                        <li v-for="tee in hole.tee_values" :class="tee.cssClass" >
+                                        <li v-for="tee in hole.tee_values" >
                                             <div :class="[tee.cssClass , 'form-group', {{($errors->has('hole1'))?'has-error':''}} ]">
                                                 <div class="col-sm-8">
-                                               <!-- <label class="form-control-label label-tees" v-text="tee.selectedValue">Tees Color</label>-->
+                                               	<!-- <label class="form-control-label label-tees" v-text="tee.selectedValue">Tees Color</label>-->
                                                 <label class="form-control-label label-tees" >Tees Color</label>
                                                 </div>
                                                 <div class="col-sm-4">
                                                 <label class="form-control-label">Yard</label>
-                                                <input type="text" class="form-control" v-model="tee.distance"/></div></div>
+                                                <div class="input-group">
+                                                    <input type="text"  class="form-control" v-model="tee.distance">
+                                                    <span :class="[tee.cssClass , 'input-group-addon', {{($errors->has('hole1'))?'has-error':''}} ]"></span>
+                                                </div>
+                                                
+                                                
+                                                <!--<input type="text" class="form-control" v-model="tee.distance"/>--></div></div>
                                             
                                         </li>
                                         </div>

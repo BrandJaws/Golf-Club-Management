@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\DB;
-
-
+use Illuminate\Support\Facades\Validator;
 
 
 class Course extends Model
@@ -35,6 +34,72 @@ class Course extends Model
 
     public $reservations;
 
+    public static function validateTeesData(&$data){
+        $availableColors = [
+                                'Pink',
+                                'Black',
+                                'Gold',
+                                'Blue',
+                                'Silver',
+                                'Green',
+                                'White',
+                                'Purple',
+                                'Orange',
+
+                            ];
+        $foundOneOrMoreErrors = false;
+
+        $validationRules = [
+          'color' => 'required|string',
+        ];
+
+
+
+        foreach($data as $index => $tee){
+            
+            //Unset previous errors
+            if(isset($data[$index]['error'])){
+                unset($data[$index]['error']);
+            }
+
+            $validator = Validator::make($data,$validationRules);
+            if($validator->fails()){
+
+                $data[$index]['error'] = json_decode(json_encode($validator->errors()), true);
+                $foundOneOrMoreErrors = true;
+
+            }
+            if(array_search($tee['color'],$availableColors) === false){
+
+                Course::ensureErrorsPropertyOnData($data[$index], "color");
+                $data[$index]['error']['color'][] = "Please Select A Valid Color";
+                $foundOneOrMoreErrors = true;
+            }
+
+
+        }
+
+        if($foundOneOrMoreErrors){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    public static function ensureErrorsPropertyOnData(&$data, $propertyName){
+        if(isset($data['error'])){
+
+            if(!isset($data['error'][$propertyName])){
+                $data['error'][$propertyName] = [];
+            }
+
+        }else{
+            $data['error'] = [];
+            $data['error'][$propertyName]= [];
+
+        }
+    }
+    
     /**
      *
      * @deprecated use fill instead

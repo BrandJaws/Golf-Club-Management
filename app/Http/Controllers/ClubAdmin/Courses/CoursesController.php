@@ -86,6 +86,9 @@ class CoursesController extends Controller
                 'error' => \trans('message.unauthorized_access')
             ]);
         }
+
+        $foundOneOrMoreErrors = false;
+        $error = [];
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:1,max:50',
             'openTime' => 'required|date_format:H:i',
@@ -97,41 +100,54 @@ class CoursesController extends Controller
             'holesDataJson'=> 'required',
         ]);
 
-      
         if ($validator->fails()) {
 
-            $this->error = $validator->errors();
-            return \Redirect::back()->withInput()->withErrors($this->error);
+            $error = json_decode(json_encode($validator->errors()),true);
+            $foundOneOrMoreErrors = true;
+
         }
 
-        $errorBag = json_decode(json_encode($validator->errors()));
-        $errorBag->messages[] = "A new Message";
 
-        $teesData = json_decode($request->get('teesDataJson'));
+        $teesData = json_decode($request->get('teesDataJson'), true);
         if(!$teesData || !is_array($teesData) || !count($teesData)){
 
-            return \Redirect::back()->withInput()->with([
-              'error' => \trans('message.tees_fields_required.message')
-            ]);
+            Course::ensureErrorsPropertyOnData($error,"teesDataJson");
+            $error['teesDataJson'] = "Must Select Atleast One Tee";
+            $foundOneOrMoreErrors = true;
+
         }
 
-        $holesData = json_decode($request->get('holesDataJson'));
+        if(!Course::validateTeesData($teesData)){
+            $foundOneOrMoreErrors = true;
+
+        }
+
+        $holesData = json_decode($request->get('holesDataJson'), true);
         if(!$holesData || !is_array($holesData) || !count($holesData)){
 
-            return \Redirect::back()->withInput()->with([
-              'error' => \trans('message.holes_fields_required.message')
-            ]);
+
+            Course::ensureErrorsPropertyOnData($error,"holesDataJson");
+            $error["holesDataJson"] = "Must Select Atleast One Hole";
+            $foundOneOrMoreErrors = true;
         }
 
-        foreach($holesData as $holeData){
-            if(!CourseHole::validateDataAgainstModel($holeData)){
-                return \Redirect::back()->withInput()->with([
-                  'error' => \trans('message.holes_fields_required.message')
-                ]);
-            }
+        $colorsSent = [];
+        foreach($teesData as $tee){
+            $colorsSent[] = $tee['color'];
+        }
+
+        if(!CourseHole::validateDataListAgainstModel($holesData,$colorsSent)){
+            $foundOneOrMoreErrors = true;
+
         }
 
 
+        if($foundOneOrMoreErrors){
+
+            $request->merge(["holesDataJson" => json_encode($holesData)]);
+            $request->merge(["teesDataJson" => json_encode($teesData)]);
+            return \Redirect::back()->withInput()->withErrors($error);
+        }
 
         try {
             $data = $request->only([

@@ -16,6 +16,7 @@ class CreateCourseHolesTable extends Migration
         Schema::create('course_holes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('course_id')->unsigned();
+            $table->bigInteger('hole_number')->unsigned();
             $table->integer('mens_handicap');
             $table->integer('mens_par');
             $table->integer('womens_handicap');

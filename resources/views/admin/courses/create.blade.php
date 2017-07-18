@@ -96,7 +96,7 @@
                                 <div class="row">
                                     <div class="col-sm-12"><label class="form-control-label">Select Tees Color</label>
                                     </div>
-                                    <div class="col-sm-3" v-for="(tee,teeIndex) in colorSelectionFieldsForTees">
+                                    <div class="col-sm-3" v-for="(tee,teeIndex) in colorSelectionFieldsForTees" @click="teeFieldClicked(tee)">
                                         <div class="form-group">
                                             <select name="tees" id="" class="form-control tees-colors"
                                                     v-model="tee.selectedValue"
@@ -106,7 +106,11 @@
 
                                             </select>
                                         </div>
+                                        <div v-if="tee.error && tee.error.color[1] != undefined" >
+                                            <span class="help-block errorProfilePic" v-text="tee.error.color[1]"></span>
+                                        </div>
                                     </div>
+
 
                                 </div>
                                 <div class="col-sm-12"><div class="inner-header row">
@@ -124,6 +128,11 @@
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>
+                                        @if($errors->has('holesDataJson'))
+                                            <div class="col-sm-12">
+                                                <span class="help-block errorProfilePic">{{$errors->first('holesDataJson') }}</span>
+                                            </div>
+                                        @endif
                                     </div></div>
                                 <div class="panel panel-tees" v-for="hole in holes">
                                     
@@ -133,54 +142,66 @@
                                         <li v-for="tee in hole.tee_values" >
                                             <div :class="[tee.cssClass , 'form-group', {{($errors->has('hole1'))?'has-error':''}} ]">
                                                 <div class="col-sm-8">
-                                               	<!-- <label class="form-control-label label-tees" v-text="tee.selectedValue">Tees Color</label>-->
-                                                <label class="form-control-label label-tees" v-text="tee.color != ''? tee.color : 'No Color Selected'"></label>
+                                                    <!-- <label class="form-control-label label-tees" v-text="tee.selectedValue">Tees Color</label>-->
+                                                    <label class="form-control-label label-tees" v-text="tee.color != ''? tee.color : 'No Color Selected'"></label>
                                                 </div>
                                                 <div class="col-sm-4">
-                                                <label class="form-control-label">Yard</label>
-                                                <div class="input-group">
-                                                    <input type="text"  class="form-control" v-model="tee.distance">
-                                                    <span :class="[tee.cssClass , 'input-group-addon', {{($errors->has('hole1'))?'has-error':''}} ]"></span>
+                                                    <label class="form-control-label">Yard</label>
+                                                    <div class="input-group">
+                                                        <input type="text"  class="form-control" v-model="tee.distance">
+                                                        <span :class="[tee.cssClass , 'input-group-addon', {{($errors->has('hole1'))?'has-error':''}} ]"></span>
+                                                    </div>
+
                                                 </div>
-                                                
-                                                
-                                                <!--<input type="text" class="form-control" v-model="tee.distance"/>--></div></div>
-                                            
+                                            </div>
+                                            <div v-if="tee.error && tee.error.color != undefined" class="col-sm-12">
+                                                <span class="help-block errorProfilePic" v-text="tee.error.color[0]"></span>
+                                            </div>
+                                            <div v-if="tee.error && tee.error.distance != undefined" class="col-sm-12">
+                                                <span class="help-block errorProfilePic" v-text="tee.error.distance[0]"></span>
+                                            </div>
+
                                         </li>
                                         </div>
+
+
+
                                     </ul>
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group {{($errors->has('menHandiCap'))?'has-error':''}}">
                                                 <label class="form-control-label">Men's Handicap Tees</label>
-                                                <input type="text" class="form-control"
-                                                       v-model="hole.mens_handicap"/>
-                                                @if($errors->has('menHandiCap')) <span
-                                                        class="help-block errorProfilePic">{{$errors->first('menHandiCap') }}</span> @endif
+                                                <input type="text" class="form-control" v-model="hole.mens_handicap"/>
+                                                <div v-if="hole.error && hole.error.mens_handicap != undefined">
+                                                    <span class="help-block errorProfilePic" v-text="hole.error.mens_handicap[0]"></span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group {{($errors->has('menPar'))?'has-error':''}}">
                                                 <label class="form-control-label">Men's Par</label>
                                                 <input type="text" class="form-control" v-model="hole.mens_par"/>
-                                                @if($errors->has('menPar')) <span
-                                                        class="help-block errorProfilePic">{{$errors->first('menPar') }}</span> @endif
+                                                <div v-if="hole.error && hole.error.mens_par != undefined">
+                                                    <span class="help-block errorProfilePic" v-text="hole.error.mens_par[0]"></span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group {{($errors->has('womenHandiCap'))?'has-error':''}}">
                                                 <label class="form-control-label">Women's Handicap Tees</label>
                                                 <input type="text" class="form-control" v-model="hole.womens_handicap"/>
-                                                @if($errors->has('womenHandiCap')) <span
-                                                        class="help-block errorProfilePic">{{$errors->first('womenHandiCap') }}</span> @endif
+                                                <div v-if="hole.error && hole.error.womens_handicap != undefined">
+                                                    <span class="help-block errorProfilePic" v-text="hole.error.womens_handicap[0]"></span>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group {{($errors->has('womenPar'))?'has-error':''}}">
                                                 <label class="form-control-label">Women's Par</label>
                                                 <input type="text" class="form-control" v-model="hole.womens_par"/>
-                                                @if($errors->has('menHandiCap')) <span
-                                                        class="help-block errorProfilePic">{{$errors->first('womenPar') }}</span> @endif
+                                                <div v-if="hole.error && hole.error.womens_par != undefined">
+                                                    <span class="help-block errorProfilePic" v-text="hole.error.womens_par[0]"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -302,7 +323,7 @@
                                 if(this.colorSelectionFieldsForTees.length > 0){
                                     for(teeIndex in this.colorSelectionFieldsForTees){
                                        // if(this.colorSelectionFieldsForTees[teeIndex].selectedValue != '' ){
-                                            teesData.push(this.colorSelectionFieldsForTees[teeIndex].selectedValue);
+                                            teesData.push({color:this.colorSelectionFieldsForTees[teeIndex].selectedValue});
                                        // }
                                     }
                                 }
@@ -327,6 +348,9 @@
                             containerClicked:function(){
 
                             },
+                             teeFieldClicked:function(tee){
+                                 console.log(tee);
+                             },
                             teeColorSelectionChanged:function(tee){
                                 for(colorIndex in tee.colors){
                                     if(tee.selectedValue == tee.colors[colorIndex].name){
@@ -399,6 +423,7 @@
                                      while(this.holes.length < this.numberOfHoles){
 
                                          var holeData = {
+                                             hole_number:this.holes.length+1,
                                              tee_values: [],
                                              mens_handicap: 0,
                                              mens_par: 0,
@@ -420,17 +445,23 @@
 
 
                                  for(holeIndex in holesDataToPrefill){
-
+                                         this.holes[holeIndex].hole_number =  holesDataToPrefill[holeIndex].hole_number;
                                          this.holes[holeIndex].mens_handicap =  holesDataToPrefill[holeIndex].mens_handicap;
                                          this.holes[holeIndex].mens_par =  holesDataToPrefill[holeIndex].mens_par;
                                          this.holes[holeIndex].womens_handicap =  holesDataToPrefill[holeIndex].womens_handicap;
                                          this.holes[holeIndex].womens_par = holesDataToPrefill[holeIndex].womens_par;
 
+                                         if(holesDataToPrefill[holeIndex].error != undefined){
+                                             this.holes[holeIndex].error = holesDataToPrefill[holeIndex].error;
+                                         }
                                          for(teeIndex =0;  teeIndex<this.holes[holeIndex].tee_values.length; teeIndex++){
-                                       
+
                                              this.holes[holeIndex].tee_values[teeIndex].color = holesDataToPrefill[holeIndex].tee_values[teeIndex].color;
                                              this.holes[holeIndex].tee_values[teeIndex].cssClass = this.getClassAgainstColorSelected(holesDataToPrefill[holeIndex].tee_values[teeIndex].color);
                                              this.holes[holeIndex].tee_values[teeIndex].distance = holesDataToPrefill[holeIndex].tee_values[teeIndex].distance;
+                                             if(holesDataToPrefill[holeIndex].tee_values[teeIndex].error != undefined){
+                                                 this.holes[holeIndex].tee_values[teeIndex].error = holesDataToPrefill[holeIndex].tee_values[teeIndex].error;
+                                             }
 
                                          }
                                  }
@@ -464,8 +495,12 @@
 
                                  for(teeIndex in teeColorsToPrefill){
 
-                                     this.colorSelectionFieldsForTees[teeIndex].selectedValue =  teeColorsToPrefill[teeIndex];
-                                     this.colorSelectionFieldsForTees[teeIndex].cssClass = this.getClassAgainstColorSelected( teeColorsToPrefill[teeIndex]);
+                                     this.colorSelectionFieldsForTees[teeIndex].selectedValue =  teeColorsToPrefill[teeIndex].color;
+                                     this.colorSelectionFieldsForTees[teeIndex].cssClass = this.getClassAgainstColorSelected( teeColorsToPrefill[teeIndex].color);
+                                     if(teeColorsToPrefill[teeIndex].error != undefined){
+
+                                         this.colorSelectionFieldsForTees[teeIndex].error = teeColorsToPrefill[teeIndex].error;
+                                     }
 
                                  }
 

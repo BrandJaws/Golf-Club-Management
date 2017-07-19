@@ -222,6 +222,55 @@
                                     </a>
                                 </div>
                             </div>
+                            <div class="table">
+                            	<table class="table table-hover">
+                                	<thead>
+                                    	<tr class="inner-header">
+                                        	<th>Tee</th>
+                                          	<th>Yards</th>
+                                            <th>Men's Rating</th>
+                                            <th>Men's Slope</th>
+                                            <th>Ladies Rating</th>
+                                            <th>Ladies Slope</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    	<tr>
+                                    		<th class="inner-header">Black</th>
+                                            <td><input type="text" class="form-control" name="" ></td> 
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                       	</tr>
+                                       	<tr>
+                                        	<th class="inner-header">Silver</th>
+                                            <td><input type="text" class="form-control" name="" ></td> 
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                        </tr>
+                                        <tr>
+                                        	<th class="inner-header">White</th>
+                                            <td><input type="text" class="form-control" name="" ></td> 
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                        </tr>
+                                        <tr>
+                                        	<th class="inner-header">Red</th>
+                                            <td><input type="text" class="form-control" name="" ></td> 
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                            <td><input type="text" class="form-control" name="" ></td>
+                                        </tr>
+                                    </tbody>
+                            </table>
+                            
+                            </div>
                             <div class="col-md-12">
                                 <div class="form-group clearfix">
                                     <div class="checkbox">

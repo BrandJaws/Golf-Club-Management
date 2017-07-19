@@ -270,7 +270,7 @@
             var vue = new Vue({
                         el: "#courseContainer",
                         data: {
-                            numberOfHoles:{!! Request::old('numberOfHoles') ? Request::old('numberOfHoles') : (isset($course['numberOfHoles']) ? $course['numberOfHoles'] : 2) !!},
+                            numberOfHoles:{!! Request::old('numberOfHoles') ? Request::old('numberOfHoles') : (isset($course['numberOfHoles']) ? $course['numberOfHoles'] : 1) !!},
                             numberOfTees:{!! Request::old('numberOfTees') ? Request::old('numberOfTees') : (isset($course['numberOfTees']) ? $course['numberOfTees'] : 1) !!},
                             teesDataReceived:{!! Request::old('teesDataJson') ? Request::old('teesDataJson') : (isset($course['teesDataJson']) ? $course['teesDataJson'] : '[]') !!},
                             holesDataReceived:{!! Request::old('holesDataJson') ? Request::old('holesDataJson') : (isset($course['holesDataJson']) ? $course['holesDataJson'] : '[]') !!},

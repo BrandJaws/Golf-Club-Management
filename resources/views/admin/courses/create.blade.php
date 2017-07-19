@@ -137,7 +137,7 @@
                                     </div>
                                 </div>
                                 {{--<transition name="slideInLeft">--}}
-                                    <div class="panel panel-tees" v-for="hole in holes" v-if="hole.selectedForSettings" :key="hole.hole_number">
+                                    <div class="panel panel-tees" v-for="hole in holes" v-show="hole.selectedForSettings" :key="hole.hole_number">
 
 
 
@@ -235,38 +235,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    	<tr>
-                                    		<th class="inner-header">Black</th>
-                                            <td><input type="text" class="form-control" name="" ></td> 
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
+                                    	<tr v-for="(tee,teeIndex) in colorSelectionFieldsForTees">
+                                    		<th class="inner-header" v-text="tee.selectedValue != '' ? tee.selectedValue: '-'" ></th>
+                                            <td><input type="text" class="form-control" v-model="tee.distance" ></td>
+                                            <td><input type="text" class="form-control" v-model="tee.mensRating" ></td>
+                                            <td><input type="text" class="form-control" v-model="tee.mensSlope" ></td>
+                                            <td><input type="text" class="form-control" v-model="tee.womensRating" ></td>
+                                            <td><input type="text" class="form-control" v-model="tee.womensSlope" ></td>
                                        	</tr>
-                                       	<tr>
-                                        	<th class="inner-header">Silver</th>
-                                            <td><input type="text" class="form-control" name="" ></td> 
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                        </tr>
-                                        <tr>
-                                        	<th class="inner-header">White</th>
-                                            <td><input type="text" class="form-control" name="" ></td> 
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                        </tr>
-                                        <tr>
-                                        	<th class="inner-header">Red</th>
-                                            <td><input type="text" class="form-control" name="" ></td> 
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                            <td><input type="text" class="form-control" name="" ></td>
-                                        </tr>
+
                                     </tbody>
                             </table>
                             
@@ -384,7 +361,14 @@
                                 if(this.colorSelectionFieldsForTees.length > 0){
                                     for(teeIndex in this.colorSelectionFieldsForTees){
                                        // if(this.colorSelectionFieldsForTees[teeIndex].selectedValue != '' ){
-                                            teesData.push({color:this.colorSelectionFieldsForTees[teeIndex].selectedValue});
+                                            teesData.push({
+                                                            color:this.colorSelectionFieldsForTees[teeIndex].selectedValue,
+                                                            distance:this.colorSelectionFieldsForTees[teeIndex].distance,
+                                                            mensRating:this.colorSelectionFieldsForTees[teeIndex].mensRating,
+                                                            mensSlope:this.colorSelectionFieldsForTees[teeIndex].mensSlope,
+                                                            womensRating:this.colorSelectionFieldsForTees[teeIndex].womensRating,
+                                                            womensSlope:this.colorSelectionFieldsForTees[teeIndex].womensSlope,
+                                            });
                                        // }
                                     }
                                 }
@@ -539,7 +523,13 @@
                                              }
 
                                          }
+
+
+
                                      }
+
+
+
 
                                      if(firstHoleWithErrors !== 0){
                                          this.selectHoleForSettings(firstHoleWithErrors);
@@ -552,7 +542,8 @@
                                      this.selectHoleForSettings(1);
                                  }
 
-
+                                  //reset sizes of panels to be equal to the one with highest size
+                                 this.balanceHoleSettingPanelSize();
 
 
                              },
@@ -577,20 +568,34 @@
                                          fieldData.colors = JSON.parse(JSON.stringify(this.colors));
                                          fieldData.selectedValue = "";
                                          fieldData.cssClass = "";
+                                         fieldData.distance = "";
+                                         fieldData.mensRating = "";
+                                         fieldData.mensSlope = "";
+                                         fieldData.womensRating = "";
+                                         fieldData.womensSlope = "";
                                          this.colorSelectionFieldsForTees.push(fieldData);
                                      }
                                  }
 
-                                 for(teeIndex in teeColorsToPrefill){
+                                if(teeColorsToPrefill.length > 0){
+                                    for(teeIndex in teeColorsToPrefill){
 
-                                     this.colorSelectionFieldsForTees[teeIndex].selectedValue =  teeColorsToPrefill[teeIndex].color;
-                                     this.colorSelectionFieldsForTees[teeIndex].cssClass = this.getClassAgainstColorSelected( teeColorsToPrefill[teeIndex].color);
-                                     if(teeColorsToPrefill[teeIndex].error != undefined){
+                                        this.colorSelectionFieldsForTees[teeIndex].selectedValue =  teeColorsToPrefill[teeIndex].color;
+                                        this.colorSelectionFieldsForTees[teeIndex].cssClass = this.getClassAgainstColorSelected( teeColorsToPrefill[teeIndex].color);
+                                        this.colorSelectionFieldsForTees[teeIndex].distance = teeColorsToPrefill[teeIndex].distance;
+                                        this.colorSelectionFieldsForTees[teeIndex].mensRating = teeColorsToPrefill[teeIndex].mensRating;
+                                        this.colorSelectionFieldsForTees[teeIndex].mensSlope = teeColorsToPrefill[teeIndex].mensSlope;
+                                        this.colorSelectionFieldsForTees[teeIndex].womensRating = teeColorsToPrefill[teeIndex].womensRating;
+                                        this.colorSelectionFieldsForTees[teeIndex].womensSlope = teeColorsToPrefill[teeIndex].womensSlope;
+                                        if(teeColorsToPrefill[teeIndex].error != undefined){
 
-                                         this.colorSelectionFieldsForTees[teeIndex].error = teeColorsToPrefill[teeIndex].error;
-                                     }
+                                            this.colorSelectionFieldsForTees[teeIndex].error = teeColorsToPrefill[teeIndex].error;
+                                        }
 
-                                 }
+                                    }
+                                }
+
+
 
                                  this.resetColorsAvailableForEachTeeSelection();
 
@@ -653,7 +658,30 @@
                                     }
 
                                 }
-                             }
+                             },
+                             balanceHoleSettingPanelSize:function(){
+                                //reset form sizes. Set them all to the highest of sizes
+                                 Vue.nextTick(function(){
+                                     var teePanels = $('.panel-tees');
+                                     var highestHeight = 0;
+                                     teePanels.each(function(){
+                                         console.log($(this).css('height'));
+                                         if(parseInt($(this).css('height')) > highestHeight){
+
+                                             highestHeight = parseInt($(this).css('height'));
+                                         }
+                                     });
+                                     console.log(highestHeight);
+                                     teePanels.each(function(){
+                                         if(parseInt($(this).css('height')) < highestHeight){
+                                             $(this).css('height',highestHeight);
+
+                                         }
+                                     });
+                                     //console.log(highestHeight);
+
+                                 });
+                             },
                          }
 
             });

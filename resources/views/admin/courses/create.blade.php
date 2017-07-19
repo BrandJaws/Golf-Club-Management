@@ -113,7 +113,8 @@
 
 
                                 </div>
-                                <div class="col-sm-12"><div class="inner-header row">
+                                <div class="col-sm-12">
+                                    <div class="inner-header row">
                                         <div>
                                             <div class="col-md-4">
                                                 <div class="inner-page-heading text-left">
@@ -121,8 +122,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-8">
-                                                <select name="tees" id="" class="form-control tees-colors">
-                                                <option value="">Search Tess By ID</option>
+                                                <select name="tees" id="" class="form-control tees-colors" v-model="holeSelectedForSettings" @change="holeForSettingsSelectionChanged">
+                                                    <option v-for="hole in holes" v-text="'Hole ' + hole.hole_number" :value="hole.hole_number" :class="hole.hasErrors ? 'text-danger' : '' "></option>
                                                 
                                                 </select>
                                             </div>
@@ -133,84 +134,90 @@
                                                 <span class="help-block errorProfilePic">{{$errors->first('holesDataJson') }}</span>
                                             </div>
                                         @endif
-                                    </div></div>
-                                <div class="panel panel-tees" v-for="hole in holes">
-                                    
-
-                                    <ul class="list-tees">
-                                        <div class="row">
-                                        <li v-for="tee in hole.tee_values" >
-                                            <div :class="[tee.cssClass , 'form-group', {{($errors->has('hole1'))?'has-error':''}} ]">
-                                                <div class="col-sm-8">
-                                                    <!-- <label class="form-control-label label-tees" v-text="tee.selectedValue">Tees Color</label>-->
-                                                    <label class="form-control-label label-tees" v-text="tee.color != ''? tee.color : 'No Color Selected'"></label>
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    <label class="form-control-label">Yard</label>
-                                                    <div class="input-group">
-                                                        <input type="text"  class="form-control" v-model="tee.distance">
-                                                        <span :class="[tee.cssClass , 'input-group-addon', {{($errors->has('hole1'))?'has-error':''}} ]"></span>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            <div v-if="tee.error && tee.error.color != undefined" class="col-sm-12">
-                                                <span class="help-block errorProfilePic" v-text="tee.error.color[0]"></span>
-                                            </div>
-                                            <div v-if="tee.error && tee.error.distance != undefined" class="col-sm-12">
-                                                <span class="help-block errorProfilePic" v-text="tee.error.distance[0]"></span>
-                                            </div>
-
-                                        </li>
-                                        </div>
-
-
-
-                                    </ul>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group {{($errors->has('menHandiCap'))?'has-error':''}}">
-                                                <label class="form-control-label">Men's Handicap Tees</label>
-                                                <input type="text" class="form-control" v-model="hole.mens_handicap"/>
-                                                <div v-if="hole.error && hole.error.mens_handicap != undefined">
-                                                    <span class="help-block errorProfilePic" v-text="hole.error.mens_handicap[0]"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group {{($errors->has('menPar'))?'has-error':''}}">
-                                                <label class="form-control-label">Men's Par</label>
-                                                <input type="text" class="form-control" v-model="hole.mens_par"/>
-                                                <div v-if="hole.error && hole.error.mens_par != undefined">
-                                                    <span class="help-block errorProfilePic" v-text="hole.error.mens_par[0]"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group {{($errors->has('womenHandiCap'))?'has-error':''}}">
-                                                <label class="form-control-label">Women's Handicap Tees</label>
-                                                <input type="text" class="form-control" v-model="hole.womens_handicap"/>
-                                                <div v-if="hole.error && hole.error.womens_handicap != undefined">
-                                                    <span class="help-block errorProfilePic" v-text="hole.error.womens_handicap[0]"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group {{($errors->has('womenPar'))?'has-error':''}}">
-                                                <label class="form-control-label">Women's Par</label>
-                                                <input type="text" class="form-control" v-model="hole.womens_par"/>
-                                                <div v-if="hole.error && hole.error.womens_par != undefined">
-                                                    <span class="help-block errorProfilePic" v-text="hole.error.womens_par[0]"></span>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
+                                {{--<transition name="slideInLeft">--}}
+                                    <div class="panel panel-tees" v-for="hole in holes" v-if="hole.selectedForSettings" :key="hole.hole_number">
+
+
+
+                                        <ul class="list-tees">
+                                            <div class="row">
+                                            <li v-for="tee in hole.tee_values" >
+                                                <div :class="[tee.cssClass , 'form-group', {{($errors->has('hole1'))?'has-error':''}} ]">
+                                                    <div class="col-sm-8">
+                                                        <!-- <label class="form-control-label label-tees" v-text="tee.selectedValue">Tees Color</label>-->
+                                                        <label class="form-control-label label-tees" v-text="tee.color != ''? tee.color : 'No Color Selected'"></label>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <label class="form-control-label">Yard</label>
+                                                        <div class="input-group">
+                                                            <input type="text"  class="form-control" v-model="tee.distance">
+                                                            <span :class="[tee.cssClass , 'input-group-addon', {{($errors->has('hole1'))?'has-error':''}} ]"></span>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                                <div v-if="tee.error && tee.error.color != undefined" class="col-sm-12">
+                                                    <span class="help-block errorProfilePic" v-text="tee.error.color[0]"></span>
+                                                </div>
+                                                <div v-if="tee.error && tee.error.distance != undefined" class="col-sm-12">
+                                                    <span class="help-block errorProfilePic" v-text="tee.error.distance[0]"></span>
+                                                </div>
+
+                                            </li>
+                                            </div>
+
+
+
+                                        </ul>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <div class="form-group {{($errors->has('menHandiCap'))?'has-error':''}}">
+                                                    <label class="form-control-label">Men's Handicap Tees</label>
+                                                    <input type="text" class="form-control" v-model="hole.mens_handicap"/>
+                                                    <div v-if="hole.error && hole.error.mens_handicap != undefined">
+                                                        <span class="help-block errorProfilePic" v-text="hole.error.mens_handicap[0]"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group {{($errors->has('menPar'))?'has-error':''}}">
+                                                    <label class="form-control-label">Men's Par</label>
+                                                    <input type="text" class="form-control" v-model="hole.mens_par"/>
+                                                    <div v-if="hole.error && hole.error.mens_par != undefined">
+                                                        <span class="help-block errorProfilePic" v-text="hole.error.mens_par[0]"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group {{($errors->has('womenHandiCap'))?'has-error':''}}">
+                                                    <label class="form-control-label">Women's Handicap Tees</label>
+                                                    <input type="text" class="form-control" v-model="hole.womens_handicap"/>
+                                                    <div v-if="hole.error && hole.error.womens_handicap != undefined">
+                                                        <span class="help-block errorProfilePic" v-text="hole.error.womens_handicap[0]"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group {{($errors->has('womenPar'))?'has-error':''}}">
+                                                    <label class="form-control-label">Women's Par</label>
+                                                    <input type="text" class="form-control" v-model="hole.womens_par"/>
+                                                    <div v-if="hole.error && hole.error.womens_par != undefined">
+                                                        <span class="help-block errorProfilePic" v-text="hole.error.womens_par[0]"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                {{--</transition>--}}
                                 <div class="form-group text-right">
-                                    <a href="#." class="btn btn-def disabled">
+                                    <a href="" :class="['btn', 'btn-def', holeSelectedForSettings == 1 ? 'disabled' : '']" @click.prevent="selectPreviousHoleForSettings">
                                         <i class="fa fa-arrow-left"></i> &nbsp;Prev
                                     </a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <a href="#." class="btn btn-def">
+                                    <a href="" :class="['btn', 'btn-def', holeSelectedForSettings == holes.length ? 'disabled' : '']" @click.prevent="selectNextHoleForSettings">
                                         Next &nbsp; <i class="fa fa-arrow-right"></i>
                                     </a>
                                 </div>
@@ -263,7 +270,7 @@
             var vue = new Vue({
                         el: "#courseContainer",
                         data: {
-                            numberOfHoles:{!! Request::old('numberOfHoles') ? Request::old('numberOfHoles') : (isset($course['numberOfHoles']) ? $course['numberOfHoles'] : 1) !!},
+                            numberOfHoles:{!! Request::old('numberOfHoles') ? Request::old('numberOfHoles') : (isset($course['numberOfHoles']) ? $course['numberOfHoles'] : 2) !!},
                             numberOfTees:{!! Request::old('numberOfTees') ? Request::old('numberOfTees') : (isset($course['numberOfTees']) ? $course['numberOfTees'] : 1) !!},
                             teesDataReceived:{!! Request::old('teesDataJson') ? Request::old('teesDataJson') : (isset($course['teesDataJson']) ? $course['teesDataJson'] : '[]') !!},
                             holesDataReceived:{!! Request::old('holesDataJson') ? Request::old('holesDataJson') : (isset($course['holesDataJson']) ? $course['holesDataJson'] : '[]') !!},
@@ -282,6 +289,7 @@
                             courseName:"Test Name",
                             colorSelectionFieldsForTees:[],
                             holes:[],
+                            holeSelectedForSettings:1,
                          },
                         mounted:function(){
                             this.generateColorSelectionFieldsForTees(this.teesDataReceived);
@@ -311,10 +319,14 @@
 
                                     this.numberOfHoles = 1;
 
+                                }else if(this.numberOfHoles > 36){
+
+                                    this.numberOfHoles = 36;
+
                                 }
 
                                 this.generateHoles([]);
-                            },
+                            }
 
                         },
                         computed:{
@@ -429,6 +441,8 @@
                                              mens_par: 0,
                                              womens_handicap: 0,
                                              womens_par: 0,
+                                             hasErrors:false,
+                                             selectedForSettings:false,
                                          };
                                          for(teeIndex in this.colorSelectionFieldsForTees){
                                            // if(this.colorSelectionFieldsForTees[teeIndex].selectedValue != ''){
@@ -443,16 +457,24 @@
                                      }
                                  }
 
+                                 if(holesDataToPrefill.length > 0){
+                                     var firstHoleWithErrors = 0;
 
-                                 for(holeIndex in holesDataToPrefill){
+                                     for(holeIndex in holesDataToPrefill){
                                          this.holes[holeIndex].hole_number =  holesDataToPrefill[holeIndex].hole_number;
                                          this.holes[holeIndex].mens_handicap =  holesDataToPrefill[holeIndex].mens_handicap;
                                          this.holes[holeIndex].mens_par =  holesDataToPrefill[holeIndex].mens_par;
                                          this.holes[holeIndex].womens_handicap =  holesDataToPrefill[holeIndex].womens_handicap;
                                          this.holes[holeIndex].womens_par = holesDataToPrefill[holeIndex].womens_par;
 
+
                                          if(holesDataToPrefill[holeIndex].error != undefined){
                                              this.holes[holeIndex].error = holesDataToPrefill[holeIndex].error;
+                                             this.holes[holeIndex].hasErrors = true;
+
+                                             if(firstHoleWithErrors === 0){
+                                                 firstHoleWithErrors = holesDataToPrefill[holeIndex].hole_number;
+                                             }
                                          }
                                          for(teeIndex =0;  teeIndex<this.holes[holeIndex].tee_values.length; teeIndex++){
 
@@ -461,10 +483,27 @@
                                              this.holes[holeIndex].tee_values[teeIndex].distance = holesDataToPrefill[holeIndex].tee_values[teeIndex].distance;
                                              if(holesDataToPrefill[holeIndex].tee_values[teeIndex].error != undefined){
                                                  this.holes[holeIndex].tee_values[teeIndex].error = holesDataToPrefill[holeIndex].tee_values[teeIndex].error;
+                                                 this.holes[holeIndex].hasErrors = true;
+                                                 if(firstHoleWithErrors === 0){
+                                                     firstHoleWithErrors = holesDataToPrefill[holeIndex].hole_number;
+                                                 }
                                              }
 
                                          }
+                                     }
+
+                                     if(firstHoleWithErrors !== 0){
+                                         this.selectHoleForSettings(firstHoleWithErrors);
+                                     }else{
+                                         this.selectHoleForSettings(1);
+                                     }
+
+
+                                 }else{
+                                     this.selectHoleForSettings(1);
                                  }
+
+
 
 
                              },
@@ -538,6 +577,34 @@
                                      }
                                  }
                              },
+                             holeForSettingsSelectionChanged:function(){
+                                 this.selectHoleForSettings(this.holeSelectedForSettings);
+                             },
+                             selectNextHoleForSettings:function(){
+                                 if(this.holeSelectedForSettings < this.holes.length){
+                                     this.selectHoleForSettings(this.holeSelectedForSettings + 1);
+                                 }
+                             },
+                             selectPreviousHoleForSettings:function(){
+                                 if(this.holeSelectedForSettings > 1 ){
+                                     this.selectHoleForSettings(this.holeSelectedForSettings - 1);
+                                 }
+                             },
+                             selectHoleForSettings:function(holeNumber){
+                                if(this.holeSelectedForSettings != holeNumber){
+                                    this.holeSelectedForSettings = holeNumber
+                                }
+
+                                for(var holeIndex in this.holes){
+
+                                    if(this.holes[holeIndex].hole_number == holeNumber){
+                                        this.holes[holeIndex].selectedForSettings = true;
+                                    }else{
+                                        this.holes[holeIndex].selectedForSettings = false;
+                                    }
+
+                                }
+                             }
                          }
 
             });

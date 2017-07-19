@@ -247,6 +247,7 @@ label { display: block; margin: 3px 0; }
 .panel-tees.panel { padding:20px; display:inline-block; background:#f5f5f5; margin-bottom:20px;}
 .panel-tees .inner-header{ background:transparent; padding:0px;}
 
-
+.slideInLeft-enter-active { animation: slideInLeft 0.5s; }
+.slideInLeft-leave-active { animation: slideInLeft 0.5s reverse; }
 
 

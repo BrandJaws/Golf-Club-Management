@@ -146,7 +146,6 @@ class CoursesController extends Controller
 
             $request->merge(["holesDataJson" => json_encode($holesData)]);
             $request->merge(["teesDataJson" => json_encode($teesData)]);
-    
             return \Redirect::back()->withInput()->withErrors($error);
         }
 

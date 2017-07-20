@@ -101,12 +101,13 @@
                                             <select name="tees" id="" class="form-control tees-colors"
                                                     v-model="tee.selectedValue"
                                                     v-on:change="teeColorSelectionChanged(tee)">
+                                                <option value="">Select Color</option>
                                                 <option v-for="color in tee.colors" :class="color.class"
                                                         v-text="color.name" :value="color.name"></option>
 
                                             </select>
                                         </div>
-                                        <div v-if="tee.error && tee.error.color[1] != undefined" >
+                                        <div v-if="tee.error != undefined && tee.error.color != undefined && tee.error.color[1] != undefined" >
                                             <span class="help-block errorProfilePic" v-text="tee.error.color[1]"></span>
                                         </div>
                                     </div>
@@ -136,8 +137,8 @@
                                         @endif
                                     </div>
                                 </div>
-                                {{--<transition name="slideInLeft">--}}
-                                    <div class="panel panel-tees" v-for="hole in holes" v-show="hole.selectedForSettings" :key="hole.hole_number">
+                                <transition-group name="flipInX">
+                                    <div class="panel panel-tees bounceIn" v-for="hole in holes" :key="hole.hole_number" v-show="hole.selectedForSettings">
 
 
 
@@ -158,10 +159,10 @@
 
                                                     </div>
                                                 </div>
-                                                <div v-if="tee.error && tee.error.color != undefined" class="col-sm-12">
+                                                <div v-if="tee.error != undefined && tee.error.color != undefined" class="col-sm-12">
                                                     <span class="help-block errorProfilePic" v-text="tee.error.color[0]"></span>
                                                 </div>
-                                                <div v-if="tee.error && tee.error.distance != undefined" class="col-sm-12">
+                                                <div v-if="tee.error != undefined && tee.error.distance != undefined" class="col-sm-12">
                                                     <span class="help-block errorProfilePic" v-text="tee.error.distance[0]"></span>
                                                 </div>
 
@@ -212,7 +213,7 @@
 
 
                                     </div>
-                                {{--</transition>--}}
+                                </transition-group>
                                 <div class="form-group text-right">
                                     <a href="" :class="['btn', 'btn-def', holeSelectedForSettings == 1 ? 'disabled' : '']" @click.prevent="selectPreviousHoleForSettings">
                                         <i class="fa fa-arrow-left"></i> &nbsp;Prev
@@ -235,17 +236,32 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    	<tr v-for="(tee,teeIndex) in colorSelectionFieldsForTees">
-                                    		<th class="inner-header" v-text="tee.selectedValue != '' ? tee.selectedValue: '-'" ></th>
-                                            <td><input type="text" class="form-control" v-model="tee.distance" ></td>
+                                    <template v-for="(tee,teeIndex) in colorSelectionFieldsForTees">
+                                        <tr>
+                                            <th class="inner-header" v-text="tee.selectedValue != '' ? tee.selectedValue: '-'" ></th>
+                                            <td><input type="number" class="form-control number-input-tees-summary" v-model="tee.distance" data-property="distance" :data-index="teeIndex"></td>
                                             <td><input type="text" class="form-control" v-model="tee.mensRating" ></td>
                                             <td><input type="text" class="form-control" v-model="tee.mensSlope" ></td>
                                             <td><input type="text" class="form-control" v-model="tee.womensRating" ></td>
                                             <td><input type="text" class="form-control" v-model="tee.womensSlope" ></td>
-                                       	</tr>
+                                        </tr>
+                                        <tr v-if="tee.error != undefined" >
+                                            <td colspan="6">
+                                                <span class="help-block errorProfilePic" v-if="tee.error.color != undefined && tee.error.color[1] != undefined"  v-text="tee.error.color[1]"></span>
+                                                <span class="help-block errorProfilePic" v-if="tee.error.distance != undefined" v-text="tee.error.distance[0]"></span>
+                                                <span class="help-block errorProfilePic" v-if="tee.error.mensRating != undefined" v-text="tee.error.mensRating[0]"></span>
+                                                <span class="help-block errorProfilePic" v-if="tee.error.mensSlope != undefined" v-text="tee.error.mensSlope[0]"></span>
+                                                <span class="help-block errorProfilePic" v-if="tee.error.womensRating != undefined" v-text="tee.error.womensRating[0]"></span>
+                                                <span class="help-block errorProfilePic" v-if="tee.error.womensSlope != undefined" v-text="tee.error.womensSlope[0]"></span>
+                                            </td>
+                                        </tr>
+
+                                    </template>
+
 
                                     </tbody>
-                            </table>
+                                </table>
+
                             
                             </div>
                             <div class="col-md-12">
@@ -321,6 +337,13 @@
                             this.generateColorSelectionFieldsForTees(this.teesDataReceived);
                             this.generateHoles(this.holesDataReceived);
                             this.updateTeesForHoles();
+
+
+                            var colorSelectionFieldsForTees = this.colorSelectionFieldsForTees;
+                            $('#courseContainer').on("input",".number-input-tees-summary",function(){
+                                var inputField = $(this);
+                                colorSelectionFieldsForTees[inputField.attr("data-index")][inputField.attr("data-property")] = inputField.val();
+                            });
 
                         },
                         watch:{
@@ -665,20 +688,20 @@
                                      var teePanels = $('.panel-tees');
                                      var highestHeight = 0;
                                      teePanels.each(function(){
-                                         console.log($(this).css('height'));
+
                                          if(parseInt($(this).css('height')) > highestHeight){
 
                                              highestHeight = parseInt($(this).css('height'));
                                          }
                                      });
-                                     console.log(highestHeight);
+
                                      teePanels.each(function(){
                                          if(parseInt($(this).css('height')) < highestHeight){
                                              $(this).css('height',highestHeight);
 
                                          }
                                      });
-                                     //console.log(highestHeight);
+
 
                                  });
                              },

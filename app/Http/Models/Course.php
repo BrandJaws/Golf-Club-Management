@@ -51,6 +51,7 @@ class Course extends Model
 
         $validationRules = [
           'color' => 'required|string',
+          'distance'=>'required|integer|min:1',
         ];
 
 
@@ -62,7 +63,7 @@ class Course extends Model
                 unset($data[$index]['error']);
             }
 
-            $validator = Validator::make($data,$validationRules);
+            $validator = Validator::make($tee,$validationRules);
             if($validator->fails()){
 
                 $data[$index]['error'] = json_decode(json_encode($validator->errors()), true);
@@ -75,10 +76,30 @@ class Course extends Model
                 $data[$index]['error']['color'][] = "Please Select A Valid Color";
                 $foundOneOrMoreErrors = true;
             }
+            if(!is_int($tee['mensRating']) && $tee['mensRating'] != ""){
+                Course::ensureErrorsPropertyOnData($data[$index], "mensRating");
+                $data[$index]['error']['mensRating'][] = "Mens rating should be an integer value";
+                $foundOneOrMoreErrors = true;
+            }
+            if(!is_int($tee['mensSlope']) && $tee['mensSlope'] != ""){
+                Course::ensureErrorsPropertyOnData($data[$index], "mensSlope");
+                $data[$index]['error']['mensSlope'][] = "Mens slope should be an integer value";
+                $foundOneOrMoreErrors = true;
+            }
+            if(!is_int($tee['womensRating']) && $tee['womensRating'] != ""){
+                Course::ensureErrorsPropertyOnData($data[$index], "womensRating");
+                $data[$index]['error']['womensRating'][] = "Womens rating should be an integer value";
+                $foundOneOrMoreErrors = true;
+            }
+            if(!is_int($tee['womensSlope']) && $tee['womensSlope'] != ""){
+                Course::ensureErrorsPropertyOnData($data[$index], "womensSlope");
+                $data[$index]['error']['womensSlope'][] = "Womens slope should be an integer value";
+                $foundOneOrMoreErrors = true;
+            }
 
 
         }
-
+       
         if($foundOneOrMoreErrors){
             return false;
         }else{

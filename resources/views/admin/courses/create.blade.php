@@ -336,35 +336,36 @@
                             this.generateHoles(this.holesDataReceived);
                             this.updateTeesForHoles();
 
-                            var vueInstance = this;
-                            var colorSelectionFieldsForTees = this.colorSelectionFieldsForTees;
-                            var holes = this.holes;
-
-
-                            $('#courseContainer').on("input",".number-input-tees-summary",function(){
-                                var inputField = $(this);
-                                colorSelectionFieldsForTees[inputField.attr("data-index")][inputField.attr("data-property")] = parseInt(inputField.val());
-                            });
-
-                            $('#courseContainer').on("input",".number-input-hole-tees",function(){
-                                var inputField = $(this);
-                                holes[inputField.attr("data-hole-index")].tee_values[inputField.attr("data-tee-index")][inputField.attr("data-property")] = parseInt(inputField.val());
-
-                            });
-
-                            $('#courseContainer').on("input",".number-input-hole",function(){
-                                var inputField = $(this);
-                                holes[inputField.attr("data-hole-index")][inputField.attr("data-property")] = parseInt(inputField.val());
-
-                            });
-
-
-
-                            $('#courseContainer').on("input",".number-input-course",function(){
-                                var inputField = $(this);
-                                vueInstance[inputField.attr("data-property")] = parseInt(inputField.val());
-
-                            });
+//                            var vueInstance = this;
+//
+//
+//
+//                            $('#courseContainer').on("input",".number-input-tees-summary",function(){
+//                                var inputField = $(this);
+//                                vueInstance.colorSelectionFieldsForTees[inputField.attr("data-tee-index")][inputField.attr("data-property")] = parseInt(inputField.val());
+//
+//                            });
+//
+//                            $('#courseContainer').on("input",".number-input-hole-tees",function(){
+//                                var inputField = $(this);
+//                                vueInstance.holes[inputField.attr("data-hole-index")].tee_values[inputField.attr("data-tee-index")][inputField.attr("data-property")] = parseInt(inputField.val());
+//
+//                            });
+//
+//                            $('#courseContainer').on("input",".number-input-hole",function(){
+//                                var inputField = $(this);
+//                                vueInstance.holes[inputField.attr("data-hole-index")][inputField.attr("data-property")] = parseInt(inputField.val());
+//
+//                            });
+//
+//                            $('#courseContainer').on("input",".number-input-course",function(){
+//                                var inputField = $(this);
+//                                vueInstance[inputField.attr("data-property")] = parseInt(inputField.val());
+//                                Vue.nextTick(function(){
+//                                    inputField.val(vueInstance[inputField.attr("data-property")]);
+//                                });
+//
+//                            });
 
 
 
@@ -728,7 +729,13 @@
 
                                  });
                              },
-                         }
+                             resetAddThemeUIInitializers:function(){
+                                 Vue.nextTick(function(){
+                                     webshim.polyfill('forms forms-ext');
+                                 });
+                             }
+                         },
+
 
             });
 

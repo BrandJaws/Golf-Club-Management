@@ -53,7 +53,7 @@
     //webshim.polyfill('forms forms-ext');
 
     webshim.setOptions('forms-ext', {
-        replaceUI: 'auto',
+        replaceUI: {date:'auto'},
         types: 'date',
         date: {
             startView: 2,

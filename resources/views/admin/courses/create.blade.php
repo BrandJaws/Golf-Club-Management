@@ -65,8 +65,7 @@
                             <div class="col-md-6">
                                 <div class="form-group {{($errors->has('numberOfHoles'))?'has-error':''}}">
                                     <label class="form-control-label">Number of Holes</label>
-                                    <input type="text" class="form-control" name="numberOfHoles"
-                                           value="{{Request::old('numberOfHoles')}}" v-model="numberOfHoles"/>
+                                    <input name="numberOfHoles"  v-model.number="numberOfHoles" type="number" class="form-control number-input-course" data-property="numberOfHoles"/>
                                     @if($errors->has('numberOfHoles')) <span
                                             class="help-block errorProfilePic">{{$errors->first('numberOfHoles') }}</span> @endif
                                 </div>
@@ -78,8 +77,7 @@
                             <div class="col-md-6">
                                 <div class="form-group {{($errors->has('numberOfTees'))?'has-error':''}}">
                                     <label class="form-control-label">Number of Tees</label>
-                                    <input type="text" class="form-control" name="numberOfTees"
-                                           value="{{Request::old('numberOfTees')}}" v-model.number="numberOfTees"/>
+                                    <input name="numberOfTees"  v-model.number="numberOfTees" type="number" class="form-control number-input-course" data-property="numberOfTees"/>
                                     @if($errors->has('numberOfTees')) <span
                                             class="help-block errorProfilePic">{{$errors->first('numberOfTees') }}</span> @endif
                                 </div>
@@ -138,35 +136,35 @@
                                     </div>
                                 </div>
                                 <transition-group name="flipInX">
-                                    <div class="panel panel-tees bounceIn" v-for="hole in holes" :key="hole.hole_number" v-show="hole.selectedForSettings">
+                                    <div class="panel panel-tees bounceIn" v-for="(hole,holeIndex) in holes" :key="hole.hole_number" v-show="hole.selectedForSettings">
 
 
 
                                         <ul class="list-tees">
                                             <div class="row">
-                                            <li v-for="tee in hole.tee_values" >
-                                                <div :class="[tee.cssClass , 'form-group', {{($errors->has('hole1'))?'has-error':''}} ]">
-                                                    <div class="col-sm-8">
-                                                        <!-- <label class="form-control-label label-tees" v-text="tee.selectedValue">Tees Color</label>-->
-                                                        <label class="form-control-label label-tees" v-text="tee.color != ''? tee.color : 'No Color Selected'"></label>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <label class="form-control-label">Yard</label>
-                                                        <div class="input-group">
-                                                            <input type="text"  class="form-control" v-model="tee.distance">
-                                                            <span :class="[tee.cssClass , 'input-group-addon', {{($errors->has('hole1'))?'has-error':''}} ]"></span>
+                                                <li v-for="(tee,teeIndex) in hole.tee_values" >
+                                                    <div :class="[tee.cssClass , 'form-group', {{($errors->has('hole1'))?'has-error':''}} ]">
+                                                        <div class="col-sm-8">
+                                                            <!-- <label class="form-control-label label-tees" v-text="tee.selectedValue">Tees Color</label>-->
+                                                            <label class="form-control-label label-tees" v-text="tee.color != ''? tee.color : 'No Color Selected'"></label>
                                                         </div>
+                                                        <div class="col-sm-4">
+                                                            <label class="form-control-label">Yard</label>
+                                                            <div class="input-group">
+                                                                <input type="number" class="form-control number-input-hole-tees" v-model.number="tee.distance" :data-hole-index="holeIndex" :data-tee-index="teeIndex" data-property="distance">
+                                                                <span :class="[tee.cssClass , 'input-group-addon', {{($errors->has('hole1'))?'has-error':''}} ]"></span>
+                                                            </div>
 
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div v-if="tee.error != undefined && tee.error.color != undefined" class="col-sm-12">
-                                                    <span class="help-block errorProfilePic" v-text="tee.error.color[0]"></span>
-                                                </div>
-                                                <div v-if="tee.error != undefined && tee.error.distance != undefined" class="col-sm-12">
-                                                    <span class="help-block errorProfilePic" v-text="tee.error.distance[0]"></span>
-                                                </div>
+                                                    <div v-if="tee.error != undefined && tee.error.color != undefined" class="col-sm-12">
+                                                        <span class="help-block errorProfilePic" v-text="tee.error.color[0]"></span>
+                                                    </div>
+                                                    <div v-if="tee.error != undefined && tee.error.distance != undefined" class="col-sm-12">
+                                                        <span class="help-block errorProfilePic" v-text="tee.error.distance[0]"></span>
+                                                    </div>
 
-                                            </li>
+                                                </li>
                                             </div>
 
 
@@ -176,7 +174,7 @@
                                             <div class="col-sm-6">
                                                 <div class="form-group {{($errors->has('menHandiCap'))?'has-error':''}}">
                                                     <label class="form-control-label">Men's Handicap Tees</label>
-                                                    <input type="text" class="form-control" v-model="hole.mens_handicap"/>
+                                                    <input   v-model="hole.mens_handicap" type="number" class="form-control number-input-hole" v-model.number="hole.mens_handicap" :data-hole-index="holeIndex" data-property="mens_handicap"/>
                                                     <div v-if="hole.error && hole.error.mens_handicap != undefined">
                                                         <span class="help-block errorProfilePic" v-text="hole.error.mens_handicap[0]"></span>
                                                     </div>
@@ -185,7 +183,7 @@
                                             <div class="col-sm-6">
                                                 <div class="form-group {{($errors->has('menPar'))?'has-error':''}}">
                                                     <label class="form-control-label">Men's Par</label>
-                                                    <input type="text" class="form-control" v-model="hole.mens_par"/>
+                                                    <input v-model="hole.mens_par" type="number" class="form-control number-input-hole" v-model.number="hole.mens_par" :data-hole-index="holeIndex" data-property="mens_par"/>
                                                     <div v-if="hole.error && hole.error.mens_par != undefined">
                                                         <span class="help-block errorProfilePic" v-text="hole.error.mens_par[0]"></span>
                                                     </div>
@@ -194,7 +192,7 @@
                                             <div class="col-sm-6">
                                                 <div class="form-group {{($errors->has('womenHandiCap'))?'has-error':''}}">
                                                     <label class="form-control-label">Women's Handicap Tees</label>
-                                                    <input type="text" class="form-control" v-model="hole.womens_handicap"/>
+                                                    <input v-model="hole.womens_handicap" type="number" class="form-control number-input-hole" v-model.number="hole.womens_handicap" :data-hole-index="holeIndex" data-property="womens_handicap"/>
                                                     <div v-if="hole.error && hole.error.womens_handicap != undefined">
                                                         <span class="help-block errorProfilePic" v-text="hole.error.womens_handicap[0]"></span>
                                                     </div>
@@ -203,7 +201,7 @@
                                             <div class="col-sm-6">
                                                 <div class="form-group {{($errors->has('womenPar'))?'has-error':''}}">
                                                     <label class="form-control-label">Women's Par</label>
-                                                    <input type="text" class="form-control" v-model="hole.womens_par"/>
+                                                    <input v-model="hole.womens_par" type="number" class="form-control number-input-hole" v-model.number="hole.womens_par" :data-hole-index="holeIndex" data-property="womens_par"/>
                                                     <div v-if="hole.error && hole.error.womens_par != undefined">
                                                         <span class="help-block errorProfilePic" v-text="hole.error.womens_par[0]"></span>
                                                     </div>
@@ -239,11 +237,11 @@
                                     <template v-for="(tee,teeIndex) in colorSelectionFieldsForTees">
                                         <tr>
                                             <th class="inner-header" v-text="tee.selectedValue != '' ? tee.selectedValue: '-'" ></th>
-                                            <td><input type="number" class="form-control number-input-tees-summary" v-model="tee.distance" data-property="distance" :data-index="teeIndex"></td>
-                                            <td><input type="text" class="form-control" v-model="tee.mensRating" ></td>
-                                            <td><input type="text" class="form-control" v-model="tee.mensSlope" ></td>
-                                            <td><input type="text" class="form-control" v-model="tee.womensRating" ></td>
-                                            <td><input type="text" class="form-control" v-model="tee.womensSlope" ></td>
+                                            <td><input type="number" class="form-control number-input-tees-summary" v-model.number="tee.distance" data-property="distance" :data-tee-index="teeIndex"></td>
+                                            <td><input type="number" class="form-control number-input-tees-summary" v-model.number="tee.mensRating" data-property="mensRating" :data-tee-index="teeIndex"></td>
+                                            <td><input type="number" class="form-control number-input-tees-summary" v-model.number="tee.mensSlope" data-property="mensSlope" :data-tee-index="teeIndex"></td>
+                                            <td><input type="number" class="form-control number-input-tees-summary" v-model.number="tee.womensRating" data-property="womensRating" :data-tee-index="teeIndex"></td>
+                                            <td><input type="number" class="form-control number-input-tees-summary" v-model.number="tee.womensSlope" data-property="womensSlope" :data-tee-index="teeIndex"></td>
                                         </tr>
                                         <tr v-if="tee.error != undefined" >
                                             <td colspan="6">
@@ -338,12 +336,37 @@
                             this.generateHoles(this.holesDataReceived);
                             this.updateTeesForHoles();
 
-
+                            var vueInstance = this;
                             var colorSelectionFieldsForTees = this.colorSelectionFieldsForTees;
+                            var holes = this.holes;
+
+
                             $('#courseContainer').on("input",".number-input-tees-summary",function(){
                                 var inputField = $(this);
-                                colorSelectionFieldsForTees[inputField.attr("data-index")][inputField.attr("data-property")] = inputField.val();
+                                colorSelectionFieldsForTees[inputField.attr("data-index")][inputField.attr("data-property")] = parseInt(inputField.val());
                             });
+
+                            $('#courseContainer').on("input",".number-input-hole-tees",function(){
+                                var inputField = $(this);
+                                holes[inputField.attr("data-hole-index")].tee_values[inputField.attr("data-tee-index")][inputField.attr("data-property")] = parseInt(inputField.val());
+
+                            });
+
+                            $('#courseContainer').on("input",".number-input-hole",function(){
+                                var inputField = $(this);
+                                holes[inputField.attr("data-hole-index")][inputField.attr("data-property")] = parseInt(inputField.val());
+
+                            });
+
+
+
+                            $('#courseContainer').on("input",".number-input-course",function(){
+                                var inputField = $(this);
+                                vueInstance[inputField.attr("data-property")] = parseInt(inputField.val());
+
+                            });
+
+
 
                         },
                         watch:{

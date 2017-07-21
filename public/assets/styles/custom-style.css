@@ -248,6 +248,10 @@ label { display: block; margin: 3px 0; }
 .panel-tees .inner-header{ background:transparent; padding:0px;}
 
 .flipInX-enter-active { animation: flipInX 0.5s; }
+.slideInLeft-enter-active { animation: slideInLeft 0.5s; }
+.slideInRight-enter-active { animation: slideInRight 0.5s; }
 /*.slideInLeft-leave-active { animation: slideInLeft 0.5s reverse; }*/
+
+
 
 

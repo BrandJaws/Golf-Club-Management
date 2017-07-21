@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Models\Course;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 
@@ -57,12 +58,22 @@ class CoursesController extends Controller
             ]);
         }
         try {
-            $course = Course::findOrFail($course_id);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
-            return Redirect::route('admin.courses.index')->with([
-                'error' => \trans('message.not_found')
-            ]);
+
+            $course = Course::where("id",$course_id)->with('holes')->first();
+
+            if(!$course){
+                return Redirect::back()->with([
+                  'error' => \trans('message.not_found')
+                ]);
+            }
+
+
+            foreach($course->holes as $hole){
+                $hole->tee_values = json_decode($hole->tee_values);
+            }
+
         } catch (\Exception $exp) {
+
             return Redirect::back()->with([
                 'error' => $exp->getMessage()
             ]);
@@ -115,12 +126,14 @@ class CoursesController extends Controller
             $error['teesDataJson'] = "Must Select Atleast One Tee";
             $foundOneOrMoreErrors = true;
 
+        }else{
+            if(!Course::validateTeesData($teesData)){
+                $foundOneOrMoreErrors = true;
+
+            }
         }
 
-        if(!Course::validateTeesData($teesData)){
-            $foundOneOrMoreErrors = true;
 
-        }
 
         $holesData = json_decode($request->get('holesDataJson'), true);
         if(!$holesData || !is_array($holesData) || !count($holesData)){
@@ -129,17 +142,19 @@ class CoursesController extends Controller
             Course::ensureErrorsPropertyOnData($error,"holesDataJson");
             $error["holesDataJson"] = "Must Select Atleast One Hole";
             $foundOneOrMoreErrors = true;
+        }else{
+            $colorsSent = [];
+            foreach($teesData as $tee){
+                $colorsSent[] = $tee['color'];
+            }
+
+            if(!CourseHole::validateDataListAgainstModel($holesData,$colorsSent)){
+                $foundOneOrMoreErrors = true;
+
+            }
         }
 
-        $colorsSent = [];
-        foreach($teesData as $tee){
-            $colorsSent[] = $tee['color'];
-        }
 
-        if(!CourseHole::validateDataListAgainstModel($holesData,$colorsSent)){
-            $foundOneOrMoreErrors = true;
-
-        }
 
 
         if($foundOneOrMoreErrors){
@@ -150,6 +165,7 @@ class CoursesController extends Controller
         }
 
         try {
+            DB::beginTransaction();
             $data = $request->only([
                 'name',
                 'openTime',
@@ -160,11 +176,29 @@ class CoursesController extends Controller
             ]);
 
             $data['tees'] = $request->get('teesDataJson');
+            $data['status'] = ($request->has('status')) ? config('global.status.open') : config('global.status.closed');
+            $data['club_id'] = \Auth::user()->club_id;
 
             $course = new Course();
-            $course->status = ($request->has('status')) ? config('global.status.open') : config('global.status.closed');
-            $course->club_id = \Auth::user()->club_id;
             $course->fill($data)->save();
+
+            foreach($holesData as $hole){
+
+                $courseHole = new CourseHole();
+                $courseHole->course_id = $course->id;
+                $courseHole->hole_number = $hole['hole_number'];
+                $courseHole->mens_handicap = $hole['mens_handicap'];
+                $courseHole->mens_par = $hole['mens_par'];
+                $courseHole->womens_handicap = $hole['womens_handicap'];
+                $courseHole->womens_par = $hole['womens_par'];
+                $courseHole->tee_values = json_encode($hole['tee_values']);
+                $courseHole->save();
+
+            }
+
+            
+            DB::commit();
+            
             return \Redirect::route('admin.courses.index')->with([
                 'success' => \trans('message.course_created_success')
             ]);
@@ -182,38 +216,121 @@ class CoursesController extends Controller
                 'error' => \trans('message.unauthorized_access')
             ]);
         }
+
+        $foundOneOrMoreErrors = false;
+        $error = [];
         $validator = Validator::make($request->all(), [
-            'name' => 'required|min:1,max:50',
-            'openTime' => 'required|date_format:H:i',
-            'closeTime' => 'required|date_format:H:i',
-            'bookingDuration' => 'required|numeric',
-            'bookingInterval' => 'required|numeric',
-            'numberOfHoles' => 'required|numeric'
+          'name' => 'required|min:1,max:50',
+          'openTime' => 'required|date_format:H:i',
+          'closeTime' => 'required|date_format:H:i',
+          'bookingDuration' => 'required|numeric',
+          'bookingInterval' => 'required|numeric',
+          'numberOfHoles' => 'required|numeric',
+          'teesDataJson'=> 'required',
+          'holesDataJson'=> 'required',
         ]);
-        
+
         if ($validator->fails()) {
-            $this->error = $validator->errors();
-            return \Redirect::back()->withInput()->withErrors($this->error);
+
+            $error = json_decode(json_encode($validator->errors()),true);
+            $foundOneOrMoreErrors = true;
+
         }
-        try {
-            $data = $request->only([
-                'name',
-                'openTime',
-                'closeTime',
-                'bookingDuration',
-                'bookingInterval',
-                'numberOfHoles'
+
+
+        $teesData = json_decode($request->get('teesDataJson'), true);
+        if(!$teesData || !is_array($teesData) || !count($teesData)){
+
+            Course::ensureErrorsPropertyOnData($error,"teesDataJson");
+            $error['teesDataJson'] = "Must Select Atleast One Tee";
+            $foundOneOrMoreErrors = true;
+
+        }else{
+            if(!Course::validateTeesData($teesData)){
+                $foundOneOrMoreErrors = true;
+
+            }
+        }
+
+
+
+        $holesData = json_decode($request->get('holesDataJson'), true);
+        if(!$holesData || !is_array($holesData) || !count($holesData)){
+
+
+            Course::ensureErrorsPropertyOnData($error,"holesDataJson");
+            $error["holesDataJson"] = "Must Select Atleast One Hole";
+            $foundOneOrMoreErrors = true;
+        }else{
+            $colorsSent = [];
+            foreach($teesData as $tee){
+                $colorsSent[] = $tee['color'];
+            }
+
+            if(!CourseHole::validateDataListAgainstModel($holesData,$colorsSent)){
+                $foundOneOrMoreErrors = true;
+
+            }
+        }
+
+
+
+
+        if($foundOneOrMoreErrors){
+
+            $request->merge(["holesDataJson" => json_encode($holesData)]);
+            $request->merge(["teesDataJson" => json_encode($teesData)]);
+            return \Redirect::back()->withInput()->withErrors($error);
+        }
+
+        $course = Course::where("id",$courseId)->with('holes')->first();
+        if(!$course){
+            return Redirect::back()->with([
+              'error' => \trans('message.not_found')
             ]);
-            $course = Course::findOrFail($courseId);
-            $course->status = ($request->has('status')) ? config('global.status.open') : config('global.status.closed');
-            $course->fill($data)->update();
+        }
+
+        try {
+            DB::beginTransaction();
+            $data = $request->only([
+              'name',
+              'openTime',
+              'closeTime',
+              'bookingDuration',
+              'bookingInterval',
+              'numberOfHoles',
+            ]);
+
+            $data['tees'] = $request->get('teesDataJson');
+            $data['status'] = ($request->has('status')) ? config('global.status.open') : config('global.status.closed');
+
+
+            $course->fill($data)->save();
+
+            foreach($course->holes as $hole){
+                $hole->delete();
+            }
+
+            foreach($holesData as $hole){
+
+                $courseHole = new CourseHole();
+                $courseHole->course_id = $course->id;
+                $courseHole->hole_number = $hole['hole_number'];
+                $courseHole->mens_handicap = $hole['mens_handicap'];
+                $courseHole->mens_par = $hole['mens_par'];
+                $courseHole->womens_handicap = $hole['womens_handicap'];
+                $courseHole->womens_par = $hole['womens_par'];
+                $courseHole->tee_values = json_encode($hole['tee_values']);
+                $courseHole->save();
+
+            }
+
+            DB::commit();
+
             return \Redirect::route('admin.courses.index')->with([
                 'success' => \trans('message.course_update_success')
             ]);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
-            return Redirect::back()->with([
-                'error' => \trans('message.not_found')
-            ]);
+
         } catch (\Exception $exp) {
             return \Redirect::back()->withInput()->with([
                 'error' => $exp->getMessage()
@@ -224,7 +341,15 @@ class CoursesController extends Controller
     public function destroy($course_id)
     {
         try {
-            Course::find($course_id)->delete();
+            DB::beginTransaction();
+            $course = Course::where("id",$course_id)->with('holes')->first();
+            foreach($course->holes as $hole){
+                $hole->delete();
+            }
+
+            $course->delete();
+
+            DB::commit();
             return "success";
         } catch (\Exception $e) {
             return $e->getMessage();

@@ -10,6 +10,7 @@ class CourseHole extends Model
 
   protected $fillable = [
     'course_id',
+    'hole_number',
     'mens_handicap',
     'mens_par',
     'womens_handicap',

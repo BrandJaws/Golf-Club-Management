@@ -19,6 +19,7 @@ class Course extends Model
 
     protected $fillable = [
         'name',
+        'club_id',
         'openTime',
         'closeTime',
         'bookingDuration',

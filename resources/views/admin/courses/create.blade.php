@@ -143,7 +143,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <transition-group :name="slideInLeft">
+                            <transition-group :name="animationForHoleSettingsPage">
                                 <div class="panel panel-tees bounceIn" v-for="(hole,holeIndex) in holes"
                                      :key="hole.hole_number" v-show="hole.selectedForSettings">
 

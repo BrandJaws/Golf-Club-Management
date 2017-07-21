@@ -189,7 +189,7 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group {{($errors->has('menHandiCap'))?'has-error':''}}">
-                                                <label class="form-control-label">Men's Handicap Tees</label>
+                                                <label class="form-control-label">Men's Handicap</label>
                                                 <input v-model="hole.mens_handicap" type="number"
                                                        class="form-control number-input-hole"
                                                        v-model.number="hole.mens_handicap" :data-hole-index="holeIndex"
@@ -215,7 +215,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="form-group {{($errors->has('womenHandiCap'))?'has-error':''}}">
-                                                <label class="form-control-label">Women's Handicap Tees</label>
+                                                <label class="form-control-label">Women's Handicap</label>
                                                 <input v-model="hole.womens_handicap" type="number"
                                                        class="form-control number-input-hole"
                                                        v-model.number="hole.womens_handicap"
@@ -324,7 +324,7 @@
                             <div class="form-group clearfix">
                                 <div class="checkbox">
                                     <label class="ui-check">
-                                        <input type="checkbox" value="open" name="status">
+                                        <input type="checkbox" {{Request::old('status') ? (Request::old('status') == 'on' ? 'checked' : '') :  ($course['status'] == 'OPEN' ? 'checked' : '') }} name="status">
                                         <i class="dark-white"></i>
                                         Is Open?
                                     </label>

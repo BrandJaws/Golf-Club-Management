@@ -63,8 +63,8 @@ return [
     'status'=>[
         'active'=>'ACTIVE',
         'inactive'=>'INACTIVE',
-        'closed'=>'CLOSED'
-        
+        'closed'=>'CLOSED',
+        'open'=>'OPEN'
     ],
     'pushNotificationsUseCases' => [
         'reservation_confirmation_prompt' => 'reservation_confirmation_prompt',

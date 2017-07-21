@@ -39,6 +39,38 @@ class MemberSeeder extends Seeder {
 					'auth_token' => NULL,
 					'created_at' => Carbon::now () 
 			] );
+
+		}
+
+		foreach($clubList as $club){
+
+			$password = Hash::make ( '123456' );
+			\App\Http\Models\Member::create([
+				'club_id' => $club['id'],
+				'firstName' => "Fahad",
+				'lastName' => "Mansoor",
+				'email' => "fahad.brandjaws@gmail.com",
+				'phone' => $faker->phoneNumber (),
+				'password' => $password,
+				'profilePic' => NULL,
+				'dob' => Carbon::createFromDate ( $faker->year (), $faker->month (), $faker->dayOfMonth () )->startOfDay ()->toDateString (),
+				'gender' => 'MALE',
+				'auth_token' => NULL,
+				'created_at' => Carbon::now ()
+			]);
+			\App\Http\Models\Member::create([
+				'club_id' => $club['id'],
+				'firstName' => "Todd",
+				'lastName' => "Fiesel",
+				'email' => "todd@retrio.com",
+				'phone' => $faker->phoneNumber (),
+				'password' => $password,
+				'profilePic' => NULL,
+				'dob' => Carbon::createFromDate ( $faker->year (), $faker->month (), $faker->dayOfMonth () )->startOfDay ()->toDateString (),
+				'gender' => 'MALE',
+				'auth_token' => NULL,
+				'created_at' => Carbon::now ()
+			]);
 		}
 	}
 }

@@ -145,7 +145,7 @@
                             </div>
                             <transition-group :name="animationForHoleSettingsPage">
                                 <div class="panel panel-tees bounceIn" v-for="(hole,holeIndex) in holes"
-                                     :key="hole.hole_number" v-show="hole.selectedForSettings">
+                                     :key="hole.hole_number" v-if="hole.selectedForSettings">
 
 
                                     <ul class="list-tees">
@@ -440,13 +440,13 @@
             watch:{
                 numberOfTees:function(){
 
-                    if(this.numberOfTees < 1 ){
+                    if (this.numberOfTees < 1) {
 
                         this.numberOfTees = 1;
 
-                    }else if(this.numberOfTees > this.colors.length ){
+                    } else if (this.numberOfTees > (this.colors.length -1)) {
 
-                        this.numberOfTees = this.colors.length;
+                        this.numberOfTees = this.colors.length-1;
 
                     }
 
@@ -773,19 +773,25 @@
                     }
                 },
                 selectHoleForSettings:function(holeNumber){
-                    if(this.holeSelectedForSettings != holeNumber){
+                    if (this.holeSelectedForSettings != holeNumber) {
+
                         this.holeSelectedForSettings = holeNumber
                     }
 
-                    for(var holeIndex in this.holes){
 
-                        if(this.holes[holeIndex].hole_number == holeNumber){
-                            this.holes[holeIndex].selectedForSettings = true;
-                        }else{
+
+                    for (var holeIndex in this.holes) {
+
+                        if(this.holes[holeIndex].selectedForSettings){
                             this.holes[holeIndex].selectedForSettings = false;
+
+                            break;
                         }
 
+
                     }
+
+                    this.holes[holeNumber-1].selectedForSettings = true;
                 },
                 balanceHoleSettingPanelSize:function(){
                     //reset form sizes. Set them all to the highest of sizes

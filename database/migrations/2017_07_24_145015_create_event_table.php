@@ -16,7 +16,6 @@ class CreateEventTable extends Migration
         Schema::create('event', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('club_id');
-            $table->bigInteger('coach_id');
             $table->string('name', 100);
             $table->text('description')
               ->nullable()

@@ -11,7 +11,6 @@ class Event extends Model
 
     protected $fillable = [
         'club_id',
-        'coach_id',
         'name',
         'description',
         'seats',
@@ -50,9 +49,6 @@ class Event extends Model
     {
         
         return $this->where('event.club_id', '=', $club_id)
-            ->leftJoin('coaches', function ($join) {
-            $join->on('coaches.id', '=', 'event.coach_id');
-            })
             ->where(function($query) use ($onlyShowEventsNotYetComplete){
                 if ($onlyShowEventsNotYetComplete) {
                     $query->where("endDate",">",Carbon::now()->toDateString());
@@ -63,7 +59,7 @@ class Event extends Model
                     $query->where('event.name', 'like', "%$search%");
                 }
             })
-            ->select('event.id as id', 'event.name', 'event.seats', 'event.startDate', 'event.endDate','coaches.profilePic',\DB::raw('CONCAT(coaches.firstName," ",coaches.lastName) as coach'), \DB::raw("(SELECT COUNT(*)  FROM reservation_players WHERE  reservation_id = event.id AND reservation_type = '".addslashes(Event::class)."'  ) as seatsReserved"))
+            ->select('event.id as id', 'event.name', 'event.seats', 'event.startDate', 'event.endDate', \DB::raw("(SELECT COUNT(*)  FROM reservation_players WHERE  reservation_id = event.id AND reservation_type = '".addslashes(Event::class)."'  ) as seatsReserved"))
             ->orderby('event.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'

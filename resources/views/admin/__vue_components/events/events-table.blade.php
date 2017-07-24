@@ -7,7 +7,6 @@
                 <thead>
                     <tr>
                         <th>Lesson Name</th>
-                        <th>Coach</th>
                         <th>Total Seats</th>
                         <th>Start Date</th>
                         <th>End Date</th>
@@ -19,9 +18,6 @@
                     <tr v-for="(event,memberIndex) in eventListData">
                         <td>
                             @{{ event.name }}
-                        </td>
-                        <td>
-                            @{{ event.coach }}
                         </td>
                         <td>
                             @{{ event.seats }}

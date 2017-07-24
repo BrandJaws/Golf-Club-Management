@@ -67,18 +67,6 @@
                                     <textarea name="eventDescription" id="" class="form-control" rows="4">{!!old('eventDescription')?old('eventDescription'):$event->description !!}</textarea>
                                     @if($errors->has('eventDescription')) <span class="help-block errorProfilePic">{{$errors->first('eventDescription') }}</span> @endif
                                 </div>
-                                <div class="form-group {{($errors->has('coach'))?'has-error':''}}">
-                                    <label class="form-control-label">Coach Name</label>
-                                    <select name="coach" id="" class="form-control">
-                                    <option value="">Please Select</option>
-                                   @if($coaches && $coaches->count()>0)
-                                   		@foreach($coaches as $key=>$coach)
-                                   			<option value="{{$coach->id}}" {{(old('coach') && old('coach')==$coach->id)?'selected="selected"':($event->coach_id == $coach->id)?'selected="selected"':'' }}>{{$coach->name}}</option>
-                                   		@endforeach
-                                   @endif
-                                </select>
-                                @if($errors->has('coach')) <span class="help-block errorProfilePic">{{$errors->first('coach') }}</span> @endif
-                                </div>
                                 <div class="form-group {{($errors->has('numberOfSeats'))?'has-error':''}}">
                                     <label class="form-control-label">Number of seats available</label>
                                     <input type="number" class="form-control" name="numberOfSeats" value="{{old('numberOfSeats')?old('numberOfSeats'):$event->seats}}" />

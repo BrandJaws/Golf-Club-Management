@@ -44,8 +44,8 @@ class EventsController extends Controller
                 'error' => \trans('message.unauthorized_access')
             ]);
         }
-        $coaches = (new Coach())->getCoachDropDownList(Auth::user()->club_id);
-        return view('admin.events.create', compact('coaches'));
+
+        return view('admin.events.create');
     }
 
     public function store(Request $request)
@@ -53,7 +53,6 @@ class EventsController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:1,max:99',
             'eventDescription' => 'required|min:1,max:250',
-            'coach' => 'required|numeric',
             'numberOfSeats' => 'required|numeric',
             'promotionImage' => 'required_if:eventMedia,image|image|mimes:jpeg,bmp,png,jpg|max:1024',
             'videoUrl' => 'required_if:eventMedia,videoUrl|active_url',
@@ -78,7 +77,6 @@ class EventsController extends Controller
             $data['startDate'] = $request->get('startDate');
             $data['endDate'] = $request->get('endDate');
             $data['sessions'] = $request->get('numberOfSessions');
-            $data['coach_id'] = $request->get('coach');
             $data['price'] = $request->get('price');
             $data['club_id'] = \Auth::user()->club_id;
             if ($request->get('eventMedia') == 'image' && $request->hasFile('promotionImage')) {
@@ -114,7 +112,6 @@ class EventsController extends Controller
         try {
             $event = Event::findOrFail($id);
             $players = $event->getPlayersForEventPaginated(\Config::get('global.portal_items_per_page'),1);
-            $coaches = (new Coach())->getCoachDropDownList(Auth::user()->club_id);
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $exp) {
             return Redirect::back()->with([
                 'error' => \trans('message.not_found')
@@ -125,7 +122,7 @@ class EventsController extends Controller
             ]);
         }
         
-        return view('admin.events.edit', compact('event', 'coaches','players'));
+        return view('admin.events.edit', compact('event','players'));
     }
 
     public function update(Request $request, $id)
@@ -145,7 +142,6 @@ class EventsController extends Controller
             $validator = Validator::make($request->all(), array_merge([
                 'name' => 'required|min:1,max:99',
                 'eventDescription' => 'required|min:1,max:250',
-                'coach' => 'required|numeric',
                 'numberOfSeats' => 'required|numeric',
                 'startDate' => 'required|date_format:Y-m-d',
                 'endDate' => 'required|date_format:Y-m-d',
@@ -164,7 +160,6 @@ class EventsController extends Controller
             $data['startDate'] = $request->get('startDate');
             $data['endDate'] = $request->get('endDate');
             $data['sessions'] = $request->get('numberOfSessions');
-            $data['coach_id'] = $request->get('coach');
             $data['price'] = $request->get('price');
             /*
              * delete image if the promotion content changed from image to video

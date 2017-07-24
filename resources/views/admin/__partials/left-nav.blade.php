@@ -106,6 +106,12 @@
 						</span> <span class="nav-text">Leagues</span>
 					</a></li>
 					@endif
+					@can('event', 'App\Model')
+					<li><a href="{{route('admin.events.index')}}"> <span class="nav-icon"> <i
+										class="fa fa-graduation-cap"></i>
+						</span> <span class="nav-text">Events</span>
+						</a></li>
+					@endif
 					
 				</ul>
 			</nav>

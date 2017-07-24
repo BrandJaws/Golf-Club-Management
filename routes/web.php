@@ -427,6 +427,50 @@ Route::group([
             ]);
 
         });
+        /**
+         * Routes related to events
+         */
+        Route::group([
+          'prefix' => 'events',
+          'as' => 'events.'
+        ], function () {
+            Route::get('/', [
+              'as' => 'index',
+              'uses' => 'ClubAdmin\Events\EventsController@index'
+            ]);
+            Route::get('create', [
+              'as' => 'create',
+              'uses' => 'ClubAdmin\Events\EventsController@create'
+            ]);
+            Route::get('edit/{event_id}', [
+              'as' => 'edit',
+              'uses' => 'ClubAdmin\Events\EventsController@edit'
+            ]);
+            Route::post('/', [
+              'as' => 'store',
+              'uses' => 'ClubAdmin\Events\EventsController@store'
+            ]);
+            Route::put('/{event_id}', [
+              'as' => 'update',
+              'uses' => 'ClubAdmin\Events\EventsController@update'
+            ]);
+            Route::delete('/{event_id}', [
+              'as' => 'destroy',
+              'uses' => 'ClubAdmin\Events\EventsController@destroy'
+            ]);
+            Route::get('/{event}/players', [
+              'as' => 'players',
+              'uses' => 'ClubAdmin\Events\EventsController@playersForEventPaginated'
+            ]);
+            Route::delete('/{event_id}/players', [
+              'as' => 'deleteplayer',
+              'uses' => 'ClubAdmin\Events\EventsController@cancelPlaceForReservation'
+            ]);
+            Route::post('/{event_id}/players', [
+              'as' => 'addPlayer',
+              'uses' => 'ClubAdmin\Events\EventsController@reservePlaceForAEvent'
+            ]);
+        });
     });
 });
 Route::get('/home', 'HomeController@index');

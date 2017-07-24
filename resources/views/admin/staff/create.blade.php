@@ -164,6 +164,14 @@
 											</label>
 										</div>
 									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="event" name="permissions[]" {{(Request::old('permissions') && array_key_exists('event',array_flip(Request::old('permissions'))))?'checked':''}}>
+												Events
+											</label>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

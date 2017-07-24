@@ -98,4 +98,13 @@ Route::group([
 
 	});
 
+	Route::group(['prefix' => 'events', 'as' => 'events.'], function() {
+		Route::get('/', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\EventsController@index']);
+		Route::get('/{event_id}', ['as' => 'show', 'uses' => '\App\Http\Controllers\Mobile\EventsController@show']);
+		Route::post('/', ['as' => 'reserve', 'uses' => '\App\Http\Controllers\Mobile\EventsController@reservePlaceForAEvent']);
+		Route::delete('/', ['as' => 'reserve', 'uses' => '\App\Http\Controllers\Mobile\EventsController@cancelPlaceForReservation']);
+
+
+	});
+
 });

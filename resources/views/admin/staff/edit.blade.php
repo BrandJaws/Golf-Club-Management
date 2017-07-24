@@ -165,6 +165,14 @@
 											</label>
 										</div>
 									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="event" name="permissions[]" {{(is_array($employee['permissions']) && array_key_exists('event',array_flip($employee['permissions'])))?'checked':''}}>
+												Events
+											</label>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

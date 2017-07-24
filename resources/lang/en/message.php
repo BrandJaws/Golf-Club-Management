@@ -760,6 +760,56 @@ return [
         'httpCode' => '412',
         'message'=>"Hole Details Are Required"
       ],
+      'event_created_success' => [
+        'code' => '135',
+        'httpCode' => '200',
+        'message' => 'Event created successfully'
+      ],
+      'event_updated_success' => [
+        'code' => '136',
+        'httpCode' => '200',
+        'message' => 'Event updated successfully'
+      ],
+      'no_events_found' => [
+        'code' => '137',
+        'httpCode' => '404',
+        'message' => "No Events Found"
+      ],
+      'event_doesnt_belong_to_users_club' => [
+        'code' => '138',
+        'httpCode' => '412',
+        'message' => "Requested event doesn't belong to your club"
+      ],
+      'event_id_missing' => [
+        'code' => '139',
+        'httpCode' => '412',
+        'message' => "Event ID Is Missing"
+      ],
+      'event_slots_full' => [
+        'code' => '140',
+        'httpCode' => '412',
+        'message' => "All Places For This Event Have Been Filled"
+      ],
+      'event_is_not_available' => [
+        'code' => '141',
+        'httpCode' => '412',
+        'message' => "The Event You Requested Is Not Available Anymore"
+      ],
+      'already_reserved_for_event' => [
+        'code' => '142',
+        'httpCode' => '412',
+        'message' => "You Already Have A Reservation For This Event"
+      ],
+      'event_reservation_successful' => [
+        'code' => '143',
+        'httpCode' => '200',
+        'message' => "Successfuly Reserved A Place For Event"
+      ],
+      'not_reserved_for_event' => [
+        'code' => '144',
+        'httpCode' => '404',
+        'message' => "You Aren't Reserved For This Event"
+      ],
 
 
 

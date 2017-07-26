@@ -3,6 +3,7 @@
     Edit Course
     @endSection
 @section('main')
+
     <div class="app-body" id="courseContainer" @click="containerClicked">
     <!-- ############ PAGE START-->
     <div class="profile-main padding" id="selectionDepHidden">
@@ -324,7 +325,7 @@
                             <div class="form-group clearfix">
                                 <div class="checkbox">
                                     <label class="ui-check">
-                                        <input type="checkbox" {{Request::old('status') ? (Request::old('status') == 'on' ? 'checked' : '') :  ($course['status'] == 'OPEN' ? 'checked' : '') }} name="status">
+                                        <input type="checkbox" {{Request::old('status') ?(Request::old('status') == 'on' ? 'checked' : '') : (isset($course['status']) && $course['status'] == 'OPEN' ? 'checked' : ''  )     }} name="status">
                                         <i class="dark-white"></i>
                                         Is Open?
                                     </label>

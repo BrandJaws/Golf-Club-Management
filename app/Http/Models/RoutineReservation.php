@@ -22,6 +22,11 @@ class RoutineReservation extends Model
         return $this->morphMany("App\Http\Models\ReservationTimeSlot", "reservation");
     }
 
+    public function scores()
+    {
+        return $this->morphMany("App\Http\Models\Score", "reservation");
+    }
+
 
     public function reservation_players()
     {

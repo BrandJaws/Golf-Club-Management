@@ -99,5 +99,12 @@ return [
         "ReservationUpdation"=>"ReservationUpdation",
         
     ],
+    'score' => [
+        "handicap_options"=>["yes"=>"YES", "no"=>"NO"],
+        "scorecard_types"=>["strokePlay"=>"STROKE PLAY",
+
+        ],
+
+    ],
 
 ];

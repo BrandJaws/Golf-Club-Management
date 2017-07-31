@@ -151,7 +151,7 @@
 									<div class="form-group clearfix">
 										<div class="checkbox-inline">
 											<span class="pull-left"><label>
-												<input type="checkbox" value="Active" name="status">Activate Beacon</label>
+												<input type="checkbox" value="Active" name="status"> &nbsp;Activate Beacon</label>
 											</span>
 										</div>
 									</div>

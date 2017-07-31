@@ -4,7 +4,7 @@
 Vue.component('reservation-tab-divs', {
     template: `
               		
-                <div class="tab-content m-b-md">
+                <div class="tab-content m-b-md" style="max-height: 1000px; overflow-y: scroll;">
                       <div v-for="(reservationByDate,reservationIndex) in reservationsByDate" v-if="reservationByDate.dateIsVisible" :id="'tab'+(reservationIndex+1)" :class="['tab-pane', 'animated', 'fadeIn', 'text-muted', reservationIndex == 0 ? 'active' : '']" >
                         <div class="tab-pane-content">
                             <div class="booked-list">

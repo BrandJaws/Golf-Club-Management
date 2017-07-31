@@ -7,12 +7,12 @@
         <!-- chat -->
         <div class="chat_box chat-shadow" style="z-index:99;">
             <div class="chat_head"> Chat Box</div>
-            <div class="chat_body">
+            <div class="chat_body" style="display: none;">
                 <div class="user"> Krishna Teja</div>
             </div>
         </div>
 
-        <div class="msg_box chat-shadow" style="right:290px;z-index:99;">
+        <div class="msg_box chat-shadow" style="right:290px;z-index:99;display: none;">
             <div class="msg_head">Krishna Teja
                 <div class="close">x</div>
             </div>

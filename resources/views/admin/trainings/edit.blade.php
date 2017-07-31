@@ -1,6 +1,6 @@
 @extends('admin.__layouts.admin-layout')
 @section('heading')
-    Edit Lessons
+    Edit Training
     @endSection
 @section('main')
         <div class="app-body" id="view">
@@ -21,7 +21,7 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <label class="form-control-label">
-                                                Select Lesson Media
+                                                Select Training Media
                                             </label>
                                         </div>
                                         <div class="col-md-3">
@@ -59,11 +59,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-control-label">Lesson Name</label>
+                                    <label class="form-control-label">Training Name</label>
                                     <input type="text" class="form-control" value="{{old('name')?old('name'):$training->name}}" name="name" />
                                 </div>
                                 <div class="form-group {{($errors->has('lessonDescription'))?'has-error':''}}">
-                                    <label class="form-control-label">Lesson Description</label>
+                                    <label class="form-control-label">Training Description</label>
                                     <textarea name="lessonDescription" id="" class="form-control" rows="4">{!!old('lessonDescription')?old('lessonDescription'):$training->description !!}</textarea>
                                     @if($errors->has('lessonDescription')) <span class="help-block errorProfilePic">{{$errors->first('lessonDescription') }}</span> @endif
                                 </div>
@@ -110,7 +110,7 @@
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn-def">
-                                        <i class="fa fa-floppy-o"></i> &nbsp;Update Lesson
+                                        <i class="fa fa-floppy-o"></i> &nbsp;Update Training
                                     </button>
                                     <a href="{{route("admin.trainings.index")}}" class="btn btn-outline b-primary text-primary">
                                         <i class="fa fa-ban"></i> &nbsp;Cancel

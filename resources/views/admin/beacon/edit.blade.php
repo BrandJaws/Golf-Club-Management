@@ -144,7 +144,7 @@
 									<div class="form-group clearfix">
 										<div class="checkbox-inline">
 											<span class="pull-left"><label>
-												<input type="checkbox" value="Active" name="status" {{($beacon->status == config('global.status.active'))?'checked="checked"':''}}>Activate Beacon</label>
+												<input type="checkbox" value="Active" name="status" {{($beacon->status == config('global.status.active'))?'checked="checked"':''}}> &nbsp;Activate Beacon</label>
 											</span>
 										</div>
 									</div>

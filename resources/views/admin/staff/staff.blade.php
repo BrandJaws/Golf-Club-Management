@@ -39,7 +39,7 @@
                             <div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
                         @endif
                         @if(Session::has('success'))
-                        	<div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
+                        	<div class="alert alert-success" role="alert"> Member Create Successfully. </div>
                         @endif
 						<!-- inner header -->
 						<staff :staff-list="staffList"> </staff>

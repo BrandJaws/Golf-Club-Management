@@ -13,7 +13,7 @@
                     <div class="col-md-6">
                         <div class="main-page-heading">
                             <h3>
-                                <span>Person Taking this Lesson</span>
+                                <span>Persons Taking this Training</span>
                             </h3>
                         </div>
                     </div>

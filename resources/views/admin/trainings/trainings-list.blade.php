@@ -1,6 +1,6 @@
 @extends('admin.__layouts.admin-layout')
 @section('heading')
-    Lessons
+    Trainings
     @endSection
 @section('main')
         <div ui-view class="app-body" id="view">
@@ -13,12 +13,12 @@
                                 <div class="">
                                     <div class="col-md-8">
                                         <h3>
-                                            <span>Lessons List</span>
+                                            <span>Trainings List</span>
                                         </h3>
                                     </div>
                                     <div class="col-md-4 text-right">
                                         <a class="btn-def btn" href="{{route("admin.trainings.create")}}"><i
-                                                    class="fa fa-plus-circle"></i>&nbsp;Add New Lesson</a>
+                                                    class="fa fa-plus-circle"></i>&nbsp;Add New Training</a>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>

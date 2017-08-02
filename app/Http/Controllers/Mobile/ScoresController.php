@@ -129,7 +129,7 @@ class ScoresController extends Controller
                 //return with error prompt if the user wants to overtake his score card
                 $this->error = "requesting_user_already_being_scored";
                 $this->supportingDataUseCase = 'requesting_user_already_being_scored';
-                
+
                 $manager = Member::find($scoreCard->manager_member_id);
                 $managerName = $manager->firstName." ".$manager->lastName;
                 $this->responseParameters = ["manager"=>$managerName];
@@ -256,7 +256,7 @@ class ScoresController extends Controller
           "use_handicap"=>$useHandicap,
           "round_type"=>$request->get('round_type'),
           "starting_hole"=>$startingHole,
-          "scores"=>$scoreEntries,
+          "score_cards"=>$scoreEntries,
         ];
 
         //Send Messages to previous mangers of scores *if replaced *if any
@@ -268,7 +268,7 @@ class ScoresController extends Controller
       }
       catch(\Exception $e)
       {
-        dd($e);
+        //dd($e);
         \DB::rollback();
 
         \Log::info(__METHOD__, [

@@ -17,9 +17,11 @@ trait ResponseProvider {
     protected $validationError = '';
     protected $response = '';
     protected $responseParameters = [];
+    protected $supportingDataUseCase = '';
+    protected $supportingData = null;
 
     public function response() {
-        $response = ['code' => '', 'httpcode' => '', 'response' => ''];
+        $response = ['code' => '', 'httpcode' => '', 'response' => '', 'supportingData'=>['useCase'=>$this->supportingDataUseCase,'data'=>$this->supportingData]];
         if ($this->validationError) {
             $response['code'] = 412;
             $response['response'] = $this->validationError;
@@ -52,9 +54,11 @@ trait ResponseProvider {
             $response['code'] = 200;
             $response['httpCode'] = 200;
         }
+
         return \Response::json([
                     'code' => $response['code'],
-                    'response' => $response['response']
+                    'response' => $response['response'],
+                    'supportingData' => $response['supportingData'],
                         ], $response['httpCode']);
     }
 

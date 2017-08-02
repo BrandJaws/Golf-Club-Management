@@ -107,4 +107,12 @@ Route::group([
 
 	});
 
+	Route::group(['prefix' => 'score', 'as' => 'score.'], function() {
+		
+		Route::post('/', ['as' => 'store', 'uses' => '\App\Http\Controllers\Mobile\ScoresController@store']);
+		Route::delete('/', ['as' => 'destroy', 'uses' => '\App\Http\Controllers\Mobile\ScoresController@destroy']);
+		Route::post('/record-score', ['as' => 'recordScore', 'uses' => '\App\Http\Controllers\Mobile\ScoresController@recordScoreForHoles']);
+
+	});
+
 });

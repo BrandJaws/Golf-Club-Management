@@ -268,7 +268,7 @@ return [
     'tennis_reservation_id_missing' => [
         'code' => '44',
         'httpCode' => '412',
-        'message' => 'Tennis reservation id is missing'
+        'message' => 'Reservation id is missing'
     ],
     'invalid_reservation' => [
         'code' => '45',
@@ -810,6 +810,96 @@ return [
         'httpCode' => '404',
         'message' => "You Aren't Reserved For This Event"
       ],
+      'scorecard_type_not_found' => [
+        'code' => '145',
+        'httpCode' => '412',
+        'message' => "Scorecard type is required"
+      ],
+      'round_type_not_found' => [
+        'code' => '146',
+        'httpCode' => '412',
+        'message' => "Round type is required"
+      ],
+      'players_data_not_valid' => [
+        'code' => '147',
+        'httpCode' => '412',
+        'message' => "Players Data Not Valid"
+      ],
+      'player_already_being_scored' => [
+              'code' => '148',
+              'httpCode' => '412',
+              'message' => "One Or More Players Are Already Being Scored"
+      ],
+      'requesting_user_already_being_scored' => [
+        'code' => '149',
+        'httpCode' => '412',
+        'message' => "Your score is already being managed by :manager. Do you want to overtake your score card?"
+      ],
+      'invalid_round_type' => [
+        'code' => '150',
+        'httpCode' => '412',
+        'message' => "Invalid Round Type Value"
+      ],
+      'player_not_reserved_for_reservation'=> [
+        'code' => '151',
+        'httpCode' => '412',
+        'message' => "One or more players sent for scoring have not reserved the game being played"
+      ],
+      'scores_missing'=> [
+        'code' => '152',
+        'httpCode' => '412',
+        'message' => "Scores Missing"
+      ],
+      'scores_data_not_valid' => [
+        'code' => '153',
+        'httpCode' => '412',
+        'message' => "Scores Data Not Valid"
+      ],
+      'not_allowed_score_updation' => [
+        'code' => '154',
+        'httpCode' => '412',
+        'message' => "You are not managing scores for one or more players sent"
+      ],
+      'invalid_hole' => [
+        'code' => '155',
+        'httpCode' => '412',
+        'message' => "One or more invalid holes sent for scoring"
+      ],
+      'late_holes_not_allowed' => [
+        'code' => '156',
+        'httpCode' => '412',
+        'message' => "Can't record scores for holes for which player was late"
+      ],
+      'score_recorded_successfuly' => [
+        'code' => '157',
+        'httpCode' => '200',
+        'message' => "Scores recorded successfuly"
+      ],
+      'score_card_id_missing' => [
+        'code' => '158',
+        'httpCode' => '412',
+        'message' => "Score Card Id is missing"
+      ],
+      'invalid_scorecard' => [
+        'code' => '159',
+        'httpCode' => '404',
+        'message' => "Score Card not found"
+      ],
+      'score_not_being_managed_by_user' => [
+        'code' => '160',
+        'httpCode' => '412',
+        'message' => "Requested score card is not being managed by you "
+      ],
+
+      'score_card_deleted_successfuly' => [
+          'code' => '161',
+          'httpCode' => '200',
+          'message' => "Score Card deleted successfuly"
+      ],
+
+
+  
+  
 
 
 
@@ -845,7 +935,8 @@ return [
         'reservation_cancelled_by_parent' => 'Your reservation at %s has been cancelled by the parent player. ',
         'reservation_confirmed' => 'Your reservation request at %s has been confirmed. ',
         'status_reserved' => 'Your status is Reserved.',
-        'status_pending' => 'Your status is Pending.'
+        'status_pending' => 'Your status is Pending.',
+        'score_management_overtaken' => ':memberName have opted to do their own scoring',
     ],
     'beacon_messages' => [
         'welcome_without_reservation' => "Welcome to :clubName :memberName.",

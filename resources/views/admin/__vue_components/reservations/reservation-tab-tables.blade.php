@@ -6,7 +6,7 @@
 Vue.component('reservation-tab-tables', {
     template: `
               		
-                <div class="tab-content p-a m-b-md">
+                <div class="tab-content p-a m-b-md" style="max-height: 800px; overflow-y: scroll;">
                     <div v-for="(reservationByDate,reservationByDateIndex) in reservationsByDateData" :id="'tab'+(reservationByDateIndex+1)" :class="['tab-pane', 'animated', 'fadeIn', 'text-muted', reservationByDateIndex == 0 ? 'active' : '']"  >
                       <div class="tab-pane-content">
 

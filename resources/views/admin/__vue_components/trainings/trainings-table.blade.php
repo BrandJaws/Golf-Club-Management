@@ -6,7 +6,7 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Lesson Name</th>
+                        <th>Training Name</th>
                         <th>Coach</th>
                         <th>Total Seats</th>
                         <th>Start Date</th>

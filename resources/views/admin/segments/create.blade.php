@@ -62,9 +62,9 @@
 								<i class="fa fa-floppy-o"></i> &nbsp;Create Segment
 							</button>
 							&nbsp; &nbsp;
-							<button class="btn btn-outline b-primary text-primary">
+							<a href="{{route('admin.segments.index')}}" class="btn btn-outline b-primary text-primary">
 								<i class="fa fa-ban"></i> &nbsp;Cancel
-							</button>
+							</a>
 						</div>
 					</form>
 				</div>

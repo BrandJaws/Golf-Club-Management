@@ -7,7 +7,7 @@
 		<div class="padding">
 			<div class="row notificationsCreateSec">
 				<div class="col-md-8">
-					<form action="#." method="post">
+					<form method="post">
 						<div class="form-group">
 							<label class="form-control-label">Offer/Reward Title</label> <input
 								type="text" name="offerTitle" class="form-control" />
@@ -48,13 +48,13 @@
 						</div>
 						<br />
 						<div class="form-group">
-							<button class="btn btn-def">
+							<a class="btn btn-def">
 								<i class="fa fa-floppy-o"></i> &nbsp;Create Offer
-							</button>
+							</a>
 							&nbsp; &nbsp;
-							<button class="btn btn-outline b-primary text-primary">
+							<a href="{{route('admin.rewards.rewards')}}" class="btn btn-outline b-primary text-primary">
 								<i class="fa fa-ban"></i> &nbsp;Cancel
-							</button>
+							</a>
 						</div>
 					</form>
 				</div>

@@ -75,7 +75,8 @@ return [
         'reservation_cancelled_due_to_non_response' => 'reservation_cancelled_due_to_non_response',
         'reservation_cancelled_by_parent' => 'reservation_cancelled_by_parent',
         'reservation_confirmed' => 'reservation_confirmed',
-        'announcement' => 'announcement'
+        'announcement' => 'announcement',
+        'score_management_overtaken' => 'score_management_overtaken',
     ],
 
     'contentType' => [
@@ -101,9 +102,11 @@ return [
     ],
     'score' => [
         "handicap_options"=>["yes"=>"YES", "no"=>"NO"],
-        "scorecard_types"=>["strokePlay"=>"STROKE PLAY",
+        "scorecard_types"=>["strokePlay"=>"STROKE PLAY"],
+        "fairway"=>  ["left"=>"LEFT","center"=>"CENTER","right"=>"RIGHT"],
+        "latePenaltyStrokesAbovePar"=>2,
 
-        ],
+
 
     ],
 

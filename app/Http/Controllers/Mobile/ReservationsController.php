@@ -222,7 +222,7 @@ class ReservationsController extends Controller
             return $reservation->id;
         } catch (\Exception $e) {
             \DB::rollback();
-            dd($e);
+            
             \Log::info(__METHOD__, [
                 'error' => $e->getMessage()
             ]);

@@ -15,16 +15,17 @@ class CreateScoreHolesTable extends Migration
     {
         Schema::create('score_holes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('score_id')->unsigned();
+            $table->bigInteger('score_card_id')->unsigned();
             $table->bigInteger('hole_id');
             $table->integer('score');
             $table->integer('putts');
-            $table->integer('fairway');
+            $table->enum('fairway',["LEFT","CENTER","RIGHT"])->default("CENTER");
             $table->integer('distance');
             $table->integer('par');
             $table->integer('handicap');
-            $table->foreign('score_id')->references('id')
-              ->on('scores')
+            $table->enum('player_is_late', array('YES', 'NO'))->default('NO');
+            $table->foreign('score_card_id')->references('id')
+              ->on('score_cards')
               ->onDelete('cascade');
         });
     }

@@ -522,6 +522,7 @@ class Course extends Model
                 $member_ids = $reservation->member_ids !== "" ? explode("||-separation-player-||",$reservation->member_ids) : [];
                 $member_names = $reservation->member_names !== "" ? explode("||-separation-player-||",$reservation->member_names) : [];
                 $member_profile_pics = $reservation->member_profile_pics !== "" ? explode("||-separation-player-||",$reservation->member_profile_pics) : [];
+                $parent_ids = $reservation->parent_ids !== "" ? explode("||-separation-player-||",$reservation->parent_ids) : [];
                 $response_statuses = $reservation->response_statuses !== "" ? explode("||-separation-player-||",$reservation->response_statuses) : [];
                 $comingOnTime_responses = $reservation->comingOnTime_responses !== "" ? explode("||-separation-player-||",$reservation->comingOnTime_responses) : [];
                 $processTypes = $reservation->processTypes !== "" ? explode("||-separation-player-||",$reservation->processTypes) : [];
@@ -540,6 +541,7 @@ class Course extends Model
                         $reservationPlayerObject->member_id = trim($member_ids[$playerIndex]);
                         $reservationPlayerObject->member_name = trim($member_names[$playerIndex]);
                         $reservationPlayerObject->profilePic = trim($member_profile_pics[$playerIndex]);
+                        $reservationPlayerObject->parent_id = trim($parent_ids[$playerIndex]);
                         $reservationPlayerObject->response_status = trim($response_statuses[$playerIndex]);
                         $reservationPlayerObject->comingOnTime = trim($comingOnTime_responses[$playerIndex]);
                         $reservationPlayerObject->process_type = trim($processTypes[$playerIndex]);

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateScoresTable extends Migration
+class CreateScoreCardsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,24 @@ class CreateScoresTable extends Migration
      */
     public function up()
     {
-        Schema::create('scores', function (Blueprint $table) {
+        Schema::create('score_cards', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->morphs('reservation');
             $table->bigInteger('player_member_id');
             $table->bigInteger('manager_member_id');
             $table->decimal('handicap', 5, 2);
-            $table->string('tee',20);
+            $table->enum('tee',[
+              'Pink',
+              'Black',
+              'Gold',
+              'Blue',
+              'Silver',
+              'Green',
+              'White',
+              'Purple',
+              'Orange',
+
+            ]);
             $table->enum('scorecard_type', array('STROKE PLAY'));
             $table->enum('use_handicap', array('YES', 'NO'))->default('NO');
             $table->integer('round_type');
@@ -37,6 +48,6 @@ class CreateScoresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scores');
+        Schema::dropIfExists('score_cards');
     }
 }

@@ -29,7 +29,7 @@ Vue.component('reservation-player-checkin-popup', {
                       </div>
 
                       <div class="modal-footer text-center">
-                        <button type="button" class="btn btn-fw primary"  @click="saveReservationClicked"><i class="fa fa-floppy-o" ></i> &nbsp;Save</button>
+                        <button type="button" class="btn primary"  @click="saveReservationClicked"><i class="fa fa-floppy-o" ></i> &nbsp;Save</button>
                         &nbsp;&nbsp;
                         <button type="button" class="closePopup btn btn-outline b-primary text-primary" ><i class="fa fa-times-circle closePopup"></i> &nbsp;Close</button>
                       </div>

@@ -17,7 +17,7 @@
         <p class="text-center">@{{ popupMessage }}</p>
                       </div>
                       <div class="modal-footer text-center">
-                        <button type="button" class="btn btn-fw primary" @click="yesSelected">Yes</button>
+                        <button type="button" class="btn primary" @click="yesSelected">Yes</button>
                         &nbsp;&nbsp;
                         <button  type="button" class="closePopup btn btn-outline b-primary text-primary" >No</button>
                       </div>

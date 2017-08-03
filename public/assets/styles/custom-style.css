@@ -20,9 +20,9 @@
 .blue-cb:hover { background: #E7334B; color: #fff; opcaity: 0.8; }
 .b-b { border: 0 !important; }
 .main-page-heading h3 { padding: 15px 0; font-size: 26px; text-transform: uppercase; }
-.tsheet-tabs .nav-tabs { border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+.tsheet-tabs .nav-tabs { /*border-top: 1px solid #eee; border-bottom: 1px solid #eee;*/ border: 1px solid #eee; }
 .tsheet-tabs .nav-tabs li { width: 25%; margin: 0 !important; }
-.tsheet-tabs .nav-tabs li a { background: #fafafa !important; padding: 25px 15px; border-radius: 0; border: 0 !important; border-right: 2px solid #eee !important; }
+.tsheet-tabs .nav-tabs li a { background: #fafafa !important; padding: 25px 15px; border-radius: 0; border: 0px solid #eee !important; }
 .tsheet-tabs .nav-tabs li a.active { background: #fff !important; }
 .tsheet-tabs .nav-tabs li a p:first-child { color: #999; font-size: 36px !important; text-transform: uppercase }
 .tsheet-tabs .nav-tabs li a p { color: #999; font-size: 20px; text-transform: uppercase; margin: 0; line-height: 32px; }

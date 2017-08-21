@@ -896,11 +896,61 @@ return [
           'httpCode' => '200',
           'message' => "Score Card deleted successfuly"
       ],
-
-
-  
-  
-
+      "invalid_scoring_type" => [
+        'code' => '162',
+        'httpCode' => '412',
+        'message' => "Scoring type is not valid"
+      ],
+      "score_card_teams_missing" => [
+        'code' => '163',
+        'httpCode' => '412',
+        'message' => "Players/Teams are missing"
+      ],
+      "team_size_missing" => [
+        'code' => '164',
+        'httpCode' => '412',
+        'message' => "Team Size is missing"
+      ],
+      "duplicate_members_in_teams" => [
+        'code' => '165',
+        'httpCode' => '412',
+        'message' => "Can't have same member in multiple teams"
+      ],
+      "self_not_in_teams" => [
+        'code' => '166',
+        'httpCode' => '412',
+        'message' => "You should include yourself in the players"
+      ],
+      "already_created_scorecard" => [
+        'code' => '167',
+        'httpCode' => '412',
+        'message' => "You have already created a scorecard for this reservation"
+      ],
+      "inconsistent_team_size" => [
+        'code' => '168',
+        'httpCode' => '412',
+        'message' => "Players for one or more players doesn't match the team size requested"
+      ],
+      "invalid_starting_hole" => [
+        'code' => '169',
+        'httpCode' => '412',
+        'message' => "Invalid starting hole provided for one or more players"
+      ],
+      "manager_score_card_id_missing" => [
+        'code' => '170',
+        'httpCode' => '412',
+        'message' => "Manager score card id is missing"
+      ],
+      "score_card_not_found" => [
+        'code' => '171',
+        'httpCode' => '404',
+        'message' => "No score card found to edit"
+      ],
+      "user_not_manager"=> [
+        'code' => '172',
+        'httpCode' => '412',
+        'message' => "User not manager of scorecard"
+      ],
 
 
 

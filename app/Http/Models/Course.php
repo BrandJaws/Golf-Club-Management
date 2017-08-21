@@ -442,6 +442,7 @@ class Course extends Model
         $blankReservation->member_profile_pics = "";
         $blankReservation->response_statuses = "";
         $blankReservation->member_ids = "";
+        $blankReservation->parent_ids = "";
         $blankReservation->member_names = "";
         $blankReservation->processTypes = "";
         $blankReservation->comingOnTime_responses = "";
@@ -523,6 +524,7 @@ class Course extends Model
                 $member_names = $reservation->member_names !== "" ? explode("||-separation-player-||",$reservation->member_names) : [];
                 $member_profile_pics = $reservation->member_profile_pics !== "" ? explode("||-separation-player-||",$reservation->member_profile_pics) : [];
                 $parent_ids = $reservation->parent_ids !== "" ? explode("||-separation-player-||",$reservation->parent_ids) : [];
+
                 $response_statuses = $reservation->response_statuses !== "" ? explode("||-separation-player-||",$reservation->response_statuses) : [];
                 $comingOnTime_responses = $reservation->comingOnTime_responses !== "" ? explode("||-separation-player-||",$reservation->comingOnTime_responses) : [];
                 $processTypes = $reservation->processTypes !== "" ? explode("||-separation-player-||",$reservation->processTypes) : [];

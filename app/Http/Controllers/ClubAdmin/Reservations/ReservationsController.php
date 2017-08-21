@@ -575,7 +575,7 @@ class ReservationsController extends Controller
 
             } catch (\Exception $e)
             {
-
+                dd($e);
                 \Log::info(__METHOD__, [
                     'error' => $e->getMessage()
                 ]);

@@ -3,6 +3,7 @@
 namespace App\Http\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 class ScoreHole extends Model
 {
@@ -12,10 +13,6 @@ class ScoreHole extends Model
     "score",
     "putts",
     "fairway",
-    "distance",
-    "par",
-    "handicap",
-    "player_is_late",
 
   ];
   public $timestamps = false;
@@ -26,6 +23,26 @@ class ScoreHole extends Model
 
   public function hole(){
     return $this->belongsTo(CourseHole::class);
+  }
+
+  public function calculateToPar($playerHandicap,$holeHandicap,$score, $par , $playerIsLate){
+    
+    $holePar = $par;
+    //Only raise hole par for player if he is on time i-e the calculation of score is 
+    if($playerIsLate == Config::get('global.score.handicap_options.no')){
+      if($holeHandicap <= $playerHandicap){
+        $holePar++;
+      }
+    }
+
+    if($score == 0){
+      $toPar = null;
+    }else{
+      $toPar = $score - $holePar;
+    }
+
+    return $toPar;
+
   }
 
 }

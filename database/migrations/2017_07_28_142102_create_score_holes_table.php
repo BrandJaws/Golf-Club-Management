@@ -20,10 +20,6 @@ class CreateScoreHolesTable extends Migration
             $table->integer('score');
             $table->integer('putts');
             $table->enum('fairway',["LEFT","CENTER","RIGHT"])->default("CENTER");
-            $table->integer('distance');
-            $table->integer('par');
-            $table->integer('handicap');
-            $table->enum('player_is_late', array('YES', 'NO'))->default('NO');
             $table->foreign('score_card_id')->references('id')
               ->on('score_cards')
               ->onDelete('cascade');

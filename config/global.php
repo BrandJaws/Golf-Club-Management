@@ -102,9 +102,25 @@ return [
     ],
     'score' => [
         "handicap_options"=>["yes"=>"YES", "no"=>"NO"],
-        "scorecard_types"=>["strokePlay"=>"STROKE PLAY"],
+        "scorecard_types"=>["strokePlay"=>"STROKE PLAY", "matchPlay"=>"MATCH PLAY","skinsGame"=>"SKINS GAME"],
         "fairway"=>  ["left"=>"LEFT","center"=>"CENTER","right"=>"RIGHT"],
         "latePenaltyStrokesAbovePar"=>2,
+        "scoring_type_options"=>["gross"=>"GROSS", "net"=>"NET"],
+        "skins_game_hole_values"=>[
+            "3" => 1,
+            "6" => 2,
+            "9" => 5,
+            "12" => 7,
+            "15" => 9,
+            "18" => 10,
+            "21" => 12,
+            "24" => 15,
+            "27" => 19,
+            "30" => 25,
+            "33" => 32,
+            "36" => 40,
+
+        ]
 
 
 

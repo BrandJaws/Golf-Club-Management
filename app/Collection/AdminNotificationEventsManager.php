@@ -30,7 +30,11 @@ class AdminNotificationEventsManager
     }
 
     private function broadcast($channel,$dataToBroadcast){
-        Redis::publish($channel,json_encode($dataToBroadcast));
+        try{
+            Redis::publish($channel,json_encode($dataToBroadcast));
+        }catch (\Exception $e){
+            
+        }
     }
 
 }

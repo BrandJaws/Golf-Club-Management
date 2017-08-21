@@ -37,8 +37,8 @@ return [
         'timeForReservationInSeconds' => 3600
     ],
     'queues' => [
-        'announcements' => 'announcements',
-        'reservations' => 'reservations'
+        'announcements' => 'golf_announcements',
+        'reservations' => 'golf_reservations'
     ],
     'jobDelays' => [
         'initialProcess' => 60,

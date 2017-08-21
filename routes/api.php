@@ -110,7 +110,7 @@ Route::group([
 	Route::group(['prefix' => 'score', 'as' => 'score.'], function() {
 		
 		Route::post('/', ['as' => 'store', 'uses' => '\App\Http\Controllers\Mobile\ScoresController@store']);
-		Route::delete('/', ['as' => 'destroy', 'uses' => '\App\Http\Controllers\Mobile\ScoresController@destroy']);
+		//Route::delete('/', ['as' => 'destroy', 'uses' => '\App\Http\Controllers\Mobile\ScoresController@destroy']);
 		Route::put('/', ['as' => 'update', 'uses' => '\App\Http\Controllers\Mobile\ScoresController@update']);
 		Route::post('/record-score', ['as' => 'recordScore', 'uses' => '\App\Http\Controllers\Mobile\ScoresController@recordScoreForHoles']);
 		Route::post('/group-score', ['as' => 'groupScore', 'uses' => '\App\Http\Controllers\Mobile\ScoresController@getGroupScoreDetailed']);

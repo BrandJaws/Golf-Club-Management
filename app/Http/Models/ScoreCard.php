@@ -386,6 +386,13 @@ class ScoreCard extends Model
       }
     }
 
+    //Sort the teams back by their team number
+    usort($scoreCardsGrouped["teams"], function($a,$b){
+      if ($a["team_number"] == $b["team_number"]) {
+        return 0;
+      }
+      return ($a["team_number"] >  $b["team_number"]) ? 1 : -1;
+    });
 
     return $scoreCardsGrouped;
 

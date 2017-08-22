@@ -362,7 +362,7 @@ class ReservationsController extends Controller
             $this->error = "mobile_not_enough_slots_remaining";
             return $this->response();
         }
-        
+
         $startTime = $reservation->reservation_time_slots->first()->time_start;
         $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime , $newPlayers);
         if ($playersWithOtherReservationsInBetween != null) {

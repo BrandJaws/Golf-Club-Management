@@ -284,6 +284,7 @@ class ReservationsController extends Controller
 
         $parent_id = Auth::user()->id;
         $group = $reservation->getGroupByParentId($parent_id);
+
         if(!$group){
             $this->error = "user_not_parent";
             return $this->response();
@@ -294,22 +295,16 @@ class ReservationsController extends Controller
             return $this->response();
         }
 
-
         if (!$request->has('player') || (is_array($request->get('player')) && empty ($request->get('player')))) {
 
-            if (!$request->has('guests')) {
-                $this->error = "player_missing";
-                return $this->response();
-            } else if ((int)$request->get('guests') <= 0) {
-                $this->error = "player_missing";
-                return $this->response();
-            }
             $players = [];
         } else {
             $players = $request->get('player');
         }
 
-        //$players = array_filter ( $request->get ( 'player' ) );
+        $parent_id = Auth::user()->id;
+
+
         $players = array_filter($players, function ($val) {
             if ($val == 0 || trim($val) == "") {
                 return false;
@@ -319,32 +314,57 @@ class ReservationsController extends Controller
         });
 
         $players = array_unique($players);
+
+        array_unshift($players, $parent_id);
+
+
         $club = Club::find($reservation->club_id);
         $course = Course::find($reservation->course_id);
 
-        //add number of guests as separate values to the players array
-        if ($request->has('guests') && $request->get('guests') > 0) {
-            for ($x = 0; $x < $request->get('guests'); $x++) {
-                $players[] = "guest";
-            }
 
-        }
 
-        $newGroupSize = $group->group_size+count($players);
+        $newGroupSize = count($players) + $request->get('guests');
         if( $newGroupSize > 4){
             $this->error = "mobile_players_are_not_enough";
             return $this->response();
         }
 
-        $sumOfGroupSizesReserved = $reservation->sumOfGroupSizes('reserved');
+        //Validate if the player has not removed any previously added players
+        $guestsPreviouslyReserved = 0;
+        $newPlayers = $request->get('player');
+        foreach ($group->players as $reservedPlayer){
+            $receivedPreviouslyAddedPlayer = false;
+            foreach($players as $player){
+                if($reservedPlayer->member_id == $player){
+                    $receivedPreviouslyAddedPlayer = true;
+                    if(array_search($player,$newPlayers) !== false){
+                        unset($newPlayers[array_search($player,$newPlayers)]);
+                    }
 
-        if(($sumOfGroupSizesReserved+count($players)) > 4){
+                    break;
+                }else if($reservedPlayer->member_id == 0){
+                    $guestsPreviouslyReserved++;
+                    $receivedPreviouslyAddedPlayer = true;
+                    break;
+                }
+            }
+            if(!$receivedPreviouslyAddedPlayer){
+
+                $this->error = "removing_players_not_allowed";
+                return $this->response();
+            }
+
+        }
+        $newPlayers = array_values($newPlayers);
+        $sumOfGroupSizesReserved = ($reservation->sumOfGroupSizes('reserved') - $group->group_size);
+
+        if(($sumOfGroupSizesReserved+$newGroupSize) > 4){
             $this->error = "mobile_not_enough_slots_remaining";
             return $this->response();
         }
-
+        
         $startTime = $reservation->reservation_time_slots->first()->time_start;
-        $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime , $players);
+        $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime , $newPlayers);
         if ($playersWithOtherReservationsInBetween != null) {
             $this->error = "players_already_have_booking";
             $this->responseParameters["player_names"] = $playersWithOtherReservationsInBetween;
@@ -354,7 +374,29 @@ class ReservationsController extends Controller
         try {
             \DB::beginTransaction();
 
-            $reservation->attachPlayers($players, $parent_id, false, $newGroupSize, \Config::get('global.reservation.new_addition'));
+            //Add new guests to new players array if any
+            if($guestsPreviouslyReserved < $request->get('guests')){
+
+                for($guestCount = 0; $guestCount < ($request->get('guests') - $guestsPreviouslyReserved) ; $guestCount++){
+                    array_unshift($newPlayers, "guest");
+                }
+
+            //else remove guests from previous reservation if number of guests requested is less than previous number
+            }else if($guestsPreviouslyReserved > $request->get('guests')){
+                $removedGuestCount = 0;
+                $numberOfGuestsToRemove = $guestsPreviouslyReserved - $request->get('guests');
+                foreach($group->players as $reservedPlayer){
+                    if($reservedPlayer->member_id == 0){
+                        $reservedPlayer->delete();
+                        $removedGuestCount++;
+                        if($removedGuestCount >= $numberOfGuestsToRemove){
+                            break;
+                        }
+                    }
+                }
+            }
+
+            $reservation->attachPlayers($newPlayers, $parent_id, false, $newGroupSize, \Config::get('global.reservation.new_addition'));
             $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($request->get('reservation_id'));
             $reservation->updateReservationStatusesForAReservation();
 

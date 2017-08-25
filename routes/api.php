@@ -62,6 +62,7 @@ Route::group([
 			'uses' => 'Mobile\ReservationsController@declineReservationRequest'
 		]);
 
+
 	});
 
 	Route::group(['prefix' => 'member', 'as' => 'member.'], function() {
@@ -117,5 +118,16 @@ Route::group([
 		Route::post('/single-score', ['as' => 'groupScore', 'uses' => '\App\Http\Controllers\Mobile\ScoresController@getSinglePlayerScoreDetailed']);
 
 	});
+
+	Route::group(['prefix' => 'chat', 'as' => 'chat.'], function() {
+		Route::group(['prefix' => 'reservation', 'as' => 'reservation.'], function() {
+
+			//Routes For Chat related to reservations
+			Route::post('/', ['as' => 'store', 'uses' => '\App\Http\Controllers\Mobile\ReservationChatController@store']);
+			Route::post('/messages', ['as' => 'store', 'uses' => '\App\Http\Controllers\Mobile\ReservationChatController@getMessagesForChatByReservation']);
+
+		});
+	});
+
 
 });

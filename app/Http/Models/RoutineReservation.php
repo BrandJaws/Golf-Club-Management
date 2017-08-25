@@ -33,6 +33,11 @@ class RoutineReservation extends Model
         return $this->morphMany("App\Http\Models\ReservationPlayer", "reservation");
     }
 
+    public function chat_messages()
+    {
+        return $this->morphMany("App\Http\Models\ReservationChatMessage", "reservation");
+    }
+
     public function course()
     {
         return $this->belongsTo(Course::class);

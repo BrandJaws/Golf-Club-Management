@@ -77,6 +77,7 @@ return [
         'reservation_confirmed' => 'reservation_confirmed',
         'announcement' => 'announcement',
         'score_management_overtaken' => 'score_management_overtaken',
+        'reservation_group_chat_message' => 'reservation_group_chat_message',
     ],
 
     'contentType' => [

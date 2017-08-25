@@ -843,7 +843,7 @@ return [
       'player_not_reserved_for_reservation'=> [
         'code' => '151',
         'httpCode' => '412',
-        'message' => "One or more players sent for scoring have not reserved the game being played"
+        'message' => "One or more players are not reserved for this reservation"
       ],
       'scores_missing'=> [
         'code' => '152',
@@ -956,6 +956,19 @@ return [
         'httpCode' => '412',
         'message' => "You are not allowed to remove previously added players from the reservation"
       ],
+      "chat_message_missing"=> [
+        'code' => '174',
+        'httpCode' => '412',
+        'message' => "Chat message is missing"
+      ],
+      "chat_message_sent"=> [
+        'code' => '175',
+        'httpCode' => '200',
+        'message' => "Chat message sent successfuly"
+      ],
+
+
+  
 
 
 

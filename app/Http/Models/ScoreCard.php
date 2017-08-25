@@ -629,6 +629,7 @@ class ScoreCard extends Model
           $body,
           [ 'player_member_id'=> $memberOvertakenBy->id ]
         ),
+        true,
         $previousManagerMember->id,
         $this);
     }

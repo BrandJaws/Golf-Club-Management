@@ -17,7 +17,7 @@ trait PushNotification
      * @param string $deviceToken
      * @param string $deviceType
      */
-    public function sendNotification($message, $deviceToken, $deviceType, $options = [], $memberId, $message_owner = null) {
+    public function sendNotification($message, $deviceToken, $deviceType, $options = [], $saveToPushNotificationsTable = true, $memberId, $message_owner = null) {
         try {
 
             $pushManager = new PushManager ( PushManager::ENVIRONMENT_PROD );
@@ -43,7 +43,10 @@ trait PushNotification
             $pushManager->add ( $push );
             $pushManager->push ();
 
-            App\Http\Models\PushNotification::savePushNotification($memberId, $options,$message_owner);
+            if($saveToPushNotificationsTable){
+                App\Http\Models\PushNotification::savePushNotification($memberId, $options,$message_owner);
+            }
+
 
         } catch ( \Exception $exp ) {
             

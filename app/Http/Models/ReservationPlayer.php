@@ -114,6 +114,7 @@ class ReservationPlayer extends Model
                     $body,
                     [ 'reservation_player_id'=> $this->id ]
                 ),
+                true,
                 $this->member->id,
                 $this);
         }
@@ -148,6 +149,7 @@ class ReservationPlayer extends Model
                      'player_name'=>$member_name
                     ]
                 ),
+                true,
                 $parent->id,
                 $this);
         }

@@ -966,6 +966,11 @@ return [
         'httpCode' => '200',
         'message' => "Chat message sent successfuly"
       ],
+      "product_not_found"=> [
+          'code' => '176',
+          'httpCode' => '404',
+          'message' => "Product Not Found"
+      ],
 
 
   

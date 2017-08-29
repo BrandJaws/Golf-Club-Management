@@ -253,9 +253,11 @@
 																	<i class="fa fa-search"></i>
 																</button>
 															</span> <span class="">
-																<button type="button" name="add-segment" class="btn-def">
-																	<i class="fa fa-plus-circle"></i>&nbsp;Add Item
-																</button>
+																<a href="{{route('admin.shop.create_product')}}">
+																	<button type="button" name="add-segment" class="btn-def">
+																		<i class="fa fa-plus-circle"></i>&nbsp;Add Item
+																	</button>
+																</a>
 															</span>
 														</div>
 													</form>

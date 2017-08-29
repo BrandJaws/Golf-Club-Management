@@ -256,6 +256,35 @@ Route::group([
                 'as' => 'shop',
                 'uses' => 'ClubAdmin\Shop\ShopController@index'
             ]);
+            Route::post('/categories/create', [
+              'as' => 'shop',
+              'uses' => 'ClubAdmin\Shop\ShopController@createNewCategory'
+            ]);
+
+
+
+            Route::get('/products/new', [
+              'as' => 'create_product',
+              'uses' => 'ClubAdmin\Shop\ShopController@showNewProductForm'
+            ]);
+
+            Route::post('/products', [
+              'as' => 'store_product',
+              'uses' => 'ClubAdmin\Shop\ShopController@saveNewProduct'
+            ]);
+
+            Route::get('/products/{product_id}/edit', [
+              'as' => 'edit_product',
+              'uses' => 'ClubAdmin\Shop\ShopController@showEditProductForm'
+            ]);
+            Route::post('/products/{product_id}', [
+              'as' => 'update_product',
+              'uses' => 'ClubAdmin\Shop\ShopController@updateProduct'
+            ]);
+            Route::delete('/products/{product_id}', [
+              'as' => 'delete_product',
+              'uses' => 'ClubAdmin\Shop\ShopController@deleteProduct'
+            ]);
         });
         
         /**

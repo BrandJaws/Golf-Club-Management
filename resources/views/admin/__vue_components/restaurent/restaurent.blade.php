@@ -1,5 +1,132 @@
-<template id="shopTemplate" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<template id = "shopTemplate">
     <div class="shop-main">
+        <div class="row">
+            <div class="shop-inner">
+                <div class="box">
+                    <div class="col-md-11">
+
+                        <div id="shop-carousel" class="owl-carousel owl-theme">
+
+                            <div class="item active-item">
+
+                                <div class="parent-category-box">
+
+                                    <div class="media">
+                                        <a class="media-left" href="#"> <img class="media-object"
+                                                                             src="../assets/images/food-ico.png" alt="icon">
+                                        </a>
+                                        <div class="media-body text-left">
+                                            <a href="#.">
+                                                <h4 class="media-heading">Food</h4>
+                                                <p class="media-sub">Categories</p>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="item">
+
+                                <div class="parent-category-box">
+
+                                    <div class="media">
+                                        <a class="media-left" href="#"> <img class="media-object"
+                                                                             src="../assets/images/beverages.png" alt="icon">
+                                        </a>
+                                        <div class="media-body text-left">
+                                            <a href="#.">
+                                                <h4 class="media-heading">Beverages</h4>
+                                                <p class="media-sub">No Shows</p>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="item">
+
+                                <div class="parent-category-box">
+
+                                    <div class="media">
+                                        <a class="media-left" href="#"> <img class="media-object"
+                                                                             src="../assets/images/clothing.png" alt="icon">
+                                        </a>
+                                        <div class="media-body text-left">
+                                            <a href="#.">
+                                                <h4 class="media-heading">Clothing</h4>
+                                                <p class="media-sub">No Shows</p>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="item">
+
+                                <div class="parent-category-box">
+
+                                    <div class="media">
+                                        <a class="media-left" href="#"> <img class="media-object"
+                                                                             src="../assets/images/golf.png" alt="icon">
+                                        </a>
+                                        <div class="media-body text-left">
+                                            <a href="#.">
+                                                <h4 class="media-heading">Brands</h4>
+                                                <p class="media-sub">Golf Brands</p>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="item">
+
+                                <div class="parent-category-box">
+
+                                    <div class="media">
+                                        <a class="media-left" href="#"> <img class="media-object"
+                                                                             src="../assets/images/beverages.png" alt="icon">
+                                        </a>
+                                        <div class="media-body text-left">
+                                            <a href="#.">
+                                                <h4 class="media-heading">Beverages</h4>
+                                                <p class="media-sub">No Shows</p>
+                                            </a>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- owl carousel -->
+
+                    </div>
+                    <div class="col-md-1">
+                        <div class="add-category-btn text-center">
+                            <a href="#."><i class="fa fa-plus"></i><br>More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- shop-inner ends here -->
+        </div>
+
         <div class="row">
             <div class="main-padd">
                 <div class="col-md-3">
@@ -10,18 +137,6 @@
 
                             <h3>Categories</h3>
 
-                            <span class="addCategoryButton">
-                                <button v-on:click="showAddCategoryField()" title="Add Category"><i class="fa fa-plus"></i></button>
-                            </span>
-
-                        </div>
-                        <div v-if="addCategoryFieldVisible" class="addCategoryField">
-                            <form action="">
-                                <div class="form-group">
-                                    <label for="">Category Name</label>
-                                    <input type="text" class="form-control" />
-                                </div>
-                            </form>
                         </div>
 
                         <div class="menu-list">
@@ -29,7 +144,7 @@
                             <ul>
 
                                 <li v-for="category in categoriesData" class="active-menu" v-on:click="categorySelected(category)"> <a href="#."
-                                                            class="pull-left"> <span><i
+                                                                                                                                       class="pull-left"> <span><i
                                                     class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;@{{category.name}}</span>
 
                                     </a> <a href="#." class="pull-right"> <span><i
@@ -80,42 +195,40 @@
                                 </div>
                             </div>
                             <!-- inner header -->
-                            <div class="productsTableContainer">
-                                <table class="table table-hover b-t shopTable">
-                                    <tbody>
-                                    <tr v-for="product in categories[selectedCategoryIndex].products.data">
-                                        <td>
-                                            <div class="section-3 sec-style text-center">
-                                                <img :src="baseUrl+'/'+product.image" class="shopProdImage"></imgsrc>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="section-1 sec-style">
-                                                <h3>@{{ product.name }}</h3>
-                                                <p>Product Name</p>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="section-3 sec-style">
-                                                <h3>@{{ product.in_stock }}</h3>
-                                                <p>In Stock</p>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="section-3 sec-style">
-                                                <p>
-                                                    <span><a :href="baseUrl+'/admin/shop/products/'+product.id+'/edit'" class="blue-cb">edit</a></span>&nbsp;&nbsp;&nbsp;
-                                                    <span><a href="#." class="del-icon"><i
-                                                                    class="fa fa-trash"></i></a></span>
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
+                            <table class="table table-hover b-t">
+                                <tbody>
+                                <tr v-for="product in categories[selectedCategoryIndex].products.data">
+                                    <td>
+                                        <div class="section-1 sec-style">
+                                            <h3>@{{ product.name }}</h3>
+                                            <p>Product Name</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="section-3 sec-style">
+                                            <img :src="baseUrl+'/'+product.image"></imgsrc>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="section-3 sec-style">
+                                            <h3>@{{ product.in_stock }}</h3>
+                                            <p>In Stock</p>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="section-3 sec-style">
+                                            <p>
+                                                <span><a :href="baseUrl+'/admin/shop/products/'+product.id+'/edit'" class="blue-cb">edit</a></span>&nbsp;&nbsp;&nbsp;
+                                                <span><a href="#." class="del-icon"><i
+                                                                class="fa fa-trash"></i></a></span>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
 
 
-                                    </tbody>
-                                </table>
-                            </div>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -129,26 +242,25 @@
 <script>
 
     Vue.component('shop',{
-       template: "#shopTemplate",
-       mounted:function(){
+        template: "#shopTemplate",
+        mounted:function(){
             $(".owl-carousel").owlCarousel({
                 //autoplay: true,
                 //autoplayTimeout: 5000,
-               // items: 1,
+                // items: 1,
                 //nav: true,
-               // smartSpeed: 500,
+                // smartSpeed: 500,
             });
         },
         props:[
-                'categories',
-                'baseUrl'
+            'categories',
+            'baseUrl'
         ],
         data:function(){
             return {
                 categoriesData:this.processCategoriesForBinding(this.categories),
                 selectedCategoryId: this.categories.length >0 ? this.categories[0].id : null,
-                productListPageUrl:this.baseUrl+"/admin/shop/products/by-category",
-                addCategoryFieldVisible: false,
+                productListPageUrl:this.baseUrl+"/admin/shop/products/by-category"
             }
         },
         computed:{
@@ -161,13 +273,6 @@
             },
         },
         methods:{
-            showAddCategoryField:function(){
-                if(this.addCategoryFieldVisible) {
-                    this.addCategoryFieldVisible = false;
-                } else {
-                    this.addCategoryFieldVisible = true;
-                }
-            },
             categorySelected:function(category){
 
                 if(this.selectedCategoryId != category.id){
@@ -216,7 +321,7 @@
                     //_url = baseUrl+'?search='+category.searchQuery+'&current_page='+(category.nextAvailablePage);
                 }else{
                     queryParams.current_page = category.nextAvailablePage;
-               //     _url = baseUrl+'?current_page='+(category.nextAvailablePage);
+                    //     _url = baseUrl+'?current_page='+(category.nextAvailablePage);
                 }
 
 

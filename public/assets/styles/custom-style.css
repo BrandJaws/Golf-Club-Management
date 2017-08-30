@@ -252,6 +252,12 @@ label { display: block; margin: 3px 0; }
 .slideInRight-enter-active { animation: slideInRight 0.5s; }
 /*.slideInLeft-leave-active { animation: slideInLeft 0.5s reverse; }*/
 
-
-
-
+.addCategoryButton { display: inline-block; position: absolute; right: 25px; top: 20px; }
+.addCategoryButton button { background: #C4061F; border: 1px transparent; border-radius: 50%; width: 30px; height: 30px; color: #fff; -webkit-transition: all 0.2s ease-in-out; -moz-transition: all 0.2s ease-in-out; -o-transition: all 0.2s ease-in-out; transition: all 0.2s ease-in-out; }
+.addCategoryButton button:hover { -webkit-box-shadow: 0px 18px 59px -13px rgba(196,6,31,1);
+ -moz-box-shadow: 0px 18px 59px -13px rgba(196,6,31,1);
+ box-shadow: 0px 18px 59px -13px rgba(196,6,31,1); }
+.addCategoryField { padding: 10px; background: #f0f0f0; border: 1px solid #fafafa; }
+.shopProdImage { display: inline-block; width: 70px; height: 70px; border: 1px transparent; border-radius: 50%; object-fit: cover; object-position: center; }
+.shopTable tr td { vertical-align: middle }
+.productsTableContainer { height: 600px; overflow-y: scroll }

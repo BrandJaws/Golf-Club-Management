@@ -257,7 +257,7 @@ Route::group([
                 'uses' => 'ClubAdmin\Shop\ShopController@index'
             ]);
             Route::post('/categories/create', [
-              'as' => 'shop',
+              'as' => 'create_category',
               'uses' => 'ClubAdmin\Shop\ShopController@createNewCategory'
             ]);
 
@@ -284,6 +284,10 @@ Route::group([
             Route::delete('/products/{product_id}', [
               'as' => 'delete_product',
               'uses' => 'ClubAdmin\Shop\ShopController@deleteProduct'
+            ]);
+            Route::get('/products/by-category', [
+              'as' => 'products_by_category',
+              'uses' => 'ClubAdmin\Shop\ShopController@getProductsByCategoryIdPaginated'
             ]);
         });
         

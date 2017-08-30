@@ -50,6 +50,7 @@ var vue = new Vue({
         lastSearchTerm:"",
         nextAvailablePage:{!! (json_encode($trainings))!!}.next_page_url !== null ? 2 : null ,
         searchRequestHeld:false,
+        ajaxRequestInProcess:false,
     },
     methods: {
         loadNextPage:function(isSearchQuery){
@@ -95,7 +96,7 @@ var vue = new Vue({
                                 }
                                 
                                 pageDataReceived = msg;
-                                membersList = pageDataReceived.data ;
+                                productsList = pageDataReceived.data ;
                                 
                                 //Success code to follow
                                     if(pageDataReceived.next_page_url !== null){
@@ -106,10 +107,10 @@ var vue = new Vue({
                                 
                                     if(isSearchQuery){
                                         
-                                         this.trainingsList=membersList;
+                                         this.trainingsList=productsList;
                                     }else{
                                         
-                                       appendArray(this.trainingsList,membersList);
+                                       appendArray(this.trainingsList,productsList);
                                     }
                                 
                                 

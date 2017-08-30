@@ -12,4 +12,21 @@ class ShopCategory extends Model
 
   ];
   public $timestamps = false;
+
+  public function products(){
+    return $this->hasMany(ShopProduct::class,'category_id');
+  }
+
+  public static function getProductsByCategoryIdPaginated($categoryId, $currentPage, $perPage, $search){
+    //dd($categoryId,$currentPage,$perPage,$search);
+    return ShopProduct::where('category_id',$categoryId)
+                ->where(function ($query) use ($search) {
+                  if ($search) {
+                    $query->where('name', 'like', "%$search%");
+                  }
+                })
+                ->paginate($perPage, array(
+                  'id','name','image','in_stock'
+                ), 'current_page', $currentPage);
+  }
 }

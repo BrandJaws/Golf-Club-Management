@@ -49,7 +49,7 @@
 		
                 computed: {
                             membersListData: function () {
-                                                return this.membersList;
+                                                return this.productsList;
                                               }
                 },
 		methods: {

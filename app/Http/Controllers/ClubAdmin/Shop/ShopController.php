@@ -10,9 +10,36 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ShopController extends Controller {
-	public function index() {
-		return view ( 'admin.shop.shop' );
+	public function index(Request $request) {
+
+		$categories = ShopCategory::where('club_id',Auth::user()->club_id)->get();
+		$currentPage = 1;
+		$perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
+
+
+		if($categories->count() > 0){
+			$categories[0]->products = $categories[0]->products()->paginate($perPage, array(
+				'id','name','image','in_stock'
+			), 'current_page', $currentPage);
+		}
+
+		return view ( 'admin.shop.shop', ["categories"=>json_encode($categories)] );
 	}
+
+	public function getProductsByCategoryIdPaginated(Request $request) {
+
+		$category_id =  $request->get('category_id');
+		$currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
+		$perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
+		$search = $request->has('search') ? $request->get('search') : false;
+ 		$products = ShopCategory::getProductsByCategoryIdPaginated($category_id,$currentPage, $perPage, $search);
+		
+		$this->response = $products;
+
+		return $this->response();
+
+	}
+
 
 	public function createNewCategory(Request $request){
 		$validator = Validator::make($request->all(), [
@@ -64,9 +91,9 @@ class ShopController extends Controller {
 
 			$image = $request->file('image');
 			$fileName = time() . '.' . $image->getClientOriginalExtension();
-			$image->move('uploads/training/', $fileName);
+			$image->move('uploads/shop/', $fileName);
 			$data = $request->all();
-			$data["image"] = 'uploads/training/' . $fileName;
+			$data["image"] = 'uploads/shop/' . $fileName;
 			$data["club_id"] = Auth::user()->club_id;
 			$product->fill($data)->save();
 
@@ -133,9 +160,9 @@ class ShopController extends Controller {
 
 			$image = $request->file('image');
 			$fileName = time() . '.' . $image->getClientOriginalExtension();
-			$image->move('uploads/training/', $fileName);
+			$image->move('uploads/shop/', $fileName);
 			$data = $request->all();
-			$data["image"] = 'uploads/training/' . $fileName;
+			$data["image"] = 'uploads/shop/' . $fileName;
 			$data["club_id"] = Auth::user()->club_id;
 			$product->fill($data)->save();
 

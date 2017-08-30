@@ -121,7 +121,7 @@
                                         
                                             if(isSearchQuery){
                                                 
-                                                 this.beaconList=membersList;
+                                                 this.beaconList=productsList;
                                             }else{
                                                 
                                                appendArray(this.beaconList,beaconList);

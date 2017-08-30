@@ -4,7 +4,7 @@
        template: `
             <div class="menu-sidebar">
                 <div class="sidebar-heading">
-                    <h3>Food Menu</h3>
+                    <h3>Shop Menu</h3>
                 </div>
                 <div class="menu-list">
                     <ul>

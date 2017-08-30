@@ -95,7 +95,7 @@ var vue = new Vue({
                                 }
                                 
                                 pageDataReceived = msg;
-                                membersList = pageDataReceived.data ;
+                                productsList = pageDataReceived.data ;
                                 
                                 //Success code to follow
                                     if(pageDataReceived.next_page_url !== null){
@@ -106,10 +106,10 @@ var vue = new Vue({
                                 
                                     if(isSearchQuery){
                                         
-                                         this.eventsList=membersList;
+                                         this.eventsList=productsList;
                                     }else{
                                         
-                                       appendArray(this.eventsList,membersList);
+                                       appendArray(this.eventsList,productsList);
                                     }
                                 
                                 

@@ -23,9 +23,14 @@
                             <form action="" v-on:submit.prevent="addNewCategory">
                                 <div class="form-group">
                                     <label for="">Category Name</label>
-                                    <input type="text" class="form-control" v-model="newCategoryName"/>
-                                    <button v-on:click.prevent="addNewCategory" title="Add Category" class="form-control"><i class="fa fa-plus"></i></button>
-
+                                    <div class="row">
+                                        <div class=" col-sm-9">
+                                            <input type="text" class="form-control" v-model="newCategoryName"/>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <button v-on:click.prevent="addNewCategory" title="Add Category" class="form-control"><i class="fa fa-plus"></i></button>
+                                        </div>
+                                    </div>
                                 </div>
                             </form>
                         </div>
@@ -34,13 +39,18 @@
 
                             <ul>
                                 <li  v-for="category in categoriesData" :class="[category.id == selectedCategoryId ? 'active-menu' : '']" v-on:click="categorySelected(category)">
-                                    <a href="#." class="pull-left" v-if="!category.editModeOn">
+
+                                    <div class="">
+                                    <div class="col-sm-7">
+                                        <a href="#." class="pull-left" v-if="!category.editModeOn">
                                         <span>
                                             <i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;@{{category.name}}
                                         </span>
-                                    </a>
+                                        </a>
+                                        <input v-if="category.editModeOn" type="text" class="form-control" v-model="category.editableName" />
+                                    </div>
 
-                                    <input v-if="category.editModeOn" type="text" class="form-control" v-model="category.editableName" />
+                                    <div class="col-sm-5">
                                     <a href="#." class="pull-right" v-on:click="deleteCategory(category,false)" v-if="!category.editModeOn">
                                         <span>
                                             <i class="fa fa-trash"></i>
@@ -61,6 +71,8 @@
                                             <i class="fa fa-floppy-o"></i>
                                         </span>
                                     </a>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li v-if="categoriesData.length < 1">
                                     No Categories Found

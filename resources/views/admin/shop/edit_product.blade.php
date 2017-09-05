@@ -39,11 +39,15 @@
                                 <textarea name="description"  id="" class="form-control" rows="8">{{Request::old('description') ? Request::old('description') : $product->description}}</textarea>
                                 @if($errors->has('description')) <span class="help-block errorProfilePic">{{$errors->first('description') }}</span> @endif
                             </div>
+                            <div class="row">
+                            <div class="col-sm-4">
                             <div class="form-group  {{($errors->has('image'))?'has-error':''}}">
-                                <img src="{{asset($product->image)}}" alt="" class="ïmg-responsive" />
+                                <img src="{{asset($product->image)}}" alt="" class="img-thumbnail" />
                                 <label class="form-control-label">Select Image File</label>
                                 <input type="file" class="form-control" name="image" value=""/>
                                 @if($errors->has('image')) <span class="help-block errorProfilePic">{{$errors->first('image') }}</span> @endif
+                            </div>
+                            </div>
                             </div>
                             <div class="form-group {{($errors->has('in_stock'))?'has-error':''}}">
                                 <label class="form-control-label">In Stock</label>

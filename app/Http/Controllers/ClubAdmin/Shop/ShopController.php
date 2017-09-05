@@ -207,7 +207,7 @@ class ShopController extends Controller {
 			'category_id' => 'exists:shop_categories,id',
 			'name' => 'required|min:1,max:50',
 			'description' => 'required|min:1,max:250',
-			'image' => 'required|image|image|mimes:jpeg,bmp,png,jpg|max:1024',
+			//'image' => 'required|image|image|mimes:jpeg,bmp,png,jpg|max:1024',
 
 		]);
 
@@ -232,12 +232,17 @@ class ShopController extends Controller {
 
 		try {
 
-
-			$image = $request->file('image');
-			$fileName = time() . '.' . $image->getClientOriginalExtension();
-			$image->move('uploads/shop/', $fileName);
 			$data = $request->all();
-			$data["image"] = 'uploads/shop/' . $fileName;
+			
+			if($request->hasFile('image')){
+				$image = $request->file('image');
+				$fileName = time() . '.' . $image->getClientOriginalExtension();
+				$image->move('uploads/shop/', $fileName);
+				$data["image"] = 'uploads/shop/' . $fileName;
+			}
+
+
+
 			$data["club_id"] = Auth::user()->club_id;
 			$product->fill($data)->save();
 

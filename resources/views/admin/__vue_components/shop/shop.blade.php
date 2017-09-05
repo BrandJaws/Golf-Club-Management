@@ -20,7 +20,7 @@
 
                         </div>
                         <div v-if="addCategoryFieldVisible" class="addCategoryField">
-                            <form action="">
+                            <form action="" v-on:submit.prevent="addNewCategory">
                                 <div class="form-group">
                                     <label for="">Category Name</label>
                                     <input type="text" class="form-control" v-model="newCategoryName"/>
@@ -40,7 +40,7 @@
                                         </span>
                                     </a>
 
-                                    <input v-if="category.editModeOn" type="text" class="form-control" v-model="category.editableName"/>
+                                    <input v-if="category.editModeOn" type="text" class="form-control" v-model="category.editableName" />
                                     <a href="#." class="pull-right" v-on:click="deleteCategory(category,false)" v-if="!category.editModeOn">
                                         <span>
                                             <i class="fa fa-trash"></i>
@@ -88,7 +88,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <div class="search-form text-right">
-                                            <form action="#." method="post">
+                                            <form action="#." method="post"  v-on:submit.prevent>
                                                 <div class="search-field">
 															<span class="search-box">
                                                                 <input type="text" name="search" class="search-bar" v-model="searchQuery" v-on:input="performSearchQuery()">

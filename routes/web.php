@@ -256,11 +256,18 @@ Route::group([
                 'as' => 'shop',
                 'uses' => 'ClubAdmin\Shop\ShopController@index'
             ]);
-            Route::post('/categories/create', [
+            Route::post('/categories', [
               'as' => 'create_category',
               'uses' => 'ClubAdmin\Shop\ShopController@createNewCategory'
             ]);
-
+            Route::delete('/categories/{category_id}', [
+              'as' => 'delete_category',
+              'uses' => 'ClubAdmin\Shop\ShopController@deleteCategory'
+            ]);
+            Route::put('/categories', [
+              'as' => 'update_category',
+              'uses' => 'ClubAdmin\Shop\ShopController@updateCategory'
+            ]);
 
 
             Route::get('/products/new', [

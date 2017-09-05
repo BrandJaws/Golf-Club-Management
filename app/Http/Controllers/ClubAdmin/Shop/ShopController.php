@@ -12,14 +12,14 @@ use Illuminate\Support\Facades\Validator;
 class ShopController extends Controller {
 	public function index(Request $request) {
 
-		$categories = ShopCategory::where('club_id',Auth::user()->club_id)->get();
+		$categories = ShopCategory::where('club_id',Auth::user()->club_id)->orderBy('name')->get();
 		$currentPage = 1;
 		$perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
 
 
 		if($categories->count() > 0){
 			$categories[0]->products = $categories[0]->products()->paginate($perPage, array(
-				'id','name','image','in_stock'
+				'id','category_id','name','image','in_stock'
 			), 'current_page', $currentPage);
 		}
 
@@ -29,8 +29,8 @@ class ShopController extends Controller {
 	public function getProductsByCategoryIdPaginated(Request $request) {
 
 		$category_id =  $request->get('category_id');
-		$currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
-		$perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
+		$currentPage = $request->has('current_page') && is_numeric($request->get('current_page'))? $request->get('current_page') : 0;
+		$perPage = $request->has('per_page') && is_numeric($request->get('per_page')) ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
 		$search = $request->has('search') ? $request->get('search') : false;
  		$products = ShopCategory::getProductsByCategoryIdPaginated($category_id,$currentPage, $perPage, $search);
 		
@@ -42,29 +42,104 @@ class ShopController extends Controller {
 
 
 	public function createNewCategory(Request $request){
-		$validator = Validator::make($request->all(), [
+//		$validator = Validator::make($request->all(), [
+//
+//			'name' => 'required|min:1,max:50',
+//
+//		]);
 
-			'name' => 'required|min:1,max:50',
 
-		]);
 
-		if ($validator->fails()) {
-			$this->error = $validator->errors();
+//		if ($validator->fails()) {
+//			return response($validator->errors(),412);
+//		}
+		if(!$request->has('name')){
+			$this->error = "category_name_missing";
 			return $this->response();
 		}
+
 		try {
 			$shopCategory = new ShopCategory();
 			$data = $request->all();
 			$data["club_id"] = Auth::user()->id;
 			$shopCategory->fill($data)->save();
 
-			$this->response = "success";
+			$this->response = $shopCategory;
 		} catch (\Exception $exp) {
 			$this->error = $exp->getMessage();
 
 		}
 
 		return $this->response();
+	}
+
+	public function updateCategory(Request $request){
+
+		if(!$request->has('category_id')){
+			$this->error = "category_id_missing";
+			return $this->response();
+		}
+
+		if(!$request->has('name')){
+			$this->error = "category_name_missing";
+			return $this->response();
+		}
+
+		try {
+			$shopCategory = ShopCategory::find($request->get('category_id'));
+			if(!$shopCategory || $shopCategory->club_id != Auth::user()->club_id){
+				$this->error = "category_id_missing";
+				return $this->response();
+			}
+
+			$shopCategory->name =  $request->get('name');
+			$shopCategory->save();
+
+			$this->response = $shopCategory;
+		} catch (\Exception $exp) {
+			$this->error = $exp->getMessage();
+
+		}
+
+		return $this->response();
+	}
+
+	public function deleteCategory($category_id){
+
+		$category = ShopCategory::where("id",$category_id)->with('products')->first();
+
+		if(!$category){
+
+			$this->error = "category_not_found";
+			return $this->response();
+
+		}
+
+		if($category->club_id != Auth::user()->club_id){
+			$this->error = "category_not_found";
+			return $this->response();
+		}
+
+		if($category->products->count() > 0){
+			$this->error = "category_has_products";
+			return $this->response();
+		}
+
+
+		try {
+
+
+			$category->delete();
+			$this->response = "success";
+
+		} catch (\Exception $exp) {
+
+			$this->error = $exp->getMessage();
+
+		}
+
+		return $this->response();
+
 	}
 
 	public function showNewProductForm(){

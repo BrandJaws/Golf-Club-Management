@@ -971,33 +971,54 @@ return [
           'httpCode' => '404',
           'message' => "Product Not Found"
       ],
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      "category_name_missing"=> [
+        'code' => '177',
+        'httpCode' => '412',
+        'message' => "Category name is required"
+      ],
+      "category_id_missing"=> [
+        'code' => '178',
+        'httpCode' => '412',
+        'message' => "Category Id is required"
+      ],
+      "category_not_found"=> [
+        'code' => '179',
+        'httpCode' => '412',
+        'message' => "Category not found"
+      ],
+      "category_has_products"=> [
+        'code' => '180',
+        'httpCode' => '412',
+        'message' => "Can't delete category since it already has some products. Delete the associated products first and try again."
+      ],
 
 
 
-    'pushNotificationMessageBodies' => [
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  'pushNotificationMessageBodies' => [
         'reservation_confirmation_prompt' => "%s has added you to a reservation at %s on %s for court %s. Are you available?",
         'reservation_confirmation_prompt_final' => "You have a reservation at %s on %s for court %s. Are you still available?",
         'add_more_players_prompt' => 'You need to add more players to keep your reservation',

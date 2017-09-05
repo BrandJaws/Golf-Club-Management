@@ -26,7 +26,7 @@ class ShopCategory extends Model
                   }
                 })
                 ->paginate($perPage, array(
-                  'id','name','image','in_stock'
+                  'id','category_id','name','image','in_stock'
                 ), 'current_page', $currentPage);
   }
 }

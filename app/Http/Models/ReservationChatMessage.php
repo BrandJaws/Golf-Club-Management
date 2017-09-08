@@ -68,12 +68,8 @@ class ReservationChatMessage extends Model
                 "reservation_type"=>$this->reservation_type,
                 "member_id"=>$this->member_id,
                 "message"=>$this->message,
-                'member'=>[
-                  "id"=>$this->member->id,
-                  "firstName"=>$this->member->firstName,
-                  "lastName"=>$this->member->lastName,
-                  "profilePic"=>$this->member->profilePic,
-                ],
+                'memberName'=>$this->member->firstName." ".$this->member->lastName,
+                'memberProfilePic'=>$this->member->profilePic,
                 "created_at"=>$this->created_at->toDateTimeString()
               ]
             ),

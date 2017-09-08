@@ -53,7 +53,15 @@
                                 </select>
                                 @if($errors->has('in_stock')) <span class="help-block errorProfilePic">{{$errors->first('in_stock') }}</span> @endif
                             </div>
+                            <div class="form-group {{($errors->has('visible'))?'has-error':''}}">
+                                <label class="form-control-label">Visible</label>
+                                <select name="visible" id="" class="form-control">
+                                    <option value="YES" {{(old('in_stock') && old('visible')=="YES")?'selected="selected"':'' }}>Yes</option>
+                                    <option value="NO" {{(old('in_stock') && old('visible')=="NO")?'selected="selected"':'' }}>No</option>
 
+                                </select>
+                                @if($errors->has('visible')) <span class="help-block errorProfilePic">{{$errors->first('visible') }}</span> @endif
+                            </div>
                             <div class="form-group">
                                 <button class="btn btn-def">
                                     <i class="fa fa-floppy-o"></i> &nbsp;Add Product

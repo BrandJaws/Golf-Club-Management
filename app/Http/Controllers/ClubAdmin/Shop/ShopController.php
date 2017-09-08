@@ -19,7 +19,7 @@ class ShopController extends Controller {
 
 		if($categories->count() > 0){
 			$categories[0]->products = $categories[0]->products()->paginate($perPage, array(
-				'id','category_id','name','image','in_stock'
+				'id','category_id','name','image','in_stock', 'visible'
 			), 'current_page', $currentPage);
 		}
 

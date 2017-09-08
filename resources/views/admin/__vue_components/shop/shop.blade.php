@@ -146,6 +146,12 @@
                                             </td>
                                             <td>
                                                 <div class="section-3 sec-style">
+                                                    <h3>@{{ product.visible }}</h3>
+                                                    <p>Is Visible</p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="section-3 sec-style">
                                                     <p>
                                                         <span><a :href="baseUrl+'/admin/shop/products/'+product.id+'/edit'" class="blue-cb">edit</a></span>&nbsp;&nbsp;&nbsp;
                                                         <span><a href="#." class="del-icon" v-on:click="deleteProduct(product,false)"><i
@@ -153,6 +159,7 @@
                                                     </p>
                                                 </div>
                                             </td>
+
                                         </tr>
                                     </template>
                                     <template v-else-if="categoriesData[selectedCategoryIndex].firstLoadDone">
@@ -235,6 +242,9 @@
                         return categoryIndex;
                     }
                 }
+            },
+            addNewProductFormUrl:function(){
+                return this.baseUrl+"/admin/shop/products/new"+(this.selectedCategoryId)
             },
         },
         methods:{
@@ -461,7 +471,7 @@
 
                         //Select newly added category
                         this.selectedCategoryId = newCategory[0].id;
-
+                        this.newCategoryName = "";
 
 
 

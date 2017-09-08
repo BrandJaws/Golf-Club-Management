@@ -47,7 +47,8 @@ class ReservationChatMessage extends Model
   public function sendChatMessageToMembersInReservation(){
 
     foreach($this->reservation->reservation_players as $reservation_player){
-      if($reservation_player->member->id != $this->member_id){
+      if($reservation_player->member_id != 0 && ($reservation_player->member->id != $this->member_id)){
+
 
         $member_id = $this->member_id;
         $useCase = Config::get ( 'global.pushNotificationsUseCases.reservation_group_chat_message' );

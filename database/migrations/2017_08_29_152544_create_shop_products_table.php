@@ -21,6 +21,7 @@ class CreateShopProductsTable extends Migration
             $table->text('description');
             $table->string('image');
             $table->enum('in_stock', array('YES', 'NO'))->default('YES');
+            $table->enum('visible', array('YES', 'NO'))->default('YES');
         });
     }
 

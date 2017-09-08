@@ -69,7 +69,7 @@ class ReservationChatMessage extends Model
                 "member_id"=>$this->member_id,
                 "message"=>$this->message,
                 'memberName'=>$this->member->firstName." ".$this->member->lastName,
-                'memberProfilePic'=>$this->member->profilePic,
+                'memberProfilePic'=>$this->member->profilePic == null ? "" : $this->member->profilePic,
                 "created_at"=>$this->created_at->toDateTimeString()
               ]
             ),

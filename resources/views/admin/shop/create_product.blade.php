@@ -28,7 +28,7 @@
                                     <option value="0">Please Select</option>
                                     @if($categories && $categories->count()>0)
                                         @foreach($categories as $key=>$category)
-                                            <option value="{{$category->id}}" {{(old('category_id') && old('category_id')==$category->id)?'selected="selected"':''}}>{{$category->name}}</option>
+                                            <option value="{{$category->id}}" {{(old('category_id') && old('category_id')==$category->id)?'selected="selected"':($category->id == $selectedCategory ? 'selected="selected"' : '')}}>{{$category->name}}</option>
                                         @endforeach
                                     @endif
                                 </select>

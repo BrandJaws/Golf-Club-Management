@@ -142,9 +142,15 @@ class ShopController extends Controller {
 
 	}
 
-	public function showNewProductForm(){
+	public function showNewProductForm(Request $request){
+
+		$categoryId = "";
+		if($request->has('category')){
+			$categoryId = $request->get('category');
+		}
 		$categories = ShopCategory::where("club_id",Auth::user()->club_id)->get();
-		return view ( 'admin.shop.create_product',["categories"=>$categories] );
+
+		return view ( 'admin.shop.create_product',["categories"=>$categories, "selectedCategory"=>$categoryId] );
 	}
 
 	public function saveNewProduct(Request $request){

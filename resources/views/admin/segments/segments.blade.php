@@ -20,7 +20,7 @@
 								</div>
 								<div class="col-md-8">
 									<div class="search-form text-right">
-										<form action="#." method="post">
+										<form action="#." method="post" v-on:click.prevent>
 											<div class="search-field">
 												<span class="search-box"> <input name="search"
 													class="search-bar" type="text">

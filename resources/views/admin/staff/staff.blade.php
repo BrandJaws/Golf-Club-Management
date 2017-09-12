@@ -13,7 +13,7 @@
 							<div class="">
 								<div class="col-md-8">
 									<div class="search-form">
-										<form action="#." method="post">
+										<form action="#." method="post" v-on:click.prevent>
 											<div class="search-field">
 												<span class="search-box"> <input type="text" name="search"
 													class="search-bar">

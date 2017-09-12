@@ -116,7 +116,7 @@
                                                     }
                                                     
                                                     pageDataReceived = msg;
-                                                    productsList = pageDataReceived.data ;
+                                                    membersList = pageDataReceived.data ;
                                                     
                                                     //Success code to follow
                                                         if(pageDataReceived.next_page_url !== null){
@@ -127,10 +127,10 @@
                                                     
                                                         if(isSearchQuery){
                                                             
-                                                             this.productsList=productsList;
+                                                             this.membersList=membersList;
                                                         }else{
                                                             
-                                                           appendArray(this.productsList,productsList);
+                                                           appendArray(this.membersList,membersList);
                                                         }
                                                     
                                                     

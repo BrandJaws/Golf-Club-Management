@@ -129,5 +129,25 @@ Route::group([
 		});
 	});
 
+	/**
+	 * Routes related to shop
+	 */
+	Route::group([
+		'prefix' => 'shop',
+		'as' => 'shop.'
+	], function () {
+
+		Route::get('/categories', [
+			'as' => 'all_categories',
+			'uses' => '\App\Http\Controllers\Mobile\ShopController@getAllCategories'
+		]);
+
+		Route::get('/categories/{category_id}/products', [
+			'as' => 'products_by_category',
+			'uses' => '\App\Http\Controllers\Mobile\ShopController@getProductsByCategory'
+		]);
+		
+	});
+
 
 });

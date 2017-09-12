@@ -17,16 +17,27 @@ class ShopCategory extends Model
     return $this->hasMany(ShopProduct::class,'category_id');
   }
 
-  public static function getProductsByCategoryIdPaginated($categoryId, $currentPage, $perPage, $search){
+  public static function getProductsByCategoryIdPaginated($categoryId, $currentPage, $perPage, $search, $showOnlyVisible = false, $newestFirst = false){
     //dd($categoryId,$currentPage,$perPage,$search);
-    return ShopProduct::where('category_id',$categoryId)
+    $query =  ShopProduct::where('category_id',$categoryId)
                 ->where(function ($query) use ($search) {
                   if ($search) {
                     $query->where('name', 'like', "%$search%");
                   }
                 })
-                ->paginate($perPage, array(
-                  'id','category_id','name','image','in_stock', 'visible'
-                ), 'current_page', $currentPage);
+                ->where(function ($query) use ($showOnlyVisible) {
+                  if ($showOnlyVisible) {
+                    $query->where('visible', 'YES');
+                  }
+                });
+
+     if($newestFirst){
+       $query->orderBy('created_at','desc');
+     }
+
+
+      return $query->paginate($perPage, array(
+               'id','category_id','name','image','price','in_stock', 'visible'
+              ), 'current_page', $currentPage);
   }
 }

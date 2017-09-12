@@ -140,6 +140,12 @@
                                             </td>
                                             <td>
                                                 <div class="section-3 sec-style">
+                                                    <h3>@{{ '$ '+product.price }}</h3>
+                                                    <p>Price</p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="section-3 sec-style">
                                                     <h3>@{{ product.in_stock }}</h3>
                                                     <p>In Stock</p>
                                                 </div>

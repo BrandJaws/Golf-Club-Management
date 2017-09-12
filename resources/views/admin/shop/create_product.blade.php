@@ -44,6 +44,11 @@
                                 <input type="file" class="form-control" name="image" value=""/>
                                 @if($errors->has('image')) <span class="help-block errorProfilePic">{{$errors->first('image') }}</span> @endif
                             </div>
+                            <div class="form-group {{($errors->has('price'))?'has-error':''}}">
+                                <label class="form-control-label">Price</label>
+                                <input type="number" class="form-control" name="price" value="{{old('price')}}" step=".01" />
+                                @if($errors->has('price')) <span class="help-block errorProfilePic">{{$errors->first('price') }}</span> @endif
+                            </div>
                             <div class="form-group {{($errors->has('in_stock'))?'has-error':''}}">
                                 <label class="form-control-label">In Stock</label>
                                 <select name="in_stock" id="" class="form-control">

@@ -991,6 +991,11 @@ return [
         'httpCode' => '412',
         'message' => "Can't delete category since it already has some products. Delete the associated products first and try again."
       ],
+      "no_categories_found"=> [
+        'code' => '181',
+        'httpCode' => '404',
+        'message' => "No Categories Found"
+      ],
 
 
 

@@ -12,9 +12,10 @@ class ShopProduct extends Model
     "name",
     "description",
     "image",
+    "price",
     "in_stock",
     "visible"
 
   ];
-  public $timestamps = false;
+  
 }

@@ -806,7 +806,7 @@
                         },
                         success: function (msg) {
 
-                            categoryIndices = this.getMainAndSubCategoryIndexFromSubCategoryId(category.id);
+                            categoryIndices = this.getMainAndSubCategoryIndexFromSubCategoryId(product.restaurant_sub_category_id);
                             categoryOfProduct = this.mainCategoriesData[categoryIndices.mainCategoryIndex].sub_categories[categoryIndices.subCategoryIndex];
 
 

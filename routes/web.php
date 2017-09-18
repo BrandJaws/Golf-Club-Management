@@ -373,6 +373,11 @@ Route::group([
               'as' => 'products_by_category',
               'uses' => 'ClubAdmin\Restaurant\RestaurantController@getProductsByCategoryIdPaginated'
             ]);
+
+	        Route::get('/orders', [
+		        'as' => 'orders',
+		        'uses' => 'ClubAdmin\Restaurant\RestaurantController@ordersList'
+	        ]);
         });
         
         /**

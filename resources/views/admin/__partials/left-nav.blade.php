@@ -58,6 +58,10 @@
 								<i class="fa fa-shopping-basket"></i>
 						</span> <span class="nav-text">Restaurant</span>
 						</a></li>
+					<li><a href="{{route('admin.restaurant.orders')}}"> <span class="nav-icon">
+								<i class="fa fa-shopping-cart"></i>
+						</span> <span class="nav-text">Orders</span>
+					</a></li>
 					@endif
 					@can('segment', 'App\Model')
 					<li><a href="{{route('admin.segments.index')}}"> <span

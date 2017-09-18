@@ -457,6 +457,10 @@ class RestaurantController extends Controller {
 
 	}
 
+	public function ordersList() {
+		return view ( 'admin.restaurant.orders');
+	}
+
 
 
 

@@ -297,6 +297,83 @@ Route::group([
               'uses' => 'ClubAdmin\Shop\ShopController@getProductsByCategoryIdPaginated'
             ]);
         });
+
+        /**
+         * Routes related to restaurant
+         */
+        Route::group([
+          'prefix' => 'restaurant',
+          'as' => 'restaurant.'
+        ], function () {
+            Route::get('/', [
+              'as' => 'restaurant',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@index'
+            ]);
+
+            Route::get('/main-categories/new', [
+              'as' => 'create_main_category',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@showNewMainCategoryForm'
+            ]);
+            Route::post('/main-categories', [
+              'as' => 'store_main_category',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@saveNewMainCategory'
+            ]);
+            Route::get('/main-categories/{main_category_id}/edit', [
+              'as' => 'edit_main_category',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@showEditMainCategoryForm'
+            ]);
+            Route::post('/main-categories/{main_category_id}', [
+              'as' => 'update_main_category',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@updateMainCategory'
+            ]);
+            Route::delete('/main-categories/{main_category_id}', [
+              'as' => 'delete_main_category',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@deleteMainCategory'
+            ]);
+
+
+
+            Route::post('/sub-categories', [
+              'as' => 'create_sub_category',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@createNewSubCategory'
+            ]);
+            Route::delete('/sub-categories/{sub_category_id}', [
+              'as' => 'delete_sub_category',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@deleteSubCategory'
+            ]);
+            Route::put('/sub-categories', [
+              'as' => 'update_sub_category',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@updateSubCategory'
+            ]);
+
+
+            Route::get('/products/new', [
+              'as' => 'create_product',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@showNewProductForm'
+            ]);
+
+            Route::post('/products', [
+              'as' => 'store_product',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@saveNewProduct'
+            ]);
+
+            Route::get('/products/{product_id}/edit', [
+              'as' => 'edit_product',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@showEditProductForm'
+            ]);
+            Route::post('/products/{product_id}', [
+              'as' => 'update_product',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@updateProduct'
+            ]);
+            Route::delete('/products/{product_id}', [
+              'as' => 'delete_product',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@deleteProduct'
+            ]);
+            Route::get('/products/by-category', [
+              'as' => 'products_by_category',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@getProductsByCategoryIdPaginated'
+            ]);
+        });
         
         /**
          * Routes related to coaches

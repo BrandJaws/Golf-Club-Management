@@ -53,6 +53,12 @@
 						</span> <span class="nav-text">Shop</span>
 					</a></li>
 					@endif
+					@can('restaurant', 'App\Model')
+					<li><a href="{{route('admin.restaurant.restaurant')}}"> <span class="nav-icon">
+								<i class="fa fa-shopping-basket"></i>
+						</span> <span class="nav-text">Restaurant</span>
+						</a></li>
+					@endif
 					@can('segment', 'App\Model')
 					<li><a href="{{route('admin.segments.index')}}"> <span
 							class="nav-icon"> <i class="fa fa-pie-chart"></i>

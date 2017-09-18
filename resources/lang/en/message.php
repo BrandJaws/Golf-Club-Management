@@ -996,6 +996,16 @@ return [
         'httpCode' => '404',
         'message' => "No Categories Found"
       ],
+      "category_creation_successful"=> [
+        'code' => '182',
+        'httpCode' => '200',
+        'message' => "Category Created Successfuly"
+      ],
+      "category_has_sub_categories"=> [
+        'code' => '183',
+        'httpCode' => '412',
+        'message' => "Can't delete category since it already has some sub categories in it. Delete the associated sub categories first and try again."
+      ],
 
 
 

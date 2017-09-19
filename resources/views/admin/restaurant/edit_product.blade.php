@@ -77,7 +77,7 @@
                                 <button class="btn btn-def">
                                     <i class="fa fa-floppy-o"></i> &nbsp;Update Product
                                 </button>
-                                <a href="{{route("admin.shop.shop")}}" class="btn btn-outline b-primary text-primary">
+                                <a href="{{route("admin.restaurant.restaurant")}}" class="btn btn-outline b-primary text-primary">
                                     <i class="fa fa-ban"></i> &nbsp;Cancel
                                 </a>
                             </div>

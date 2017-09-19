@@ -17,42 +17,47 @@
                                     <div class="box p-a">
                                         <div class="pull-left m-r">
                                             <span class="w-53 rounded">
-                                                <a class="media-left" href="#">
+
                                                     <img class="media-object" :src="baseUrl+'/'+mainCategory.icon" alt="icon">
-                                                </a>
+
                                             </span>
                                         </div>
                                         <div class="clear">
                                             <h4 class="m-a-0 text-lg _300 heading">
-                                                <a href="">@{{mainCategory.name}}</a>
+                                                @{{mainCategory.name}}
                                             </h4>
                                             <small class="text-muted">
                                                 <span>
                                                		<a href="#" class="del-icon pull-right" v-on:click="deleteMainCategory(mainCategory,false)">
-                                                	<i class="fa fa-trash"></i>
-                                                </a>
+                                                	    <i class="fa fa-trash"></i>
+                                                    </a>
                                                 </span>
                                                 <span>
                                                 	<a v-on:click.stop :href="baseUrl+'/admin/restaurant/main-categories/'+mainCategory.id+'/edit'" class="del-icon pull-right">
-                                                	<i class="fa fa-pencil"></i>
-                                                </a>
+                                                	    <i class="fa fa-pencil"></i>
+                                                     </a>
                                                 </span>
                                             </small>
                                         </div>
                                         <div class="media-body text-left">
-                                            <a href="#.">
+
                                                 <!--<h4 class="media-heading">@{{mainCategory.name}}</h4>-->
                                                 <!--<p class="media-sub">-</p>-->
-                                            </a>
+
                                         </div>
-                                        
+
 
 
                                     </div>
-                                    
+
 
                                 </div>
 
+                            </div>
+                            <div class="col-md-4 item" v-show="mainCategoriesData.length < 3">
+                                <div class="add-category-btn text-center">
+                                    <a href="{{route('admin.restaurant.create_main_category')}}"><i class="fa fa-plus"></i><br>More</a>
+                                </div>
                             </div>
 
 							
@@ -61,7 +66,7 @@
                         <!-- owl carousel -->
 
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-1" v-if="mainCategoriesData.length >= 3">
                         <div class="add-category-btn text-center">
                             <a href="{{route('admin.restaurant.create_main_category')}}"><i class="fa fa-plus"></i><br>More</a>
                         </div>
@@ -614,7 +619,12 @@
                            for(mainCategoryIndex in this.mainCategoriesData){
 
                                if(this.mainCategoriesData[mainCategoryIndex].id == category.id){
+
+
                                    this.mainCategoriesData.splice(mainCategoryIndex,1);
+                                   console.log(this.mainCategoriesData);
+                                   $(".owl-item").eq(mainCategoryIndex).remove();
+
                                    break;
                                }
                            }

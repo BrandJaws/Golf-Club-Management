@@ -146,7 +146,38 @@ Route::group([
 			'as' => 'products_by_category',
 			'uses' => '\App\Http\Controllers\Mobile\ShopController@getProductsByCategory'
 		]);
-		
+		Route::get('/products/{product_id}', [
+			'as' => 'product_by_id',
+			'uses' => '\App\Http\Controllers\Mobile\ShopController@getProductById'
+		]);
+	});
+
+	/**
+	 * Routes related to Restaurant
+	 */
+	Route::group([
+		'prefix' => 'restaurant',
+		'as' => 'restaurant.'
+	], function () {
+
+		Route::get('/categories', [
+			'as' => 'all_categories',
+			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getAllCategories'
+		]);
+
+		Route::get('/sub-categories/{category_id}/products', [
+			'as' => 'products_by_category',
+			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getProductsBySubCategory'
+		]);
+
+		Route::get('/main-categories/{category_id}/products', [
+			'as' => 'products_by_category',
+			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getProductsByMainCategory'
+		]);
+		Route::get('/products/{product_id}', [
+			'as' => 'product_by_id',
+			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getProductById'
+		]);
 	});
 
 

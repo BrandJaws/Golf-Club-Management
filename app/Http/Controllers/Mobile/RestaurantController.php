@@ -2,20 +2,28 @@
 
 namespace App\Http\Controllers\Mobile;
 
-use App\Http\Models\ShopCategory;
-use App\Http\Models\ShopProduct;
+use App\Http\Models\RestaurantMainCategory;
+use App\Http\Models\RestaurantProduct;
+use App\Http\Models\RestaurantSubCategory;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class ShopController extends Controller {
+class RestaurantController extends Controller {
 
 	public function getAllCategories(){
 
-		$categories = ShopCategory::where('club_id',Auth::user()->club_id)->orderBy('name')->get();
-		if($categories->count() >0){
-			$this->response = $categories;
+		$mainCategories = RestaurantMainCategory::where('club_id',Auth::user()->club_id)
+			->with([
+				'sub_categories'=>function($query){
+					$query->orderBy('name');
+				}
+			])
+			->orderBy('name')
+			->get();
+		if($mainCategories->count() >0){
+			$this->response = $mainCategories;
 		}else{
 			$this->error = "no_categories_found";
 		}
@@ -23,7 +31,7 @@ class ShopController extends Controller {
 		return $this->response();
 	}
 
-	public function getProductsByCategory($category_id,Request $request){
+	public function getProductsBySubCategory($category_id,Request $request){
 
 
 		$currentPage = $request->has('current_page') && is_numeric($request->get('current_page'))? $request->get('current_page') : 0;
@@ -33,7 +41,7 @@ class ShopController extends Controller {
 
 		$newest = $request->has('newest') && strtolower($request->get('newest')) == 'true' ? true : false;
 		
-		$products = ShopCategory::getProductsByCategoryIdPaginated($category_id,$currentPage, $perPage, $search, $showOnlyVisible, $newest );
+		$products = RestaurantSubCategory::getProductsByCategoryIdPaginated($category_id,$currentPage, $perPage, $search, $showOnlyVisible, $newest );
 
 		$this->response = $products;
 
@@ -45,7 +53,7 @@ class ShopController extends Controller {
 
 
 
-		$product = ShopProduct::where('id',$product_id)
+		$product = RestaurantProduct::where('id',$product_id)
 								->where('club_id',Auth::user()->club_id)
 								->where('visible','YES')
 								->first();

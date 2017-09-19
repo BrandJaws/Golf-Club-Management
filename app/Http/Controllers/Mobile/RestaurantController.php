@@ -72,6 +72,14 @@ class RestaurantController extends Controller {
 
 	}
 
+	public function placeNewOrder(Request $request){
+
+		if (!$request->has('club_id')) {
+			$this->error = "mobile_invalid_club_identifire";
+			return $this->response();
+		}
+		
+	}
 
 
 

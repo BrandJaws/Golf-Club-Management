@@ -170,13 +170,18 @@ Route::group([
 			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getProductsBySubCategory'
 		]);
 
-		Route::get('/main-categories/{category_id}/products', [
-			'as' => 'products_by_category',
-			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getProductsByMainCategory'
-		]);
+//		Route::get('/main-categories/{category_id}/products', [
+//			'as' => 'products_by_category',
+//			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getProductsByMainCategory'
+//		]);
 		Route::get('/products/{product_id}', [
 			'as' => 'product_by_id',
 			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getProductById'
+		]);
+
+		Route::post('/orders/new', [
+			'as' => 'new_order',
+			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@placeNewOrder'
 		]);
 	});
 

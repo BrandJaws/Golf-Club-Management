@@ -9,6 +9,7 @@ class RestaurantOrder extends Model
   protected $fillable = [
     'club_id',
     'member_id',
+    'in_process',
     'is_ready',
     'is_served',
     'gross_total',

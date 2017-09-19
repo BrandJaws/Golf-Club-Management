@@ -17,6 +17,7 @@ class CreateRestaurantOrdersTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('club_id');
             $table->bigInteger('member_id');
+            $table->enum('in_process', array('YES','NO'))->default('NO');
             $table->enum('is_ready', array('YES','NO'))->default('NO');
             $table->enum('is_served', array('YES','NO'))->default('NO');
             $table->decimal('gross_total');

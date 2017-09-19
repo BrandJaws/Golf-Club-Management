@@ -8,44 +8,56 @@
             <div class="shop-inner">
                 <div class="box">
                     <div class="col-md-11">
-
-                        <div id="shop-carousel" class="owl-carousel owl-theme">
+						<div id="shop-carousel" class="owl-carousel owl-theme">
 
                             <div :class="['item', selectedMainCategoryId == mainCategory.id ? 'active-item' : '']" v-for="mainCategory in mainCategoriesData" :key="mainCategory.id" v-on:click="mainCategorySelected(mainCategory)">
 
-                                <div class="parent-category-box">
+                                <div class="parent-category-box resturant-box">
 
-                                    <div class="media">
-                                        <a class="media-left" href="#"> <img class="media-object"
-                                                                             :src="baseUrl+'/'+mainCategory.icon" alt="icon">
-                                        </a>
+                                    <div class="box p-a">
+                                        <div class="pull-left m-r">
+                                            <span class="w-53 rounded">
+                                                <a class="media-left" href="#">
+                                                    <img class="media-object" :src="baseUrl+'/'+mainCategory.icon" alt="icon">
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <div class="clear">
+                                            <h4 class="m-a-0 text-lg _300 heading">
+                                                <a href="">@{{mainCategory.name}}</a>
+                                            </h4>
+                                            <small class="text-muted">
+                                                <span>
+                                               		<a href="#" class="del-icon pull-right" v-on:click="deleteMainCategory(mainCategory,false)">
+                                                	<i class="fa fa-trash"></i>
+                                                </a>
+                                                </span>
+                                                <span>
+                                                	<a v-on:click.stop :href="baseUrl+'/admin/restaurant/main-categories/'+mainCategory.id+'/edit'" class="del-icon pull-right">
+                                                	<i class="fa fa-pencil"></i>
+                                                </a>
+                                                </span>
+                                            </small>
+                                        </div>
                                         <div class="media-body text-left">
                                             <a href="#.">
-                                                <h4 class="media-heading">@{{mainCategory.name}}</h4>
-                                                <p class="media-sub">-</p>
+                                                <!--<h4 class="media-heading">@{{mainCategory.name}}</h4>-->
+                                                <!--<p class="media-sub">-</p>-->
                                             </a>
                                         </div>
-                                        <span>
-                                            <a href="#" class="del-icon pull-right" v-on:click="deleteMainCategory(mainCategory,false)">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        </span>
-                                         <span>
-                                            <a v-on:click.stop :href="baseUrl+'/admin/restaurant/main-categories/'+mainCategory.id+'/edit'" class="del-icon pull-right">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                        </span>
+                                        
 
 
                                     </div>
+                                    
 
                                 </div>
 
                             </div>
 
-
+							
                         </div>
-
+                        	
                         <!-- owl carousel -->
 
                     </div>
@@ -98,16 +110,16 @@
                                 <li  v-for="category in mainCategoriesData[selectedMainCategoryIndex].sub_categories" :class="[category.id == mainCategoriesData[selectedMainCategoryIndex].selectedSubCategoryId ? 'active-menu' : '']" v-on:click="categorySelected(category)">
 
                                     <div class="">
-                                    <div class="col-sm-7">
+                                    <div class="col-sm-8">
                                         <a href="#." class="pull-left" v-if="!category.editModeOn">
                                         <span>
-                                            <i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp;&nbsp;&nbsp;@{{category.name}}
+                                            <i class="fa fa-long-arrow-right"></i><span class="nameHeading">@{{category.name}}</span>
                                         </span>
                                         </a>
                                         <input v-if="category.editModeOn" type="text" class="form-control" v-model="category.editableName" />
                                     </div>
 
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-4">
                                     <a href="#." class="pull-right" v-on:click="deleteCategory(category,false)" v-if="!category.editModeOn">
                                         <span>
                                             <i class="fa fa-trash"></i>
@@ -132,7 +144,7 @@
                                     </div>
                                 </li>
                                 <li v-if="mainCategoriesData[selectedMainCategoryIndex].sub_categories.length < 1">
-                                    No Categories Found
+                                    <div class="col-sm-12">No Categories Found</div>
                                 </li>
 
 
@@ -150,12 +162,12 @@
                         <div class="box">
                             <div class="inner-header">
                                 <div class="">
-                                    <div class="col-md-4">
+                                    <div class="col-md-5">
                                         <div class="inner-page-heading text-left">
                                             <h3>@{{ selectedMainCategoryIndex != null && mainCategoriesData[selectedMainCategoryIndex].selectedSubCategoryIndex != -1 ?  mainCategoriesData[selectedMainCategoryIndex].sub_categories[mainCategoriesData[selectedMainCategoryIndex].selectedSubCategoryIndex].name : 'No Category Selected' }}</h3>
                                         </div>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-7">
                                         <div class="search-form text-right">
                                             <form action="#." method="post"  v-on:submit.prevent>
                                                 <div class="search-field">
@@ -184,36 +196,36 @@
                                     <tbody v-if=" selectedMainCategoryIndex != null && mainCategoriesData[selectedMainCategoryIndex].selectedSubCategoryIndex != -1">
                                     <template v-if="mainCategoriesData[selectedMainCategoryIndex].sub_categories[mainCategoriesData[selectedMainCategoryIndex].selectedSubCategoryIndex].products.data.length > 0 ">
                                         <tr  v-for="(product,productIndex) in mainCategoriesData[selectedMainCategoryIndex].sub_categories[mainCategoriesData[selectedMainCategoryIndex].selectedSubCategoryIndex].products.data" :key="productIndex">
-                                            <td>
+                                            <td width="100px">
                                                 <div class="section-3 sec-style text-center">
                                                     <img :src="baseUrl+'/'+product.image" class="shopProdImage"></imgsrc>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="250px">
                                                 <div class="section-1 sec-style">
                                                     <h3>@{{ product.name }}</h3>
-                                                    <p>Product Name</p>
+                                                    <p><strong>Product Name</strong></p>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="150px">
                                                 <div class="section-3 sec-style">
                                                     <h3>@{{ '$ '+product.price }}</h3>
-                                                    <p>Price</p>
+                                                    <p><strong>Price</strong></p>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="90px">
                                                 <div class="section-3 sec-style">
                                                     <h3>@{{ product.in_stock }}</h3>
-                                                    <p>In Stock</p>
+                                                    <p><strong>In Stock</strong></p>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="120px">
                                                 <div class="section-3 sec-style">
                                                     <h3>@{{ product.visible }}</h3>
-                                                    <p>Is Visible</p>
+                                                    <p><strong>Is Visible</strong></p>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="100px">
                                                 <div class="section-3 sec-style">
                                                     <p>
                                                         <span><a :href="baseUrl+'/admin/restaurant/products/'+product.id+'/edit'" class="blue-cb">edit</a></span>&nbsp;&nbsp;&nbsp;
@@ -264,7 +276,8 @@
        template: "#restaurantTemplate",
        mounted:function(){
             $(".owl-carousel").owlCarousel({
-                //autoplay: true,
+                margin: 20,
+				//autoplay: true,
                 //autoplayTimeout: 5000,
                // items: 1,
                 //nav: true,

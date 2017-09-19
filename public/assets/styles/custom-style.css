@@ -169,6 +169,38 @@ label { display: block; margin: 3px 0; }
 .socialMediaConnect li.instagram a { background: #fb3958; text-decoration: none; color: #fff; text-transform: uppercase; }
 .socialMediaConnect li.instagram a, .socialMediaConnect li.twitter a, .socialMediaConnect li.facebook a { display: inline-block; margin: 10px; width: 200px; height: 48px; line-height: 48px; }
 .socialMediaConnect li:hover { opacity: 0.8; }
+
+.resturant-box {}
+.resturant-box.parent-category-box .media-left { width:100% !important; float: left; padding:0px;}
+.resturant-box.parent-category-box .media-left img { width:53px !important; max-width:100%;}
+.resturant-box.parent-category-box .media-heading{ font-weight:400;}
+
+.w-53 { width: 53px; height: auto; line-height: 53px; display: inline-block; text-align: center;}
+
+
+
+.resturant-box .text-muted{ display:inline-block;}
+.resturant-box .del-icon { color: #999; font-size: 18px; margin: 0 10px 0 0; }
+.resturant-box a.del-icon:hover { color:#C4061F;}
+.restaurant-main .parent-category-box{ padding:0px;}
+.resturant-box.parent-category-box .media-left img {}
+#shop-carousel .active-item {}
+.resturant-box .box{ margin-bottom:0px; }
+.restaurant-main .shop-inner { margin-bottom:30px; }
+.restaurant-main .heading { text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+
+.restaurant-main .menu-list ul li span { padding:7px;}
+.restaurant-main .nameHeading { text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 105px; width: 105px; display: inline-block; vertical-align: middle; }
+.restaurant-main .menu-list { height: 598px; overflow-y: auto;}
+.restaurant-main .menu-sidebar { box-shadow:0 0px 1px rgba(0, 0, 0, 0.15);}
+.restaurant-main .sidebar-heading { border-bottom:0px; background:#f8f8f8; }
+.menu-list ul li:hover, .menu-list ul li.active-menu { background:rgba(0, 0, 0, 0.065) !important; }
+
+.restaurant-main .productsTableContainer { overflow-y:auto;}
+.restaurant-main .menu-list ul li:hover { cursor:pointer;}
+
+
+
 /** social profile connect **/
 /** social message post **/
 .createSocialPost { line-height: 48px; }

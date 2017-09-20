@@ -54,7 +54,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-md-4 item" v-show="mainCategoriesData.length < 3">
+                            <div id="inCarouselAddMainCategoryItem" class="col-md-4 item" v-show="!fixAddMainCategoryButton">
                                 <div class="add-category-btn text-center">
                                     <a href="{{route('admin.restaurant.create_main_category')}}"><i class="fa fa-plus"></i><br>More</a>
                                 </div>
@@ -66,7 +66,7 @@
                         <!-- owl carousel -->
 
                     </div>
-                    <div class="col-md-1" v-if="mainCategoriesData.length >= 3">
+                    <div class="col-md-1" v-if="fixAddMainCategoryButton">
                         <div class="add-category-btn text-center">
                             <a href="{{route('admin.restaurant.create_main_category')}}"><i class="fa fa-plus"></i><br>More</a>
                         </div>
@@ -280,14 +280,24 @@
     Vue.component('restaurant',{
        template: "#restaurantTemplate",
        mounted:function(){
-            $(".owl-carousel").owlCarousel({
+           var owlCarousel = $(".owl-carousel");
+           owlCarousel.owlCarousel({
                 margin: 20,
+                //onDragged: this.setValueForFixAddMainCategoryButtonFlag,
+
 				//autoplay: true,
                 //autoplayTimeout: 5000,
                // items: 1,
                 //nav: true,
                // smartSpeed: 500,
             });
+
+           this.setValueForFixAddMainCategoryButtonFlag();
+           owlCarousel.on('translated.owl.carousel', function(event) {
+               this.setValueForFixAddMainCategoryButtonFlag(event);
+           }.bind(this));
+
+
         },
         props:[
                 'mainCategories',
@@ -316,6 +326,7 @@
                     confirmCallback:null
 
                 },
+                fixAddMainCategoryButton:false,
             }
         },
         computed:{
@@ -346,6 +357,15 @@
             },
         },
         methods:{
+            setValueForFixAddMainCategoryButtonFlag:function(event){
+                console.log($('#inCarouselAddMainCategoryItem').parent().hasClass('active'));
+                if($('#inCarouselAddMainCategoryItem').parent().hasClass('active')){
+                    this.fixAddMainCategoryButton = false;
+                }else{
+                    this.fixAddMainCategoryButton = true;
+                }
+
+            },
             showAddCategoryField:function(){
                 if(this.addCategoryFieldVisible) {
                     this.addCategoryFieldVisible = false;

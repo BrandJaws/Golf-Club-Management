@@ -873,7 +873,7 @@ return [
       'score_recorded_successfuly' => [
         'code' => '157',
         'httpCode' => '200',
-        'message' => "Scores recorded successfuly"
+        'message' => "Scores recorded successfully"
       ],
       'score_card_id_missing' => [
         'code' => '158',
@@ -891,10 +891,10 @@ return [
         'message' => "Requested score card is not being managed by you "
       ],
 
-      'score_card_deleted_successfuly' => [
+      'score_card_deleted_successfully' => [
           'code' => '161',
           'httpCode' => '200',
-          'message' => "Score Card deleted successfuly"
+          'message' => "Score Card deleted successfully"
       ],
       "invalid_scoring_type" => [
         'code' => '162',
@@ -964,7 +964,7 @@ return [
       "chat_message_sent"=> [
         'code' => '175',
         'httpCode' => '200',
-        'message' => "Chat message sent successfuly"
+        'message' => "Chat message sent successfully"
       ],
       "product_not_found"=> [
           'code' => '176',
@@ -999,15 +999,58 @@ return [
       "category_creation_successful"=> [
         'code' => '182',
         'httpCode' => '200',
-        'message' => "Category Created Successfuly"
+        'message' => "Category Created Successfully"
       ],
       "category_has_sub_categories"=> [
         'code' => '183',
         'httpCode' => '412',
         'message' => "Can't delete category since it already has some sub categories in it. Delete the associated sub categories first and try again."
       ],
-
-
+      "restaurant_order_details_missing"=> [
+        'code' => '184',
+        'httpCode' => '412',
+        'message' => "Restaurant order details are missing"
+      ],
+      "invalid_order_details"=> [
+        'code' => '185',
+        'httpCode' => '412',
+        'message' => "Restaurant order details are invalid"
+      ],
+      "order_not_found"=> [
+        'code' => '186',
+        'httpCode' => '404',
+        'message' => "Order Not Found"
+      ],
+      "order_id_missing"=> [
+        'code' => '187',
+        'httpCode' => '412',
+        'message' => "Order ID missing"
+      ],
+      "order_already_in_process"=> [
+        'code' => '188',
+        'httpCode' => '412',
+        'message' => "Can't update or delete since the order is now already in process"
+      ],
+      "order_creation_successful"=> [
+        'code' => '189',
+        'httpCode' => '200',
+        'message' => "Order placed successfully"
+      ],
+      "order_updation_successful"=> [
+        'code' => '190',
+        'httpCode' => '200',
+        'message' => "Order updated successfully"
+      ],
+      "order_deletion_successful"=> [
+        'code' => '191',
+        'httpCode' => '200',
+        'message' => "Order cancelled successfully"
+      ],
+      "order_doesnt_belong_to_requesting_body"=> [
+        'code' => '192',
+        'httpCode' => '412',
+        'message' => "Order doesn't belong to you"
+      ],
 
 
 

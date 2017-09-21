@@ -179,10 +179,31 @@ Route::group([
 			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getProductById'
 		]);
 
-		Route::post('/orders/new', [
+		Route::get('/orders', [
+			'as' => 'list_orders',
+			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getOrdersForMember'
+		]);
+
+		Route::get('/orders/{order_id}', [
+			'as' => 'single_order',
+			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@getSingleOrder'
+		]);
+
+		Route::post('/orders', [
 			'as' => 'new_order',
 			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@placeNewOrder'
 		]);
+
+		Route::put('/orders', [
+			'as' => 'update_order',
+			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@updateOrder'
+		]);
+
+		Route::delete('/orders', [
+			'as' => 'delete_order',
+			'uses' => '\App\Http\Controllers\Mobile\RestaurantController@deleteOrder'
+		]);
+
 	});
 
 

@@ -378,6 +378,19 @@ Route::group([
 		        'as' => 'orders',
 		        'uses' => 'ClubAdmin\Restaurant\RestaurantController@ordersList'
 	        ]);
+
+            Route::post('/orders/mark-in-process', [
+              'as' => 'mark_order_in_process',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@markOrderAsInProcess'
+            ]);
+            Route::post('/orders/mark-is-ready', [
+              'as' => 'mark_order_is_ready',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@markOrderAsIsReady'
+            ]);
+            Route::post('/orders/mark-is-served', [
+              'as' => 'mark_order_is_served',
+              'uses' => 'ClubAdmin\Restaurant\RestaurantController@markOrderAsIsServed'
+            ]);
         });
         
         /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ClubAdmin\Restaurant;
 
 use App\Http\Models\RestaurantMainCategory;
+use App\Http\Models\RestaurantOrder;
 use App\Http\Models\RestaurantSubCategory;
 use App\Http\Models\RestaurantProduct;
 use Illuminate\Http\Request;
@@ -461,8 +462,95 @@ class RestaurantController extends Controller {
 		return view ( 'admin.restaurant.orders');
 	}
 
+	public function markOrderAsInProcess(Request $request){
+		if (!$request->has('restaurant_order_id')) {
+			$this->error = "order_id_missing";
+			return $this->response();
+		}
+		$order = RestaurantOrder::getSingleOrderById($request->get("restaurant_order_id"));
+		if(!$order){
+			$this->error = "order_id_missing";
+			return $this->response();
+		}
 
+		if($order->club_id != Auth::user()->club_id){
+			$this->error = "order_doesnt_belong_to_requesting_body";
+			return $this->response();
+		}
 
+		try{
+			$order->in_process = "YES";
+			$order->save();
+			$this->response = $order;
+		}catch (\Exception $e){
+
+			$this->error = $e->getMessage();
+
+		}
+
+		return $this->response();
+	}
+
+	public function markOrderAsIsReady(Request $request){
+		if (!$request->has('restaurant_order_id')) {
+			$this->error = "order_id_missing";
+			return $this->response();
+		}
+		$order = RestaurantOrder::getSingleOrderById($request->get("restaurant_order_id"));
+		if(!$order){
+			$this->error = "order_id_missing";
+			return $this->response();
+		}
+
+		if($order->club_id != Auth::user()->club_id){
+			$this->error = "order_doesnt_belong_to_requesting_body";
+			return $this->response();
+		}
+
+		try{
+			$order->in_process = "YES";
+			$order->is_ready = "YES";
+			$order->save();
+			$this->response = $order;
+		}catch (\Exception $e){
+
+			$this->error = $e->getMessage();
+
+		}
+
+		return $this->response();
+	}
+
+	public function markOrderAsIsServed(Request $request){
+		if (!$request->has('restaurant_order_id')) {
+			$this->error = "order_id_missing";
+			return $this->response();
+		}
+		$order = RestaurantOrder::getSingleOrderById($request->get("restaurant_order_id"));
+		if(!$order){
+			$this->error = "order_id_missing";
+			return $this->response();
+		}
+
+		if($order->club_id != Auth::user()->club_id){
+			$this->error = "order_doesnt_belong_to_requesting_body";
+			return $this->response();
+		}
+
+		try{
+			$order->in_process = "YES";
+			$order->is_ready = "YES";
+			$order->is_served = "YES";
+			$order->save();
+			$this->response = $order;
+		}catch (\Exception $e){
+
+			$this->error = $e->getMessage();
+
+		}
+
+		return $this->response();
+	}
 
 
 }

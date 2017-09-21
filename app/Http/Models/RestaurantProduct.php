@@ -18,5 +18,14 @@ class RestaurantProduct extends Model
     "visible"
 
   ];
+
+  public static function findProductByIdForAMember($productId,$member){
+    $product = RestaurantProduct::where('id',$productId)
+      ->where('club_id',$member->club_id)
+      ->where('visible','YES')
+      ->first();
+
+    return $product;
+  }
   
 }

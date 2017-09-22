@@ -10,8 +10,8 @@ redis.on('message',function(channel,message){
     parsedMessage = JSON.parse(message)
     if(channel == "admin-notifications"){
         if(parsedMessage.event == "ReservationUpdation"){
-            
-            io.emit('admin-notifications:ReservationUpdation',true);
+            //Only emit to the relevant club
+            io.emit('admin-notifications:ReservationUpdation'+parsedMessage.data.club_id,true);
         }
     }
     

@@ -16,7 +16,7 @@ class CreateEntityBasedNotificationsTable extends Migration
         Schema::create('entity_based_notifications', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('club_id');
-            $table->enum('event', array('ReservationUpdation'));
+            $table->enum('event', array('ReservationUpdation','RestaurantOrderUpdation'));
             $table->morphs('entity');
             $table->text('deleted_entity')->nullable();
         });

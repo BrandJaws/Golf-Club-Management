@@ -11,6 +11,7 @@ class AdminNotificationEventsManager
 
     //string constants for events
     public static $ReservationUpdationEvent = "ReservationUpdation";
+    public static $RestaurantOrderUpdation = "RestaurantOrderUpdation";
 
     private $dataToBroadcast = [
         "event" => null,
@@ -24,8 +25,13 @@ class AdminNotificationEventsManager
 
     }
 
-    public static function broadcastReservationUpdationEvent(){
-        $eventManager = new AdminNotificationEventsManager(self::$ReservationUpdationEvent);
+    public static function broadcastReservationUpdationEvent($club_id){
+        $eventManager = new AdminNotificationEventsManager(self::$ReservationUpdationEvent,["club_id"=>$club_id]);
+        $eventManager->broadcast(self::$AdminNotificationsChannel,$eventManager->dataToBroadcast);
+    }
+
+    public static function broadcastRestaurantOrderUpdationEvent($club_id){
+        $eventManager = new AdminNotificationEventsManager(self::$RestaurantOrderUpdation,["club_id"=>$club_id]);
         $eventManager->broadcast(self::$AdminNotificationsChannel,$eventManager->dataToBroadcast);
     }
 

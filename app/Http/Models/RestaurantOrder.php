@@ -30,6 +30,7 @@ class RestaurantOrder extends Model
     $restaurantOrder = RestaurantOrder::leftJoin('member','restaurant_orders.member_id','=','member.id')
                                       ->where('restaurant_orders.id',$restaurantOrderId)
                                       ->select(
+                                              'restaurant_orders.club_id',
                                               'restaurant_orders.id as id',
                                               'member_id',
                                               DB::raw('CONCAT(member.firstName," ",member.lastName) as member_name'),

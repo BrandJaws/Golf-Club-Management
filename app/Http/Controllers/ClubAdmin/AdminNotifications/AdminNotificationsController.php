@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ClubAdmin\AdminNotifications;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Course;
 use App\Http\Models\EntityBasedNotification;
+use App\Http\Models\RestaurantOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -113,4 +114,75 @@ class AdminNotificationsController extends Controller
 
         return $this->response();
     }
+
+    /**
+     * @param Request $request
+     *
+     * Action to get all the reservations for which the display at the admin side needs to be notified and updated
+     * Effectively these are the reservations in the entity_based_notifications table with the event ReservationUpdation
+     */
+    public function restaurantOrderUpdation(Request $request) {
+        if (!$request->has('entity_based_notification_id')) {
+
+            $this->error = "entity_based_notification_id_missing";
+            return $this->response();
+        }
+
+
+        $entityBasedNotifications = EntityBasedNotification::where('id', '>', $request->get('entity_based_notification_id'))
+          ->where('event', \Config::get('global.entityBasedNotificationsEvents.RestaurantOrderUpdation'))
+          ->where('club_id', Auth::user()->club_id)
+          ->select('entity_id', 'entity_type', 'deleted_entity')
+          ->get()
+          ->toArray();
+
+
+        $deletedEntities = [];
+        $updatedOrNewEntities = [];
+        foreach ($entityBasedNotifications as $entIndex => $entityBasedNotification) {
+            if ($entityBasedNotification["deleted_entity"] != NULL) {
+                $deletedEntities[] = json_decode($entityBasedNotification["deleted_entity"])->id;
+
+            }
+            else {
+                $updatedOrNewEntities[] = $entityBasedNotification->entity_id;
+            }
+
+        }
+
+
+        if (count($updatedOrNewEntities)) {
+
+            $updatedOrNewEntities = RestaurantOrder::whereIn("id", $updatedOrNewEntities)
+              ->get();
+
+            if (!$request->has('load_details')) {
+                foreach($updatedOrNewEntities as $order){
+                    $order->restaurant_order_details = $order->getRestaurantOrderDetailsCustomized();
+                }
+            }
+
+
+            if (count($updatedOrNewEntities) || count($deletedEntities)) {
+                $maxEntityBasedNotificationId = EntityBasedNotification::select('id')
+                  ->where('event', \Config::get('global.entityBasedNotificationsEvents.RestaurantOrderUpdation'))
+                  ->orderBy('id', 'desc')
+                  ->first();
+
+                $restaurantOrderUpdates = [
+                  "deletedOrders" => $deletedEntities,
+                  "updatedOrNew" => $updatedOrNewEntities,
+                  "entity_based_notification_id" => $maxEntityBasedNotificationId
+                ];
+                $this->response = $restaurantOrderUpdates;
+            }
+            else {
+                $this->error = "no_orders_found";
+            }
+
+            return $this->response();
+        }
+    }
+
+
 }

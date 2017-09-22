@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Mobile;
 
+use App\Collection\AdminNotificationEventsManager;
+use App\Http\Models\EntityBasedNotification;
 use App\Http\Models\RestaurantMainCategory;
 use App\Http\Models\RestaurantOrder;
 use App\Http\Models\RestaurantOrderDetail;
@@ -124,7 +126,16 @@ class RestaurantController extends Controller {
 				]);
 			}
 
+			EntityBasedNotification::create([
+				"club_id"=>$restaurantOrder->club_id,
+				"event"=>AdminNotificationEventsManager::$RestaurantOrderUpdation,
+				"entity_id"=>$restaurantOrder->id,
+				"entity_type"=>RestaurantOrder::class
+			]);
+			AdminNotificationEventsManager::broadcastRestaurantOrderUpdationEvent($restaurantOrder->club_id);
+
 			DB::commit();
+
 
 
 			$this->response = "order_creation_successful";
@@ -228,6 +239,14 @@ class RestaurantController extends Controller {
 				]);
 			}
 
+			EntityBasedNotification::create([
+				"club_id"=>$order->club_id,
+				"event"=>AdminNotificationEventsManager::$RestaurantOrderUpdation,
+				"entity_id"=>$order->id,
+				"entity_type"=>RestaurantOrder::class
+			]);
+			AdminNotificationEventsManager::broadcastRestaurantOrderUpdationEvent($order->club_id);
+
 			DB::commit();
 
 
@@ -235,7 +254,6 @@ class RestaurantController extends Controller {
 
 
 		}catch (\Exception $e){
-
 			\DB::rollback();
 			\Log::info(__METHOD__, [
 				'error' => $e->getMessage()
@@ -282,6 +300,15 @@ class RestaurantController extends Controller {
 
 			$order->delete();
 			$this->response = "order_deletion_successful";
+
+			EntityBasedNotification::create([
+				"club_id"=>$order->club_id,
+				"event"=>AdminNotificationEventsManager::$RestaurantOrderUpdation,
+				"entity_id"=>$order->id,
+				"entity_type"=>RestaurantOrder::class,
+				"deleted_entity"=>json_encode($order),
+			]);
+			AdminNotificationEventsManager::broadcastRestaurantOrderUpdationEvent($order->club_id);
 
 			DB::commit();
 

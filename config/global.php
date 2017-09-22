@@ -99,7 +99,7 @@ return [
     ],
     'entityBasedNotificationsEvents' => [
         "ReservationUpdation"=>"ReservationUpdation",
-        
+        "RestaurantOrderUpdation"=>"RestaurantOrderUpdation",
     ],
     'score' => [
         "handicap_options"=>["yes"=>"YES", "no"=>"NO"],

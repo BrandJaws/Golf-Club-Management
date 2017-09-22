@@ -62,21 +62,15 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>iPhone 5 32GB White &amp; Silver (GSM) Unlocked</td>
-                                            <td>$749.00</td>
-                                            <td>$749.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>iPad mini with Wi-Fi 32GB - White &amp; Silver</td>
-                                            <td>$429.00</td>
-                                            <td>$858.00</td>
+                                        <tr v-for="(detail, index) in orderDetail.restaurant_order_details"}>
+                                            <td>@{{ index+1 }}</td>
+                                            <td>@{{ detail.restaurant_product_name }}</td>
+                                            <td>@{{ detail.quantity }}</td>
+                                            <td>@{{ '$ ' + detail.sale_total }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="3" class="text-right"><strong>Subtotal</strong></td>
-                                            <td>$1607.00</td>
+                                            <td>@{{ '$ ' + orderDetail.gross_total }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="3" class="text-right no-border"><strong>VAT Included in Total</strong></td>
@@ -84,7 +78,7 @@
                                         </tr>
                                         <tr>
                                             <td colspan="3" class="text-right no-border"><strong>Total</strong></td>
-                                            <td><strong>$1607.00</strong></td>
+                                            <td><strong>@{{ '$ ' + orderDetail.gross_total }}</strong></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -109,7 +103,7 @@
             is_served: "NO",
             gross_total: 12345.43,
             created_at: "",
-            order_details: [{
+            restaurant_order_details: [{
                 id: 1,
                 restaurant_product_name: "Product 1",
                 quantity: 1,

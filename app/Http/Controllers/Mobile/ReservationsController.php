@@ -182,7 +182,7 @@ class ReservationsController extends Controller
                 "entity_id"=>$result,
                 "entity_type"=>RoutineReservation::class
             ]);
-            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent($course->club_id);
 
             $this->response = "mobile_reservation_successfull";
         } else {
@@ -419,7 +419,7 @@ class ReservationsController extends Controller
                 "entity_id"=>$reservation->id,
                 "entity_type"=>RoutineReservation::class
             ]);
-            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent($course->club_id);
 
 
             \DB::commit();
@@ -495,7 +495,7 @@ class ReservationsController extends Controller
                 $reservation->delete();
             }
 
-            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent($reservation->club_id);
 
             $this->response = "cancel_reservation_success";
             \DB::commit();
@@ -602,7 +602,7 @@ class ReservationsController extends Controller
                 "entity_id"=>$reservation->id,
                 "entity_type"=>get_class($reservation)
             ]);
-            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent($reservation->club_id);
 
             \DB::commit();
             return $this->response();
@@ -688,7 +688,7 @@ class ReservationsController extends Controller
             $this->response = "success_decline";
 
 
-            AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+            AdminNotificationEventsManager::broadcastReservationUpdationEvent($reservation->club_id);
             \DB::commit();
             //Send message to parent
             $reservation_player->sendNotificationToParentOnRequestDeclinedByPlayer();

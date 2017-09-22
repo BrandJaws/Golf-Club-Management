@@ -167,7 +167,7 @@ class BeaconConfiguration
                     "entity_id"=>$nextValidReservationToday->id,
                     "entity_type"=>get_class($nextValidReservationToday)
                 ]);
-                AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+                AdminNotificationEventsManager::broadcastReservationUpdationEvent($nextValidReservationToday->club_id);
                 
 
                 DB::commit();
@@ -251,7 +251,7 @@ class BeaconConfiguration
                     "entity_id"=>$mostRelevantReservation->id,
                     "entity_type"=>get_class($mostRelevantReservation)
                 ]);
-                AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+                AdminNotificationEventsManager::broadcastReservationUpdationEvent($mostRelevantReservation->club_id);
 
 
                 DB::commit();
@@ -336,7 +336,7 @@ class BeaconConfiguration
                     "entity_id"=>$mostRelevantReservation->id,
                     "entity_type"=>get_class($mostRelevantReservation)
                 ]);
-                AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+                AdminNotificationEventsManager::broadcastReservationUpdationEvent($mostRelevantReservation->club_id);
 
 
                 DB::commit();
@@ -418,7 +418,7 @@ class BeaconConfiguration
                     "entity_id"=>$mostRelevantReservation->id,
                     "entity_type"=>get_class($mostRelevantReservation)
                 ]);
-                AdminNotificationEventsManager::broadcastReservationUpdationEvent();
+                AdminNotificationEventsManager::broadcastReservationUpdationEvent($mostRelevantReservation->club_id);
 
 
                 DB::commit();

@@ -560,6 +560,11 @@ Route::group([
                 'as' => 'reservation-updation',
                 'uses' => 'ClubAdmin\AdminNotifications\AdminNotificationsController@reservationUpdation'
             ]);
+            Route::post('/restaurant-order-updation', [
+              'as' => 'reservation-updation',
+              'uses' => 'ClubAdmin\AdminNotifications\AdminNotificationsController@restaurantOrderUpdation'
+            ]);
+
 
         });
         /**

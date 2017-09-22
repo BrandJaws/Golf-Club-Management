@@ -348,7 +348,7 @@
 
             vue.getAdminNotificationsForReservationUpdationEvent();
         });
-        socket.on('admin-notifications:ReservationUpdation',function(data){
+        socket.on('admin-notifications:ReservationUpdation{{Auth::user()->club_id}}',function(data){
 
             if(data){
                 vue.getAdminNotificationsForReservationUpdationEvent();

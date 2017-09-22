@@ -1051,6 +1051,11 @@ return [
         'httpCode' => '412',
         'message' => "Order doesn't belong to you"
       ],
+      "no_updates_found"=> [
+        'code' => '193',
+        'httpCode' => '404',
+        'message' => "No Updates Found"
+      ],
 
 
 

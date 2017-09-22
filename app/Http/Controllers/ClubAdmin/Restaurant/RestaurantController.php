@@ -9,6 +9,7 @@ use App\Http\Models\RestaurantProduct;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class RestaurantController extends Controller {
@@ -479,9 +480,21 @@ class RestaurantController extends Controller {
 		}
 
 		try{
+
+			DB::beginTransaction();
 			$order->in_process = "YES";
 			$order->save();
 			$this->response = $order;
+
+			EntityBasedNotification::create([
+				"club_id"=>$order->club_id,
+				"event"=>AdminNotificationEventsManager::$RestaurantOrderUpdation,
+				"entity_id"=>$order->id,
+				"entity_type"=>RestaurantOrder::class
+			]);
+			AdminNotificationEventsManager::broadcastRestaurantOrderUpdationEvent($order->club_id);
+
+			DB::commit();
 		}catch (\Exception $e){
 
 			$this->error = $e->getMessage();
@@ -508,10 +521,22 @@ class RestaurantController extends Controller {
 		}
 
 		try{
+			DB::beginTransaction();
+
 			$order->in_process = "YES";
 			$order->is_ready = "YES";
 			$order->save();
 			$this->response = $order;
+
+			EntityBasedNotification::create([
+				"club_id"=>$order->club_id,
+				"event"=>AdminNotificationEventsManager::$RestaurantOrderUpdation,
+				"entity_id"=>$order->id,
+				"entity_type"=>RestaurantOrder::class
+			]);
+			AdminNotificationEventsManager::broadcastRestaurantOrderUpdationEvent($order->club_id);
+
+			DB::commit();
 		}catch (\Exception $e){
 
 			$this->error = $e->getMessage();
@@ -538,11 +563,23 @@ class RestaurantController extends Controller {
 		}
 
 		try{
+			DB::beginTransaction();
+			
 			$order->in_process = "YES";
 			$order->is_ready = "YES";
 			$order->is_served = "YES";
 			$order->save();
 			$this->response = $order;
+
+			EntityBasedNotification::create([
+				"club_id"=>$order->club_id,
+				"event"=>AdminNotificationEventsManager::$RestaurantOrderUpdation,
+				"entity_id"=>$order->id,
+				"entity_type"=>RestaurantOrder::class
+			]);
+			AdminNotificationEventsManager::broadcastRestaurantOrderUpdationEvent($order->club_id);
+
+			DB::commit();
 		}catch (\Exception $e){
 
 			$this->error = $e->getMessage();

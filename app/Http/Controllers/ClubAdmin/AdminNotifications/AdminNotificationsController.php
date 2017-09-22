@@ -177,7 +177,7 @@ class AdminNotificationsController extends Controller
                 $this->response = $restaurantOrderUpdates;
             }
             else {
-                $this->error = "no_updates_found";
+                $this->error = "no_orders_found";
             }
 
             return $this->response();

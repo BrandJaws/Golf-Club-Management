@@ -293,3 +293,4 @@ label { display: block; margin: 3px 0; }
 .shopProdImage { display: inline-block; width: 70px; height: 70px; border: 1px transparent; border-radius: 50%; object-fit: cover; object-position: center; }
 .shopTable tr td { vertical-align: middle }
 .productsTableContainer { height: 600px; overflow-y: scroll }
+.m-b-10 { margin-bottom: 10px; display: inline-block }

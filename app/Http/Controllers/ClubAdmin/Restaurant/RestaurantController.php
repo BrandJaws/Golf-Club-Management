@@ -552,5 +552,9 @@ class RestaurantController extends Controller {
 		return $this->response();
 	}
 
+	public function orderView($order_id) {
+		return view ( 'admin.restaurant.orders-details', ['order_id' => $order_id]);
+	}
+
 
 }

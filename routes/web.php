@@ -379,6 +379,11 @@ Route::group([
 		        'uses' => 'ClubAdmin\Restaurant\RestaurantController@ordersList'
 	        ]);
 
+	        Route::get('/orders/{order_id}', [
+		        'as' => 'single_order',
+		        'uses' => 'ClubAdmin\Restaurant\RestaurantController@orderView'
+	        ]);
+
             Route::post('/orders/mark-in-process', [
               'as' => 'mark_order_in_process',
               'uses' => 'ClubAdmin\Restaurant\RestaurantController@markOrderAsInProcess'

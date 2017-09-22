@@ -5,19 +5,16 @@
 				<thead>
 	          		<tr>
 	          			<th>
-	          				Name
+	          				Member Name
 	          			</th>
 	          			<th>
-	          				Email
+	          				Gross Total
 	          			</th>
 	          			<th>
-	          				Gender
+	          				Created at
 	          			</th>
 	          			<th>
-	          				Warnings
-	          			</th>
-	          			<th>
-	          				Actions
+	          				Status
 	          			</th>
 	          		</tr>
 	          	</thead>
@@ -30,26 +27,30 @@
     Vue.component('orders-table', {
         template: `
 			<tbody>
-				<tr v-for="(member,memberIndex) in membersListData">
-					<td>@{{ member.firstName }} @{{member.lastName}}</td>
-					<td>@{{ member.email }}</td>
-					<td>@{{ member.gender }}</td>
-					<td>@{{ member.warnings }}</td>
+				<tr v-for="(order,orderIndex) in ordersListData">
 					<td>
-						<a :href="generateEditMemberRoute('{{Request::url()}}',member.id)" class="blue-cb" >edit</a>
-						&nbsp;&nbsp;
-						<a href="#." class="del-icon" @click="deleteMemeber('{{Request::url()}}',member.id,memberIndex)"><i class="fa fa-trash"></i></a>
-					</td>
+					    <a href="">@{{ order.member_name }}</a>
+                    </td>
+					<td>$ @{{ order.gross_total }}</td>
+					<td>@{{ order.created_at }}</td>
+					<td>
+					    <button class="btn btn-sm btn-outline rounded b-primary text-primary">In Process</button>
+					    <!--<button class="btn btn-sm rounded rounded red">In Process</button>-->
+					    <button class="btn btn-sm btn-outline rounded b-info text-info">Is Ready</button>
+					    <!--<button class="btn btn-sm rounded rounded blue">Is Ready</button>-->
+					    <button class="btn btn-sm btn-outline rounded b-success text-success">Is Served</button>
+					    <!--<button class="btn btn-sm rounded rounded green">Is Served</button>-->
+                    </td>
 				</tr>
 			</tbody>
 		`,
         props: [
-            "membersList"
+            "ordersList"
         ],
 
         computed: {
-            membersListData: function () {
-                return this.membersList;
+            ordersListData: function () {
+                return this.ordersList;
             }
         },
         methods: {

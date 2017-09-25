@@ -163,7 +163,7 @@ class AdminNotificationsController extends Controller
                   'is_ready',
                   'is_served',
                   'gross_total',
-                  'restaurant_orders.created_at'
+                  DB::raw('DATE_FORMAT(restaurant_orders.created_at, "%b %D, %Y %h:%i:%s") as time')
                 )
               ->get();
 

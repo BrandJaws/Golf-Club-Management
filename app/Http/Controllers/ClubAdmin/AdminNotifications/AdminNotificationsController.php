@@ -133,8 +133,7 @@ class AdminNotificationsController extends Controller
           ->where('event', \Config::get('global.entityBasedNotificationsEvents.RestaurantOrderUpdation'))
           ->where('club_id', Auth::user()->club_id)
           ->select('entity_id', 'entity_type', 'deleted_entity')
-          ->get()
-          ->toArray();
+          ->get();
 
 
         $deletedEntities = [];
@@ -151,12 +150,24 @@ class AdminNotificationsController extends Controller
         }
 
 
-        if (count($updatedOrNewEntities)) {
+        if (count($updatedOrNewEntities) || count($deletedEntities)) {
 
-            $updatedOrNewEntities = RestaurantOrder::whereIn("id", $updatedOrNewEntities)
+            $updatedOrNewEntities = RestaurantOrder::whereIn("restaurant_orders.id", $updatedOrNewEntities)
+                ->leftJoin('member','restaurant_orders.member_id','=','member.id')
+                ->select(
+                  'restaurant_orders.club_id',
+                  'restaurant_orders.id as id',
+                  'member_id',
+                  DB::raw('CONCAT(member.firstName," ",member.lastName) as member_name'),
+                  'in_process',
+                  'is_ready',
+                  'is_served',
+                  'gross_total',
+                  'restaurant_orders.created_at'
+                )
               ->get();
 
-            if (!$request->has('load_details')) {
+            if ($request->has('load_order_details') && $request->get('load_order_details') == "true") {
                 foreach($updatedOrNewEntities as $order){
                     $order->restaurant_order_details = $order->getRestaurantOrderDetailsCustomized();
                 }
@@ -164,9 +175,9 @@ class AdminNotificationsController extends Controller
 
 
             if (count($updatedOrNewEntities) || count($deletedEntities)) {
-                $maxEntityBasedNotificationId = EntityBasedNotification::select('id')
-                  ->where('event', \Config::get('global.entityBasedNotificationsEvents.RestaurantOrderUpdation'))
+                $maxEntityBasedNotificationId = EntityBasedNotification::where('event', \Config::get('global.entityBasedNotificationsEvents.RestaurantOrderUpdation'))
                   ->orderBy('id', 'desc')
+                  ->pluck('id')
                   ->first();
 
                 $restaurantOrderUpdates = [

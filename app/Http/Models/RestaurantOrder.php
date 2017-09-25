@@ -38,7 +38,7 @@ class RestaurantOrder extends Model
                                               'is_ready',
                                               'is_served',
                                               'gross_total',
-                                              'restaurant_orders.created_at'
+                                        DB::raw('DATE_FORMAT(restaurant_orders.created_at, "%b %D, %Y %h:%i:%s") as time')
                                       )
                                       ->first();
 
@@ -60,28 +60,12 @@ class RestaurantOrder extends Model
                                 'is_ready',
                                 'is_served',
                                 'gross_total',
-                                'restaurant_orders.created_at'
+                                DB::raw('DATE_FORMAT(restaurant_orders.created_at, "%b %D, %Y %h:%i:%s") as time')
                               ), 'current_page', $currentPage);
 
   }
 
-  public static function getRecentOrdersForAClubPaginated($clubId,$currentPage, $perPage){
-    //dd($categoryId,$currentPage,$perPage,$search);
-    return  RestaurantOrder::leftJoin('member','restaurant_orders.member_id','=','member.id')
-      ->where('club_id',$clubId)
-      ->orderBy('created_at','desc')
-      ->paginate($perPage, array(
-        'restaurant_orders.id as id',
-        'member_id',
-        DB::raw('CONCAT(member.firstName,member.lastName) as member_name'),
-        'in_process',
-        'is_ready',
-        'is_served',
-        'gross_total',
-        'restaurant_orders.created_at'
-      ), 'current_page', $currentPage);
-
-  }
+ 
 
   public function getRestaurantOrderDetailsCustomized(){
 
@@ -91,6 +75,7 @@ class RestaurantOrder extends Model
                                     'restaurant_order_details.restaurant_order_id',
                                     'restaurant_order_details.restaurant_product_id',
                                     'restaurant_products.name as restaurant_product_name',
+                                    'restaurant_products.price as price',
                                     'restaurant_order_details.quantity',
                                     'restaurant_order_details.sale_total'
 
@@ -98,4 +83,25 @@ class RestaurantOrder extends Model
                           ->get();
 
   }
+
+  public static function getOpenOrdersForAClub($clubId){
+    //dd($categoryId,$currentPage,$perPage,$search);
+    return  RestaurantOrder::leftJoin('member','restaurant_orders.member_id','=','member.id')
+      ->where('restaurant_orders.club_id',$clubId)
+      ->where('is_served',"NO")
+      ->orderBy('restaurant_orders.created_at','asc')
+      ->select(
+        'restaurant_orders.id as id',
+        'member_id',
+        DB::raw('CONCAT(member.firstName,member.lastName) as member_name'),
+        'in_process',
+        'is_ready',
+        'is_served',
+        'gross_total',
+        DB::raw('DATE_FORMAT(restaurant_orders.created_at, "%b %D, %Y %h:%i:%s") as time')
+      )
+      ->get();
+
+  }
+
 }

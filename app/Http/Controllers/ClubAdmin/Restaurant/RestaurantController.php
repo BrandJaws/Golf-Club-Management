@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\ClubAdmin\Restaurant;
 
+use App\Collection\AdminNotificationEventsManager;
+use App\Http\Models\EntityBasedNotification;
 use App\Http\Models\RestaurantMainCategory;
 use App\Http\Models\RestaurantOrder;
 use App\Http\Models\RestaurantSubCategory;
@@ -345,7 +347,6 @@ class RestaurantController extends Controller {
 				'success' => \trans('message.training_created_success.message')
 			]);
 		} catch (\Exception $exp) {
-			dd($exp);
 			return \Redirect::back()->withInput()->with([
 				'error' => $exp->getMessage()
 			]);
@@ -460,7 +461,13 @@ class RestaurantController extends Controller {
 	}
 
 	public function ordersList() {
-		return view ( 'admin.restaurant.orders');
+
+		$orders = RestaurantOrder::getOpenOrdersForAClub(Auth::user()->club_id);
+		$maxEntityBasedNotificationId = EntityBasedNotification::max('id');
+		$entity_based_notification_id = $maxEntityBasedNotificationId ? $maxEntityBasedNotificationId : 0;
+
+		return view ( 'admin.restaurant.orders', ["orders"=>json_encode($orders),
+												  "entity_based_notification_id"=>$entity_based_notification_id]);
 	}
 
 	public function markOrderAsInProcess(Request $request){
@@ -590,7 +597,19 @@ class RestaurantController extends Controller {
 	}
 
 	public function orderView($order_id) {
-		return view ( 'admin.restaurant.orders-details', ['order_id' => $order_id]);
+		$order = RestaurantOrder::getSingleOrderById($order_id);
+		if(!$order || $order->club_id != Auth::user()->id){
+			return \Redirect::back()->with([
+				'error' => trans('message.order_not_found.message')]);
+
+		}
+
+		$order->restaurant_order_details = $order->getRestaurantOrderDetailsCustomized();
+		$maxEntityBasedNotificationId = EntityBasedNotification::max('id');
+		$entity_based_notification_id = $maxEntityBasedNotificationId ? $maxEntityBasedNotificationId : 0;
+
+		return view ( 'admin.restaurant.orders-details', ['order' => json_encode($order),
+			"entity_based_notification_id"=>$entity_based_notification_id]);
 	}
 
 

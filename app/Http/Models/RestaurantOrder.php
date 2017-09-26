@@ -2,6 +2,7 @@
 
 namespace App\Http\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -102,6 +103,67 @@ class RestaurantOrder extends Model
       )
       ->get();
 
+  }
+
+  public static function paginatedListWithFilters($club_id, $perPage, $currentPage, $filters = null)
+  {
+
+    $orders = RestaurantOrder::leftJoin('member','restaurant_orders.member_id','=','member.id')
+    ->where('restaurant_orders.club_id',$club_id)
+    ->where('is_served',"YES")
+    ->where(function ($query) use ($filters) {
+        if ($filters) {
+          if ((int) ($filters->memberId) > 0) {
+
+            $query->where('member_id', $filters->memberId);
+          }
+
+          if ($filters->date) {
+
+            if($filters->timeStart){
+              $query->where('restaurant_orders.created_at', '>=', Carbon::parse($filters->date." ".$filters->timeStart)->toDateTimeString());
+              if($filters->timeEnd){
+                $query->where('restaurant_orders.created_at', '<=', Carbon::parse($filters->date." ".$filters->timeEnd)->toDateTimeString());
+              }
+            }else if($filters->timeEnd){
+              $query->where('restaurant_orders.created_at', '>=', Carbon::parse($filters->date)->toDateTimeString());
+              $query->where('restaurant_orders.created_at', '<=', Carbon::parse($filters->date." ".$filters->timeEnd)->toDateTimeString());
+            }else{
+              $query->where('restaurant_orders.created_at', '>=', Carbon::parse($filters->date)->toDateTimeString());
+            }
+
+          }else{
+            if($filters->timeStart || $filters->timeEnd){
+              $todaysDate = Carbon::today()->toDateString();
+              if($filters->timeStart){
+                $query->where('restaurant_orders.created_at', '>=', Carbon::parse($todaysDate." ".$filters->timeStart)->toDateTimeString());
+                if($filters->timeEnd){
+                  $query->where('restaurant_orders.created_at', '<=', Carbon::parse($todaysDate." ".$filters->timeEnd)->toDateTimeString());
+                }
+              }else if($filters->timeEnd){
+                $query->where('restaurant_orders.created_at', '>=', Carbon::parse($todaysDate)->toDateTimeString());
+                $query->where('restaurant_orders.created_at', '<=', Carbon::parse($todaysDate." ".$filters->timeEnd)->toDateTimeString());
+              }
+            }
+
+          }
+
+        }
+      })
+      ->orderBy('restaurant_orders.created_at','desc')
+      ->paginate($perPage, [
+
+      'restaurant_orders.id as id',
+      'member_id',
+      DB::raw('CONCAT(member.firstName,member.lastName) as member_name'),
+      'in_process',
+      'is_ready',
+      'is_served',
+      'gross_total',
+      DB::raw('DATE_FORMAT(restaurant_orders.created_at, "%b %D, %Y %h:%i:%s") as time')
+
+    ], 'page', $currentPage);
+    return $orders;
   }
 
 }

@@ -612,5 +612,30 @@ class RestaurantController extends Controller {
 			"entity_based_notification_id"=>$entity_based_notification_id]);
 	}
 
+	public function ordersArchive(Request $request){
+
+		if ($request->has('filters')) {
+			$filters = json_decode($request->get('filters'));
+		} else {
+
+			$filters = null;
+		}
+
+		$currentPage = $request->has('current_page') ? $request->get('current_page') : 0;
+		$perPage = $request->has('per_page') ? $request->get('per_page') : \Config::get('global.portal_items_per_page');
+		$orders = RestaurantOrder::paginatedListWithFilters(Auth::user()->club_id, $perPage, $currentPage, $filters);
+
+		$orders = json_decode($orders->toJson(), FALSE);
+		$orders->filters = $filters;
+		dd($orders);
+		if ($request->ajax()) {
+			return json_encode($orders);
+		} else {
+			return view ( 'admin.restaurant.orders-archive', ["ordersWithFilters"=>json_encode($orders)]);
+		}
+
+
+	}
+
 
 }

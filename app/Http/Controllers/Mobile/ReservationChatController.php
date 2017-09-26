@@ -34,7 +34,8 @@ class ReservationChatController extends Controller
        $reservation = $reservationType::where('id',$request->get('reservation_id'))
          ->with([
            'reservation_players'=>function($query){
-               $query->where("reservation_status",Config::get('global.reservation.reserved'));
+               //$query->where("reservation_status",Config::get('global.reservation.reserved'));
+
                $query->with(['member'=>function($query){
                    $query->select("id","firstName","lastName","profilePic","device_registeration_id","device_type");
                }]);

@@ -1,4 +1,4 @@
-<template id="#ordersArchiveTemplate">
+<template id="ordersArchiveTemplate">
     <table class="table table-hover">
         <thead>
         <tr>

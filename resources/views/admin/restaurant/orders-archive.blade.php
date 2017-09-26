@@ -12,10 +12,10 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 {{--<input type="text" placeholder="Instructor Name" class="form-control" />--}}
-                                <auto-complete-box url="{{url('/portal/coaches/search-list')}}" property-for-id="id" property-for-name="name"
+                                <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
                                                    filtered-from-source="true"
                                                    {{--include-id-in-list="true"--}}
-                                                   initial-text-value="" search-query-key="search" field-name="coachId" enable-explicit-selection="false" v-model="filtersForBinding.coachId"> </auto-complete-box>
+                                                   initial-text-value="" search-query-key="search" field-name="memberId" enable-explicit-selection="false" v-model="filtersForBinding.memberId"> </auto-complete-box>
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -69,7 +69,7 @@
 										<form action="#." method="post" v-on:click.prevent>
 											<div class="search-field">
 												<span class="search-box"> <input type="text" name="search"
-													class="search-bar" v-model="searchQuery"
+													class="search-bar"
 													v-on:input="loadNextPage(true)">
 													<button type="submit" class="search-btn">
 														<i class="fa fa-search"></i>
@@ -96,7 +96,7 @@
                         	<div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
                         @endif
 						<!-- inner header -->
-						<orders-archive :orders-list="ordersList"></orders-archive>
+						<orders-archive :orders-list="orderList"></orders-archive>
 					</div>
 				</div>
 			</div>
@@ -116,10 +116,10 @@
         data: {
             //Null filters as at the time of initialization to send null value with the request if the filtersForBinding Equals these
             //This will save us where query clauses at the server
-            nullFilters:{ coachId:-1, age:"",  date:"{{\Carbon\Carbon::today()->format("m/d/Y")}}", gender:"{{Config::get('global.gender.all')}}",sort:"", },
-            filtersReceived : ({!! $ordersWithFilters !!}).filters != null ? ({!! $ordersWithFilters !!}).filters : { coachId:-1, age:"",  date:"{{\Carbon\Carbon::today()->format("m/d/Y")}}", gender:"{{Config::get('global.gender.all')}}",sort:"", },
+            nullFilters:{ memberId:-1, age:"",  date:"{{\Carbon\Carbon::today()->format("m/d/Y")}}", gender:"{{Config::get('global.gender.all')}}",sort:"", },
+            filtersReceived : ({!! $ordersWithFilters !!}).filters != null ? ({!! $ordersWithFilters !!}).filters : { memberId:-1, age:"",  date:"{{\Carbon\Carbon::today()->format("m/d/Y")}}", gender:"{{Config::get('global.gender.all')}}",sort:"", },
             filtersForBinding:{
-                coachId:-1,
+                memberId:-1,
                 age:"",
                 date:"",
                 gender:"{{Config::get('global.gender.all')}}",
@@ -206,7 +206,7 @@
 
                             pageDataReceived = JSON.parse(msg);
                             orderList = pageDataReceived.data ;
-                            this.filtersReceived = pageDataReceived.filters != null ? pageDataReceived.filters : { coachId:-1, age:"",  date:"{{\Carbon\Carbon::today()->format("m/d/Y")}}", gender:"{{Config::get('global.gender.all')}}",sort:"", };
+                            this.filtersReceived = pageDataReceived.filters != null ? pageDataReceived.filters : { memberId:-1, age:"",  date:"{{\Carbon\Carbon::today()->format("m/d/Y")}}", gender:"{{Config::get('global.gender.all')}}",sort:"", };
 
                             //Success code to follow
                             if(pageDataReceived.next_page_url !== null){

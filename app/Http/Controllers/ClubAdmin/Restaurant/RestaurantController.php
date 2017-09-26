@@ -627,7 +627,7 @@ class RestaurantController extends Controller {
 
 		$orders = json_decode($orders->toJson(), FALSE);
 		$orders->filters = $filters;
-		dd($orders);
+		
 		if ($request->ajax()) {
 			return json_encode($orders);
 		} else {

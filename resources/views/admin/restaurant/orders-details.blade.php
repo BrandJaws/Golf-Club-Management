@@ -31,7 +31,7 @@
                                         <p class="m-b-lg"></p>
                                     </div>
                                     <div class="col-xs-6 text-right">
-                                        <p class="text-md">#9048392</p>
+                                        <p class="text-md">@{{ '#'+orderDetail.id }}</p>
                                     </div>
                                 </div>
                                 <p>

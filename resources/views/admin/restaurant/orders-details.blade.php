@@ -76,11 +76,11 @@
                                         </tr>
                                         <tr>
                                             <td colspan="3" class="text-right no-border"><strong>VAT Included in Total</strong></td>
-                                            <td>$0.00</td>
+                                            <td>@{{ '$ ' + orderDetail.vat }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="3" class="text-right no-border"><strong>Total</strong></td>
-                                            <td><strong>@{{ '$ ' + orderDetail.gross_total }}</strong></td>
+                                            <td><strong>@{{ '$ ' + orderDetail.net_total }}</strong></td>
                                         </tr>
                                         </tbody>
                                     </table>

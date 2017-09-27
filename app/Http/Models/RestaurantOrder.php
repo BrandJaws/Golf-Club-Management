@@ -41,6 +41,8 @@ class RestaurantOrder extends Model
                                               'is_ready',
                                               'is_served',
                                               'gross_total',
+                                        'vat',
+                                        'net_total',
                                         DB::raw('DATE_FORMAT(restaurant_orders.created_at, "%b %D, %Y %h:%i:%s") as time')
                                       )
                                       ->first();
@@ -63,6 +65,8 @@ class RestaurantOrder extends Model
                                 'is_ready',
                                 'is_served',
                                 'gross_total',
+                                'vat',
+                                'net_total',
                                 DB::raw('DATE_FORMAT(restaurant_orders.created_at, "%b %D, %Y %h:%i:%s") as time')
                               ), 'current_page', $currentPage);
 
@@ -101,6 +105,8 @@ class RestaurantOrder extends Model
         'is_ready',
         'is_served',
         'gross_total',
+        'vat',
+        'net_total',
         DB::raw('DATE_FORMAT(restaurant_orders.created_at, "%b %D, %Y %h:%i:%s") as time')
       )
       ->get();
@@ -162,7 +168,10 @@ class RestaurantOrder extends Model
       'is_ready',
       'is_served',
       'gross_total',
-      DB::raw('DATE_FORMAT(restaurant_orders.created_at, "%b %D, %Y %h:%i:%s") as time')
+        'vat',
+        'net_total',
+      DB::raw('DATE_FORMAT(restaurant_orders.created_at, "%b %D, %Y %h:%i:%s") as time'),
+
 
     ], 'page', $currentPage);
     return $orders;

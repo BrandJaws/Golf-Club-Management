@@ -9,6 +9,12 @@
                 Gross Total
             </th>
             <th>
+               Vat
+            </th>
+            <th>
+                Net Total
+            </th>
+            <th>
                 Created at
             </th>
             <th>
@@ -25,6 +31,8 @@
                 <a :href="baseUrl+'/admin/restaurant/orders/'+order.id">@{{ order.member_name }}</a>
             </td>
             <td>$ @{{ order.gross_total }}</td>
+            <td>@{{ '$ ' + order.vat }}</td>
+            <td>@{{ '$ ' + order.net_total }}</td>
             <td>@{{ order.time }}</td>
             <td>
                 Served

@@ -3,32 +3,31 @@
         <thead>
         <tr>
             <th>
-                Name
+                Member Name
             </th>
             <th>
-                Email
+                Gross Total
             </th>
             <th>
-                Gender
+                Created at
             </th>
             <th>
-                Warnings
-            </th>
-            <th>
-                Actions
+                Status
             </th>
         </tr>
         </thead>
-        <tbody>
-        <tr v-for="(order,orderIndex) in ordersListData">
-            <td>@{{ order.firstName }} @{{order.lastName}}</td>
-            <td>@{{ order.email }}</td>
-            <td>@{{ order.gender }}</td>
-            <td>@{{ order.warnings }}</td>
+        <tbody v-if="ordersList.length < 1">
+        <tr><td>No Orders Found</td></tr>
+        </tbody>
+        <tbody v-else>
+        <tr v-for="(order,orderIndex) in ordersList">
             <td>
-                <a :href="generateEditorderRoute('{{Request::url()}}',order.id)" class="blue-cb" >edit</a>
-                &nbsp;&nbsp;
-                <a href="#." class="del-icon" @click="deleteMemeber('{{Request::url()}}',order.id,orderIndex)"><i class="fa fa-trash"></i></a>
+                <a :href="baseUrl+'/admin/restaurant/orders/'+order.id">@{{ order.member_name }}</a>
+            </td>
+            <td>$ @{{ order.gross_total }}</td>
+            <td>@{{ order.time }}</td>
+            <td>
+                Served
             </td>
         </tr>
         </tbody>
@@ -41,7 +40,8 @@
 	Vue.component('orders-archive', {
 		template: "#ordersArchiveTemplate",
 		props: [
-			"ordersList"
+			"ordersList",
+            "baseUrl"
 		],
 		
                 computed: {

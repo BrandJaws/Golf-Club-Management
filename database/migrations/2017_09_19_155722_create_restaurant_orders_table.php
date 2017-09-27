@@ -21,6 +21,8 @@ class CreateRestaurantOrdersTable extends Migration
             $table->enum('is_ready', array('YES','NO'))->default('NO');
             $table->enum('is_served', array('YES','NO'))->default('NO');
             $table->decimal('gross_total');
+            $table->decimal('vat');
+            $table->decimal('net_total');
             $table->timestamps();
         });
     }

@@ -397,7 +397,7 @@ Route::group([
               'uses' => 'ClubAdmin\Restaurant\RestaurantController@markOrderAsIsServed'
             ]);
             Route::get('/orders-archive', [
-              'as' => 'order_archive',
+              'as' => 'orders_archive',
               'uses' => 'ClubAdmin\Restaurant\RestaurantController@ordersArchive'
             ]);
         });

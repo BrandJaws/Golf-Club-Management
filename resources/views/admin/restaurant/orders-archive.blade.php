@@ -6,88 +6,55 @@
 	<div ui-view class="app-body" id="view">
 		<!-- ############ PAGE START-->
 		<div id="orders-vue-container" class="segments-main padding">
-            <div class="filters">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                {{--<input type="text" placeholder="Instructor Name" class="form-control" />--}}
-                                <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
-                                                   filtered-from-source="true"
-                                                   {{--include-id-in-list="true"--}}
-                                                   initial-text-value="" search-query-key="search" field-name="memberId" enable-explicit-selection="false" v-model="filtersForBinding.memberId"> </auto-complete-box>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <select class="form-control" v-model="filtersForBinding.age">
-                                    <option value="">Age</option>
-                                    <option>18-25</option>
-                                    <option>26-32</option>
-                                    <option>33-45</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <input type="text" name="" class="form-control datepicker" />
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <select class="form-control" v-model="filtersForBinding.gender">
-                                    <option value="{{\Illuminate\Support\Facades\Config::get('global.gender.all')}}">All</option>
-                                    <option value="{{\Illuminate\Support\Facades\Config::get('global.gender.male')}}" >Male</option>
-                                    <option value="{{\Illuminate\Support\Facades\Config::get('global.gender.female')}}">Female</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <select class="form-control" v-model="filtersForBinding.price">
-                                    <option>Price</option>
-                                    <option>High Price</option>
-                                    <option>Low Price</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <input type="submit" name="" value="Search" class="customFilterBtn" @click.prevent="loadNextPage(true)" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 			<div class="row">
 				<div class="segments-inner">
 					<div class="box">
 						<div class="inner-header">
-							<div class="">
-								<div class="col-md-8">
-									<div class="search-form">
-										<form action="#." method="post" v-on:click.prevent>
-											<div class="search-field">
-												<span class="search-box"> <input type="text" name="search"
-													class="search-bar"
-													v-on:input="loadNextPage(true)">
-													<button type="submit" class="search-btn">
-														<i class="fa fa-search"></i>
-													</button>
-												</span>
-											</div>
-										</form>
-									</div>
-								</div>
-								<div class="col-md-4 text-right">
-									<a href="" class="btn-def btn"><i
-										class="fa fa-plus-circle"></i>&nbsp;Add orders</a>
-									<button class="btn-def btn">
-										<i class="fa fa-upload"></i>&nbsp;Import CSV
-									</button>
-								</div>
-								<div class="clearfix"></div>
-							</div>
+                            <div class="filters">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Member</label>
+                                                <auto-complete-box url="{{url('admin/member/search-list')}}" property-for-id="member_id" property-for-name="member_name"
+                                                                   filtered-from-source="true"
+                                                                   include-id-in-list="true"
+                                                                   initial-text-value="" search-query-key="search" field-name="memberId" enable-explicit-selection="false" v-model="filtersForBinding.memberId"> </auto-complete-box>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Date</label>
+                                                <input id="date" type="text" name="" class="form-control datepicker" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <div class="form-group ">
+                                                    <label class="form-control-label">From</label>
+                                                    <input id="timeFrom" type="time" class="form-control" placeholder="AM" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <div class="form-group ">
+                                                    <label class="form-control-label">To</label>
+                                                    <input id="timeTo" type="time" class="form-control" placeholder="AM" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <br><br>
+                                                <input type="submit" name="" value="Search" class="btn-def btn" @click.prevent="loadNextPage(true)" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 						</div>
 						@if(Session::has('error'))
                             <div class="alert alert-warning" role="alert"> {{Session::get('error')}} </div>
@@ -96,7 +63,7 @@
                         	<div class="alert alert-success" role="alert"> {{Session::get('success')}} </div>
                         @endif
 						<!-- inner header -->
-						<orders-archive :orders-list="orderList"></orders-archive>
+						<orders-archive :orders-list="orderList" :base-url="baseUrl"></orders-archive>
 					</div>
 				</div>
 			</div>
@@ -116,14 +83,13 @@
         data: {
             //Null filters as at the time of initialization to send null value with the request if the filtersForBinding Equals these
             //This will save us where query clauses at the server
-            nullFilters:{ memberId:-1, age:"",  date:"{{\Carbon\Carbon::today()->format("m/d/Y")}}", gender:"{{Config::get('global.gender.all')}}",sort:"", },
-            filtersReceived : ({!! $ordersWithFilters !!}).filters != null ? ({!! $ordersWithFilters !!}).filters : { memberId:-1, age:"",  date:"{{\Carbon\Carbon::today()->format("m/d/Y")}}", gender:"{{Config::get('global.gender.all')}}",sort:"", },
+            nullFilters:{ memberId:-1,  date:"", timeFrom:"",timeTo:"", },
+            filtersReceived : ({!! $ordersWithFilters !!}).filters != null ? ({!! $ordersWithFilters !!}).filters : { memberId:-1,  date:"", timeFrom:"",timeTo:"", },
             filtersForBinding:{
                 memberId:-1,
-                age:"",
                 date:"",
-                gender:"{{Config::get('global.gender.all')}}",
-                sort:"",
+                timeFrom:"",
+                timeTo:"",
 
             },
             orderList: ({!! $ordersWithFilters !!}).data,
@@ -131,13 +97,36 @@
             nextAvailablePage:({!! $ordersWithFilters!!}).next_page_url !== null ? 2 : null ,
             searchRequestHeld:false,
             baseUrl:_baseUrl,
-            messageBar:{
-                type:"",
-                message:""
-            }
 
 
 
+
+        },
+        mounted:function(){
+            $( "#date" ).datepicker()
+                    .on('changeDate', function(e) {
+
+                        vue.filtersForBinding.date = $( "#date" ).val();
+
+
+
+                    });
+            $( "#date" ).datepicker()
+                    .on('input', function(e) {
+
+                        vue.filtersForBinding.date = $( "#date" ).val();
+
+
+
+                    });
+
+            $( "#timeFrom" ).on('input',function(){
+                vue.filtersForBinding.timeFrom =$( "#timeFrom" ).val();
+            })
+
+            $( "#timeTo" ).on('input',function(){
+                vue.filtersForBinding.timeTo =$( "#timeTo" ).val();
+            })
 
         },
         methods: {
@@ -148,7 +137,7 @@
                 var _data ={};
 
                 if(isSearchQuery){
-                    this.hideMessageBar();
+
                     if(JSON.stringify(this.filtersForBinding) ==  JSON.stringify(this.filtersReceived)){
 
                         return;
@@ -191,7 +180,7 @@
                     this.ajaxRequestInProcess = true;
                     var request = $.ajax({
 
-                        url: this.baseUrl+'/portal/order',
+                        url: this.baseUrl+'/admin/restaurant/orders-archive',
                         method: "GET",
                         data:_data,
                         success:function(msg){
@@ -206,7 +195,7 @@
 
                             pageDataReceived = JSON.parse(msg);
                             orderList = pageDataReceived.data ;
-                            this.filtersReceived = pageDataReceived.filters != null ? pageDataReceived.filters : { memberId:-1, age:"",  date:"{{\Carbon\Carbon::today()->format("m/d/Y")}}", gender:"{{Config::get('global.gender.all')}}",sort:"", };
+                            this.filtersReceived = pageDataReceived.filters != null ? pageDataReceived.filters : { memberId:-1,  date:"", timeFrom:"",timeTo:"", };
 
                             //Success code to follow
                             if(pageDataReceived.next_page_url !== null){
@@ -237,63 +226,11 @@
                     });
                 }
             },
-            reservationSuccess:function(updatedorder){
-                for(x=0; x<this.orderList.length; x++){
-                    if(this.orderList[x].id == updatedorder.id){
-
-                        this.orderList[x].age = updatedorder.age;
-                        this.orderList[x].coach = updatedorder.coach;
-                        this.orderList[x].dates = updatedorder.dates;
-                        this.orderList[x].promotionContent = updatedorder.image;
-                        this.orderList[x].name = updatedorder.name;
-                        this.orderList[x].seatsAvailable = updatedorder.seatsAvailable;
-                        this.orderList[x].reservation_player_id = updatedorder.reservation_player_id;
 
 
-
-                    }
-                }
-                this.showMessageInMessageBar("success",updatedorder.reservationStatusMessage);
-            },
-            reservationFailure:function(message){
-
-                this.showMessageInMessageBar("error",message);
-            },
-            showMessageInMessageBar:function(type,message){
-                this.messageBar.type = type;
-                this.messageBar.message = message;
-            },
-            hideMessageBar:function(){
-                this.messageBar.type = "";
-                this.messageBar.message = "";
-            }
         },
 
 
-
-
-
-    });
-
-    vue.$nextTick(function(){
-
-
-        $( ".datepicker" ).datepicker()
-                .on('changeDate', function(e) {
-
-                    vue.filtersForBinding.date = $( ".datepicker" ).val();
-
-
-
-                });
-        $( ".datepicker" ).datepicker()
-                .on('input', function(e) {
-
-                    vue.filtersForBinding.date = $( ".datepicker" ).val();
-
-
-
-                });
 
 
 

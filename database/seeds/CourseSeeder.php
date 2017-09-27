@@ -21,7 +21,7 @@ class CourseSeeder extends Seeder
             ->toArray();
         for ($i = 0; $i < 10; $i ++) {
             $randomClub = $faker->randomElement($clubList);
-            DB::table('course')->insert([
+            $course = \App\Http\Models\Course::create([
                 'club_id' => $randomClub['id'],
                 'name' => $faker->sentence(2, true),
                 'openTime' => '05:00:00',
@@ -29,8 +29,20 @@ class CourseSeeder extends Seeder
                 'bookingInterval' => 15,
                 'bookingDuration'=>240,
                 'status' => 'OPEN',
-                'tees' => '[]'
+                'numberOfHoles'=> 18,
+                'tees' => '[{"color":"Pink","distance":1,"mensRating":"","mensSlope":"","womensRating":"","womensSlope":""},{"color":"Black","distance":1,"mensRating":"","mensSlope":"","womensRating":"","womensSlope":""}]'
             ]);
+            for($holeCount = 0; $holeCount < 18; $holeCount ++){
+                $courseHole = new \App\Http\Models\CourseHole();
+                $courseHole->course_id = $course->id;
+                $courseHole->hole_number = $holeCount+1;
+                $courseHole->mens_handicap = 1;
+                $courseHole->mens_par = 1;
+                $courseHole->womens_handicap = 1;
+                $courseHole->womens_par = 1;
+                $courseHole->tee_values = '[{"color":"Pink","cssClass":"pink","distance":1},{"color":"Black","cssClass":"black","distance":1}]';
+                $courseHole->save();
+            }
         }
     }
 }

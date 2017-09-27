@@ -108,11 +108,15 @@ class RestaurantController extends Controller {
 		try{
 			DB::beginTransaction();
 
+			$vat = 0;
+			$netTotal = $orderGrossTotal + $vat;
 			$restaurantOrder = RestaurantOrder::create([
 
 				'club_id' => Auth::user()->club_id,
 				'member_id'=> Auth::user()->id,
 				'gross_total'=> $orderGrossTotal,
+				'vat'=>$vat,
+				'net_total' => $netTotal
 
 			]);
 
@@ -228,6 +232,8 @@ class RestaurantController extends Controller {
 				$orderDetailOld->delete();
 			}
 			$order->gross_total = $orderGrossTotal;
+			$order->vat = 0;
+			$order->net_total = $orderGrossTotal + $order->vat;
 			$order->save();
 			foreach($orderDetails as $index => $orderDetail){
 

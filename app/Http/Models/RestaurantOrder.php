@@ -15,6 +15,8 @@ class RestaurantOrder extends Model
     'is_ready',
     'is_served',
     'gross_total',
+    'vat',
+    'net_total'
   ];
 
   public static function getSingleOrderByIdWithDetails($restaurantOrderId){
@@ -120,29 +122,29 @@ class RestaurantOrder extends Model
 
           if ($filters->date) {
 
-            if($filters->timeStart){
-              $query->where('restaurant_orders.created_at', '>=', Carbon::parse($filters->date." ".$filters->timeStart)->toDateTimeString());
-              if($filters->timeEnd){
-                $query->where('restaurant_orders.created_at', '<=', Carbon::parse($filters->date." ".$filters->timeEnd)->toDateTimeString());
+            if($filters->timeFrom){
+              $query->where('restaurant_orders.created_at', '>=', Carbon::parse($filters->date." ".$filters->timeFrom)->toDateTimeString());
+              if($filters->timeTo){
+                $query->where('restaurant_orders.created_at', '<=', Carbon::parse($filters->date." ".$filters->timeTo)->toDateTimeString());
               }
-            }else if($filters->timeEnd){
+            }else if($filters->timeTo){
               $query->where('restaurant_orders.created_at', '>=', Carbon::parse($filters->date)->toDateTimeString());
-              $query->where('restaurant_orders.created_at', '<=', Carbon::parse($filters->date." ".$filters->timeEnd)->toDateTimeString());
+              $query->where('restaurant_orders.created_at', '<=', Carbon::parse($filters->date." ".$filters->timeTo)->toDateTimeString());
             }else{
               $query->where('restaurant_orders.created_at', '>=', Carbon::parse($filters->date)->toDateTimeString());
             }
 
           }else{
-            if($filters->timeStart || $filters->timeEnd){
+            if($filters->timeFrom || $filters->timeTo){
               $todaysDate = Carbon::today()->toDateString();
-              if($filters->timeStart){
-                $query->where('restaurant_orders.created_at', '>=', Carbon::parse($todaysDate." ".$filters->timeStart)->toDateTimeString());
-                if($filters->timeEnd){
-                  $query->where('restaurant_orders.created_at', '<=', Carbon::parse($todaysDate." ".$filters->timeEnd)->toDateTimeString());
+              if($filters->timeFrom){
+                $query->where('restaurant_orders.created_at', '>=', Carbon::parse($todaysDate." ".$filters->timeFrom)->toDateTimeString());
+                if($filters->timeTo){
+                  $query->where('restaurant_orders.created_at', '<=', Carbon::parse($todaysDate." ".$filters->timeTo)->toDateTimeString());
                 }
-              }else if($filters->timeEnd){
+              }else if($filters->timeTo){
                 $query->where('restaurant_orders.created_at', '>=', Carbon::parse($todaysDate)->toDateTimeString());
-                $query->where('restaurant_orders.created_at', '<=', Carbon::parse($todaysDate." ".$filters->timeEnd)->toDateTimeString());
+                $query->where('restaurant_orders.created_at', '<=', Carbon::parse($todaysDate." ".$filters->timeTo)->toDateTimeString());
               }
             }
 

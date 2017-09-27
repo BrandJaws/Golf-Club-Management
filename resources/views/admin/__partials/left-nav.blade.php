@@ -62,7 +62,12 @@
 								<i class="fa fa-shopping-cart"></i>
 						</span> <span class="nav-text">Orders</span>
 					</a></li>
+					<li><a href="{{route('admin.restaurant.orders_archive')}}"> <span class="nav-icon">
+								<i class="fa fa-shopping-cart"></i>
+						</span> <span class="nav-text">Orders Archive</span>
+						</a></li>
 					@endif
+
 					@can('segment', 'App\Model')
 					<li><a href="{{route('admin.segments.index')}}"> <span
 							class="nav-icon"> <i class="fa fa-pie-chart"></i>

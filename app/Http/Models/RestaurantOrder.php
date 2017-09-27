@@ -100,7 +100,7 @@ class RestaurantOrder extends Model
       ->select(
         'restaurant_orders.id as id',
         'member_id',
-        DB::raw('CONCAT(member.firstName,member.lastName) as member_name'),
+        DB::raw('CONCAT(member.firstName," ",member.lastName) as member_name'),
         'in_process',
         'is_ready',
         'is_served',
@@ -163,7 +163,7 @@ class RestaurantOrder extends Model
 
       'restaurant_orders.id as id',
       'member_id',
-      DB::raw('CONCAT(member.firstName,member.lastName) as member_name'),
+      DB::raw('CONCAT(member.firstName," ",member.lastName) as member_name'),
       'in_process',
       'is_ready',
       'is_served',

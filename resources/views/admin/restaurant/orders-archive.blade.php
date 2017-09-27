@@ -1,6 +1,6 @@
 @extends('admin.__layouts.admin-layout')
 @section('heading')
-    Add orders
+    Orders Archive
     @endSection
 @section('main')
 	<div ui-view class="app-body" id="view">

@@ -137,7 +137,7 @@ class RestaurantOrder extends Model
               $query->where('restaurant_orders.created_at', '>=', Carbon::parse($filters->date)->toDateTimeString());
               $query->where('restaurant_orders.created_at', '<=', Carbon::parse($filters->date." ".$filters->timeTo)->toDateTimeString());
             }else{
-              $query->where('restaurant_orders.created_at', '>=', Carbon::parse($filters->date)->toDateTimeString());
+              $query->where('restaurant_orders.created_at', '=', Carbon::parse($filters->date)->toDateTimeString());
             }
 
           }else{

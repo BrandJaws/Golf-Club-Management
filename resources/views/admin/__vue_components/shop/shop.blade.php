@@ -75,7 +75,9 @@
                                     </div>
                                 </li>
                                 <li v-if="categoriesData.length < 1">
-                                    No Categories Found
+                                    <div class="col-sm-12">
+                                        No Categories Found
+                                    </div>
                                 </li>
 
 

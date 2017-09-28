@@ -199,6 +199,8 @@ label { display: block; margin: 3px 0; }
 .restaurant-main .productsTableContainer { overflow-y:auto;}
 .restaurant-main .menu-list ul li:hover { cursor:pointer;}
 
+.shop-main .menu-list { height: 598px; overflow-y: auto;}
+
 
 
 /** social profile connect **/

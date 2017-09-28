@@ -78,6 +78,7 @@ return [
         'announcement' => 'announcement',
         'score_management_overtaken' => 'score_management_overtaken',
         'reservation_group_chat_message' => 'reservation_group_chat_message',
+        'restaurant_order_status_update' => 'restaurant_order_status_update',
     ],
 
     'contentType' => [

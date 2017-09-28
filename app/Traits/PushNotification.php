@@ -49,7 +49,7 @@ trait PushNotification
 
 
         } catch ( \Exception $exp ) {
-            
+         
             Log::error( __CLASS__,['Message'=>$exp->getMessage()]);
             Log::error( __CLASS__,['Options'=>$options]);
         }

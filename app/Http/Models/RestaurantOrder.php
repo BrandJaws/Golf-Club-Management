@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\DB;
 
 class RestaurantOrder extends Model
 {
+  use \PushNotification;
+
+
+  public function member(){
+    return $this->belongsTo(Member::class);
+  }
+
   protected $fillable = [
     'club_id',
     'member_id',
@@ -175,6 +182,43 @@ class RestaurantOrder extends Model
 
     ], 'page', $currentPage);
     return $orders;
+  }
+
+  public function sendNotificationToMemberOnStatusUpdate(){
+
+
+    $orderStatus = "";
+    if($this->is_served == "YES"){
+      $orderStatus = "served";
+    }else if($this->is_ready == "YES"){
+      $orderStatus = "ready";
+    }else if($this->in_process == "YES"){
+      $orderStatus = "in process";
+    }else{
+      return;
+    }
+
+    $useCase = \Config::get ( 'global.pushNotificationsUseCases.restaurant_order_status_update' );
+    $title = "Order Status Update";
+    $body = trans('message.pushNotificationMessageBodies.restaurant_order_status_update',['orderNumber'=>$this->id,'orderStatus'=>$orderStatus]);
+
+    if($this->member->device_type == "Iphone"){
+      $this->sendNotification($body,
+        $this->member->device_registeration_id,
+        $this->member->device_type,
+        self::getIOSOptionsObject(
+          $useCase,
+          $title,
+          $body,
+          []
+
+        ),
+        true,
+        $this->member->id,
+        $this);
+    }
+    //Android logic to follow
+
   }
 
 }

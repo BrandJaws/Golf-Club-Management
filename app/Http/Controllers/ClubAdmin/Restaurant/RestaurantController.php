@@ -486,6 +486,11 @@ class RestaurantController extends Controller {
 			return $this->response();
 		}
 
+		if($order->in_process == "YES"){
+			$this->error = "order_id_missing";
+			return $this->response();
+		}
+
 		try{
 
 			DB::beginTransaction();
@@ -500,7 +505,7 @@ class RestaurantController extends Controller {
 				"entity_type"=>RestaurantOrder::class
 			]);
 			AdminNotificationEventsManager::broadcastRestaurantOrderUpdationEvent($order->club_id);
-
+			$order->sendNotificationToMemberOnStatusUpdate();
 			DB::commit();
 		}catch (\Exception $e){
 
@@ -526,7 +531,10 @@ class RestaurantController extends Controller {
 			$this->error = "order_doesnt_belong_to_requesting_body";
 			return $this->response();
 		}
-
+		if($order->is_ready == "YES"){
+			$this->error = "order_id_missing";
+			return $this->response();
+		}
 		try{
 			DB::beginTransaction();
 
@@ -542,7 +550,7 @@ class RestaurantController extends Controller {
 				"entity_type"=>RestaurantOrder::class
 			]);
 			AdminNotificationEventsManager::broadcastRestaurantOrderUpdationEvent($order->club_id);
-
+			$order->sendNotificationToMemberOnStatusUpdate();
 			DB::commit();
 		}catch (\Exception $e){
 
@@ -568,7 +576,10 @@ class RestaurantController extends Controller {
 			$this->error = "order_doesnt_belong_to_requesting_body";
 			return $this->response();
 		}
-
+		if($order->in_served == "YES"){
+			$this->error = "order_id_missing";
+			return $this->response();
+		}
 		try{
 			DB::beginTransaction();
 			
@@ -585,7 +596,7 @@ class RestaurantController extends Controller {
 				"entity_type"=>RestaurantOrder::class
 			]);
 			AdminNotificationEventsManager::broadcastRestaurantOrderUpdationEvent($order->club_id);
-
+			$order->sendNotificationToMemberOnStatusUpdate();
 			DB::commit();
 		}catch (\Exception $e){
 

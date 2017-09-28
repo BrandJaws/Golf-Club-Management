@@ -1094,6 +1094,7 @@ return [
         'status_reserved' => 'Your status is Reserved.',
         'status_pending' => 'Your status is Pending.',
         'score_management_overtaken' => ':memberName have opted to do their own scoring',
+        'restaurant_order_status_update' => "Your Order #:orderNumber is now :orderStatus "
     ],
     'beacon_messages' => [
         'welcome_without_reservation' => "Welcome to :clubName :memberName.",

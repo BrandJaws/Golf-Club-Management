@@ -296,3 +296,4 @@ label { display: block; margin: 3px 0; }
 .shopTable tr td { vertical-align: middle }
 .productsTableContainer { height: 600px; overflow-y: scroll }
 .m-b-10 { margin-bottom: 10px; display: inline-block }
+.btn-full-width { width: 100%; }

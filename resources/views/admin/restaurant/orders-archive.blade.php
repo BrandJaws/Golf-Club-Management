@@ -26,7 +26,7 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label class="form-control-label">Date</label>
-                                                <input id="date" type="text" name="" class="form-control datepicker" />
+                                                <input id="date" type="text" name="" class="form-control" />
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -46,10 +46,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-2 text-right">
                                             <div class="form-group">
                                                 <br><br>
-                                                <input type="submit" name="" value="Search" class="btn-def btn" @click.prevent="loadNextPage(true)" />
+                                                <input type="submit" name="" value="Search" class="btn-def btn btn-full-width" @click.prevent="loadNextPage(true)" />
                                             </div>
                                         </div>
                                     </div>

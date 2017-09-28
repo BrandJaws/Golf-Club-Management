@@ -4,7 +4,7 @@
         Vue.component('auto-complete-box', {
                 template: `
                             <div style="width: 186px;" class="easy-autocomplete eac-plate-dark eac-description">
-                                <input v-model="textFieldValue" placeholder="Type to add members" class="form-control autocomplete-input" type="text" @keydown.down="downArrowPressed" @keydown.up="upArrowPressed" @keydown.enter="enterKeyPressed" @keydown.esc="closeDropDownWithoutAction" @input="inputEvent" @blur="closeDropDownWithoutAction">
+                                <input v-model="textFieldValue" placeholder="Type to add members" class="form-control" type="text" @keydown.down="downArrowPressed" @keydown.up="upArrowPressed" @keydown.enter="enterKeyPressed" @keydown.esc="closeDropDownWithoutAction" @input="inputEvent" @blur="closeDropDownWithoutAction">
                                 <div id="eac-container-eac-5104" class="easy-autocomplete-container" v-if="panelVisible" style="position:absolute;">
                                     <ul style="display: block;">
                                         <li v-for="(data,dataIndex) in dataListData" :class="[data.selected ? 'selected' : '','data-item']" @mouseover="mouseOver(dataIndex,data)" @mousedown="dataOptionClicked">

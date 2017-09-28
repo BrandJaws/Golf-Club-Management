@@ -76,7 +76,11 @@
             <!-- shop-inner ends here -->
         </div>
         <div class="row" v-if="this.mainCategoriesData.length < 1">
-            No Categories Added Yet. Please Add One To Continue
+            <div class="col-md-12">
+                <div class="box m-t p-a-sm">
+                    No Categories Added Yet. Please Add One To Continue
+                </div>
+            </div>
         </div>
         <div class="row" v-else>
             <div class="main-padd">

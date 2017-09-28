@@ -213,25 +213,25 @@
                                             <td width="250px">
                                                 <div class="section-1 sec-style">
                                                     <h3>@{{ product.name }}</h3>
-                                                    <p><strong>Product Name</strong></p>
+                                                    <p>Product Name</p>
                                                 </div>
                                             </td>
                                             <td width="150px">
                                                 <div class="section-3 sec-style">
                                                     <h3>@{{ '$ '+product.price }}</h3>
-                                                    <p><strong>Price</strong></p>
+                                                    <p>Price</p>
                                                 </div>
                                             </td>
                                             <td width="90px">
                                                 <div class="section-3 sec-style">
                                                     <h3>@{{ product.in_stock }}</h3>
-                                                    <p><strong>In Stock</strong></p>
+                                                    <p>In Stock</p>
                                                 </div>
                                             </td>
                                             <td width="120px">
                                                 <div class="section-3 sec-style">
                                                     <h3>@{{ product.visible }}</h3>
-                                                    <p><strong>Is Visible</strong></p>
+                                                    <p>Is Visible</p>
                                                 </div>
                                             </td>
                                             <td width="100px">

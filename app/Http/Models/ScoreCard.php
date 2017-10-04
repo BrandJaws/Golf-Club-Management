@@ -449,9 +449,10 @@ class ScoreCard extends Model
           $manager_score_card_id = $scoreCard->id;
         }
       }
-
+      $course = $scoreCards[0]->reservation->course;
       $scoreCardsGrouped = [
         "manager_score_card_id" => $manager_score_card_id,
+        "course_name"=>$course->name,
         "reservation_id" => $scoreCards[0]->reservation_id,
         "reservation_type" => $scoreCards[0]->reservation_type,
         "manager_member_id" => $scoreCards[0]->manager_member_id,

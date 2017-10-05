@@ -139,6 +139,29 @@ class ScoresController extends Controller
           return $this->response();
         }
 
+        $reservation->course->tees = json_decode($reservation->course->tees);
+        if(is_array($reservation->course->tees)){
+          foreach($request->get('teams') as $team){
+
+            foreach($team["player_members"] as $teamMember){
+              $teeValid = false;
+              foreach($reservation->course->tees as $tee){
+                if($tee->color == $teamMember["tee"]){
+                  $teeValid = true;
+                }
+              }
+
+              if(!$teeValid){
+                $this->error = "invalid_tee_value";
+                return $this->response();
+              }
+
+
+            }
+          }
+
+        }
+
         //Validate if any of the players sent is not reserved for the reservation being scored
         foreach($players as $player){
 
@@ -573,6 +596,31 @@ class ScoresController extends Controller
         $this->error = "invalid_round_type";
         return $this->response();
       }
+      $reservation->course->tees = json_decode($reservation->course->tees);
+      if(is_array($reservation->course->tees)){
+        foreach($request->get('teams') as $team){
+
+          foreach($team["player_members"] as $teamMember){
+            $teeValid = false;
+            foreach($reservation->course->tees as $tee){
+              if($tee->color == $teamMember["tee"]){
+                $teeValid = true;
+              }
+            }
+
+            if(!$teeValid){
+              $this->error = "invalid_tee_value";
+              return $this->response();
+            }
+
+
+          }
+        }
+
+      }
+
+
+
 
       //Validate if any of the players sent is not reserved for the reservation being scored
       foreach($players as $player){

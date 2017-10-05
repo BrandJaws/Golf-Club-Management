@@ -1056,6 +1056,11 @@ return [
         'httpCode' => '404',
         'message' => "No Orders Found"
       ],
+    "invalid_tee_value"=> [
+      'code' => '194',
+      'httpCode' => '412',
+      'message' => "One or more invalid tee values sent"
+    ],
 
 
 

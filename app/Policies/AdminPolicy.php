@@ -103,4 +103,8 @@ class AdminPolicy
     {
         return (array_get($this->permissions, 'course')) ?: false;
     }
+    public function restaurant(Employee $employee)
+    {
+        return (array_get($this->permissions, 'restaurant')) ?: false;
+    }
 }

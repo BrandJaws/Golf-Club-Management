@@ -172,6 +172,14 @@
 											</label>
 										</div>
 									</div>
+									<div class="col-md-3">
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" value="restaurant" name="permissions[]" {{(Request::old('permissions') && array_key_exists('restaurant',array_flip(Request::old('permissions'))))?'checked':''}}>
+												Restaurant
+											</label>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

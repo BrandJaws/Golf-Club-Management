@@ -112,7 +112,9 @@ class StaffController extends Controller
         }
         if (empty($request->old())) {
             $employee = $employee->toArray();
+
             if (! is_null($employee['permissions']))
+
                 $employee['permissions'] = array_keys(json_decode($employee['permissions'], true), true);
         } else {
             $employee = $request->old();
@@ -153,6 +155,7 @@ class StaffController extends Controller
                 }
                 $employee->profilePic = 'uploads/staff/' . $fileName;
             }
+
             $employee->fill($data)->update();
             return \Redirect::route('admin.staff.index')->with([
                 'success' => \trans('message.staff_update_success')

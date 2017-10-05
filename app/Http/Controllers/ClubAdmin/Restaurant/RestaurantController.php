@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 
 class RestaurantController extends Controller {
 	public function index(Request $request) {
-
+		
 		$mainCategories = RestaurantMainCategory::where('club_id',Auth::user()->club_id)
 												->with([
 														'sub_categories'=>function($query){

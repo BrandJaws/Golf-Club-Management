@@ -148,6 +148,7 @@ class ScoresController extends Controller
               foreach($reservation->course->tees as $tee){
                 if($tee->color == $teamMember["tee"]){
                   $teeValid = true;
+                  break;
                 }
               }
 
@@ -605,6 +606,7 @@ class ScoresController extends Controller
             foreach($reservation->course->tees as $tee){
               if($tee->color == $teamMember["tee"]){
                 $teeValid = true;
+                break;
               }
             }
 

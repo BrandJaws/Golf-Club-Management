@@ -279,6 +279,7 @@ class Member extends Authenticatable
         $query .= "     course.club_id as club_id, ";
         $query .= "     course.id as course_id, ";
         $query .= "     course.name as course_name, ";
+        $query .= "     course.tees as tees, ";
         $query .= "     routine_reservations.id as reservation_id, ";
         $query .= "     reservation_time_slots.reservation_type as reservation_type, ";
         $query .= "     GROUP_CONCAT(IFNULL(reservation_players.parent_id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as parent_ids, ";
@@ -319,7 +320,7 @@ class Member extends Authenticatable
         ]);
         $reservations = DB::select(DB::raw($query));
         
-        return Course::returnReseravtionObjectsArrayFromReservationArray($reservations);
+        return Course::returnReseravtionObjectsArrayFromReservationArray($reservations,true);
     }
 
     public function getPushNotificationsForMember($currentPage, $perPage) {

@@ -474,7 +474,7 @@ class Course extends Model
     * converts and returns reservations results from a query on compound_reservations_aggregate view 
     * to reservation objects 
     */
-   public static function returnReseravtionObjectsArrayFromReservationArray($reservationsArray){
+   public static function returnReseravtionObjectsArrayFromReservationArray($reservationsArray, $includeTees = false){
        $reservationsByDate = [];
         if(count($reservationsArray)){
             $tempDate = 0;
@@ -499,6 +499,19 @@ class Course extends Model
                     $reservationsByDate[$dateIndex]->dayName = $dateObject->format('l');
                     $reservationsByDate[$dateIndex]->reservationsByTimeSlot = [];
                     $tempTimeSlot = "";
+
+                    if($includeTees){
+
+                        $teeNamesOnly = [];
+                        $courseTees = json_decode($reservation->tees);
+                        if(is_array($courseTees)){
+                            foreach ($courseTees as $tee){
+                                $teeNamesOnly[] = $tee->color;
+                            }
+                        }
+                        $reservationsByDate[$dateIndex]->tees = $teeNamesOnly;
+                    }
+
                 }
                 
                 //Change timeslot if different

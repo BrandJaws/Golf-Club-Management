@@ -157,7 +157,7 @@ class ReservationChatController extends Controller
                                               $query->select('id','firstName','lastName','profilePic');
                                           },
                                     ])
-                                    ->orderby('created_at', 'DESC')
+                                    ->orderby('created_at', 'ASC')
                                     ->paginate($perPage, array(
                                         '*'
                                     ), 'current_page', $currentPage);

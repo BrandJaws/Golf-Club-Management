@@ -76,7 +76,18 @@ class ReservationChatController extends Controller
            $reservationChatMessage->reservation = $reservation;
            $reservationChatMessage->member = $user;
            $reservationChatMessage->sendChatMessageToMembersInReservation();
-           $this->response = "chat_message_sent";
+
+
+           //$this->response = "chat_message_sent";
+           $this->response =["reservation_chat_message_id"=> $reservationChatMessage->id ,
+             "reservation_id"=>$reservationChatMessage->reservation_id,
+             "reservation_type"=>$reservationChatMessage->reservation_type,
+             "member_id"=>$reservationChatMessage->member_id,
+             "message"=>$reservationChatMessage->message,
+             'memberName'=>$reservationChatMessage->member->firstName." ".$reservationChatMessage->member->lastName,
+             'memberProfilePic'=>$reservationChatMessage->member->profilePic == null ? "" : $reservationChatMessage->member->profilePic,
+             "created_at"=>$reservationChatMessage->created_at->toDateTimeString()
+           ];
 
 
 

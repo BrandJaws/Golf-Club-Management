@@ -493,6 +493,7 @@ class Course extends Model
                     $dateIndex++;
                     $reservationsByDate[$dateIndex] = new \stdClass();
                     $reservationsByDate[$dateIndex]->course_id = $reservation->course_id;
+                    $reservationsByDate[$dateIndex]->course_name = $reservation->course_name;
                     $dateObject = Carbon::parse($reservation->time_start);
                     $reservationsByDate[$dateIndex]->reserved_at = $reservation->reserved_at;
                     $reservationsByDate[$dateIndex]->dayNumber = $dateObject->day;

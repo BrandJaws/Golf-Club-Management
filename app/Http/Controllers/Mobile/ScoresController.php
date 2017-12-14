@@ -317,6 +317,7 @@ class ScoresController extends Controller
                 }
                 else if(count($scoreCard->score_holes) > $request->get('round_type'))
                 {
+
                   foreach($scoreCard->score_holes as $scoreHoleIndex => $scoreHole){
                     if($scoreHoleIndex > $request->get('round_type') -1){
                       $scoreHole->delete();
@@ -484,6 +485,14 @@ class ScoresController extends Controller
 
                                 ->with(["score_holes"=>function($query){
                                     $query->leftJoin("course_holes","score_holes.hole_id","=","course_holes.id");
+                                    $query->select("score_holes.id as id",
+                                      "score_card_id",
+                                      "hole_id",
+                                      "score",
+                                      "putts",
+                                      "fairway","course_id","hole_number","mens_handicap","mens_par","womens_handicap","womens_par","tee_values"
+
+                                      );
                                     $query->orderBy("course_holes.hole_number");
                                 }])
                                 ->get();
@@ -669,6 +678,7 @@ class ScoresController extends Controller
             //adjust holes according to the new round_type value
             if(count($scoreCard->score_holes) < $request->get('round_type'))
             {
+
               //create excess holes according to the new round_type value
               for($holeIndex=count($scoreCard->score_holes); $holeIndex < $request->get('round_type'); $holeIndex++){
 
@@ -685,8 +695,11 @@ class ScoresController extends Controller
             }
             else if(count($scoreCard->score_holes) > $request->get('round_type'))
             {
+
               foreach($scoreCard->score_holes as $scoreHoleIndex => $scoreHole){
+
                 if($scoreHoleIndex > $request->get('round_type') -1){
+                 
                   $scoreHole->delete();
                 }
               }
@@ -714,6 +727,7 @@ class ScoresController extends Controller
           }
 
         }
+
         if(!$requestedPlayerFound){
 
           //**************Create Score Card***************//
@@ -890,7 +904,7 @@ class ScoresController extends Controller
     }
     catch(\Exception $e)
     {
-      dd($e);
+
       \DB::rollback();
 
       \Log::info(__METHOD__, [

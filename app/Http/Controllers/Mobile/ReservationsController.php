@@ -331,7 +331,7 @@ class ReservationsController extends Controller
 
         //Validate if the player has not removed any previously added players
         $guestsPreviouslyReserved = 0;
-        $newPlayers = $request->get('player');
+        $newPlayers = $players  ;
         foreach ($group->players as $reservedPlayer){
             $receivedPreviouslyAddedPlayer = false;
             foreach($players as $player){

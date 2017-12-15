@@ -362,7 +362,7 @@ class ReservationsController extends Controller
         }
         $newPlayers = array_values($newPlayers);
         $sumOfGroupSizesReserved = ($reservation->sumOfGroupSizes('reserved') - $group->group_size);
-
+        
         if(($sumOfGroupSizesReserved+$newGroupSize) > 4){
             $this->error = "mobile_not_enough_slots_remaining";
             return $this->response();

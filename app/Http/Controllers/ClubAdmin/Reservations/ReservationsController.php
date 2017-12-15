@@ -681,6 +681,7 @@ class ReservationsController extends Controller
             {
                 $reservationPlayer->reservation_id = $reservationToMoveTo->id;
                 $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
+                $reservationPlayer->group_size = 1;
                 $reservationPlayer->save();
             }
 
@@ -746,6 +747,7 @@ class ReservationsController extends Controller
                 {
                     $reservationPlayer->reservation_id = $reservationToMoveTo->id;
                     $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
+                    $reservationPlayer->group_size = 1;
                     $reservationPlayer->save();
                 }
 
@@ -786,6 +788,7 @@ class ReservationsController extends Controller
                 {
                     $reservationPlayer->reservation_id = $reservationToMoveTo->id;
                     $reservationPlayer->parent_id = $reservationPlayer->member_id === 0 ? null : $reservationPlayer->member_id;
+                    $reservationPlayer->group_size = 1;
                     $reservationPlayer->save();
                 }
 

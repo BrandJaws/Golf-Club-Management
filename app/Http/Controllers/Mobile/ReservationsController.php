@@ -290,10 +290,10 @@ class ReservationsController extends Controller
             return $this->response();
         }
 
-        if($group->reservation_status !== \Config::get('global.reservation.reserved')){
-            $this->error = "reservation_status_not_final";
-            return $this->response();
-        }
+//        if($group->reservation_status !== \Config::get('global.reservation.reserved')){
+//            $this->error = "reservation_status_not_final";
+//            return $this->response();
+//        }
 
         if (!$request->has('player') || (is_array($request->get('player')) && empty ($request->get('player')))) {
 
@@ -332,6 +332,7 @@ class ReservationsController extends Controller
         //Validate if the player has not removed any previously added players
         $guestsPreviouslyReserved = 0;
         $newPlayers = $players  ;
+        $playersToDelete = [];
         foreach ($group->players as $reservedPlayer){
             $receivedPreviouslyAddedPlayer = false;
             foreach($players as $player){
@@ -349,9 +350,13 @@ class ReservationsController extends Controller
                 }
             }
             if(!$receivedPreviouslyAddedPlayer){
+                if($reservedPlayer->response_status == \Config::get('global.reservation.confirmed')){
+                    $this->error = "removing_players_not_allowed";
+                    return $this->response();
+                }else{
+                    $playersToDelete[] = $reservedPlayer;
+                }
 
-                $this->error = "removing_players_not_allowed";
-                return $this->response();
             }
 
         }
@@ -395,6 +400,12 @@ class ReservationsController extends Controller
                     }
                 }
             }
+
+            //Remove unconfirmed players requested to be deleted
+            foreach($playersToDelete as $playerToDelete){
+                $playerToDelete->delete();
+            }
+
 
             $reservation->attachPlayers($newPlayers, $parent_id, false, $newGroupSize, \Config::get('global.reservation.new_addition'));
             $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($request->get('reservation_id'));

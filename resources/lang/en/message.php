@@ -954,7 +954,7 @@ return [
       "removing_players_not_allowed"=> [
         'code' => '173',
         'httpCode' => '412',
-        'message' => "You are not allowed to remove previously added players from the reservation"
+        'message' => "You are not allowed to previously added players who have already confirmed"
       ],
       "chat_message_missing"=> [
         'code' => '174',

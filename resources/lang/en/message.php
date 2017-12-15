@@ -188,7 +188,7 @@ return [
     'mobile_reservation_successfull' => [
         'code' => '30',
         'httpCode' => '412',
-        'message' => 'Court resevation was successfull'
+        'message' => 'Court resevation was successful. Your status is :status'
     ],
     'mobile_players_are_not_enough' => [
         'code' => '30',

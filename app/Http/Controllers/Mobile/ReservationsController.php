@@ -134,6 +134,7 @@ class ReservationsController extends Controller
             return $this->response();
         }
 
+        \DB::beginTransaction();
 
         if ($reservationIdOnTimeSlot > 0) {
             $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservationIdOnTimeSlot);
@@ -172,21 +173,29 @@ class ReservationsController extends Controller
 
 
         }
-        if ($result > 0) {
+
+        if ($result !== null) {
+
 
             //Make entry to the entity based notifications and fire event for admin notification
 
             EntityBasedNotification::create([
                 "club_id"=>$course->club_id,
                 "event"=>AdminNotificationEventsManager::$ReservationUpdationEvent,
-                "entity_id"=>$result,
+                "entity_id"=>$result->players[0]->reservation_id,
                 "entity_type"=>RoutineReservation::class
             ]);
             AdminNotificationEventsManager::broadcastReservationUpdationEvent($course->club_id);
 
+            $status = $result->reservation_status;
+            $this->responseParameters = ["status"=>ucwords(strtolower($status))];
             $this->response = "mobile_reservation_successfull";
+
+            \DB::commit();
         } else {
-            $this->error = $result;
+            \DB::rollBack();
+            $this->error = "exception";
+
         }
 
 
@@ -202,7 +211,7 @@ class ReservationsController extends Controller
         $reservationData ['course_id'] = $course->id;
 
         try {
-            \DB::beginTransaction();
+
             $reservation = RoutineReservation::create($reservationData);
             $reservation->attachPlayers($players, $parent_id, false, $request->get('group_size'), \Config::get('global.reservation.pending_waiting'));
             $reservation->attachTimeSlot($startTime);
@@ -217,16 +226,17 @@ class ReservationsController extends Controller
                 }
             }
 
+            $group = $reservation->getGroupByParentId($parent_id);
 
-            \DB::commit();
-            return $reservation->id;
+
+            return $group;
         } catch (\Exception $e) {
-            \DB::rollback();
+
             
             \Log::info(__METHOD__, [
                 'error' => $e->getMessage()
             ]);
-            return "exception";
+            return null;
         }
 
     }
@@ -235,7 +245,7 @@ class ReservationsController extends Controller
     {
 
         try {
-            \DB::beginTransaction();
+
 
             $reservation->attachPlayers($players, $parent_id, false, $request->get('group_size'), \Config::get('global.reservation.pending_waiting'));
             $reservation = RoutineReservation::findAndGroupReservationForReservationProcess($reservation->id);
@@ -251,15 +261,18 @@ class ReservationsController extends Controller
 
             }
 
-            \DB::commit();
-            return $reservation->id;
+            $group = $reservation->getGroupByParentId($parent_id);
+
+
+
+            return $group;
         } catch (\Exception $e) {
-            \DB::rollback();
+
 
             \Log::info(__METHOD__, [
                 'error' => $e->getMessage()
             ]);
-            return "exception";
+            return null;
         }
 
     }
@@ -362,7 +375,7 @@ class ReservationsController extends Controller
         }
         $newPlayers = array_values($newPlayers);
         $sumOfGroupSizesReserved = ($reservation->sumOfGroupSizes('reserved') - $group->group_size);
-        
+
         if(($sumOfGroupSizesReserved+$newGroupSize) > 4){
             $this->error = "mobile_not_enough_slots_remaining";
             return $this->response();

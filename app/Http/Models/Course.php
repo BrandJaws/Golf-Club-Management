@@ -167,6 +167,16 @@ class Course extends Model
         return $this->hasMany("App\Http\Models\CourseHole");
     }
 
+    public function beacons()
+    {
+        return $this->hasMany("App\Http\Models\Beacon");
+    }
+
+    public function routine_reservations()
+    {
+        return $this->hasMany("App\Http\Models\RoutineReservation");
+    }
+
     public static function getById($id)
     {
         return self::find($id);

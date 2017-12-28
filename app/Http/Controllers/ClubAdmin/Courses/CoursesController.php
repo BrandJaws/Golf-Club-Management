@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\ClubAdmin\Courses;
 
 use App\Http\Models\CourseHole;
+use App\Http\Models\RoutineReservation;
 use Illuminate\Http\Request;
 use App\Http\Models\Course;
 use App\Http\Controllers\Controller;
@@ -342,12 +343,46 @@ class CoursesController extends Controller
     {
         try {
             DB::beginTransaction();
-            $course = Course::where("id",$course_id)->with('holes')->first();
+
+            $course = Course::where("id",$course_id)->with('holes','beacons','routine_reservations.reservation_players','routine_reservations.reservation_time_slots','routine_reservations.chat_messages','routine_reservations.score_cards.score_holes')->first();
+            if(!$course){
+                return Redirect::back()->with([
+                  'error' => \trans('message.not_found')
+                ]);
+            }
+
+            foreach ($course->routine_reservations as $reservation){
+                foreach($reservation->reservation_time_slots as $timeSlot){
+                    $timeSlot->delete();
+                }
+                foreach($reservation->reservation_players as $reservationPlayer){
+                    $reservationPlayer->delete();
+                }
+                foreach($reservation->chat_messages as $chatMessage){
+                    $chatMessage->delete();
+                }
+                foreach($reservation->score_cards as $scoreCard){
+                    foreach($scoreCard->score_holes as $scoreHole){
+                        $scoreHole->delete();
+                    }
+                    $scoreCard->delete();
+                }
+                $reservation->delete();
+            }
+
+            foreach($course->beacons as $beacon){
+                $beacon->delete();
+            }
+
+
             foreach($course->holes as $hole){
                 $hole->delete();
             }
 
+
             $course->delete();
+
+
 
             DB::commit();
             return "success";

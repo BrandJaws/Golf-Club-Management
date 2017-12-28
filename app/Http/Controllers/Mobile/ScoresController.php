@@ -217,7 +217,7 @@ class ScoresController extends Controller
               //If the score is already being recorded by someone else
               //prompt user and override the manager to himself and skip this entry. Afterwards make arrangement to send notification to previous manager
               if($scoreCard->manager_member_id != $player['player_member_id']){
-                if(!$request->has('overtake_own_scorecard') || $request->get('overtake_own_scorecard') != true){
+                if(!$request->has('overtake_own_scorecard') || $request->get('overtake_own_scorecard') !== true){
                   //return with error prompt if the user wants to overtake his score card
                   $this->error = "requesting_user_already_being_scored";
                   $this->supportingDataUseCase = 'requesting_user_already_being_scored';

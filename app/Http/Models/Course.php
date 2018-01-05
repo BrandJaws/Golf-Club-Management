@@ -510,7 +510,6 @@ class Course extends Model
                     $reservationsByDate[$dateIndex]->reserved_at = $reservation->reserved_at;
                     $reservationsByDate[$dateIndex]->dayNumber = $dateObject->day;
                     $reservationsByDate[$dateIndex]->dayName = $dateObject->format('l');
-                    $reservationsByDate[$dateIndex]->score_card_created = isset($reservation->score_card_created) ? $reservation->score_card_created : 0 ;
                     $reservationsByDate[$dateIndex]->reservationsByTimeSlot = [];
                     $tempTimeSlot = "";
 
@@ -544,6 +543,7 @@ class Course extends Model
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_id = $reservation->reservation_id;
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_type = $reservation->reservation_type;
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->game_status = $reservation->game_status;
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->score_card_created = isset($reservation->score_card_created) ? $reservation->score_card_created : 0 ;
                 //$reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_status = $reservation->reservation_status;
                 
                 $reservation_player_ids = $reservation->reservation_player_ids !== "" ? explode("||-separation-player-||",$reservation->reservation_player_ids) : [];

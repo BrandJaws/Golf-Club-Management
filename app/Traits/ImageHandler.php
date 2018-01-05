@@ -14,7 +14,7 @@
 use \Symfony\Component\HttpFoundation\File\UploadedFile;
 use Illuminate\Support\Facades\Config;
 trait ImageHandler {
-	public static function uploadImage(UploadedFile $file, $path, $md5String, $upload = true, $clearOld = true, $renameTo = false) {
+	public static function uploadImage(UploadedFile $file, $path, $md5String, $upload = true, $clearOld = true, $renameTo = false , $oldImagePath="") {
 		try {
 			$path = str_replace ( [ 
 					'{member_id}',
@@ -30,11 +30,18 @@ trait ImageHandler {
                             $fileName = str_replace ( ' ', '_', strtolower ( $file->getClientOriginalName () ) );
                         }
 			
-			
+
 			if (! file_exists ( $path ) && ! is_dir ( $path )) {
 				self::constructPath ( $path );
 			} else if ($upload && $clearOld) {
-				array_map ( 'unlink', glob ( $path . "/*" ) );
+
+				//array_map ( 'unlink', glob ( $path . "/*" ) );
+				if($oldImagePath){
+					
+					array_map ( 'unlink', glob ( $oldImagePath ) );
+				}
+
+
 			}
 			
 			if ($upload) {

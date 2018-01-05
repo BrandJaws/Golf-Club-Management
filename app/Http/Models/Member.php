@@ -101,8 +101,9 @@ class Member extends Authenticatable
         if (array_key_exists('device_type', $data)) {
             $this->device_type = $data['device_type'];
         }
-        if (array_key_exists('password', $data)) {
-            $this->password = Hash::make($data['password']);
+        if (array_key_exists('password', $data) && trim($data['password']) != "" ) {
+
+            $this->password = bcrypt($data['password']);
         }
         if (array_key_exists('status', $data)) {
             $this->status = $data['status'];
@@ -320,7 +321,7 @@ class Member extends Authenticatable
             "memberId" => $memberId
         ]);
         $reservations = DB::select(DB::raw($query));
-       
+
         return Course::returnReseravtionObjectsArrayFromReservationArray($reservations,true);
     }
 

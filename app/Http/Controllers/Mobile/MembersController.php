@@ -178,11 +178,12 @@ class MembersController extends Controller
             'firstName' => 'required|string',
             'lastName' => 'required|string',
             'phone' => 'required',
-            'password' => 'sometimes|confirmed|min:6',
+
             'profilePic' => 'sometimes|image|mimes:jpeg,bmp,png,svg|max:1024',
             'gender' => 'required|in:MALE,FEMALE',
             'dob' => 'required|date_format:d-m-Y'
         ];
+        $validationRules['password'] = $request->has('password') ? 'min:4,max:15' : '';
         $validator = Validator::make($request->all(), $validationRules);
         if ($validator->fails())
         {
@@ -191,7 +192,7 @@ class MembersController extends Controller
         }
         if ($request->hasFile('profilePic'))
         {
-            $uploadPath = self::uploadImage($request->file('profilePic'), 'user_profile_path', md5(Auth::user()->id), true, true);
+            $uploadPath = self::uploadImage($request->file('profilePic'), 'user_profile_path', md5(Auth::user()->id), true, true,false, Auth::user()->profilePic );
             Auth::user()->updateProfileImage($uploadPath);
         }
         Auth::user()->populate($request->except('profilePic'))->save();

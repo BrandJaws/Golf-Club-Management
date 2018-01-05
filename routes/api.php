@@ -67,7 +67,7 @@ Route::group([
 
 	Route::group(['prefix' => 'member', 'as' => 'member.'], function() {
 		//Route::get('/', ['as' => 'profile', 'uses' => '\App\Http\Controllers\Mobile\MembersController@show']);
-		//Route::post('/', ['as' => 'profile', 'uses' => '\App\Http\Controllers\Mobile\MembersController@update']);
+		Route::post('/', ['as' => 'profile', 'uses' => '\App\Http\Controllers\Mobile\MembersController@update']);
 		Route::post('/friends/add', ['as' => 'addToFavorites', 'uses' => '\App\Http\Controllers\Mobile\MembersController@addMemberToFriends']);
 		Route::post('/friends/remove', ['as' => 'removeFromFavorites', 'uses' => '\App\Http\Controllers\Mobile\MembersController@removeMemberFromFriends']);
 		Route::get('/friends/', ['as' => 'getFavorites', 'uses' => '\App\Http\Controllers\Mobile\MembersController@getFriends']);

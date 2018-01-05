@@ -459,6 +459,8 @@ class Course extends Model
         $blankReservation->parent_id = "";
         $blankReservation->club_entries = "";
         $blankReservation->game_entries= "";
+        $blankReservation->score_card_created= 0;
+
 
         return $blankReservation;
     }
@@ -508,6 +510,7 @@ class Course extends Model
                     $reservationsByDate[$dateIndex]->reserved_at = $reservation->reserved_at;
                     $reservationsByDate[$dateIndex]->dayNumber = $dateObject->day;
                     $reservationsByDate[$dateIndex]->dayName = $dateObject->format('l');
+                    $reservationsByDate[$dateIndex]->score_card_created = isset($reservation->score_card_created) ? $reservation->score_card_created : 0 ;
                     $reservationsByDate[$dateIndex]->reservationsByTimeSlot = [];
                     $tempTimeSlot = "";
 

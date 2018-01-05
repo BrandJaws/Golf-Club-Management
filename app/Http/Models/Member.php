@@ -296,7 +296,8 @@ class Member extends Authenticatable
         $query .= "     GROUP_CONCAT(IFNULL(reservation_players.process_type,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as processTypes, ";
         $query .= "     routine_reservations.game_status, ";
         $query .= "     GROUP_CONCAT(IF(checkins_for_clubEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as club_entries, ";
-        $query .= "     GROUP_CONCAT(IF(checkins_for_gameEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as game_entries ";
+        $query .= "     GROUP_CONCAT(IF(checkins_for_gameEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as game_entries, ";
+        $query .= "     (IF((SELECT COUNT(*) FROM score_cards WHERE reservation_id = reservation_id AND reservation_type = reservation_type AND player_member_id = @memberId) > 0, true, false)) as score_card_created ";
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";
@@ -319,7 +320,7 @@ class Member extends Authenticatable
             "memberId" => $memberId
         ]);
         $reservations = DB::select(DB::raw($query));
-        
+       
         return Course::returnReseravtionObjectsArrayFromReservationArray($reservations,true);
     }
 

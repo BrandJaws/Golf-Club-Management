@@ -281,8 +281,8 @@ class Member extends Authenticatable
         $query .= "     course.id as course_id, ";
         $query .= "     course.name as course_name, ";
         $query .= "     course.tees as tees, ";
-        $query .= "     routine_reservations.id as reservation_id, ";
-        $query .= "     reservation_time_slots.reservation_type as reservation_type, ";
+        $query .= "     (@reservation_id := routine_reservations.id) as reservation_id, ";
+        $query .= "     (@reservation_type := reservation_time_slots.reservation_type) as reservation_type, ";
         $query .= "     GROUP_CONCAT(IFNULL(reservation_players.parent_id,' ') ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as parent_ids, ";
         $query .= "     reservation_time_slots.time_start as date_time_start, ";
         $query .= "     TIME(reservation_time_slots.time_start) as time_start, ";
@@ -298,7 +298,7 @@ class Member extends Authenticatable
         $query .= "     routine_reservations.game_status, ";
         $query .= "     GROUP_CONCAT(IF(checkins_for_clubEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as club_entries, ";
         $query .= "     GROUP_CONCAT(IF(checkins_for_gameEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as game_entries, ";
-        $query .= "     (IF((SELECT COUNT(*) FROM score_cards WHERE reservation_id = reservation_id AND reservation_type = reservation_type AND player_member_id = @memberId) > 0, true, false)) as score_card_created ";
+        $query .= "     (IF((SELECT COUNT(*) FROM score_cards WHERE reservation_id = @reservation_id AND reservation_type = @reservation_type AND player_member_id = @memberId) > 0, true, false)) as score_card_created ";
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";
@@ -321,7 +321,7 @@ class Member extends Authenticatable
             "memberId" => $memberId
         ]);
         $reservations = DB::select(DB::raw($query));
-
+  
         return Course::returnReseravtionObjectsArrayFromReservationArray($reservations,true);
     }
 

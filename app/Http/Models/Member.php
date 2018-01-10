@@ -298,7 +298,8 @@ class Member extends Authenticatable
         $query .= "     routine_reservations.game_status, ";
         $query .= "     GROUP_CONCAT(IF(checkins_for_clubEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as club_entries, ";
         $query .= "     GROUP_CONCAT(IF(checkins_for_gameEntry.action IS NULL , 0 , 1) ORDER BY reservation_players.id SEPARATOR '||-separation-player-||') as game_entries, ";
-        $query .= "     (IF((SELECT COUNT(*) FROM score_cards WHERE reservation_id = @reservation_id AND reservation_type = @reservation_type AND player_member_id = @memberId) > 0, true, false)) as score_card_created ";
+        $query .= "     (IF((SELECT COUNT(*) FROM score_cards WHERE reservation_id = @reservation_id AND reservation_type = @reservation_type AND player_member_id = @memberId) > 0, true, false)) as score_card_created, ";
+        $query .= "     (IF((SELECT COUNT(*) FROM score_cards WHERE reservation_id = @reservation_id AND reservation_type = @reservation_type AND player_member_id = @memberId AND manager_member_id = @memberId) > 0, true, false)) as scorecard_managed_by_self ";
         $query .= "     FROM ";
         $query .= "     routine_reservations ";
         $query .= "     LEFT JOIN course ON routine_reservations.course_id = course.id ";

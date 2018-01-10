@@ -460,7 +460,7 @@ class Course extends Model
         $blankReservation->club_entries = "";
         $blankReservation->game_entries= "";
         $blankReservation->score_card_created= 0;
-
+        $blankReservation->scorecard_managed_by_self= 0;
 
         return $blankReservation;
     }
@@ -544,6 +544,8 @@ class Course extends Model
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_type = $reservation->reservation_type;
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->game_status = $reservation->game_status;
                 $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->score_card_created = isset($reservation->score_card_created) ? $reservation->score_card_created : 0 ;
+                $reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->scorecard_managed_by_self = isset($reservation->scorecard_managed_by_self) ? $reservation->scorecard_managed_by_self : 0 ;
+
                 //$reservationsByDate[$dateIndex]->reservationsByTimeSlot[$timeSlotIndex]->reservations[$reservationIndex]->reservation_status = $reservation->reservation_status;
                 
                 $reservation_player_ids = $reservation->reservation_player_ids !== "" ? explode("||-separation-player-||",$reservation->reservation_player_ids) : [];

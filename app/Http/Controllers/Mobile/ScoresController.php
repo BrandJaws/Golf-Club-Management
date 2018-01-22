@@ -970,7 +970,7 @@ class ScoresController extends Controller
 
       foreach($scores as $score){
 
-        $scoreHole = ScoreHole::where('id',$score["score_hole_id"])->with('score_card','hole')->first();
+        $scoreHole = ScoreHole::where('id',$score["score_hole_id"])->with('score_card','hole')->with('score_card')->first();
 
         if(!$scoreHole){
           $this->error = "invalid_hole";
@@ -1006,10 +1006,34 @@ class ScoresController extends Controller
 
       $this->response = "score_recorded_successfuly";
 
+      //Find if a team has already won if the type of game is MATCH PLAY or SKINS GAME
+      $winningTeam = null;
+      if($scoreHole->score_card->scorecard_type == Config::get('global.score.scorecard_types.skinsGame') || $scoreHole->score_card->scorecard_type == Config::get('global.score.scorecard_types.matchPlay')){
+        $groupScoreCard = ScoreCard::getGroupScoreDetailed(Auth::user()->id,$scoreHole->score_card->reservation_id, $scoreHole->score_card->reservation_type);
+        $numberOfTeams = count($groupScoreCard["teams"]);
+        if($numberOfTeams > 1){
+
+          $holesToWinPerTeam = ($groupScoreCard["round_type"]+1)/$numberOfTeams;
+          foreach($groupScoreCard["teams"] as $team){
+            if($team["holes_won"] > $holesToWinPerTeam ){
+              $winningTeam = $team["team_number"];
+              break;
+            }
+          }
+
+        }
+      }
+      if($winningTeam !== null){
+        $this->supportingDataUseCase = 'match_won_by_a_team';
+        $this->supportingData = ["team_number"=>$winningTeam];
+      }
+
+
+
     }
     catch (\Exception $e)
     {
-
+      
       \DB::rollback();
 
       \Log::info(__METHOD__, [

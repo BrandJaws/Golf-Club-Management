@@ -1006,14 +1006,14 @@ class ScoresController extends Controller
 
       $this->response = "score_recorded_successfuly";
 
-      //Find if a team has already won if the type of game is MATCH PLAY or SKINS GAME
+      //Find if a team has already won if the type of game is MATCH PLAY
       $winningTeam = null;
-      if($scoreHole->score_card->scorecard_type == Config::get('global.score.scorecard_types.skinsGame') || $scoreHole->score_card->scorecard_type == Config::get('global.score.scorecard_types.matchPlay')){
+      if($scoreHole->score_card->scorecard_type == Config::get('global.score.scorecard_types.matchPlay')){
         $groupScoreCard = ScoreCard::getGroupScoreDetailed(Auth::user()->id,$scoreHole->score_card->reservation_id, $scoreHole->score_card->reservation_type);
         $numberOfTeams = count($groupScoreCard["teams"]);
         if($numberOfTeams > 1){
 
-          $holesToWinPerTeam = ($groupScoreCard["round_type"]+1)/$numberOfTeams;
+          $holesToWinPerTeam = ($groupScoreCard["round_type"])/$numberOfTeams;
           foreach($groupScoreCard["teams"] as $team){
             if($team["holes_won"] > $holesToWinPerTeam ){
               $winningTeam = $team["team_number"];
@@ -1023,6 +1023,29 @@ class ScoresController extends Controller
 
         }
       }
+
+      //Find if a team has already won if the type of game is SKINS GAME
+      if($scoreHole->score_card->scorecard_type == Config::get('global.score.scorecard_types.skinsGame')){
+
+        $groupScoreCard = ScoreCard::getGroupScoreDetailed(Auth::user()->id,$scoreHole->score_card->reservation_id, $scoreHole->score_card->reservation_type);
+        $numberOfTeams = count($groupScoreCard["teams"]);
+        if($numberOfTeams > 1){
+
+          $totalDollarValueOfHoles = 0;
+          foreach($groupScoreCard["scores_by_hole"] as $scoreByHole){
+            $totalDollarValueOfHoles += $scoreByHole["winning_amount"];
+          }
+          $amountToWinGame = $totalDollarValueOfHoles/$numberOfTeams;
+          foreach($groupScoreCard["teams"] as $team){
+            if($team["amount_won"] > $amountToWinGame ){
+              $winningTeam = $team["team_number"];
+              break;
+            }
+          }
+
+        }
+      }
+
       if($winningTeam !== null){
         $this->supportingDataUseCase = 'match_won_by_a_team';
         $this->supportingData = ["team_number"=>$winningTeam];
@@ -1033,7 +1056,7 @@ class ScoresController extends Controller
     }
     catch (\Exception $e)
     {
-      
+
       \DB::rollback();
 
       \Log::info(__METHOD__, [

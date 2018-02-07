@@ -3,7 +3,7 @@
     Add Product
     @endSection
 @section('main')
-        <div class="app-body" id="view">
+        <div class="app-body" id="vue-container">
             <!-- ############ PAGE START-->
             <div class="profile-main padding" id="selectionDepHidden">
                 <div class="row details-section">
@@ -44,6 +44,7 @@
                                 <input type="file" class="form-control" name="image" value=""/>
                                 @if($errors->has('image')) <span class="help-block errorProfilePic">{{$errors->first('image') }}</span> @endif
                             </div>
+                            <ingredients :ingredient-list="ingredientList"></ingredients>
                             <div class="form-group {{($errors->has('price'))?'has-error':''}}">
                                 <label class="form-control-label">Price</label>
                                 <input type="number" class="form-control" name="price" value="{{old('price')}}" step=".01" />
@@ -83,5 +84,28 @@
 @endsection
 
 @section('page-specific-scripts')
+    @include("admin.__vue_components.restaurant.ingredients")
+    <script>
+        {{--var _reservationsParent = {!!$reservations!!};--}}
+
+        var vue = new Vue({
+            el: "#vue-container",
+            data: {
+
+                ingredientList:[],
+            },
+            computed:{
+
+            },
+            methods:{
+
+
+            }
+
+        });
+
+
+
+    </script>
 
 @endSection

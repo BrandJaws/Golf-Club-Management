@@ -15,8 +15,13 @@ class RestaurantProduct extends Model
     "image",
     "price",
     "in_stock",
-    "visible"
+    "visible",
+    "ingredients"
 
+  ];
+
+  protected $casts = [
+    'ingredients' => 'array',
   ];
 
   public static function findProductByIdForAMember($productId,$member){

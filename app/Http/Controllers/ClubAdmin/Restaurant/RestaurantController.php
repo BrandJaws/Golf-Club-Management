@@ -324,7 +324,8 @@ class RestaurantController extends Controller {
 			'name' => 'required|min:1,max:50',
 			'description' => 'required|min:1,max:250',
 			'image' => 'required|image|image|mimes:jpeg,bmp,png,jpg|max:1024',
-			'price' =>'required|numeric'
+			'price' =>'required|numeric',
+			'ingredients'=>'array'
 
 		]);
 
@@ -341,6 +342,20 @@ class RestaurantController extends Controller {
 			$data = $request->all();
 			$data["image"] = 'uploads/restaurant/' . $fileName;
 			$data["club_id"] = Auth::user()->club_id;
+
+			if(isset($data["ingredients"]) && is_array($data["ingredients"]) && count($data["ingredients"])){
+				$ingredients = [];
+				foreach($data["ingredients"] as $ingredient){
+					$ingredient = trim($ingredient);
+					if($ingredient != "" && !in_array($ingredient,$ingredients)){
+						$ingredients[] = $ingredient;
+					}
+				}
+				$data["ingredients"] = $ingredients;
+			}else{
+				$data["ingredients"] = [];
+			}
+
 			$product->fill($data)->save();
 
 			return \Redirect::route('admin.restaurant.restaurant')->with([
@@ -378,7 +393,8 @@ class RestaurantController extends Controller {
 			'name' => 'required|min:1,max:50',
 			'description' => 'required|min:1,max:250',
 			//'image' => 'required|image|image|mimes:jpeg,bmp,png,jpg|max:1024',
-			'price' =>'required|numeric'
+			'price' =>'required|numeric',
+			'ingredients'=>'array'
 
 		]);
 
@@ -413,6 +429,18 @@ class RestaurantController extends Controller {
 			}
 
 
+			if(isset($data["ingredients"]) && is_array($data["ingredients"]) && count($data["ingredients"])){
+				$ingredients = [];
+				foreach($data["ingredients"] as $ingredient){
+					$ingredient = trim($ingredient);
+					if($ingredient != "" && !in_array($ingredient,$ingredients)){
+						$ingredients[] = $ingredient;
+					}
+				}
+				$data["ingredients"] = $ingredients;
+			}else{
+				$data["ingredients"] = [];
+			}
 
 			$data["club_id"] = Auth::user()->club_id;
 			$product->fill($data)->save();

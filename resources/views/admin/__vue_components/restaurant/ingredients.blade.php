@@ -6,8 +6,8 @@
                 <i class="fa fa-plus"></i>
             </a>
         </div>
-        <div class="form-group {{($errors->has('name'))?'has-error':''}}" v-for="ingredient in ingredientListData">
-            <input type="text" class="form-control" name="ingredients[]" :value="ingredient" />
+        <div class="form-group {{($errors->has('name'))?'has-error':''}}" v-for="(ingredient,ingredientIndex) in ingredientListData">
+            <input type="text" class="form-control" name="ingredients[]" v-model="ingredientListData[ingredientIndex]" />
         </div>
     </div>
 </template>

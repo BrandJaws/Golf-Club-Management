@@ -442,6 +442,8 @@ class Course extends Model
         $blankReservation = new \stdClass();
         $blankReservation->club_id = "";
         $blankReservation->course_id = $courseId;
+        $blankReservation->course_name = "";
+        $blankReservation->date_time_start = $time->toDateTimeString();
         $blankReservation->reserved_at = $time->toDateString() ;
         $blankReservation->time_start = $time->toTimeString() ;
         $blankReservation->reservation_id = "";

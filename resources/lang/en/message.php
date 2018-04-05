@@ -188,7 +188,8 @@ return [
     'mobile_reservation_successfull' => [
         'code' => '30',
         'httpCode' => '412',
-        'message' => 'Your TEE TIME has been reserved. Your status is :status'
+        'message' => 'Your TEE TIME has been reserved.'
+        //'message' => 'Your TEE TIME has been reserved. Your status is :status'
     ],
     'mobile_players_are_not_enough' => [
         'code' => '30',

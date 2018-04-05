@@ -188,7 +188,7 @@ return [
     'mobile_reservation_successfull' => [
         'code' => '30',
         'httpCode' => '412',
-        'message' => 'Court resevation was successful. Your status is :status'
+        'message' => 'Your TEE TIME has been reserved. Your status is :status'
     ],
     'mobile_players_are_not_enough' => [
         'code' => '30',
@@ -1087,8 +1087,8 @@ return [
 
 
   'pushNotificationMessageBodies' => [
-        'reservation_confirmation_prompt' => "%s has added you to a reservation at %s on %s for court %s. Are you available?",
-        'reservation_confirmation_prompt_final' => "You have a reservation at %s on %s for court %s. Are you still available?",
+        'reservation_confirmation_prompt' => "%s has added you to a TEE TIME at %s on %s for %s. Are you available?",
+        'reservation_confirmation_prompt_final' => "You have a reservation at %s on %s for %s. Are you still available?",
         'add_more_players_prompt' => 'You need to add more players to keep your reservation',
         'request_declined_prompt' => '%s has declined you request for reservation',
         'add_more_players_prompt_on_timeup' => 'add_more_players_prompt_on_timeup',

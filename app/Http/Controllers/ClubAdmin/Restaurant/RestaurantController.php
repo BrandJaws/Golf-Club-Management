@@ -637,7 +637,7 @@ class RestaurantController extends Controller {
 
 	public function orderView($order_id) {
 		$order = RestaurantOrder::getSingleOrderById($order_id);
-		if(!$order || $order->club_id != Auth::user()->id){
+		if(!$order || $order->club_id != Auth::user()->club_id){
 			return \Redirect::back()->with([
 				'error' => trans('message.order_not_found.message')]);
 

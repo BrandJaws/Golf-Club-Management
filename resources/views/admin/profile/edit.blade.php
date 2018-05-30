@@ -10,14 +10,20 @@
 				<div class="col-xs-12 col-md-4">
 					<div class="details-section">
 						<div class="image-thumb text-center">
-							<img src="../../assets/images/profile.jpg"
+							<img src="{{Auth::user()->profilePic ? url(Auth::user()->profilePic) : asset("/images/employee-placeholder.jpg")}}"
 								class="img-circle img-responsive profileImg" alt="profile">
 						</div>
 						<!-- image thumb -->
 						<div class="detail-content text-center">
-							<a href="#."
+							<a id="upload_link" href="#."
 								class="btn btn-outline b-primary text-primary m-y-xs">Change/Edit</a>
+							<form method="post" action="{{route('admin.profile.update')}}"  id="profilePicForm" enctype="multipart/form-data">
+								{{csrf_field()}}
+								{{method_field('PUT')}}
+								<input type="file" name="profilePic" id="profilePic" style="display:none"/>
+							</form>
 						</div>
+
 					</div>
 				</div>
 				<div class="col-xs-12 col-md-8">
@@ -152,4 +158,16 @@
             $( "#datePicker" ).datepicker();
         } );
     </script>
+<script>
+	$(function(){
+
+	});  $("#upload_link").on('click', function(e){
+		e.preventDefault();
+		$("#profilePic").trigger('click');
+	});
+
+	$('#profilePic').change(function(){
+		$('#profilePicForm').submit();
+	});
+</script>
 @endSection

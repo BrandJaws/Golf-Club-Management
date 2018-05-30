@@ -10,7 +10,7 @@
 				<div class="col-xs-12 col-md-4">
 					<div class="details-section">
 						<div class="image-thumb text-center">
-							<img src="../assets/images/profile.jpg"
+							<img src="{{Auth::user()->profilePic ? url(Auth::user()->profilePic) : asset("/images/employee-placeholder.jpg")}}"
 								class="img-circle img-responsive profileImg" alt="profile">
 						</div>
 						<!-- image thumb -->

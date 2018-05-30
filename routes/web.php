@@ -182,6 +182,10 @@ Route::group([
                 'as' => 'profile',
                 'uses' => 'ClubAdmin\Profile\ProfileController@index'
             ]);
+            Route::put('/', [
+              'as' => 'update',
+              'uses' => 'ClubAdmin\Profile\ProfileController@update'
+            ]);
             Route::get('/edit', [
                 'as' => 'edit',
                 'uses' => 'ClubAdmin\Profile\ProfileController@edit'

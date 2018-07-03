@@ -59,7 +59,7 @@ class Event extends Model
                     $query->where('event.name', 'like', "%$search%");
                 }
             })
-            ->select('event.id as id', 'event.name', 'event.seats', 'event.startDate', 'event.endDate', \DB::raw("(SELECT COUNT(*)  FROM reservation_players WHERE  reservation_id = event.id AND reservation_type = '".addslashes(Event::class)."'  ) as seatsReserved"))
+            ->select('event.id as id', 'event.name', 'event.seats', 'event.startDate', 'event.endDate', 'event.promotionType','event.promotionContent',\DB::raw("(SELECT COUNT(*)  FROM reservation_players WHERE  reservation_id = event.id AND reservation_type = '".addslashes(Event::class)."'  ) as seatsReserved"))
             ->orderby('event.created_at', 'DESC')
             ->paginate($perPage, array(
             '*'

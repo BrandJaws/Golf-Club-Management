@@ -1,7 +1,7 @@
 @include("admin.__vue_components.popups.confirmation-popup")
 <template id="shopTemplate" xmlns:v-on="http://www.w3.org/1999/xhtml">
     <div>
-    <confirmation-popup v-on:close-popup="closeConfirmationPopup"  v-if="showConfirmationPopup" :popup-message="dataHeldForConfirmation.confirmationMessage" :error-message="confirmationPopupErrorMessage" :confirm-callback="dataHeldForConfirmation.confirmCallback"></confirmation-popup>
+    <confirmation-popup v-on:close-popup="closeConfirmationPopup"  v-if="showConfirmationPopup" :title="dataHeldForConfirmation.title" :popup-message="dataHeldForConfirmation.confirmationMessage" :error-message="confirmationPopupErrorMessage" :confirm-callback="dataHeldForConfirmation.confirmCallback"></confirmation-popup>
 
     <div class="shop-main">
         <div class="row">
@@ -234,7 +234,9 @@
                 newCategoryName:"",
                 showConfirmationPopup: false,
                 confirmationPopupErrorMessage: "",
+                confirmationPopupTitle:"",
                 dataHeldForConfirmation: {
+                    title:null,
                     confirmationMessage: null,
                     confirmCallback:null
 
@@ -578,6 +580,7 @@
                 }.bind(this);
 
                 if(!confirmed){
+                    this.dataHeldForConfirmation.title = "Delete Category";
                     this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to delete this category?";
                     this.displayConfirmationPopup();
 
@@ -638,6 +641,7 @@
                 }.bind(this);
 
                 if(!confirmed){
+                    this.dataHeldForConfirmation.title = "Delete Product";
                     this.dataHeldForConfirmation.confirmationMessage = "Are you sure you want to delete this product?";
                     this.displayConfirmationPopup();
 
@@ -659,6 +663,7 @@
                 //            console.log('emit received');
                 this.showConfirmationPopup = false;
                 this.confirmationPopupErrorMessage = "";
+                this.dataHeldForConfirmation.title = null;
                 this.dataHeldForConfirmation.confirmationMessage = null;
                 this.dataHeldForConfirmation.confirmCallback = null;
 

@@ -5,7 +5,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close closePopup" aria-label="Close"><span aria-hidden="true" class="closePopup">×</span></button>
-                        <h5 class="modal-title">Cancel Reservation</h5>
+                        <h5 class="modal-title">@{{ title }}</h5>
                     </div>
                     <div class="alert alert-danger" v-if="errorMessage != '' ">
                         @{{ errorMessage }}
@@ -32,7 +32,8 @@
 
             'popupMessage',
             'errorMessage',
-            'confirmCallback'
+            'confirmCallback',
+            'title'
     ],
     methods:{
         emitClosePopup:function(){

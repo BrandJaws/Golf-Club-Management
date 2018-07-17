@@ -357,7 +357,7 @@
 //                return null;
 //            },
             addNewProductFormUrl:function(){
-                return this.baseUrl+"/admin/restaurant/products/new?category="+(this.mainCategoriesData[mainCategoryIndex].selectedSubCategoryId)
+                return this.baseUrl+"/admin/restaurant/products/new?category="+(this.mainCategoriesData[this.selectedMainCategoryIndex].selectedSubCategoryId)
             },
         },
         methods:{
@@ -394,7 +394,7 @@
             },
             categorySelected:function(category){
 
-                if(this.mainCategoriesData[mainCategoryIndex].selectedSubCategoryId != category.id){
+                if(this.mainCategoriesData[this.selectedMainCategoryIndex].selectedSubCategoryId != category.id){
 
                     this.selectSubCategoryAndIndexForAMainCategoryBySubCategoryId(category.id);
                     if(category.firstLoadDone === false){

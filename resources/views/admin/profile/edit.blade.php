@@ -103,7 +103,7 @@
 									<div class="margin-20-tb">
 										<div class="col-md-4">
 											<div class="text-left">
-												<label>No Acceptable Time</label>
+												<label>Not Acceptable Time</label>
 											</div>
 										</div>
 										<div class="col-md-6">
@@ -118,7 +118,7 @@
 									<div class="margin-20-tb">
 										<div class="col-md-4">
 											<div class="text-left">
-												<label>No Acceptable Time</label>
+												<label>Not Acceptable Time</label>
 											</div>
 										</div>
 										<div class="col-md-6">

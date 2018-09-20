@@ -5,11 +5,11 @@
 				<thead>
 	          		<tr>
 	          			<th>
-	          				title
+	          				Title
 	          			</th>
 	          			
 	          			<th>
-	          				description
+	          				Description
 	          			</th>
 	          			<th>
 	          				Actions
@@ -25,7 +25,7 @@
 			<tbody>
 				<tr v-for="(news,newsIndex) in newsListData">
 					<td>@{{ news.title }}</td>
-					<td>@{{ news.description }}</td>
+					<td v-html="news.description"></td>
 					<td>
 						<a :href="generateEditMemberRoute('{{Request::url()}}',news.id)" class="blue-cb" >edit</a>
 						&nbsp;&nbsp;

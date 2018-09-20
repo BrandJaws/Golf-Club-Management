@@ -205,6 +205,12 @@ Route::group([
 		]);
 
 	});
-
-
+	
+	/**
+	 * Routes related to News
+	 */
+	Route::group(['prefix'=>'newsfeeds','as'=>'newsfeeds.'],function(){
+		Route::get('/', ['as' => 'list', 'uses' => '\App\Http\Controllers\Mobile\NewsFeedsController@index']);
+		Route::get('/{newsfeed_id}', ['as' => 'show', 'uses' => '\App\Http\Controllers\Mobile\NewsFeedsController@show']);
+	});
 });

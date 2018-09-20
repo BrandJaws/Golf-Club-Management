@@ -18,7 +18,7 @@ Route::get ( '/user', function (Request $request) {
 
 Route::post('/login', '\App\Http\Controllers\Mobile\MembersController@login');
 Route::post('/password/forgot', '\App\Http\Controllers\Mobile\MembersController@forgotPassword');
-
+Route::post('/password/change', '\App\Http\Controllers\Mobile\MembersController@changePassword');
 
 Route::group([
 	'middleware'=>'auth.mobile'

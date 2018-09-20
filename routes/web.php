@@ -624,6 +624,40 @@ Route::group([
               'uses' => 'ClubAdmin\Events\EventsController@reservePlaceForAEvent'
             ]);
         });
+        
+        Route::group([
+        	'prefix' => 'newsfeeds',
+        	'as' => 'newsfeeds.'
+        ], function () {
+        	Route::get('/', [
+        		'as' => 'list',
+        		'uses' => 'ClubAdmin\News\NewsFeedsController@index'
+        	]);
+        	Route::get('/create', [
+        		'as' => 'create',
+        		'uses' => 'ClubAdmin\News\NewsFeedsController@create'
+        	]);
+        	Route::post('/', [
+        		'as' => 'store',
+        		'uses' => 'ClubAdmin\News\NewsFeedsController@store'
+        	]);
+        	/* Route::get('/{newsfeed_id}', [
+        		'as' => 'show',
+        		'uses' => 'NewsFeedsController@show'
+        	]); */
+        	Route::get('/edit/{newsfeed_id}', [
+        		'as' => 'edit',
+        		'uses' => 'ClubAdmin\News\NewsFeedsController@edit'
+        	]);
+        	Route::put('/{newsfeed_id}', [
+        		'as' => 'update',
+        		'uses' => 'ClubAdmin\News\NewsFeedsController@update'
+        	]);
+        	Route::delete('/{newsfeed_id}', [
+        		'as' => 'delete',
+        		'uses' => 'ClubAdmin\News\NewsFeedsController@destroy'
+        	]);
+        });
     });
 });
 Route::get('/home', 'HomeController@index');

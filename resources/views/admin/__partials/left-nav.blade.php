@@ -41,7 +41,7 @@
 					@can('news_feed', 'App\Model')
 					<li><a href="{{route('admin.newsfeeds.list')}}"> <span
 							class="nav-icon"> <i class="fa fa-calendar"></i>
-						</span> <span class="nav-text">News / Events</span>
+						</span> <span class="nav-text">News</span>
 					</a></li>
 					@endif
 					@can('courses', 'App\Model')

@@ -1,5 +1,5 @@
 @extends('admin.__layouts.admin-layout')
-@section('heading') News / Events 
+@section('heading') News 
 @endSection 
 @section('main')
 <div ui-view class="app-body" id="view">

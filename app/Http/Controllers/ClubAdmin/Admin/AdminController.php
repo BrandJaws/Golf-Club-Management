@@ -6,11 +6,13 @@ use App\Collection\AdminNotificationEventsManager;
 use App\Events\AdminNotificationEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Models\Course;
+use App\Http\Models\Employee;
 use App\Http\Models\EntityBasedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redis;
 
 class AdminController extends Controller {
@@ -179,4 +181,56 @@ class AdminController extends Controller {
 													  "entity_based_notification_id"=>$entity_based_notification_id] );
 
 	}
+
+		// use \Notification;
+		public function mobileLogin(Request $request)
+		{
+			if (! $request->has('email')) {
+				$this->error = 'login_email_not_present';
+				return $this->response();
+			}
+			if (! $request->has('password')) {
+				$this->error = 'login_password_not_present';
+				return $this->response();
+			}
+			if (! $request->has('device_registeration_id')) {
+				$this->error = 'mobile_device_registration_token_missing';
+				return $this->response();
+			}
+			if (! $request->has('device_type')) {
+				$this->error = 'mobile_device_registration_type_missing';
+				return $this->response();
+			}
+			if (! in_array($request->get('device_type'), \Config::get('global.deviceType'))) {
+				$this->error = 'mobile_invalid_device_type';
+				return $this->response();
+			}
+			$fetchUser = Employee::getUserByEmail($request->get('email'));
+			if (is_null($fetchUser) && count($fetchUser) == 0) {
+				$this->error = 'invalid_email_address';
+				return $this->response();
+			}
+			
+			if (! Hash::check($request->get('password'), $fetchUser->password)) {
+				$this->error = 'invalid_password';
+				return $this->response();
+			}
+			$fetchUser->fill([
+				'device_type' => $request->get('device_type'),
+				'device_registeration_id' => $request->get('device_registeration_id')
+			])
+				->save();
+			$fetchUser->setHidden([
+				'password',
+				'salt',
+				'deleted_at',
+				'created_at',
+				'updated_at'
+			]);
+			$data = $fetchUser->toArray();
+			$data['auth_token'] = self::getAccessToken($fetchUser);
+			$this->response = $data;
+			return $this->response();
+		}
+
 }

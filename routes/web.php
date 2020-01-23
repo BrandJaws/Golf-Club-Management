@@ -1,4 +1,11 @@
 <?php
+/**
+ * This snippet of code is here to get rid of the countable exception thrown due to php 7.2 and Laravel 5.3 incomptibility
+ * Must be commented or removed in production
+ */
+if(version_compare(PHP_VERSION, '7.2.0', '>=')) {
+    error_reporting(E_ALL ^ E_NOTICE ^ E_WARNING);
+}
 
 /*
  * |--------------------------------------------------------------------------

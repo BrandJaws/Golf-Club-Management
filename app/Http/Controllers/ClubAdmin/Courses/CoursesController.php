@@ -391,4 +391,19 @@ class CoursesController extends Controller
             return "failure";
         }
     }
+
+    
+    public function getCoursesMobile(Request $request)
+    {
+        try{
+            $coursesList = Course::where("club_id", Auth::user()->club_id)->select("id", "name")->get();
+            $this->response  = $coursesList;
+        }catch(\Exception $e){
+            \Log::info(__METHOD__, [
+				'error' => $e->getMessage()
+			]);
+			$this->error = "exception";
+        }
+        return $this->response();
+    }
 }   

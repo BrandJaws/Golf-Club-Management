@@ -70,7 +70,7 @@ class Club extends Model {
             //  - Any existing reservation's start time falls between the duration of requested reservation for the same player
             //  - Or Any existing reservation's end time falls between the duration of requested reservation for the same player
         
-            
+
             $playersFound = DB::table('compound_reservations')
                         ->select('member_name')
                         ->where("club_id",$this->id)
@@ -116,6 +116,7 @@ class Club extends Model {
 
                         })
                         ->get();
+
             foreach($playersFound as $index=>$playerFound){
                 if(strpos($playersNamesWithReservations,$playerFound->member_name) === false){
                    

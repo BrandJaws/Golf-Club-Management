@@ -75,7 +75,7 @@ class ReservationsController extends Controller
 
         if ($request->ajax())
         {
-            return json_encode($reservations);
+            return json_decode(json_encode($reservations),true);
         } else
         {
             $coursesList = Course::where("club_id", Auth::user()->club_id)->select("id", "name")->get();
@@ -86,6 +86,33 @@ class ReservationsController extends Controller
                                                        "entity_based_notification_id"=>$entity_based_notification_id]);
         }
 
+    }
+
+    public function starterReservationsMobile(Request $request)
+    {
+        try{
+            if ($request->has('course_id'))
+            {
+                $course = Course::find($request->get('course_id'));
+            } else
+            {
+                $course = Course::where("club_id",Auth::user()->club_id)->first();
+            }
+            if(!$course){
+                //probably return with an error
+                $this->error = 'invalid_course_id_provided';
+                return $this->response();
+            }
+            $dayToday = Carbon::today()->toDateString();
+            $reservations = Course::getReservationsForACourseByIdForADateRange($course, $dayToday, $dayToday);
+            $this->response  =json_decode(json_encode($reservations),true);
+        }catch(\Exception $e){
+            \Log::info(__METHOD__, [
+				'error' => $e->getMessage()
+			]);
+			$this->error = "exception";
+        }
+        return $this->response();
     }
 
     public function getReservationByDate(Request $request, $date)
@@ -116,7 +143,7 @@ class ReservationsController extends Controller
         }
         $club = Club::find($request->get('club_id'));
 
-        if (is_null($club) && count($club) < 1)
+        if (is_null($club))
         {
             $this->error = "mobile_invalid_club";
             return $this->response();
@@ -127,12 +154,12 @@ class ReservationsController extends Controller
             return $this->response();
         }
         $course = Course::getCourseByClubId($request->get('course_id'), $club->id);
-        if (is_null($course) && count($course) < 1)
+        if (is_null($course) && $course->count() < 1)
         {
             $this->error = "mobile_invalid_court";
             return $this->response();
         }
-
+        
         if (!$request->has('reserved_at'))
         {
 
@@ -194,13 +221,11 @@ class ReservationsController extends Controller
             }
 
         }
-
         if (count($players) < 1 || count($players) > 4)
         {
             $this->error = "mobile_players_are_not_enough";
             return $this->response();
         }
-
 
         try
         {
@@ -214,6 +239,7 @@ class ReservationsController extends Controller
                 $this->error = "mobile_slot_already_reserved";
                 return $this->response();
             }
+           
             $playersWithOtherReservationsInBetween = $club->getPlayersWithReservationsWithinAStartTimeAndReservationDuaration($course, $startTime, $players);
             if ($playersWithOtherReservationsInBetween != null)
             {
@@ -230,7 +256,7 @@ class ReservationsController extends Controller
             $reservation->attachPlayers($players, 0, true, 1, \Config::get('global.reservation.reserved'));
             $reservation->attachTimeSlot($startTime);
 
-
+           
             $firstReservationsOnTimeSlots = Course::getResevationsWithPlayersAtCourseForMultipleIds($reservation->course_id, $reservation->reservation_time_slots, [$reservation->id]);
             $this->response = $firstReservationsOnTimeSlots;
 
@@ -247,7 +273,7 @@ class ReservationsController extends Controller
             \DB::commit();
         } catch (\Exception $e)
         {
-
+            dd($e);
             \DB::rollback();
 
             \Log::info(__METHOD__, [
@@ -755,15 +781,15 @@ class ReservationsController extends Controller
 
             } else
             {
-                if (!$request->has('club_id'))
-                {
-                    $this->error = "mobile_invalid_club_identifire";
-                    return $this->response();
-                }
+                // if (!$request->has('club_id'))
+                // {
+                //     $this->error = "mobile_invalid_club_identifire";
+                //     return $this->response();
+                // }
+                // $club = Auth::user()->club_id;
+                $club = Club::find(Auth::user()->club_id);
 
-                $club = Club::find($request->get('club_id'));
-
-                if (is_null($club) && count($club) < 1)
+                if (is_null($club))
                 {
                     $this->error = "mobile_invalid_club";
                     return $this->response();
@@ -899,13 +925,13 @@ class ReservationsController extends Controller
             $this->error = "mobile_invalid_court";
             return $this->response();
         }
-        if (!$request->has('club_id'))
-        {
-            $this->error = "mobile_invalid_club_identifire";
-            return $this->response();
-        }
+        // if (!$request->has('club_id'))
+        // {
+        //     $this->error = "mobile_invalid_club_identifire";
+        //     return $this->response();
+        // }
 
-        $club = Club::find($request->get('club_id'));
+        $club = Club::find(Auth::user()->club_id);
 
         if (!$club)
         {

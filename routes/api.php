@@ -214,3 +214,46 @@ Route::group([
 		Route::get('/{newsfeed_id}', ['as' => 'show', 'uses' => '\App\Http\Controllers\Mobile\NewsFeedsController@show']);
 	});
 });
+
+/**
+ * Routes related to Admin Api
+ */
+
+Route::post('/admin/login', '\App\Http\Controllers\ClubAdmin\Admin\AdminController@mobileLogin');
+
+Route::group([
+	'middleware'=>'auth.mobile'
+
+], function () {
+	Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
+		Route::get('/courses', [
+			'as' => 'courses',
+			'uses' => 'ClubAdmin\Courses\CoursesController@getCoursesMobile'
+		 ]);
+		Route::group(['prefix' => 'reservations', 'as' => 'reservations.'], function() {
+			Route::get('/starter', [
+				'as' => 'starter',
+				'uses' => 'ClubAdmin\Reservations\ReservationsController@starterReservationsMobile'
+			 ]);
+			 Route::post('/checkin-player', [
+				'as' => 'checkinPlayer',
+				'uses' => 'ClubAdmin\Reservations\ReservationsController@checkinPlayer'
+			]);
+			Route::post('/move-players', [
+				'as' => 'movePlayers',
+				'uses' => 'ClubAdmin\Reservations\ReservationsController@movePlayers'
+			]);
+			Route::post('/swap-timeslots', [
+				'as' => 'swapTimeSlots',
+				'uses' => 'ClubAdmin\Reservations\ReservationsController@swapTimeSlots'
+			]);
+			Route::post('/mark-as-started', [
+				'as' => 'markAsStarted',
+				'uses' => 'ClubAdmin\Reservations\ReservationsController@markGameStatusAsStarted'
+			]);
+		});
+	
+	});
+
+	
+});

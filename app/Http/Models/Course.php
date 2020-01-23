@@ -475,7 +475,7 @@ class Course extends Model
      */
     public function countTotalHours(){
     	if(!is_null($this->reservations)){
-    		return count($this->reservations);
+    		return $this->reservations->count();
     	}else{
     		return 0;
     	}

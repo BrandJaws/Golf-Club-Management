@@ -1067,6 +1067,11 @@ return [
 		'httpCode' => '200',
 		'message' => "Password has been updated successfully"
 	],
+	"invalid_course_id_provided"=>[
+		'code' => '196',
+		'httpCode' => '412',
+		'message' => "Invalid Course Id provided"
+	],
 	
 	
 	

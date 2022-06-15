@@ -1,1 +1,1 @@
-Project For Grit Golf Admin Pannel
+Laravel Project For Golf Club Management
